@@ -1,0 +1,14 @@
+github.com/nickwells/check.mod v1.0.0 h1:rJP1UEpENhhRguq5WINn11N3JTwIk52YR+BmTTdNkx4=
+github.com/nickwells/check.mod v1.0.0/go.mod h1:C4rmyucJ3h6uz7FpGE9aGAu95CtEUaNTKfVnLE9Aq5A=
+github.com/nickwells/filecheck.mod v1.0.0 h1:qitPydbNj0OShuf8SWHvtoMmslS8PhvEzby21KqJTW8=
+github.com/nickwells/filecheck.mod v1.0.0/go.mod h1:DOd/zlX1RMHdkK+7PvEQ4qbRVsGH/N7grmVRUE4JW3c=
+github.com/nickwells/fileparse.mod v1.0.0 h1:HP86UB1JXobh8woV6QxtvvN3gq4plph9u/cHRy54AlA=
+github.com/nickwells/fileparse.mod v1.0.0/go.mod h1:ViQ5otpyLnG2wpTmPVG0n+0wKSxMBwQ8/SPIWJY6YpA=
+github.com/nickwells/location.mod v1.0.0 h1:5NXcsaI0C+tt1tNZRauq57eSFz4C7Ga75CBBVskMzEo=
+github.com/nickwells/location.mod v1.0.0/go.mod h1:bD+uCBKQGPTKR2A3kDNmxgeb0NlHip2fs89MhgoP6AM=
+github.com/nickwells/mathutil.mod v1.0.0 h1:q7+b3UzSDvd1N4f/a9KrlRSswefJKkyVchlPWIPt0Z4=
+github.com/nickwells/mathutil.mod v1.0.0/go.mod h1:8f0HTkTxNjWEdeuSHUN+cOUvSbzc3SQqI/EbtdY1+MU=
+github.com/nickwells/strdist.mod v1.0.0 h1:5UlStUSygHKGXIX5mNe1JYZ71jL2lt15zwKMSiG94rw=
+github.com/nickwells/strdist.mod v1.0.0/go.mod h1:Wp6GrXBgMzj6uHgZJJqU41TKq6t0tqGcfTXugdkTB50=
+github.com/nickwells/testhelper.mod v1.0.0 h1:jnt9uiFeINW2UALrjVfTv1k55xmTwzXOSNT+5+m+x8Y=
+github.com/nickwells/testhelper.mod v1.0.0/go.mod h1:wIYxt24+uiOPAaeUZCvJFjuGBE+mbpDXJ82ww6Og0XU=
