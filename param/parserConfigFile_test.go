@@ -2,11 +2,12 @@ package param_test
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/nickwells/filecheck.mod/filecheck"
 	"github.com/nickwells/param.mod/param"
 	"github.com/nickwells/param.mod/param/paramset"
 	"github.com/nickwells/param.mod/param/psetter"
-	"testing"
 )
 
 var CFValExample1 bool
@@ -160,11 +161,11 @@ func TestGroupConfigFile(t *testing.T) {
 	}
 
 	for i, tc := range testCases {
-		testID := fmt.Sprintf("%d: %s", i, tc.name)
+		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
 
 		ps, err := paramset.NewNoHelpNoExitNoErrRpt()
 		if err != nil {
-			t.Fatal(testID, " : couldn't construct the ParamSet: ", err)
+			t.Fatal(tcID, " : couldn't construct the ParamSet: ", err)
 		}
 		addParamsForGroupCF(ps)
 		ps.AddGroupConfigFile(tc.gName, tc.fileName, tc.check)
@@ -172,8 +173,8 @@ func TestGroupConfigFile(t *testing.T) {
 		resetParamVals()
 		errMap := ps.Parse([]string{})
 
-		errMapCheck(t, testID, errMap, tc.errsExpected)
-		valsCheck(t, testID, tc.valsExpected)
+		errMapCheck(t, tcID, errMap, tc.errsExpected)
+		valsCheck(t, tcID, tc.valsExpected)
 	}
 
 }

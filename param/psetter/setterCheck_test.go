@@ -2,12 +2,13 @@ package psetter_test
 
 import (
 	"fmt"
-	"github.com/nickwells/param.mod/param"
-	"github.com/nickwells/param.mod/param/psetter"
-	"github.com/nickwells/testhelper.mod/testhelper"
 	"regexp"
 	"testing"
 	"time"
+
+	"github.com/nickwells/param.mod/param"
+	"github.com/nickwells/param.mod/param/psetter"
+	"github.com/nickwells/testhelper.mod/testhelper"
 )
 
 func TestSetterCheck(t *testing.T) {
@@ -293,10 +294,10 @@ func TestSetterCheck(t *testing.T) {
 	}
 
 	for i, tc := range testCases {
-		testID := fmt.Sprintf("test %d: %s", i, tc.name)
+		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
 		panicked, panicVal := panicSafeCheck(tc.s)
 
-		testhelper.PanicCheckString(t, testID,
+		testhelper.PanicCheckString(t, tcID,
 			panicked, tc.panicExpected,
 			panicVal, tc.expVals)
 	}

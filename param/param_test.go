@@ -2,12 +2,13 @@ package param_test
 
 import (
 	"fmt"
+	"reflect"
+	"testing"
+
 	"github.com/nickwells/param.mod/param"
 	"github.com/nickwells/param.mod/param/paramset"
 	"github.com/nickwells/param.mod/param/psetter"
 	"github.com/nickwells/testhelper.mod/testhelper"
-	"reflect"
-	"testing"
 )
 
 func TestParamAdd(t *testing.T) {
@@ -129,33 +130,33 @@ func TestParamAdd(t *testing.T) {
 		t.Fatal("couldn't construct the ParamSet: ", err)
 	}
 	for i, tc := range testCases {
-		testName := fmt.Sprintf("%d: %s", i, tc.name)
+		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
 		p, panicked, panicVal := panicSafeTestAddByName(ps, tc.npi)
-		testhelper.PanicCheckString(t, testName,
+		testhelper.PanicCheckString(t, tcID,
 			panicked, tc.panicExpected,
 			panicVal, tc.panicMsgContains)
 
 		p2, err := ps.GetParamByName(tc.npi.name)
 		if tc.paramShouldExist {
 			if p2 == nil {
-				t.Log("test " + testName + " :\n")
+				t.Log(tcID)
 				t.Errorf("\t: param: '%s' should exist\n",
 					tc.npi.name)
 			}
 			if err != nil {
-				t.Log("test " + testName + " :\n")
+				t.Log(tcID)
 				t.Errorf("\t: GetParamByName(...) returned an error: %s\n",
 					err)
 			}
 		} else {
 			if p2 != nil {
-				t.Log("test " + testName + " :\n")
+				t.Log(tcID)
 				t.Errorf(
 					"\t: param: '%s' should not exist if Add(...) panicked\n",
 					tc.npi.name)
 			}
 			if err == nil {
-				t.Log("test " + testName + " :\n")
+				t.Log(tcID)
 				t.Errorf(
 					"\t: GetParamByName(...) should have returned an error\n")
 			}
@@ -163,15 +164,15 @@ func TestParamAdd(t *testing.T) {
 
 		if p != nil {
 			if p.Name() != tc.npi.name {
-				t.Log("test " + testName + " :\n")
+				t.Log(tcID)
 				t.Errorf("\t: the name did not match: '%s' != '%s'\n",
 					p.Name(), tc.npi.name)
 			} else if p.Description() != tc.npi.desc {
-				t.Log("test " + testName + " :\n")
+				t.Log(tcID)
 				t.Errorf("\t: the description did not match: '%s' != '%s'\n",
 					p.Description(), tc.npi.desc)
 			} else if p.HasBeenSet() {
-				t.Log("test " + testName + " :\n")
+				t.Log(tcID)
 				t.Errorf(
 					"\t: param has been set but params haven't been parsed\n")
 			}
@@ -378,10 +379,10 @@ func TestParamAddPos(t *testing.T) {
 	}
 
 	for i, tc := range testCases {
-		testName := fmt.Sprintf("%d: %s", i, tc.name)
+		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
 		ps, err := paramset.NewNoHelpNoExitNoErrRpt()
 		if err != nil {
-			t.Fatal(testName, " : couldn't construct the ParamSet: ", err)
+			t.Fatal(tcID, " : couldn't construct the ParamSet: ", err)
 		}
 		var panicked bool
 		var panicVal interface{}
@@ -398,12 +399,12 @@ func TestParamAddPos(t *testing.T) {
 				}
 				if pi.npiShouldExist != exists {
 					if exists {
-						t.Logf("test %s :\n", testName)
+						t.Log(tcID)
 						t.Errorf("\t: named parameter: '%s'"+
 							" should not exist but does\n",
 							pi.npi.name)
 					} else {
-						t.Logf("test %s :\n", testName)
+						t.Log(tcID)
 						t.Errorf("\t: named parameter: '%s'"+
 							" should exist but doesn't. Err: %s\n",
 							pi.npi.name, err)
@@ -425,12 +426,12 @@ func TestParamAddPos(t *testing.T) {
 				}
 				if pi.ppiShouldExist != exists {
 					if exists {
-						t.Logf("test %s :\n", testName)
+						t.Log(tcID)
 						t.Errorf("\t: positional parameter: %d"+
 							" should not exist but does\n",
 							posIdx)
 					} else {
-						t.Logf("test %s :\n", testName)
+						t.Log(tcID)
 						t.Errorf("\t: positional parameter: %d"+
 							" should exist but doesn't. Err: %s\n",
 							posIdx, err)
@@ -443,7 +444,7 @@ func TestParamAddPos(t *testing.T) {
 				posIdx++
 			}
 		}
-		testhelper.PanicCheckString(t, testName,
+		testhelper.PanicCheckString(t, tcID,
 			panicked, tc.panicExpected,
 			panicVal, tc.panicMsgContains)
 
@@ -451,11 +452,11 @@ func TestParamAddPos(t *testing.T) {
 			errMap, panicked, panicVal := panicSafeTestParse(ps,
 				tc.paramsToParse)
 			if panicked {
-				t.Logf("test %s :\n", testName)
+				t.Log(tcID)
 				t.Errorf("\t: unexpected panic: %v\n", panicVal)
 				logErrMap(t, errMap)
 			} else {
-				errMapCheck(t, testName, errMap, tc.errsExpected)
+				errMapCheck(t, tcID, errMap, tc.errsExpected)
 
 				if tc.remainderExpected != nil &&
 					len(tc.remainderExpected) == 0 {
@@ -463,7 +464,7 @@ func TestParamAddPos(t *testing.T) {
 				}
 
 				if !reflect.DeepEqual(ps.Remainder(), tc.remainderExpected) {
-					t.Logf("test %s :\n", testName)
+					t.Log(tcID)
 					t.Logf("\t: remainder received: %v\n", ps.Remainder())
 					t.Logf("\t: remainder expected: %v\n", tc.remainderExpected)
 					t.Errorf("\t: unexpected remainder\n")
@@ -638,7 +639,7 @@ func TestParamParse(t *testing.T) {
 	}
 
 	for i, tc := range testCases {
-		testName := fmt.Sprintf("%d: %s", i, tc.testName)
+		tcID := fmt.Sprintf("test %d: %s", i, tc.testName)
 		ps, err := paramset.NewNoHelpNoExitNoErrRpt()
 		if err != nil {
 			t.Fatal("An error was detected while constructing the ParamSet:",
@@ -649,19 +650,17 @@ func TestParamParse(t *testing.T) {
 		}
 		errMap, panicked, panicVal := panicSafeTestParse(ps, tc.paramsPassed)
 		if panicked {
-			t.Logf("test %s :\n", testName)
+			t.Log(tcID)
 			t.Errorf("\t: unexpected panic: %v\n", panicVal)
 			logErrMap(t, errMap)
 		} else {
-			errMapCheck(t, testName, errMap, tc.expectedEMap)
+			errMapCheck(t, tcID, errMap, tc.expectedEMap)
 		}
 	}
 
 }
 
 func TestParamByName(t *testing.T) {
-	// testCases
-
 	var val1 int64 = 123
 	val1InitialVal := fmt.Sprint(val1)
 	ps, err := paramset.NewNoHelpNoExitNoErrRpt()

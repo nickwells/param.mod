@@ -2,10 +2,11 @@ package param_test
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/nickwells/param.mod/param"
 	"github.com/nickwells/param.mod/param/paramset"
 	"github.com/nickwells/testhelper.mod/testhelper"
-	"testing"
 )
 
 type pfxFunc struct {
@@ -128,15 +129,15 @@ func TestSetEnv(t *testing.T) {
 		},
 	}
 	for i, tc := range testCases {
-		testName := fmt.Sprintf("%d: %s", i, tc.name)
+		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
 
 		ps, err := paramset.NewNoHelpNoExitNoErrRpt()
 		if err != nil {
-			t.Fatal(testName, " : couldn't construct the ParamSet: ", err)
+			t.Fatal(tcID, " : couldn't construct the ParamSet: ", err)
 		}
 		panicked, panicVal := panicEnvPrefix(t, tc.seq, ps)
 
-		testhelper.PanicCheckString(t, testName,
+		testhelper.PanicCheckString(t, tcID,
 			panicked, tc.panicExpected,
 			panicVal, tc.panicMustContain)
 	}

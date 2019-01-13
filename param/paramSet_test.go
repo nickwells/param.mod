@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"testing"
+
 	"github.com/nickwells/param.mod/param"
 	"github.com/nickwells/param.mod/param/paramset"
 	"github.com/nickwells/param.mod/param/psetter"
 	"github.com/nickwells/testhelper.mod/testhelper"
-	"testing"
 )
 
 // TestParamSet ...
@@ -173,11 +174,11 @@ func TestParamSet_SetGroupDescription(t *testing.T) {
 	}
 
 	for i, tc := range testCases {
-		testName := fmt.Sprintf("%d: %s", i, tc.name)
+		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
 
 		ps, err := paramset.NewNoHelpNoExitNoErrRpt()
 		if err != nil {
-			t.Fatal(testName, " : couldn't construct the ParamSet: ", err)
+			t.Fatal(tcID, " : couldn't construct the ParamSet: ", err)
 		}
 
 		var panicked bool
@@ -190,23 +191,24 @@ func TestParamSet_SetGroupDescription(t *testing.T) {
 				break
 			}
 		}
-		testhelper.PanicCheckString(t, testName,
+		testhelper.PanicCheckString(t, tcID,
 			panicked, tc.panicExpected,
 			panicVal, tc.panicMsgContains)
 
 		for _, gd := range tc.expectedDescs {
 			desc := ps.GetGroupDesc(gd.name)
 			if desc != gd.desc {
-				t.Errorf("%s : the group description for '%s'"+
-					" was expected to be: '%s' but was '%s'",
-					testName, gd.name, gd.desc, desc)
+				t.Log(tcID)
+				t.Logf("\t: expected: %s", gd.desc)
+				t.Logf("\t:  but was: %s", desc)
+				t.Errorf("\t : bad group description for '%s'", gd.name)
 			}
 		}
 
 		for gName, expected := range tc.groupsExpected {
 			hasName := ps.HasGroupName(gName)
 			if hasName != expected {
-				t.Logf("%s\n", testName)
+				t.Log(tcID)
 				if expected {
 					t.Errorf("\t: the group description for '%s'"+
 						" was not found when expected",
@@ -240,19 +242,21 @@ func TestParamSet_SetTerminalParam(t *testing.T) {
 	}
 
 	for i, tc := range testCases {
-		testName := fmt.Sprintf("%d: %s", i, tc.name)
+		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
 
 		ps, err := paramset.NewNoHelpNoExitNoErrRpt()
 		if err != nil {
-			t.Fatal(testName, " : couldn't construct the ParamSet: ", err)
+			t.Fatal(tcID, " : couldn't construct the ParamSet: ", err)
 		}
 
 		if tc.setTP {
 			ps.SetTerminalParam(tc.tpVal)
 		}
 		if ps.TerminalParam() != tc.tpVal {
-			t.Errorf("%s : TerminalParam was expected to be: '%s' but was '%s'",
-				testName, tc.tpVal, ps.TerminalParam())
+			t.Log(tcID)
+			t.Logf("\t: expected: %s", tc.tpVal)
+			t.Logf("\t:      got: %s", ps.TerminalParam())
+			t.Errorf("\t: Bad TerminalParam")
 		}
 	}
 }
@@ -317,7 +321,7 @@ func reportParamGroup(t *testing.T, paramGroups []*param.ParamGroup) {
 func checkParamGroup(t *testing.T, i int, tc paramGroupTC, ps *param.ParamSet) {
 	t.Helper()
 
-	tcID := fmt.Sprintf("%d: %s", i, tc.name)
+	tcID := fmt.Sprintf("test %d: %s", i, tc.name)
 	paramGroups := ps.GetParamGroups()
 	if len(paramGroups) != len(tc.expectedResults) {
 		t.Logf("%s: the number of ParamGroups returned is unexpected\n", tcID)
