@@ -6,7 +6,5 @@ require (
 	github.com/nickwells/fileparse.mod v1.1.1
 	github.com/nickwells/location.mod v1.1.0
 	github.com/nickwells/strdist.mod v1.0.1
-	github.com/nickwells/testhelper.mod v1.0.1
+	github.com/nickwells/testhelper.mod v1.1.0
 )
-
-replace github.com/nickwells/testhelper.mod => ../../testhelper.mod
