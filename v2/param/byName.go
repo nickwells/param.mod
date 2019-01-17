@@ -178,12 +178,7 @@ func (ps *ParamSet) Add(name string,
 				name, err))
 		}
 	}
-	g, ok := ps.groups[p.groupName]
-	if !ok {
-		g = &Group{Name: p.groupName}
-		ps.groups[p.groupName] = g
-	}
-	g.Params = append(g.Params, p)
+	ps.addByNameToGroup(p)
 	return p
 }
 

@@ -297,8 +297,10 @@ func ExampleParamSet_Add() {
 
 // GroupAndParams holds the expected group name and associated parameter names
 type GroupAndParams struct {
-	groupName  string
-	paramNames []string
+	groupName   string
+	paramNames  []string
+	hiddenCount int
+	allHidden   bool
 }
 
 type paramGroupTC struct {
@@ -325,30 +327,42 @@ func checkParamGroup(t *testing.T, i int, tc paramGroupTC, ps *param.ParamSet) {
 	tcID := fmt.Sprintf("test %d: %s", i, tc.name)
 	paramGroups := ps.GetGroups()
 	if len(paramGroups) != len(tc.expectedResults) {
-		t.Logf("%s: the number of Groups returned is unexpected\n", tcID)
-		t.Logf("\t: expected: %d\n", len(tc.expectedResults))
-		t.Logf("\t:      got: %d\n", len(paramGroups))
+		t.Log(tcID)
+		t.Logf("\t: expected: %d", len(tc.expectedResults))
+		t.Logf("\t:      got: %d", len(paramGroups))
 		reportParamGroup(t, paramGroups)
-		t.Error("\t: Failed")
+		t.Error("\t: the number of Groups returned is unexpected")
 		return
 	}
 	for idx, pg := range paramGroups {
+		tcIDGrp := tcID + fmt.Sprintf(" - group %d", idx)
 		if pg.Name != tc.expectedResults[idx].groupName {
-			t.Logf("%s: the group name for group %d is unexpected\n", tcID, idx)
-			t.Logf("\t: expected: %s\n", tc.expectedResults[idx].groupName)
-			t.Logf("\t:      got: %s\n", pg.Name)
+			t.Log(tcIDGrp)
+			t.Logf("\t: expected: %s", tc.expectedResults[idx].groupName)
+			t.Logf("\t:      got: %s", pg.Name)
 			reportParamGroup(t, paramGroups)
-			t.Error("\t: Failed")
+			t.Error("\t: the group name is unexpected")
 		}
 		if len(pg.Params) != len(tc.expectedResults[idx].paramNames) {
-			t.Logf("%s: the number of parameters for group %d is unexpected\n",
-				tcID, idx)
-			t.Logf("\t: expected: %d\n",
-				len(tc.expectedResults[idx].paramNames))
-			t.Logf("\t:      got: %d\n", len(pg.Params))
+			t.Log(tcIDGrp)
+			t.Logf("\t: expected: %d", len(tc.expectedResults[idx].paramNames))
+			t.Logf("\t:      got: %d", len(pg.Params))
 			reportParamGroup(t, paramGroups)
-			t.Error("\t: Failed")
-			return
+			t.Error("\t: the number of parameters is unexpected")
+		}
+		if pg.HiddenCount != tc.expectedResults[idx].hiddenCount {
+			t.Log(tcIDGrp)
+			t.Logf("\t: expected: %d", tc.expectedResults[idx].hiddenCount)
+			t.Logf("\t:      got: %d", pg.HiddenCount)
+			reportParamGroup(t, paramGroups)
+			t.Error("\t: the number of hidden parameters is unexpected")
+		}
+		if pg.AllParamsHidden() != tc.expectedResults[idx].allHidden {
+			t.Log(tcIDGrp)
+			t.Logf("\t: expected: %v", tc.expectedResults[idx].allHidden)
+			t.Logf("\t:      got: %v", pg.AllParamsHidden())
+			reportParamGroup(t, paramGroups)
+			t.Error("\t: the number of hidden parameters is unexpected")
 		}
 	}
 }
@@ -432,6 +446,52 @@ func TestGetParamGroups(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "three params, two hidden, two groups",
+			npi: []*namedParamInitialiser{
+				&namedParamInitialiser{
+					name:   "aaa",
+					setter: psetter.BoolSetter{Value: &boolVar},
+					desc:   "desc",
+					opts: []param.OptFunc{
+						param.GroupName("abc"),
+						param.Attrs(param.DontShowInStdUsage),
+					},
+				},
+				&namedParamInitialiser{
+					name:   "aab",
+					setter: psetter.BoolSetter{Value: &boolVar},
+					desc:   "desc",
+					opts: []param.OptFunc{
+						param.GroupName("abc"),
+						param.Attrs(param.DontShowInStdUsage),
+					},
+				},
+				&namedParamInitialiser{
+					name:   "param2",
+					setter: psetter.BoolSetter{Value: &boolVar},
+					desc:   "desc",
+					opts:   []param.OptFunc{param.GroupName("xyz")},
+				},
+			},
+			expectedResults: []GroupAndParams{
+				GroupAndParams{
+					groupName: "abc",
+					paramNames: []string{
+						"aaa",
+						"aab",
+					},
+					hiddenCount: 2,
+					allHidden:   true,
+				},
+				GroupAndParams{
+					groupName: "xyz",
+					paramNames: []string{
+						"param2",
+					},
+				},
+			},
+		},
 	}
 
 	for i, tc := range testCases {
@@ -444,5 +504,4 @@ func TestGetParamGroups(t *testing.T) {
 		}
 		checkParamGroup(t, i, tc, ps)
 	}
-
 }
