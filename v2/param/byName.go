@@ -178,7 +178,24 @@ func (ps *ParamSet) Add(name string,
 				name, err))
 		}
 	}
+	g, ok := ps.groups[p.groupName]
+	if !ok {
+		g = &Group{Name: p.groupName}
+		ps.groups[p.groupName] = g
+	}
+	g.Params = append(g.Params, p)
 	return p
+}
+
+// addByNameToGroup adds the ByName parameter to the appropriate parameter
+// group in the ParamSet
+func (ps *ParamSet) addByNameToGroup(p *ByName) {
+	g, ok := ps.groups[p.groupName]
+	if !ok {
+		g = &Group{Name: p.groupName}
+		ps.groups[p.groupName] = g
+	}
+	g.Params = append(g.Params, p)
 }
 
 // HasBeenSet will return true if the parameter has been set.

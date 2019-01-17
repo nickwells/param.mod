@@ -14,7 +14,9 @@ import (
 // arguments after the standard parsing has been completed. It takes as an
 // argument the ParamSet on which Parse has been called. The remaining
 // parameters can be retrieved for further processing through the Remainder
-// method on that ParamSet. The second argument to HandleRemainder is the location that the previous parser reached in the parameters it had been passed. It should be passed to the
+// method on that ParamSet. The second argument to HandleRemainder is the
+// location that the previous parser reached in the parameters it had been
+// passed.
 //
 // A typical way of using this mechanism might be to select a new pre-created
 // ParamSet (or create a new on on the fly) based on the settings of any

@@ -183,17 +183,18 @@ func TestParamSet_SetGroupDescription(t *testing.T) {
 
 		var panicked bool
 		var panicVal interface{}
+		var stackTrace []byte
 
 		for _, sgdp := range tc.sgdParams {
-			panicked, panicVal = panicSafeSetGroupDescription(ps,
+			panicked, panicVal, stackTrace = panicSafeSetGroupDescription(ps,
 				sgdp.name, sgdp.desc)
 			if panicked {
 				break
 			}
 		}
-		testhelper.PanicCheckString(t, tcID,
+		testhelper.PanicCheckStringWithStack(t, tcID,
 			panicked, tc.panicExpected,
-			panicVal, tc.panicMsgContains)
+			panicVal, tc.panicMsgContains, stackTrace)
 
 		for _, gd := range tc.expectedDescs {
 			desc := ps.GetGroupDesc(gd.name)
@@ -307,10 +308,10 @@ type paramGroupTC struct {
 }
 
 // reportParamGroup prints the param group details
-func reportParamGroup(t *testing.T, paramGroups []*param.ParamGroup) {
+func reportParamGroup(t *testing.T, paramGroups []*param.Group) {
 	t.Helper()
 	for _, pg := range paramGroups {
-		t.Logf("\t: Group: %s\n", pg.GroupName)
+		t.Logf("\t: Group: %s\n", pg.Name)
 		for _, p := range pg.Params {
 			t.Logf("\t\t%s\n", p.Name())
 		}
@@ -322,9 +323,9 @@ func checkParamGroup(t *testing.T, i int, tc paramGroupTC, ps *param.ParamSet) {
 	t.Helper()
 
 	tcID := fmt.Sprintf("test %d: %s", i, tc.name)
-	paramGroups := ps.GetParamGroups()
+	paramGroups := ps.GetGroups()
 	if len(paramGroups) != len(tc.expectedResults) {
-		t.Logf("%s: the number of ParamGroups returned is unexpected\n", tcID)
+		t.Logf("%s: the number of Groups returned is unexpected\n", tcID)
 		t.Logf("\t: expected: %d\n", len(tc.expectedResults))
 		t.Logf("\t:      got: %d\n", len(paramGroups))
 		reportParamGroup(t, paramGroups)
@@ -332,10 +333,10 @@ func checkParamGroup(t *testing.T, i int, tc paramGroupTC, ps *param.ParamSet) {
 		return
 	}
 	for idx, pg := range paramGroups {
-		if pg.GroupName != tc.expectedResults[idx].groupName {
+		if pg.Name != tc.expectedResults[idx].groupName {
 			t.Logf("%s: the group name for group %d is unexpected\n", tcID, idx)
 			t.Logf("\t: expected: %s\n", tc.expectedResults[idx].groupName)
-			t.Logf("\t:      got: %s\n", pg.GroupName)
+			t.Logf("\t:      got: %s\n", pg.Name)
 			reportParamGroup(t, paramGroups)
 			t.Error("\t: Failed")
 		}

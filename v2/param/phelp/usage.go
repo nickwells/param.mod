@@ -99,7 +99,7 @@ func (h StdHelp) Help(ps *param.ParamSet, messages ...string) {
 
 	if h.style == GroupNamesOnly {
 		fmt.Fprintln(w, "\nParameter groups")
-		h.printParamGroups(w, ps)
+		h.printGroups(w, ps)
 	} else {
 		h.printPositionalParams(w, ps)
 		h.printParams(w, ps)
@@ -186,9 +186,9 @@ func (h StdHelp) printPositionalParams(w io.Writer, ps *param.ParamSet) {
 }
 
 // printGroupDetails prints the group name etc
-func printGroupDetails(w io.Writer, pg *param.ParamGroup, style helpStyle) {
+func printGroupDetails(w io.Writer, pg *param.Group, style helpStyle) {
 	fmt.Fprintln(w, "\n"+dashes)
-	fmt.Fprintf(w, "%s [ ", pg.GroupName)
+	fmt.Fprintf(w, "%s [ ", pg.Name)
 	if len(pg.Params) == 1 {
 		fmt.Fprint(w, "1 parameter")
 	} else {
@@ -226,10 +226,10 @@ func (h StdHelp) showGroup(g string) bool {
 }
 
 func (h StdHelp) printParams(w io.Writer, ps *param.ParamSet) {
-	paramGroups := ps.GetParamGroups()
+	paramGroups := ps.GetGroups()
 
 	for _, pg := range paramGroups {
-		if !h.showGroup(pg.GroupName) {
+		if !h.showGroup(pg.Name) {
 			continue
 		}
 
@@ -251,7 +251,7 @@ func (h StdHelp) printParams(w io.Writer, ps *param.ParamSet) {
 	}
 }
 
-func printGroupConfigFile(w io.Writer, pg *param.ParamGroup) {
+func printGroupConfigFile(w io.Writer, pg *param.Group) {
 	if len(pg.ConfigFiles) > 0 {
 		msg := "\nParameters in this group may also be set "
 
@@ -261,11 +261,11 @@ func printGroupConfigFile(w io.Writer, pg *param.ParamGroup) {
 	}
 }
 
-func (h StdHelp) printParamGroups(w io.Writer, ps *param.ParamSet) {
-	paramGroups := ps.GetParamGroups()
+func (h StdHelp) printGroups(w io.Writer, ps *param.ParamSet) {
+	paramGroups := ps.GetGroups()
 
 	for _, pg := range paramGroups {
-		if h.showGroup(pg.GroupName) {
+		if h.showGroup(pg.Name) {
 			printGroupDetails(w, pg, h.style)
 		}
 	}

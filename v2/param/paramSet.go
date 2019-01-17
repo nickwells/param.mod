@@ -45,13 +45,12 @@ type ParamSet struct {
 	byPos           []*ByPos
 	byName          []*ByName
 	nameToParam     map[string]*ByName
-	paramGroups     map[string]GroupDesc
+	groups          map[string]*Group
 	unusedParams    map[string][]string
 	errors          ErrMap
 	finalChecks     []FinalCheckFunc
 	envPrefixes     []string
 	configFiles     []ConfigFileDetails
-	groupCfgFiles   map[string][]ConfigFileDetails
 	remainingParams []string
 	terminalParam   string
 	maxParamNameLen int
@@ -87,22 +86,26 @@ func SetHelper(h Helper) ParamSetOptFunc {
 	}
 }
 
-// SetRemHandler returns a ParamSetOptFunc which can be passed to NewSet. This
-// sets the value of the helper to be used by the parameter set and adds the
-// parameters that the helper needs. Note that the helper must be set and so
-// you must pass some such function. To avoid lots of duplicate code there
-// are sensible defaults which can be used in the param/paramset package.
-//
-// This can only be set once and this will return an error if the helper has
-// already been set
-func SetRemHandler(rh RemHandler) ParamSetOptFunc {
-	return func(ps *ParamSet) error {
-		if ps.remHandler != nil {
-			return errors.New("The remainder handler has already been set")
-		}
-		ps.remHandler = rh
-		return nil
+// SetRemHandler sets the value of the remainder handler to be used by the
+// parameter set. Note that the handler must be set and so you cannot pass
+// nil. The default behaviour is for an error to be reported if there are any
+// unprocessed parameters. If you expect additional arguments after either a
+// terminal positional parameter or after an explicit end-of-parameters
+// parameter (by default '--') then you have two choices. You can set the
+// remainder handler to the NullRemHandler and process the remainder yourself
+// in the body of the program. Alternatively you can pass a RemHandler that
+// will handle the remainder in the Parse method.
+func (ps *ParamSet) SetRemHandler(rh RemHandler) error {
+	if rh == nil {
+		return errors.New("The remainder handler must not be nil")
 	}
+	if ps.parsed {
+		return errors.New("Parsing is already complete" +
+			" - you must set the RemHandler before calling Parse")
+
+	}
+	ps.remHandler = rh
+	return nil
 }
 
 // DontExitOnParamSetupErr turns off the standard behaviour of exiting if an
@@ -175,17 +178,15 @@ func NewSet(psof ...ParamSetOptFunc) (*ParamSet, error) {
 		parseCalledFrom: "Parse() not yet called",
 		progName:        DfltProgName,
 		nameToParam:     make(map[string]*ByName),
-		paramGroups:     make(map[string]GroupDesc),
+		groups:          make(map[string]*Group),
 		unusedParams:    make(map[string][]string),
 		errors:          make(ErrMap),
 		finalChecks:     make([]FinalCheckFunc, 0),
 
-		envPrefixes:   make([]string, 0, 1),
-		configFiles:   make([]ConfigFileDetails, 0, 1),
-		groupCfgFiles: make(map[string][]ConfigFileDetails),
+		envPrefixes: make([]string, 0, 1),
+		configFiles: make([]ConfigFileDetails, 0, 1),
 
 		terminalParam: DfltTerminalParam,
-		remHandler:    dfltRemHandler{},
 
 		errWriter: os.Stderr,
 		stdWriter: os.Stdout,
@@ -206,6 +207,9 @@ func NewSet(psof ...ParamSetOptFunc) (*ParamSet, error) {
 
 			return nil, err
 		}
+	}
+	if ps.remHandler == nil {
+		ps.remHandler = dfltRemHandler{}
 	}
 
 	if ps.helper == nil {
@@ -413,54 +417,65 @@ func (ps *ParamSet) SetTerminalParam(s string) { ps.terminalParam = s }
 // TerminalParam will return the current value of the terminal parameter.
 func (ps *ParamSet) TerminalParam() string { return ps.terminalParam }
 
-// ParamGroup holds details about a group of parameters
-type ParamGroup struct {
-	GroupName   string
-	Desc        string
-	Params      []*ByName
-	HiddenCount int
-	ConfigFiles []ConfigFileDetails
+// countHiddenParams ...
+func countHiddenParams(ps []*ByName) {
+
 }
 
-// AllParamsHidden returns true if all the parameters are marked as not to be
-// shown in the standard usage message, false otherwise
-func (pg ParamGroup) AllParamsHidden() bool {
-	return len(pg.Params) == pg.HiddenCount
-}
-
-// GetParamGroups returns a slice of ParamGroups sorted by group name. Each
-// ParamGroup element has a slice of ByName parameters and these are sorted
-// by the primary parameter name.
-func (ps *ParamSet) GetParamGroups() []*ParamGroup {
-	gpMap := make(map[string]ParamGroup)
-	for _, p := range ps.byName {
-		gp := gpMap[p.groupName]
-		gp.GroupName = p.groupName
-		gp.Desc = ps.GetGroupDesc(p.groupName)
-		gp.Params = append(gp.Params, p)
-		if p.attributes&DontShowInStdUsage == DontShowInStdUsage {
-			gp.HiddenCount++
+// fixGroups checks that the parameter groups correctly reflect the
+// parameters. For instance, the parameter can be in the wrong group if the
+// parameter group name is changed after it has been added to the param
+// set. Likewise the DontShowInStdUsage attribute can be set after the
+// parameter has been added. I take it to be unlikely that the package wil be
+// used in this way but better safe than sorry. This will also clear out any
+// groups with no parameters, seth the HiddenCount on each group and finally
+// sort the parameters in each group in alphabetical order.
+func (ps *ParamSet) fixGroups() {
+	for name, g := range ps.groups {
+		var badGroup bool
+		for _, p := range g.Params {
+			if p.groupName != name {
+				badGroup = true
+			}
 		}
-		gpMap[p.groupName] = gp
+
+		if badGroup {
+			params := g.Params
+			g.Params = nil
+			for _, p := range params {
+				ps.addByNameToGroup(p)
+			}
+		}
 	}
 
-	grpParams := make([]*ParamGroup, 0, len(gpMap))
-	for gName := range gpMap {
-		gp := gpMap[gName]
-
-		if cfd, ok := ps.groupCfgFiles[gName]; ok {
-			gp.ConfigFiles = make([]ConfigFileDetails, len(cfd))
-			copy(gp.ConfigFiles, cfd)
+	for name, g := range ps.groups {
+		if g.Params == nil {
+			delete(ps.groups, name)
 		}
+	}
 
-		sort.Slice(gp.Params, func(i, j int) bool {
-			return gp.Params[i].name < gp.Params[j].name
+	for _, g := range ps.groups {
+		g.SetHiddenCount()
+	}
+
+	for _, g := range ps.groups {
+		sort.Slice(g.Params, func(i, j int) bool {
+			return g.Params[i].name < g.Params[j].name
 		})
+	}
+}
 
-		grpParams = append(grpParams, &gp)
+// GetGroups returns a slice of Groups sorted by group name. Each
+// Group element has a slice of ByName parameters and these are sorted
+// by the primary parameter name.
+func (ps *ParamSet) GetGroups() []*Group {
+	ps.fixGroups()
+	grpParams := make([]*Group, 0, len(ps.groups))
+	for _, g := range ps.groups {
+		grpParams = append(grpParams, g)
 	}
 	sort.Slice(grpParams, func(i, j int) bool {
-		return grpParams[i].GroupName < grpParams[j].GroupName
+		return grpParams[i].Name < grpParams[j].Name
 	})
 
 	return grpParams

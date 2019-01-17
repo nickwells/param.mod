@@ -2,11 +2,12 @@ package param
 
 import (
 	"fmt"
+	"os"
+	"strings"
+
 	"github.com/nickwells/filecheck.mod/filecheck"
 	"github.com/nickwells/fileparse.mod/fileparse"
 	"github.com/nickwells/location.mod/location"
-	"os"
-	"strings"
 )
 
 // ConfigFileDetails records the details of a configuration
@@ -182,6 +183,8 @@ func (ps *ParamSet) SetConfigFile(fName string, c filecheck.Exists) {
 // files have several constraints: the parameters in the file must only be
 // for the named group and it is an error if any parameter in the file is not
 // recognised.
+//
+// Additionally, the param group must already exist.
 func (ps *ParamSet) SetGroupConfigFile(gName, fName string, c filecheck.Exists) {
 	if c == filecheck.MustNotExist {
 		panic(fmt.Sprintf(
@@ -189,7 +192,12 @@ func (ps *ParamSet) SetGroupConfigFile(gName, fName string, c filecheck.Exists) 
 			fName, gName))
 	}
 
-	ps.groupCfgFiles[gName] = []ConfigFileDetails{
+	g, ok := ps.groups[gName]
+	if !ok {
+		panic("param group '" + gName + "' has not been created.")
+	}
+
+	g.ConfigFiles = []ConfigFileDetails{
 		ConfigFileDetails{
 			Name:         fName,
 			CfConstraint: c,
@@ -222,7 +230,12 @@ func (ps *ParamSet) AddGroupConfigFile(gName, fName string, c filecheck.Exists) 
 			fName, gName))
 	}
 
-	ps.groupCfgFiles[gName] = append(ps.groupCfgFiles[gName],
+	g, ok := ps.groups[gName]
+	if !ok {
+		panic("param group '" + gName + "' has not been created.")
+	}
+
+	g.ConfigFiles = append(g.ConfigFiles,
 		ConfigFileDetails{
 			Name:         fName,
 			CfConstraint: c,
@@ -239,8 +252,8 @@ func (ps *ParamSet) ConfigFiles() []ConfigFileDetails {
 // ConfigFilesForGroup returns a copy of the current config file details for
 // the given group name.
 func (ps *ParamSet) ConfigFilesForGroup(gName string) []ConfigFileDetails {
-	cf := make([]ConfigFileDetails, len(ps.groupCfgFiles[gName]))
-	copy(cf, ps.groupCfgFiles[gName])
+	cf := make([]ConfigFileDetails, len(ps.groups[gName].ConfigFiles))
+	copy(cf, ps.groups[gName].ConfigFiles)
 	return cf
 }
 
@@ -271,13 +284,13 @@ func checkErrors(ps *ParamSet, errors []error, cf ConfigFileDetails) {
 // files.
 func (ps *ParamSet) getParamsFromConfigFile() {
 
-	for gName, cfs := range ps.groupCfgFiles {
+	for gName, g := range ps.groups {
 		var lp = groupParamLineParser{
 			ps:    ps,
 			gName: gName,
 		}
 		fp := fileparse.New("group-specific parameter config file", lp)
-		for _, cf := range cfs {
+		for _, cf := range g.ConfigFiles {
 			errors := fp.Parse(cf.Name)
 
 			checkErrors(ps, errors, cf)

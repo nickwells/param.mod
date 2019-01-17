@@ -31,18 +31,48 @@ func groupNameCheck(name string) error {
 	return nil
 }
 
-// GroupDesc records details about a group of parameters such as the
-// description and where the description was set from (a stack trace)
-type GroupDesc struct {
-	Desc    string
-	setFrom string
+// Group holds details about a group of parameters
+type Group struct {
+	Name        string
+	Desc        string
+	Params      []*ByName
+	HiddenCount int
+	ConfigFiles []ConfigFileDetails
+	setFrom     string
 }
 
-// SetGroupDescription will set the descriptive text for the parameter
-// group. It will panic if the description has already been set - this is to
-// ensure that the group name is distinct. This description is shown when the
-// usage message is printed. If the short-form description is chosen then the
-// group name is shown instead so it's worth making it a useful value.
+// AllParamsHidden returns true if all the parameters are marked as not to be
+// shown in the standard usage message, false otherwise
+func (g Group) AllParamsHidden() bool {
+	return len(g.Params) == g.HiddenCount
+}
+
+// SetHiddenCount counts how many params have the DontShowInStdUsage
+// attribute set and records this in the HiddenCount field. It also returns
+// the value
+func (g *Group) SetHiddenCount() int {
+	g.HiddenCount = 0
+	for _, p := range g.Params {
+		if p.attributes&DontShowInStdUsage == DontShowInStdUsage {
+			g.HiddenCount++
+		}
+	}
+	return g.HiddenCount
+}
+
+// SetGroupDescription will call AddGroup
+//
+// Deprecated: use AddGroup
+func (ps *ParamSet) SetGroupDescription(name, desc string) {
+	ps.AddGroup(name, desc)
+}
+
+// AddGroup will add a new param group to the ParamSet and set the
+// descriptive text. It will panic if the description has already been set -
+// this is to ensure that the group name is distinct. This description is
+// shown when the usage message is printed. If the short-form description is
+// chosen then the group name is shown instead so it's worth making it a
+// useful value.
 //
 // A suggested standard for group names is to have parameters specific to a
 // command in a group called 'cmd'. This is the default group name if none is
@@ -61,49 +91,45 @@ type GroupDesc struct {
 //
 // The group name will have any leading and trailing spaces deleted before
 // use.
-func (ps *ParamSet) SetGroupDescription(groupName, desc string) {
-	groupName = strings.TrimSpace(groupName)
-	if err := groupNameCheck(groupName); err != nil {
+func (ps *ParamSet) AddGroup(name, desc string) {
+	name = strings.TrimSpace(name)
+	if err := groupNameCheck(name); err != nil {
 		panic("Invalid group name: " + err.Error())
 	}
 
-	pgd, exists := ps.paramGroups[groupName]
-	if exists {
+	g, exists := ps.groups[name]
+	if exists && g.setFrom != "" {
 		msg := fmt.Sprintf(
-			"description for param group %s is already set to:\n%s\nat: %s",
-			groupName,
-			pgd.Desc,
-			pgd.setFrom)
+			"The description for param group %s is already set to:\n%s\nat: %s",
+			name, g.Desc, g.setFrom)
 		panic(msg)
 	}
 
 	stk := make([]byte, 10000)
 	stkSize := runtime.Stack(stk, false)
 
-	pgd.Desc = desc
-	pgd.setFrom = string(stk[:stkSize])
+	g = &Group{
+		Name:    name,
+		Desc:    desc,
+		setFrom: string(stk[:stkSize]),
+	}
 
-	ps.paramGroups[groupName] = pgd
+	ps.groups[name] = g
 }
 
+// GetGroupDesc returns the description for the named group or the empty
+// string if the group does not exist.
 func (ps *ParamSet) GetGroupDesc(grpName string) string {
-	g, ok := ps.paramGroups[grpName]
+	g, ok := ps.groups[grpName]
 	if !ok {
 		return ""
 	}
 	return g.Desc
 }
 
+// HasGroupName returns true if the ParamSet has a group with the given name,
+// false otherwise
 func (ps *ParamSet) HasGroupName(grpName string) bool {
-	_, ok := ps.paramGroups[grpName]
+	_, ok := ps.groups[grpName]
 	return ok
-}
-
-// Groups will return a copy of the map of group names to group description
-func (ps *ParamSet) Groups() map[string]GroupDesc {
-	gd := make(map[string]GroupDesc)
-	for k, v := range ps.paramGroups {
-		gd[k] = v
-	}
-	return gd
 }
