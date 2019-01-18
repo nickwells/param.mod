@@ -251,7 +251,7 @@ func GroupName(name string) OptFunc {
 
 // processParam will call the parameter's setter processor and then record
 // any errors, record where it was set and call any associated post actions
-func (p *ByName) processParam(source string, loc *location.L, paramParts []string) {
+func (p *ByName) processParam(loc *location.L, paramParts []string) {
 	var err error
 
 	if (p.attributes&SetOnlyOnce) == SetOnlyOnce &&
@@ -272,7 +272,7 @@ func (p *ByName) processParam(source string, loc *location.L, paramParts []strin
 	p.whereIsParamSet = append(p.whereIsParamSet, loc.String())
 
 	for _, action := range p.postAction {
-		err = action(source, *loc, p, paramParts)
+		err = action(loc.Source(), *loc, p, paramParts)
 
 		if err != nil {
 			p.ps.errors[p.name] = append(p.ps.errors[p.name],

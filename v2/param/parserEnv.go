@@ -2,9 +2,10 @@ package param
 
 import (
 	"fmt"
-	"github.com/nickwells/location.mod/location"
 	"os"
 	"strings"
+
+	"github.com/nickwells/location.mod/location"
 )
 
 // SetEnvPrefix will set the prefix for environment variables that are to be
@@ -70,8 +71,7 @@ func ConvertEnvVarNameToParamName(name string) string {
 }
 
 func (ps *ParamSet) getParamsFromEnvironment() {
-	const source = "environment"
-	loc := location.New(source)
+	loc := location.New("environment")
 
 	for _, param := range os.Environ() {
 		paramParts := strings.SplitN(param, "=", 2)
@@ -82,7 +82,7 @@ func (ps *ParamSet) getParamsFromEnvironment() {
 			if trimmedParam != paramParts[0] {
 				paramParts[0] = ConvertEnvVarNameToParamName(trimmedParam)
 				loc.SetContent(param)
-				ps.setNonCommandLineValue(paramParts, source, loc)
+				ps.setValueFromEnv(paramParts, loc)
 				break // we've found a match so stop looking
 			}
 		}

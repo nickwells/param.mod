@@ -126,7 +126,7 @@ func TestGroupConfigFile(t *testing.T) {
 			errsExpected: map[string][]string{
 				"unknown-param": []string{
 					"this is not a parameter of this program",
-					"group-specific parameter config file",
+					"config file for " + groupCFName1,
 					configFileNameB,
 				},
 			},
@@ -140,7 +140,7 @@ func TestGroupConfigFile(t *testing.T) {
 			errsExpected: map[string][]string{
 				"pi2": []string{
 					"this parameter is not a member of group: " + groupCFName1,
-					"group-specific parameter config file",
+					"config file for " + groupCFName1,
 					configFileNameC,
 				},
 			},
@@ -191,37 +191,27 @@ func resetParamVals() {
 func valsCheck(t *testing.T, testID string, vals expVals) {
 	t.Helper()
 
-	showId := true
+	var nameLogged bool
 	if paramInt1 != vals.pi1Val {
-		t.Logf("test: %s:\n", testID)
-		showId = false
+		nameLogged = logName(t, nameLogged, testID)
 		t.Errorf("\t: unexpected values: paramInt1 = %d, should be %d\n",
 			paramInt1, vals.pi1Val)
 	}
 
 	if paramInt2 != vals.pi2Val {
-		if showId {
-			t.Logf("test: %s:\n", testID)
-			showId = false
-		}
+		nameLogged = logName(t, nameLogged, testID)
 		t.Errorf("\t: unexpected values: paramInt2 = %d, should be %d\n",
 			paramInt2, vals.pi2Val)
 	}
 
 	if paramBool1 != vals.pb1Val {
-		if showId {
-			t.Logf("test: %s:\n", testID)
-			showId = false
-		}
+		nameLogged = logName(t, nameLogged, testID)
 		t.Errorf("\t: unexpected values: paramBool1 = %v, should be %v\n",
 			paramBool1, vals.pb1Val)
 	}
 
 	if paramBool2 != vals.pb2Val {
-		if showId {
-			t.Logf("test: %s:\n", testID)
-			showId = false
-		}
+		nameLogged = logName(t, nameLogged, testID)
 		t.Errorf("\t: unexpected values: paramBool2 = %v, should be %v\n",
 			paramBool2, vals.pb2Val)
 	}

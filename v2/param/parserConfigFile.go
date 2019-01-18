@@ -289,7 +289,7 @@ func (ps *ParamSet) getParamsFromConfigFile() {
 			ps:    ps,
 			gName: gName,
 		}
-		fp := fileparse.New("group-specific parameter config file", lp)
+		fp := fileparse.New("config file for "+gName, lp)
 		for _, cf := range g.ConfigFiles {
 			errors := fp.Parse(cf.Name)
 
@@ -298,7 +298,7 @@ func (ps *ParamSet) getParamsFromConfigFile() {
 	}
 
 	var lp = paramLineParser{ps: ps}
-	fp := fileparse.New("parameter config file", lp)
+	fp := fileparse.New("config file", lp)
 	for _, cf := range ps.configFiles {
 		errors := fp.Parse(cf.Name)
 

@@ -298,7 +298,7 @@ func (ps *ParamSet) recordUnexpectedParam(paramName string, loc *location.L) {
 	ps.errors[paramName] = append(ps.errors[paramName], loc.Error(msg))
 }
 
-func (ps *ParamSet) setNonCommandLineValue(paramParts []string, source string, loc *location.L) bool {
+func (ps *ParamSet) setValueFromEnv(paramParts []string, loc *location.L) bool {
 	paramName := paramParts[0]
 	p, exists := ps.nameToParam[paramName]
 
@@ -314,7 +314,7 @@ func (ps *ParamSet) setNonCommandLineValue(paramParts []string, source string, l
 
 	paramParts = cleanParamParts(p, paramParts)
 
-	p.processParam(source, loc, paramParts)
+	p.processParam(loc, paramParts)
 	return true
 }
 
@@ -347,8 +347,7 @@ func (ps *ParamSet) setValueFromGroupFile(paramParts []string, loc *location.L, 
 
 	paramParts = cleanParamParts(p, paramParts)
 
-	p.processParam("group-specific parameter configuration file",
-		loc, paramParts)
+	p.processParam(loc, paramParts)
 	return
 }
 
@@ -372,7 +371,7 @@ func (ps *ParamSet) setValueFromFile(paramParts []string, loc *location.L, eRule
 
 	paramParts = cleanParamParts(p, paramParts)
 
-	p.processParam("parameter configuration file", loc, paramParts)
+	p.processParam(loc, paramParts)
 	return
 }
 

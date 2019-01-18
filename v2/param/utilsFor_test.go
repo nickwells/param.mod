@@ -159,16 +159,25 @@ func logErrMap(t *testing.T, errMap param.ErrMap) {
 	}
 }
 
+// logName logs the name if it hasn't already been logged and returns true to
+// set the nameLogged flag
+func logName(t *testing.T, nameLogged bool, name string) bool {
+	t.Helper()
+	if !nameLogged {
+		t.Log(name)
+	}
+	return true
+}
+
 // errMapCheck checks the error map and reports any discrepancies with the
 // expected values
-func errMapCheck(t *testing.T, testName string, errMap param.ErrMap, expected map[string][]string) {
+func errMapCheck(t *testing.T, testID string, errMap param.ErrMap, expected map[string][]string) {
 	t.Helper()
 
 	var nameLogged bool
 
 	if len(errMap) != len(expected) {
-		t.Logf("test %s :\n", testName)
-		nameLogged = true
+		nameLogged = logName(t, nameLogged, testID)
 		t.Errorf(
 			"\t: the error map had %d entries, it was expected to have %d\n",
 			len(errMap), len(expected))
@@ -176,13 +185,10 @@ func errMapCheck(t *testing.T, testName string, errMap param.ErrMap, expected ma
 	for k, errs := range errMap {
 		expStrs, ok := expected[k]
 		if !ok {
-			if !nameLogged {
-				t.Logf("test %s :\n", testName)
-				nameLogged = true
-			}
-			t.Errorf("\t: there is an unexpected error for: '%s':\n", k)
+			nameLogged = logName(t, nameLogged, testID)
+			t.Errorf("\t: there are unexpected errors for: '%s':", k)
 			for _, err := range errs {
-				t.Logf("\t\t: %s\n", err)
+				t.Logf("\t\t: %s", err)
 			}
 		} else {
 			for _, s := range expStrs {
@@ -193,12 +199,8 @@ func errMapCheck(t *testing.T, testName string, errMap param.ErrMap, expected ma
 					}
 				}
 				if count == 0 {
-					if !nameLogged {
-						t.Logf("test %s :\n", testName)
-						nameLogged = true
-					}
-					t.Errorf(
-						"\t: errors for '%s' should contain '%s' but don't\n",
+					nameLogged = logName(t, nameLogged, testID)
+					t.Errorf("\t: errors for '%s' should contain '%s' but don't",
 						k, s)
 				}
 			}
@@ -207,20 +209,16 @@ func errMapCheck(t *testing.T, testName string, errMap param.ErrMap, expected ma
 
 	for k := range expected {
 		if _, ok := errMap[k]; !ok {
-			if !nameLogged {
-				t.Logf("test %s :\n", testName)
-				nameLogged = true
-			}
-			t.Errorf("\t: error map should contain '%s' but doesn't\n", k)
+			nameLogged = logName(t, nameLogged, testID)
+			t.Errorf("\t: error map should contain '%s' but doesn't", k)
 		}
 	}
 
 	if nameLogged {
-		t.Logf("\tErrors:\n")
 		for k, v := range errMap {
-			t.Logf("\t\t: %s\n", k)
+			t.Logf("\t: Errors for: %s", k)
 			for _, e := range v {
-				t.Logf("\t\t\t: %v\n", e)
+				t.Logf("\t:     %v", e)
 			}
 		}
 	}

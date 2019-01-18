@@ -71,7 +71,7 @@ func (ps *ParamSet) getParamsFromStringSlice(loc *location.L, params []string) {
 			loc.Incr()
 			loc.SetContent(pStr)
 
-			pp.processParam(loc.Source(), loc, pStr)
+			pp.processParam(loc, pStr)
 
 			if pp.isTerminal {
 				ps.remainingParams = params[i+1:]
@@ -108,7 +108,7 @@ func (ps *ParamSet) getParamsFromStringSlice(loc *location.L, params []string) {
 					loc.SetContent(pStr + " " + params[i])
 				}
 			}
-			p.processParam(loc.Source(), loc, paramParts)
+			p.processParam(loc, paramParts)
 		} else {
 			ps.recordUnexpectedParam(trimmedParam, loc)
 		}

@@ -2,8 +2,9 @@ package param
 
 import (
 	"fmt"
-	"github.com/nickwells/location.mod/location"
 	"io"
+
+	"github.com/nickwells/location.mod/location"
 )
 
 // ByPos represents a positional parameter. There are numerous strict
@@ -117,7 +118,9 @@ func checkTerminalFlags(ps *ParamSet) {
 	}
 }
 
-func (bp *ByPos) processParam(source string, loc *location.L, val string) {
+// processParam will call the parameter's setter processor and then record
+// any errors
+func (bp *ByPos) processParam(loc *location.L, val string) {
 	err := bp.setter.SetWithVal(bp.name, val)
 
 	if err != nil {
