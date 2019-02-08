@@ -3,8 +3,9 @@ package psetter
 import (
 	"errors"
 	"fmt"
-	"github.com/nickwells/param.mod/v2/param"
 	"strings"
+
+	"github.com/nickwells/param.mod/v2/param"
 )
 
 // EnumMapSetter sets the entry in a map of strings. The values must be in
@@ -32,9 +33,11 @@ func (s EnumMapSetter) Set(_ string) error {
 func (s EnumMapSetter) SetWithVal(_ string, paramVal string) error {
 	sep := s.GetSeparator()
 	values := strings.Split(paramVal, sep)
-	for _, v := range values {
+	for i, v := range values {
 		if _, ok := s.AllowedVals[v]; !ok {
-			return errors.New("invalid value: '" + v)
+			return fmt.Errorf(
+				"invalid value: '%s': part: %d (='%s') is not an allowed value",
+				paramVal, i+1, v)
 		}
 	}
 	for _, v := range values {
