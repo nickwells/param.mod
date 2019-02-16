@@ -12,8 +12,8 @@ import (
 	"github.com/nickwells/testhelper.mod/testhelper"
 )
 
-// TestParamSet ...
-func TestParamSet(t *testing.T) {
+// TestPSet ...
+func TestPSet(t *testing.T) {
 	var buff bytes.Buffer
 
 	testCases := []struct {
@@ -98,9 +98,9 @@ type groupNameAndDesc struct {
 	desc string
 }
 
-// TestParamSet_SetGroupDescription sets group descriptions and tests the
+// TestPSet_SetGroupDescription sets group descriptions and tests the
 // resulting PSet matches expectations
-func TestParamSet_SetGroupDescription(t *testing.T) {
+func TestPSet_SetGroupDescription(t *testing.T) {
 	testCases := []struct {
 		name             string
 		sgdParams        []groupNameAndDesc
@@ -224,8 +224,8 @@ func TestParamSet_SetGroupDescription(t *testing.T) {
 	}
 }
 
-// TestParamSet_SetTerminalParam sets override values for the terminal parameter
-func TestParamSet_SetTerminalParam(t *testing.T) {
+// TestPSet_SetTerminalParam sets override values for the terminal parameter
+func TestPSet_SetTerminalParam(t *testing.T) {
 	testCases := []struct {
 		name  string
 		tpVal string
@@ -262,9 +262,9 @@ func TestParamSet_SetTerminalParam(t *testing.T) {
 	}
 }
 
-// ExampleParamSet_Add shows the usage of the Add method of the
+// ExamplePSet_Add shows the usage of the Add method of the
 // PSet. This is used to add new parameters into the set.
-func ExampleParamSet_Add() {
+func ExamplePSet_Add() {
 	ps, _ := paramset.New()
 
 	// we declare f here for the purposes of the example but typically it
