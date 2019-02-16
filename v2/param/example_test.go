@@ -12,7 +12,7 @@ import (
 // advisable to have the parameter setting grouped into separate functions
 // (see the setByFunc example) but in order to show the use of the param
 // funcs we have added the new parameters in line after constructing the new
-// ParamSet.
+// PSet.
 //
 // Note that the parameter names are given without any leading dashes. This
 // is because they can be passed on the command line or through parameter
@@ -124,7 +124,7 @@ func Example_withEnvVar() {
 }
 
 // Example_typicalUse shows how you would typically use the param
-// package. Construct the ParamSet, adding any parameters through AddParam
+// package. Construct the PSet, adding any parameters through AddParam
 // functions either from the main package or else package specific parameter
 // setters. Set some description of the program. Then just call Parse with no
 // parameters so that it will use the command line parameters
@@ -141,8 +141,8 @@ const exampleGroupName = "groupname"
 var ValExample1 bool
 var ValExample2 int64
 
-// AddParams1 will set the "example1" parameter in the ParamSet
-func AddParams1(ps *param.ParamSet) error {
+// AddParams1 will set the "example1" parameter in the PSet
+func AddParams1(ps *param.PSet) error {
 	ps.SetGroupDescription(exampleGroupName,
 		"The parameters for my command")
 
@@ -155,8 +155,8 @@ func AddParams1(ps *param.ParamSet) error {
 	return nil
 }
 
-// AddParams2 will set the "example2" parameter in the ParamSet
-func AddParams2(ps *param.ParamSet) error {
+// AddParams2 will set the "example2" parameter in the PSet
+func AddParams2(ps *param.PSet) error {
 	ps.Add("example2",
 		psetter.Int64Setter{Value: &ValExample2},
 		"the description of the parameter",

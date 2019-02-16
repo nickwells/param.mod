@@ -28,13 +28,13 @@ const DfltProgName = "PROGRAM NAME UNKNOWN"
 // key of an empty string.
 type ErrMap map[string][]error
 
-// ParamSet represents a collection of parameters to be parsed together. A
-// program will typically only have one ParamSet but having this makes it
-// easier to retain control. You would create the ParamSet in main using the
+// PSet represents a collection of parameters to be parsed together. A
+// program will typically only have one PSet but having this makes it
+// easier to retain control. You would create the PSet in main using the
 // paramset.New func which will automatically set the standard help
 // member. This lets you know precisely which parameters have been enabled
 // before calling Parse
-type ParamSet struct {
+type PSet struct {
 	parsed          bool
 	parseCalledFrom string
 
@@ -53,7 +53,6 @@ type ParamSet struct {
 	configFiles     []ConfigFileDetails
 	remainingParams []string
 	terminalParam   string
-	maxParamNameLen int
 	remHandler      RemHandler
 
 	errWriter io.Writer
@@ -64,10 +63,12 @@ type ParamSet struct {
 	exitOnParamSetupErr bool
 }
 
-// ParamSetOptFunc is the type of a function that can be passed to NewSet
-type ParamSetOptFunc func(ps *ParamSet) error
+// PSetOptFunc is the type of a function that can be passed to
+// NewSet. These functions can be used to set optional behavioiur on the
+// parameter set.
+type PSetOptFunc func(ps *PSet) error
 
-// SetHelper returns a ParamSetOptFunc which can be passed to NewSet. This
+// SetHelper returns a PSetOptFunc which can be passed to NewSet. This
 // sets the value of the helper to be used by the parameter set and adds the
 // parameters that the helper needs. Note that the helper must be set and so
 // you must pass some such function. To avoid lots of duplicate code there
@@ -75,8 +76,8 @@ type ParamSetOptFunc func(ps *ParamSet) error
 //
 // This can only be set once and this will return an error if the helper has
 // already been set
-func SetHelper(h Helper) ParamSetOptFunc {
-	return func(ps *ParamSet) error {
+func SetHelper(h Helper) PSetOptFunc {
+	return func(ps *PSet) error {
 		if ps.helper != nil {
 			return errors.New("The helper has already been set")
 		}
@@ -95,7 +96,7 @@ func SetHelper(h Helper) ParamSetOptFunc {
 // remainder handler to the NullRemHandler and process the remainder yourself
 // in the body of the program. Alternatively you can pass a RemHandler that
 // will handle the remainder in the Parse method.
-func (ps *ParamSet) SetRemHandler(rh RemHandler) error {
+func (ps *PSet) SetRemHandler(rh RemHandler) error {
 	if rh == nil {
 		return errors.New("The remainder handler must not be nil")
 	}
@@ -111,15 +112,15 @@ func (ps *ParamSet) SetRemHandler(rh RemHandler) error {
 // DontExitOnParamSetupErr turns off the standard behaviour of exiting if an
 // error is detected while initialising the param set. The error is reported
 // in either case
-func DontExitOnParamSetupErr(ps *ParamSet) error {
+func DontExitOnParamSetupErr(ps *PSet) error {
 	ps.exitOnParamSetupErr = false
 	return nil
 }
 
-// SetErrWriter returns a ParamSetOptFunc which can be passed to NewSet. It
+// SetErrWriter returns a PSetOptFunc which can be passed to NewSet. It
 // sets the Writer to which error messages are written
-func SetErrWriter(w io.Writer) ParamSetOptFunc {
-	return func(ps *ParamSet) error {
+func SetErrWriter(w io.Writer) PSetOptFunc {
+	return func(ps *PSet) error {
 		if w == nil {
 			return fmt.Errorf("param.SetErrWriter cannot take a nil value")
 		}
@@ -128,10 +129,10 @@ func SetErrWriter(w io.Writer) ParamSetOptFunc {
 	}
 }
 
-// SetStdWriter returns a ParamSetOptFunc which can be passed to NewSet. It
+// SetStdWriter returns a PSetOptFunc which can be passed to NewSet. It
 // sets the Writer to which standard messages are written
-func SetStdWriter(w io.Writer) ParamSetOptFunc {
-	return func(ps *ParamSet) error {
+func SetStdWriter(w io.Writer) PSetOptFunc {
+	return func(ps *PSet) error {
 		if w == nil {
 			return fmt.Errorf("param.SetStdWriter cannot take a nil value")
 		}
@@ -142,39 +143,39 @@ func SetStdWriter(w io.Writer) ParamSetOptFunc {
 
 // StdWriter returns the current value of the StdWriter to which standard
 // messages should be written
-func (ps *ParamSet) StdWriter() io.Writer {
+func (ps *PSet) StdWriter() io.Writer {
 	return ps.stdWriter
 }
 
 // ErrWriter returns the current value of the ErrWriter to which error
 // messages should be written
-func (ps *ParamSet) ErrWriter() io.Writer {
+func (ps *PSet) ErrWriter() io.Writer {
 	return ps.errWriter
 }
 
-// SetProgramDescription returns a ParamSetOptFunc which can be passed to
+// SetProgramDescription returns a PSetOptFunc which can be passed to
 // NewSet. It will set the program description
-func SetProgramDescription(desc string) ParamSetOptFunc {
-	return func(ps *ParamSet) error {
+func SetProgramDescription(desc string) PSetOptFunc {
+	return func(ps *PSet) error {
 		ps.progDesc = desc
 		return nil
 	}
 }
 
 // SetProgramDescription sets the program description
-func (ps *ParamSet) SetProgramDescription(desc string) {
+func (ps *PSet) SetProgramDescription(desc string) {
 	ps.progDesc = desc
 }
 
 // ProgDesc returns the program description
-func (ps *ParamSet) ProgDesc() string {
+func (ps *PSet) ProgDesc() string {
 	return ps.progDesc
 }
 
-// NewSet creates a new ParamSet with the various maps and slices
+// NewSet creates a new PSet with the various maps and slices
 // initialised
-func NewSet(psof ...ParamSetOptFunc) (*ParamSet, error) {
-	ps := &ParamSet{
+func NewSet(psof ...PSetOptFunc) (*PSet, error) {
+	ps := &PSet{
 		parseCalledFrom: "Parse() not yet called",
 		progName:        DfltProgName,
 		nameToParam:     make(map[string]*ByName),
@@ -197,9 +198,9 @@ func NewSet(psof ...ParamSetOptFunc) (*ParamSet, error) {
 	for _, f := range psof {
 		err := f(ps)
 		if err != nil {
-			fmt.Fprintf(
+			fmt.Fprintf( // nolint: errcheck
 				ps.errWriter,
-				"An error was detected while creating the ParamSet: %s\n",
+				"An error was detected while creating the PSet: %s\n",
 				err)
 			if ps.exitOnParamSetupErr {
 				os.Exit(1)
@@ -213,8 +214,8 @@ func NewSet(psof ...ParamSetOptFunc) (*ParamSet, error) {
 	}
 
 	if ps.helper == nil {
-		var err = errors.New("A helper must be passed when creating a ParamSet")
-		fmt.Fprintln(ps.errWriter, err)
+		var err = errors.New("A helper must be passed when creating a PSet")
+		fmt.Fprintln(ps.errWriter, err) // nolint: errcheck
 		if ps.exitOnParamSetupErr {
 			os.Exit(1)
 		}
@@ -225,27 +226,31 @@ func NewSet(psof ...ParamSetOptFunc) (*ParamSet, error) {
 	return ps, nil
 }
 
+// Remainder returns any arguments that come after the terminal parameter.
+// Note this may be a nil slice if all the parameters have been processed.
+func (ps *PSet) Remainder() []string { return ps.remainingParams }
+
 // Errors returns the map of errors for the param set
-func (ps ParamSet) Errors() ErrMap { return ps.errors }
+func (ps PSet) Errors() ErrMap { return ps.errors }
 
 // Help will call the helper's Help function
-func (ps *ParamSet) Help(message ...string) {
+func (ps *PSet) Help(message ...string) {
 	ps.helper.Help(ps, message...)
 }
 
 // ProgName returns the name of the program - the value of the
 // zeroth argument
-func (ps *ParamSet) ProgName() string { return ps.progName }
+func (ps *PSet) ProgName() string { return ps.progName }
 
 // AreSet will return true if Parse has been called or false otherwise
-func (ps *ParamSet) AreSet() bool { return ps.parsed }
+func (ps *PSet) AreSet() bool { return ps.parsed }
 
 // UnusedParams returns a copy of the map of unused parameter names. The map
 // associates a parameter name with a slice of strings which records where
 // the parameter has been set. Unused parameters are always from config files
 // or environment variables; unrecognised parameters given on the command
 // line are reported as errors.
-func (ps *ParamSet) UnusedParams() map[string][]string {
+func (ps *PSet) UnusedParams() map[string][]string {
 	up := make(map[string][]string, len(ps.unusedParams))
 	for pName := range ps.unusedParams {
 		copy(up[pName], ps.unusedParams[pName])
@@ -254,22 +259,19 @@ func (ps *ParamSet) UnusedParams() map[string][]string {
 }
 
 // markAsUnused will add the named parameter to the list of unused parameters
-func (ps *ParamSet) markAsUnused(name string, loc *location.L) {
+func (ps *PSet) markAsUnused(name string, loc *location.L) {
 	ps.unusedParams[name] = append(ps.unusedParams[name], loc.String())
 }
 
 // cmdLineOnly returns true if the parameter should only be set from the
 // command line.
-func (ps *ParamSet) cmdLineOnly(p *ByName) bool {
-	if p.attributes&CommandLineOnly == CommandLineOnly {
-		return true
-	}
-	return false
+func (ps *PSet) cmdLineOnly(p *ByName) bool {
+	return p.attributes&CommandLineOnly == CommandLineOnly
 }
 
 // recordCmdLineOnlyErr records as an error the attempt to set a command-line
 // only parameter from a non-command line source
-func (ps *ParamSet) recordCmdLineOnlyErr(paramName string, loc *location.L) {
+func (ps *PSet) recordCmdLineOnlyErr(paramName string, loc *location.L) {
 	ps.errors[paramName] = append(ps.errors[paramName],
 		loc.Error("The parameter can only be set on the command line"))
 }
@@ -287,7 +289,7 @@ func cleanParamParts(p *ByName, paramParts []string) []string {
 // recordUnexpectedParam records that the named parameter is not a parameter
 // of this program and if a close match is found it will suggest that
 // alternative in the error message
-func (ps *ParamSet) recordUnexpectedParam(paramName string, loc *location.L) {
+func (ps *PSet) recordUnexpectedParam(paramName string, loc *location.L) {
 	msg := "this is not a parameter of this program."
 
 	bestSuggestion := ps.findClosestMatch(paramName)
@@ -298,7 +300,7 @@ func (ps *ParamSet) recordUnexpectedParam(paramName string, loc *location.L) {
 	ps.errors[paramName] = append(ps.errors[paramName], loc.Error(msg))
 }
 
-func (ps *ParamSet) setValueFromEnv(paramParts []string, loc *location.L) bool {
+func (ps *PSet) setValueFromEnv(paramParts []string, loc *location.L) bool {
 	paramName := paramParts[0]
 	p, exists := ps.nameToParam[paramName]
 
@@ -325,7 +327,7 @@ const (
 	paramNeedNotExist
 )
 
-func (ps *ParamSet) setValueFromGroupFile(paramParts []string, loc *location.L, gName string) {
+func (ps *PSet) setValueFromGroupFile(paramParts []string, loc *location.L, gName string) {
 	//XXX - needs to be changed
 	paramName := paramParts[0]
 	p, exists := ps.nameToParam[paramName]
@@ -348,10 +350,9 @@ func (ps *ParamSet) setValueFromGroupFile(paramParts []string, loc *location.L, 
 	paramParts = cleanParamParts(p, paramParts)
 
 	p.processParam(loc, paramParts)
-	return
 }
 
-func (ps *ParamSet) setValueFromFile(paramParts []string, loc *location.L, eRule existenceRule) {
+func (ps *PSet) setValueFromFile(paramParts []string, loc *location.L, eRule existenceRule) {
 	paramName := paramParts[0]
 	p, exists := ps.nameToParam[paramName]
 
@@ -372,12 +373,11 @@ func (ps *ParamSet) setValueFromFile(paramParts []string, loc *location.L, eRule
 	paramParts = cleanParamParts(p, paramParts)
 
 	p.processParam(loc, paramParts)
-	return
 }
 
 // GetParamByName will return the named parameter if it can be found. The error
 // will be set if not
-func (ps *ParamSet) GetParamByName(name string) (p *ByName, err error) {
+func (ps *PSet) GetParamByName(name string) (p *ByName, err error) {
 	name = strings.TrimSpace(name)
 
 	p, exists := ps.nameToParam[name]
@@ -390,7 +390,7 @@ func (ps *ParamSet) GetParamByName(name string) (p *ByName, err error) {
 
 // GetParamByPos will return the positional parameter if it exists. The error
 // will be set if not.
-func (ps *ParamSet) GetParamByPos(idx int) (p *ByPos, err error) {
+func (ps *PSet) GetParamByPos(idx int) (p *ByPos, err error) {
 	if idx < 0 || idx >= len(ps.byPos) {
 		return nil, fmt.Errorf("parameter %d does not exist", idx)
 	}
@@ -404,22 +404,17 @@ func (ps *ParamSet) GetParamByPos(idx int) (p *ByPos, err error) {
 // function should return an error (or nil) to be added to the list of errors
 // detected. All the checks will be called even if one of them returns an
 // error
-func (ps *ParamSet) AddFinalCheck(fcf FinalCheckFunc) {
+func (ps *PSet) AddFinalCheck(fcf FinalCheckFunc) {
 	ps.finalChecks = append(ps.finalChecks, fcf)
 }
 
 // SetTerminalParam sets the value of the parameter that is used to terminate
 // the processing of parameters. This can be used to override the default
 // value which is set to DfltTerminalParam
-func (ps *ParamSet) SetTerminalParam(s string) { ps.terminalParam = s }
+func (ps *PSet) SetTerminalParam(s string) { ps.terminalParam = s }
 
 // TerminalParam will return the current value of the terminal parameter.
-func (ps *ParamSet) TerminalParam() string { return ps.terminalParam }
-
-// countHiddenParams ...
-func countHiddenParams(ps []*ByName) {
-
-}
+func (ps *PSet) TerminalParam() string { return ps.terminalParam }
 
 // fixGroups checks that the parameter groups correctly reflect the
 // parameters. For instance, the parameter can be in the wrong group if the
@@ -429,7 +424,7 @@ func countHiddenParams(ps []*ByName) {
 // used in this way but better safe than sorry. This will also clear out any
 // groups with no parameters, seth the HiddenCount on each group and finally
 // sort the parameters in each group in alphabetical order.
-func (ps *ParamSet) fixGroups() {
+func (ps *PSet) fixGroups() {
 	for name, g := range ps.groups {
 		var badGroup bool
 		for _, p := range g.Params {
@@ -467,7 +462,7 @@ func (ps *ParamSet) fixGroups() {
 // GetGroups returns a slice of Groups sorted by group name. Each
 // Group element has a slice of ByName parameters and these are sorted
 // by the primary parameter name.
-func (ps *ParamSet) GetGroups() []*Group {
+func (ps *PSet) GetGroups() []*Group {
 	ps.fixGroups()
 	grpParams := make([]*Group, 0, len(ps.groups))
 	for _, g := range ps.groups {

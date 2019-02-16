@@ -12,7 +12,7 @@ import (
 // considered as potential parameters. This prefix is stripped from the name
 // and any underscores are replaced with dashes before the environment
 // variable name is passed on for matching against parameters
-func (ps *ParamSet) SetEnvPrefix(prefix string) {
+func (ps *PSet) SetEnvPrefix(prefix string) {
 	panicMsgIntro := fmt.Sprintf(
 		"Can't set '%s' as an environment variable prefix.", prefix)
 	if prefix == "" {
@@ -26,7 +26,7 @@ func (ps *ParamSet) SetEnvPrefix(prefix string) {
 // AddEnvPrefix adds a new prefix to the list of environment variable
 // prefixes. If the new prefix is empty or a substring of any of the existing
 // prefixes or vice versa then it panics
-func (ps *ParamSet) AddEnvPrefix(prefix string) {
+func (ps *PSet) AddEnvPrefix(prefix string) {
 	panicMsgIntro := fmt.Sprintf(
 		"Can't add '%s' as an environment variable prefix.", prefix)
 	if prefix == "" {
@@ -47,7 +47,7 @@ func (ps *ParamSet) AddEnvPrefix(prefix string) {
 }
 
 // EnvPrefixes returns a copy of the current environment prefixes
-func (ps *ParamSet) EnvPrefixes() []string {
+func (ps *PSet) EnvPrefixes() []string {
 	ep := make([]string, len(ps.envPrefixes))
 	copy(ep, ps.envPrefixes)
 	return ep
@@ -70,7 +70,7 @@ func ConvertEnvVarNameToParamName(name string) string {
 	return strings.Replace(name, "_", "-", -1)
 }
 
-func (ps *ParamSet) getParamsFromEnvironment() {
+func (ps *PSet) getParamsFromEnvironment() {
 	loc := location.New("environment")
 
 	for _, param := range os.Environ() {

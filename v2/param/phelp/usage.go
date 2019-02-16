@@ -17,9 +17,9 @@ const paramIndent = 8
 const descriptionIndent = 16
 const textIndent = 4
 
-// badGroups checks that all the groups are in the ParamSet and reports the
+// badGroups checks that all the groups are in the PSet and reports the
 // error if not. It returns a count of the number of problems found
-func badGroups(ps *param.ParamSet, groups map[string]bool, name string) bool {
+func badGroups(ps *param.PSet, groups map[string]bool, name string) bool {
 	badGroups := 0
 	prefix := "Error: "
 	for g := range groups {
@@ -58,7 +58,7 @@ func (h StdHelp) printOptValNote(w io.Writer) {
 // Help prints the messages and then a standardised usage message based on
 // the parameters supplied to the param set. It then exits with an exit
 // status of 1
-func (h StdHelp) Help(ps *param.ParamSet, messages ...string) {
+func (h StdHelp) Help(ps *param.PSet, messages ...string) {
 	w := ps.ErrWriter()
 	for _, message := range messages {
 		formatText(w, message, 0, 0)
@@ -158,7 +158,7 @@ func (h StdHelp) printParamUsage(w io.Writer, p *param.ByName) {
 		"Initial value: ", p.InitialValue(), descriptionIndent)
 }
 
-func (h StdHelp) printPositionalParams(w io.Writer, ps *param.ParamSet) {
+func (h StdHelp) printPositionalParams(w io.Writer, ps *param.PSet) {
 	intro := ""
 	for i := 0; ; i++ {
 		bp, err := ps.GetParamByPos(i)
@@ -225,7 +225,7 @@ func (h StdHelp) showGroup(g string) bool {
 	return true
 }
 
-func (h StdHelp) printParams(w io.Writer, ps *param.ParamSet) {
+func (h StdHelp) printParams(w io.Writer, ps *param.PSet) {
 	paramGroups := ps.GetGroups()
 
 	for _, pg := range paramGroups {
@@ -261,7 +261,7 @@ func printGroupConfigFile(w io.Writer, pg *param.Group) {
 	}
 }
 
-func (h StdHelp) printGroups(w io.Writer, ps *param.ParamSet) {
+func (h StdHelp) printGroups(w io.Writer, ps *param.PSet) {
 	paramGroups := ps.GetGroups()
 
 	for _, pg := range paramGroups {
@@ -273,7 +273,7 @@ func (h StdHelp) printGroups(w io.Writer, ps *param.ParamSet) {
 
 // printAlternativeSources prints the name(s) of the configuration file
 // and any environment variable prefixes (if set)
-func (h StdHelp) printAlternativeSources(ps *param.ParamSet) {
+func (h StdHelp) printAlternativeSources(ps *param.PSet) {
 	ep := ps.EnvPrefixes()
 	var hasEnvPrefixes bool
 	if len(ep) > 0 {

@@ -17,7 +17,7 @@ import (
 // the help message); the place(s) where it has been set - the last one takes
 // precedence and the attributes
 type ByName struct {
-	ps              *ParamSet
+	ps              *PSet
 	name            string
 	altNames        []string
 	groupName       string
@@ -134,7 +134,7 @@ type OptFunc func(p *ByName) error
 //
 // Various other features of the parameter can be set by the OptFuncs which
 // may be passed after the description.
-func (ps *ParamSet) Add(name string,
+func (ps *PSet) Add(name string,
 	setter Setter,
 	desc string,
 	opts ...OptFunc) *ByName {
@@ -183,8 +183,8 @@ func (ps *ParamSet) Add(name string,
 }
 
 // addByNameToGroup adds the ByName parameter to the appropriate parameter
-// group in the ParamSet
-func (ps *ParamSet) addByNameToGroup(p *ByName) {
+// group in the PSet
+func (ps *PSet) addByNameToGroup(p *ByName) {
 	g, ok := ps.groups[p.groupName]
 	if !ok {
 		g = &Group{Name: p.groupName}
@@ -281,13 +281,13 @@ func (p *ByName) processParam(loc *location.L, paramParts []string) {
 	}
 }
 
-// StdWriter returns the standard writer of the ParamSet that this parameter
+// StdWriter returns the standard writer of the PSet that this parameter
 // belongs to
 func (p ByName) StdWriter() io.Writer {
 	return p.ps.StdWriter()
 }
 
-// ErrWriter returns the error writer of the ParamSet that this parameter
+// ErrWriter returns the error writer of the PSet that this parameter
 // belongs to
 func (p ByName) ErrWriter() io.Writer {
 	return p.ps.ErrWriter()

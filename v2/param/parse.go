@@ -40,7 +40,7 @@ import (
 // by default). If no trailing arguments are expected and no handler has been
 // set for handling them then the default handler is called which will record
 // an error and call the helper.ErrorHandler method.
-func (ps *ParamSet) Parse(args ...[]string) ErrMap {
+func (ps *PSet) Parse(args ...[]string) ErrMap {
 	if ps.parsed {
 		errMap := ErrMap{
 			"": []error{
@@ -112,12 +112,12 @@ func caller() string {
 
 // setParsed records that the parameters have already been parsed and where
 // it has been called from
-func (ps *ParamSet) setParsed() {
+func (ps *PSet) setParsed() {
 	ps.parsed = true
 	ps.parseCalledFrom = caller()
 }
 
-func (ps *ParamSet) detectMandatoryParamsNotSet() {
+func (ps *PSet) detectMandatoryParamsNotSet() {
 	for _, p := range ps.byName {
 		if p.attributes&MustBeSet == MustBeSet &&
 			len(p.whereIsParamSet) == 0 {

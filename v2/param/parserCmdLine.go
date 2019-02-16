@@ -9,14 +9,9 @@ import (
 	"github.com/nickwells/strdist.mod/strdist"
 )
 
-// Remainder returns any arguments that come after the terminal
-// parameter. Note this may be a nil slice if all the parameters have been
-// processed.
-func (ps *ParamSet) Remainder() []string { return ps.remainingParams }
-
 // findClosestMatch finds parameters with the name which is the shortest
 // distance from the passed value and returns a string describing them
-func (ps *ParamSet) findClosestMatch(badParam string) string {
+func (ps *PSet) findClosestMatch(badParam string) string {
 	paramNames := make([]string, 0, len(ps.nameToParam))
 	for p := range ps.nameToParam {
 		paramNames = append(paramNames, p)
@@ -28,7 +23,7 @@ func (ps *ParamSet) findClosestMatch(badParam string) string {
 	return strings.Join(matches, " or ")
 }
 
-func (ps *ParamSet) reportMissingParams(missingCount int) {
+func (ps *PSet) reportMissingParams(missingCount int) {
 	var err error
 
 	byPosMiniHelp := "The first"
@@ -58,12 +53,19 @@ func (ps *ParamSet) reportMissingParams(missingCount int) {
 	ps.errors[""] = append(ps.errors[""], err)
 }
 
-func (ps *ParamSet) getParamsFromStringSlice(loc *location.L, params []string) {
+type parsingStatus int
+
+const (
+	parsingFinished parsingStatus = iota
+	parsingIncomplete
+)
+
+func (ps *PSet) handleParamsByPos(loc *location.L, params []string) parsingStatus {
 	if len(ps.byPos) > 0 {
 		missingCount := len(ps.byPos) - len(params)
 		if missingCount > 0 {
 			ps.reportMissingParams(missingCount)
-			return
+			return parsingFinished
 		}
 
 		for i, pp := range ps.byPos {
@@ -75,11 +77,14 @@ func (ps *ParamSet) getParamsFromStringSlice(loc *location.L, params []string) {
 
 			if pp.isTerminal {
 				ps.remainingParams = params[i+1:]
-				return
+				return parsingFinished
 			}
 		}
 	}
+	return parsingIncomplete
+}
 
+func (ps *PSet) handleParamsByName(loc *location.L, params []string) {
 	for i := len(ps.byPos); i < len(params); i++ {
 		pStr := params[i]
 		loc.Incr()
@@ -113,6 +118,15 @@ func (ps *ParamSet) getParamsFromStringSlice(loc *location.L, params []string) {
 			ps.recordUnexpectedParam(trimmedParam, loc)
 		}
 	}
+}
+
+func (ps *PSet) getParamsFromStringSlice(loc *location.L, params []string) {
+	status := ps.handleParamsByPos(loc, params)
+	if status == parsingFinished {
+		return
+	}
+
+	ps.handleParamsByName(loc, params)
 }
 
 // trimParam trims the parameter of any leading dashes

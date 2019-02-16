@@ -8,10 +8,10 @@ import (
 	"github.com/nickwells/param.mod/v2/param/phelp"
 )
 
-// New creates a new ParamSet with the standard helper set. This is the
+// New creates a new PSet with the standard helper set. This is the
 // one you should use in most cases
-func New(psof ...param.ParamSetOptFunc) (*param.ParamSet, error) {
-	opts := make([]param.ParamSetOptFunc, 0, len(psof)+1)
+func New(psof ...param.PSetOptFunc) (*param.PSet, error) {
+	opts := make([]param.PSetOptFunc, 0, len(psof)+1)
 	opts = append(opts, param.SetHelper(&phelp.SH))
 	opts = append(opts, psof...)
 	return param.NewSet(opts...)
@@ -21,9 +21,9 @@ func New(psof ...param.ParamSetOptFunc) (*param.ParamSet, error) {
 // particular there are no parameters added
 type noHelp struct{}
 
-func (nh noHelp) ProcessArgs(ps *param.ParamSet)       {}
-func (nh noHelp) Help(ps *param.ParamSet, s ...string) {}
-func (nh noHelp) AddParams(ps *param.ParamSet)         {}
+func (nh noHelp) ProcessArgs(ps *param.PSet)       {}
+func (nh noHelp) Help(ps *param.PSet, s ...string) {}
+func (nh noHelp) AddParams(ps *param.PSet)         {}
 func (nh noHelp) ErrorHandler(w io.Writer, name string, errs param.ErrMap) {
 	if len(errs) == 0 {
 		return
@@ -35,7 +35,7 @@ func (nh noHelp) ErrorHandler(w io.Writer, name string, errs param.ErrMap) {
 
 var nh noHelp
 
-// NewNoHelp creates a new ParamSet with the helper set to the noHelp
+// NewNoHelp creates a new PSet with the helper set to the noHelp
 // helper which does nothing. In particular it will not add any parameters
 // and so it returns a suitable parameter set for the case where you want to
 // add positional parameters the last of which is terminal. This style of
@@ -47,6 +47,6 @@ var nh noHelp
 //
 // If errors are detected then they will be reported and the program will
 // exit.
-func NewNoHelp(psof ...param.ParamSetOptFunc) (*param.ParamSet, error) {
+func NewNoHelp(psof ...param.PSetOptFunc) (*param.PSet, error) {
 	return param.NewSet(append(psof, param.SetHelper(nh))...)
 }

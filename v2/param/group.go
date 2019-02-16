@@ -63,11 +63,11 @@ func (g *Group) SetHiddenCount() int {
 // SetGroupDescription will call AddGroup
 //
 // Deprecated: use AddGroup
-func (ps *ParamSet) SetGroupDescription(name, desc string) {
+func (ps *PSet) SetGroupDescription(name, desc string) {
 	ps.AddGroup(name, desc)
 }
 
-// AddGroup will add a new param group to the ParamSet and set the
+// AddGroup will add a new param group to the PSet and set the
 // descriptive text. It will panic if the description has already been set -
 // this is to ensure that the group name is distinct. This description is
 // shown when the usage message is printed. If the short-form description is
@@ -91,7 +91,7 @@ func (ps *ParamSet) SetGroupDescription(name, desc string) {
 //
 // The group name will have any leading and trailing spaces deleted before
 // use.
-func (ps *ParamSet) AddGroup(name, desc string) {
+func (ps *PSet) AddGroup(name, desc string) {
 	name = strings.TrimSpace(name)
 	if err := groupNameCheck(name); err != nil {
 		panic("Invalid group name: " + err.Error())
@@ -119,7 +119,7 @@ func (ps *ParamSet) AddGroup(name, desc string) {
 
 // GetGroupDesc returns the description for the named group or the empty
 // string if the group does not exist.
-func (ps *ParamSet) GetGroupDesc(grpName string) string {
+func (ps *PSet) GetGroupDesc(grpName string) string {
 	g, ok := ps.groups[grpName]
 	if !ok {
 		return ""
@@ -127,9 +127,9 @@ func (ps *ParamSet) GetGroupDesc(grpName string) string {
 	return g.Desc
 }
 
-// HasGroupName returns true if the ParamSet has a group with the given name,
+// HasGroupName returns true if the PSet has a group with the given name,
 // false otherwise
-func (ps *ParamSet) HasGroupName(grpName string) bool {
+func (ps *PSet) HasGroupName(grpName string) bool {
 	_, ok := ps.groups[grpName]
 	return ok
 }

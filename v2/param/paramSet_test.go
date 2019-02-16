@@ -18,7 +18,7 @@ func TestParamSet(t *testing.T) {
 
 	testCases := []struct {
 		testName    string
-		psOpts      []param.ParamSetOptFunc
+		psOpts      []param.PSetOptFunc
 		errExpected bool
 		expEStr     string
 	}{
@@ -27,14 +27,14 @@ func TestParamSet(t *testing.T) {
 		},
 		{
 			testName: "set writers",
-			psOpts: []param.ParamSetOptFunc{
+			psOpts: []param.PSetOptFunc{
 				param.SetStdWriter(&buff),
 				param.SetErrWriter(&buff),
 			},
 		},
 		{
 			testName: "bad error writer",
-			psOpts: []param.ParamSetOptFunc{
+			psOpts: []param.PSetOptFunc{
 				param.SetErrWriter(&buff),
 				param.SetErrWriter(nil),
 			},
@@ -43,7 +43,7 @@ func TestParamSet(t *testing.T) {
 		},
 		{
 			testName: "bad std writer",
-			psOpts: []param.ParamSetOptFunc{
+			psOpts: []param.PSetOptFunc{
 				param.SetErrWriter(&buff),
 				param.SetStdWriter(nil),
 			},
@@ -52,9 +52,9 @@ func TestParamSet(t *testing.T) {
 		},
 		{
 			testName: "setopt error",
-			psOpts: []param.ParamSetOptFunc{
+			psOpts: []param.PSetOptFunc{
 				param.SetErrWriter(&buff),
-				func(ps *param.ParamSet) error { return errors.New("whoops") },
+				func(ps *param.PSet) error { return errors.New("whoops") },
 			},
 			errExpected: true,
 			expEStr:     "whoops",
@@ -62,7 +62,7 @@ func TestParamSet(t *testing.T) {
 	}
 
 	for i, tc := range testCases {
-		opts := make([]param.ParamSetOptFunc, 1, 1+len(tc.psOpts))
+		opts := make([]param.PSetOptFunc, 1, 1+len(tc.psOpts))
 		opts[0] = param.DontExitOnParamSetupErr
 		opts = append(opts, tc.psOpts...)
 
@@ -99,7 +99,7 @@ type groupNameAndDesc struct {
 }
 
 // TestParamSet_SetGroupDescription sets group descriptions and tests the
-// resulting ParamSet matches expectations
+// resulting PSet matches expectations
 func TestParamSet_SetGroupDescription(t *testing.T) {
 	testCases := []struct {
 		name             string
@@ -112,15 +112,15 @@ func TestParamSet_SetGroupDescription(t *testing.T) {
 		{
 			name: "all good",
 			sgdParams: []groupNameAndDesc{
-				groupNameAndDesc{name: "a", desc: "group A desc"},
-				groupNameAndDesc{name: "b", desc: "group B desc"},
-				groupNameAndDesc{name: "c", desc: "group C desc"},
+				{name: "a", desc: "group A desc"},
+				{name: "b", desc: "group B desc"},
+				{name: "c", desc: "group C desc"},
 			},
 			expectedDescs: []groupNameAndDesc{
-				groupNameAndDesc{name: "a", desc: "group A desc"},
-				groupNameAndDesc{name: "b", desc: "group B desc"},
-				groupNameAndDesc{name: "c", desc: "group C desc"},
-				groupNameAndDesc{name: "d", desc: ""},
+				{name: "a", desc: "group A desc"},
+				{name: "b", desc: "group B desc"},
+				{name: "c", desc: "group C desc"},
+				{name: "d", desc: ""},
 			},
 			groupsExpected: map[string]bool{
 				"a": true,
@@ -132,9 +132,9 @@ func TestParamSet_SetGroupDescription(t *testing.T) {
 		{
 			name: "reset description",
 			sgdParams: []groupNameAndDesc{
-				groupNameAndDesc{name: "a", desc: "group A desc"},
-				groupNameAndDesc{name: "b", desc: "group B desc"},
-				groupNameAndDesc{name: "b", desc: "other group B desc"},
+				{name: "a", desc: "group A desc"},
+				{name: "b", desc: "group B desc"},
+				{name: "b", desc: "other group B desc"},
 			},
 			panicExpected: true,
 			panicMsgContains: []string{
@@ -142,9 +142,9 @@ func TestParamSet_SetGroupDescription(t *testing.T) {
 				"group B desc",
 			},
 			expectedDescs: []groupNameAndDesc{
-				groupNameAndDesc{name: "a", desc: "group A desc"},
-				groupNameAndDesc{name: "b", desc: "group B desc"},
-				groupNameAndDesc{name: "d", desc: ""},
+				{name: "a", desc: "group A desc"},
+				{name: "b", desc: "group B desc"},
+				{name: "d", desc: ""},
 			},
 			groupsExpected: map[string]bool{
 				"a": true,
@@ -155,7 +155,7 @@ func TestParamSet_SetGroupDescription(t *testing.T) {
 		{
 			name: "bad group name",
 			sgdParams: []groupNameAndDesc{
-				groupNameAndDesc{name: "99", desc: "group 99 desc"},
+				{name: "99", desc: "group 99 desc"},
 			},
 			panicExpected: true,
 			panicMsgContains: []string{
@@ -163,8 +163,8 @@ func TestParamSet_SetGroupDescription(t *testing.T) {
 				"the group name '99' is invalid. It must match",
 			},
 			expectedDescs: []groupNameAndDesc{
-				groupNameAndDesc{name: "a", desc: ""},
-				groupNameAndDesc{name: "99", desc: ""},
+				{name: "a", desc: ""},
+				{name: "99", desc: ""},
 			},
 			groupsExpected: map[string]bool{
 				"a":  false,
@@ -178,7 +178,7 @@ func TestParamSet_SetGroupDescription(t *testing.T) {
 
 		ps, err := paramset.NewNoHelpNoExitNoErrRpt()
 		if err != nil {
-			t.Fatal(tcID, " : couldn't construct the ParamSet: ", err)
+			t.Fatal(tcID, " : couldn't construct the PSet: ", err)
 		}
 
 		var panicked bool
@@ -247,7 +247,7 @@ func TestParamSet_SetTerminalParam(t *testing.T) {
 
 		ps, err := paramset.NewNoHelpNoExitNoErrRpt()
 		if err != nil {
-			t.Fatal(tcID, " : couldn't construct the ParamSet: ", err)
+			t.Fatal(tcID, " : couldn't construct the PSet: ", err)
 		}
 
 		if tc.setTP {
@@ -263,7 +263,7 @@ func TestParamSet_SetTerminalParam(t *testing.T) {
 }
 
 // ExampleParamSet_Add shows the usage of the Add method of the
-// ParamSet. This is used to add new parameters into the set.
+// PSet. This is used to add new parameters into the set.
 func ExampleParamSet_Add() {
 	ps, _ := paramset.New()
 
@@ -321,7 +321,7 @@ func reportParamGroup(t *testing.T, paramGroups []*param.Group) {
 }
 
 // checkParamGroup confirms that the param groups are as expected
-func checkParamGroup(t *testing.T, i int, tc paramGroupTC, ps *param.ParamSet) {
+func checkParamGroup(t *testing.T, i int, tc paramGroupTC, ps *param.PSet) {
 	t.Helper()
 
 	tcID := fmt.Sprintf("test %d: %s", i, tc.name)
@@ -376,14 +376,14 @@ func TestGetParamGroups(t *testing.T) {
 		{
 			name: "one param, default group",
 			npi: []*namedParamInitialiser{
-				&namedParamInitialiser{
+				{
 					name:   "param",
 					setter: psetter.BoolSetter{Value: &boolVar},
 					desc:   "desc",
 				},
 			},
 			expectedResults: []GroupAndParams{
-				GroupAndParams{
+				{
 					groupName: param.DfltGroupName,
 					paramNames: []string{
 						"param",
@@ -394,19 +394,19 @@ func TestGetParamGroups(t *testing.T) {
 		{
 			name: "two params, default group",
 			npi: []*namedParamInitialiser{
-				&namedParamInitialiser{
+				{
 					name:   "param",
 					setter: psetter.BoolSetter{Value: &boolVar},
 					desc:   "desc",
 				},
-				&namedParamInitialiser{
+				{
 					name:   "param2",
 					setter: psetter.BoolSetter{Value: &boolVar},
 					desc:   "desc",
 				},
 			},
 			expectedResults: []GroupAndParams{
-				GroupAndParams{
+				{
 					groupName: param.DfltGroupName,
 					paramNames: []string{
 						"param",
@@ -418,13 +418,13 @@ func TestGetParamGroups(t *testing.T) {
 		{
 			name: "two params, two groups",
 			npi: []*namedParamInitialiser{
-				&namedParamInitialiser{
+				{
 					name:   "param",
 					setter: psetter.BoolSetter{Value: &boolVar},
 					desc:   "desc",
 					opts:   []param.OptFunc{param.GroupName("abc")},
 				},
-				&namedParamInitialiser{
+				{
 					name:   "param2",
 					setter: psetter.BoolSetter{Value: &boolVar},
 					desc:   "desc",
@@ -432,13 +432,13 @@ func TestGetParamGroups(t *testing.T) {
 				},
 			},
 			expectedResults: []GroupAndParams{
-				GroupAndParams{
+				{
 					groupName: "abc",
 					paramNames: []string{
 						"param",
 					},
 				},
-				GroupAndParams{
+				{
 					groupName: "xyz",
 					paramNames: []string{
 						"param2",
@@ -449,7 +449,7 @@ func TestGetParamGroups(t *testing.T) {
 		{
 			name: "three params, two hidden, two groups",
 			npi: []*namedParamInitialiser{
-				&namedParamInitialiser{
+				{
 					name:   "aaa",
 					setter: psetter.BoolSetter{Value: &boolVar},
 					desc:   "desc",
@@ -458,7 +458,7 @@ func TestGetParamGroups(t *testing.T) {
 						param.Attrs(param.DontShowInStdUsage),
 					},
 				},
-				&namedParamInitialiser{
+				{
 					name:   "aab",
 					setter: psetter.BoolSetter{Value: &boolVar},
 					desc:   "desc",
@@ -467,7 +467,7 @@ func TestGetParamGroups(t *testing.T) {
 						param.Attrs(param.DontShowInStdUsage),
 					},
 				},
-				&namedParamInitialiser{
+				{
 					name:   "param2",
 					setter: psetter.BoolSetter{Value: &boolVar},
 					desc:   "desc",
@@ -475,7 +475,7 @@ func TestGetParamGroups(t *testing.T) {
 				},
 			},
 			expectedResults: []GroupAndParams{
-				GroupAndParams{
+				{
 					groupName: "abc",
 					paramNames: []string{
 						"aaa",
@@ -484,7 +484,7 @@ func TestGetParamGroups(t *testing.T) {
 					hiddenCount: 2,
 					allHidden:   true,
 				},
-				GroupAndParams{
+				{
 					groupName: "xyz",
 					paramNames: []string{
 						"param2",
@@ -497,7 +497,7 @@ func TestGetParamGroups(t *testing.T) {
 	for i, tc := range testCases {
 		ps, err := paramset.NewNoHelpNoExit()
 		if err != nil {
-			t.Fatal("Cannot construct the ParamSet:", err.Error())
+			t.Fatal("Cannot construct the PSet:", err.Error())
 		}
 		for _, npi := range tc.npi {
 			ps.Add(npi.name, npi.setter, npi.desc, npi.opts...)

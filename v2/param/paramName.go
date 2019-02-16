@@ -18,7 +18,7 @@ func init() {
 
 // nameCheck returns an error if the name is invalid or if it has already
 // been used.
-func (ps *ParamSet) nameCheck(name string) error {
+func (ps *PSet) nameCheck(name string) error {
 	if !nameCheckRE.MatchString(name) {
 		return fmt.Errorf(
 			"the parameter name '%s' is invalid. It must match: '%s'",

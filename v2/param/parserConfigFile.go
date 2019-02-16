@@ -30,14 +30,14 @@ func (cfd ConfigFileDetails) String() string {
 // interface and is used to parse group-specific parameter files for the
 // paramSet member
 type groupParamLineParser struct {
-	ps    *ParamSet
+	ps    *PSet
 	gName string
 }
 
 // paramLineParser is a type which satisfies the LineParser interface and
 // is used to parse parameter files for the paramSet member
 type paramLineParser struct {
-	ps *ParamSet
+	ps *PSet
 }
 
 // splitParamName splits the parameter name into two parts around a
@@ -166,13 +166,13 @@ func (gpflp groupParamLineParser) ParseLine(line string, loc *location.L) error 
 //
 // The config file supports the features of a file parsed by the
 // fileparse.FP such as comments and include files.
-func (ps *ParamSet) SetConfigFile(fName string, c filecheck.Exists) {
+func (ps *PSet) SetConfigFile(fName string, c filecheck.Exists) {
 	if c == filecheck.MustNotExist {
 		panic(fmt.Sprintf("config file '%s': bad existence constraint.", fName))
 	}
 
 	ps.configFiles = []ConfigFileDetails{
-		ConfigFileDetails{
+		{
 			Name:         fName,
 			CfConstraint: c,
 		},
@@ -185,7 +185,7 @@ func (ps *ParamSet) SetConfigFile(fName string, c filecheck.Exists) {
 // recognised.
 //
 // Additionally, the param group must already exist.
-func (ps *ParamSet) SetGroupConfigFile(gName, fName string, c filecheck.Exists) {
+func (ps *PSet) SetGroupConfigFile(gName, fName string, c filecheck.Exists) {
 	if c == filecheck.MustNotExist {
 		panic(fmt.Sprintf(
 			"config file '%s' (group '%s'): bad existence constraint.",
@@ -198,7 +198,7 @@ func (ps *ParamSet) SetGroupConfigFile(gName, fName string, c filecheck.Exists) 
 	}
 
 	g.ConfigFiles = []ConfigFileDetails{
-		ConfigFileDetails{
+		{
 			Name:         fName,
 			CfConstraint: c,
 		},
@@ -210,7 +210,7 @@ func (ps *ParamSet) SetGroupConfigFile(gName, fName string, c filecheck.Exists) 
 //
 // This can be used to set a system-wide config file and a per-user config
 // file that can be used to provide personal preferences.
-func (ps *ParamSet) AddConfigFile(fName string, c filecheck.Exists) {
+func (ps *PSet) AddConfigFile(fName string, c filecheck.Exists) {
 	if c == filecheck.MustNotExist {
 		panic(fmt.Sprintf("config file '%s': bad existence constraint.", fName))
 	}
@@ -223,7 +223,7 @@ func (ps *ParamSet) AddConfigFile(fName string, c filecheck.Exists) {
 }
 
 // AddGroupConfigFile adds an additional config file for the named group.
-func (ps *ParamSet) AddGroupConfigFile(gName, fName string, c filecheck.Exists) {
+func (ps *PSet) AddGroupConfigFile(gName, fName string, c filecheck.Exists) {
 	if c == filecheck.MustNotExist {
 		panic(fmt.Sprintf(
 			"config file '%s' (group '%s'): bad existence constraint.",
@@ -243,7 +243,7 @@ func (ps *ParamSet) AddGroupConfigFile(gName, fName string, c filecheck.Exists) 
 }
 
 // ConfigFiles returns a copy of the current config file details.
-func (ps *ParamSet) ConfigFiles() []ConfigFileDetails {
+func (ps *PSet) ConfigFiles() []ConfigFileDetails {
 	cf := make([]ConfigFileDetails, len(ps.configFiles))
 	copy(cf, ps.configFiles)
 	return cf
@@ -251,7 +251,7 @@ func (ps *ParamSet) ConfigFiles() []ConfigFileDetails {
 
 // ConfigFilesForGroup returns a copy of the current config file details for
 // the given group name.
-func (ps *ParamSet) ConfigFilesForGroup(gName string) []ConfigFileDetails {
+func (ps *PSet) ConfigFilesForGroup(gName string) []ConfigFileDetails {
 	cf := make([]ConfigFileDetails, len(ps.groups[gName].ConfigFiles))
 	copy(cf, ps.groups[gName].ConfigFiles)
 	return cf
@@ -264,9 +264,9 @@ func isOpenErr(err error) bool {
 	return ok && perr.Op == "open"
 }
 
-// checkErrors will add the errors to the ParamSet if the error is not a
+// checkErrors will add the errors to the PSet if the error is not a
 // missing optional file
-func checkErrors(ps *ParamSet, errors []error, cf ConfigFileDetails) {
+func checkErrors(ps *PSet, errors []error, cf ConfigFileDetails) {
 	if len(errors) > 0 {
 		if len(errors) == 1 {
 			err := errors[0]
@@ -282,7 +282,7 @@ func checkErrors(ps *ParamSet, errors []error, cf ConfigFileDetails) {
 // getParamsFromConfigFile will construct a line parser and then parse the
 // config files - the group-specific config files first and then the common
 // files.
-func (ps *ParamSet) getParamsFromConfigFile() {
+func (ps *PSet) getParamsFromConfigFile() {
 
 	for gName, g := range ps.groups {
 		var lp = groupParamLineParser{

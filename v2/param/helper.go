@@ -8,8 +8,8 @@ import "io"
 // will operate on the default parameter values. There should be a Help func
 // for reporting a help message and an error handler for reporting errors.
 type Helper interface {
-	ProcessArgs(ps *ParamSet)
+	ProcessArgs(ps *PSet)
 	ErrorHandler(w io.Writer, name string, errMap ErrMap)
-	Help(ps *ParamSet, messages ...string)
-	AddParams(ps *ParamSet)
+	Help(ps *PSet, messages ...string)
+	AddParams(ps *PSet)
 }

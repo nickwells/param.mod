@@ -6,7 +6,7 @@ import (
 	"github.com/nickwells/param.mod/v2/param"
 )
 
-func showWhereParamsAreSet(ps *param.ParamSet) {
+func showWhereParamsAreSet(ps *param.PSet) {
 	paramGroups := ps.GetGroups()
 	w := ps.StdWriter()
 

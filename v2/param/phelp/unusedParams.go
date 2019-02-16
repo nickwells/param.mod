@@ -6,7 +6,7 @@ import (
 	"sort"
 )
 
-func showUnusedParams(ps *param.ParamSet) {
+func showUnusedParams(ps *param.PSet) {
 	up := ps.UnusedParams()
 	unusedParamCount := len(up)
 	if unusedParamCount == 0 {

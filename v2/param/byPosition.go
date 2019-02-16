@@ -17,7 +17,7 @@ import (
 // allow different parameter sets to be used depending on the value of the
 // positional parameter.
 type ByPos struct {
-	ps           *ParamSet
+	ps           *PSet
 	setter       Setter
 	name         string
 	description  string
@@ -49,7 +49,7 @@ type PosOptFunc func(bp *ByPos) error
 // documentation purposes and should be a very short value just used as a
 // hint at the intended purpose. The name should be expanded and explained by
 // the description.
-func (ps *ParamSet) AddByPos(name string,
+func (ps *PSet) AddByPos(name string,
 	setter Setter,
 	desc string,
 	opts ...PosOptFunc) *ByPos {
@@ -96,7 +96,7 @@ func SetAsTerminal(bp *ByPos) error {
 				" It cannot also have a terminal positional parameter as"+
 				" the non-positional parameters will never be used."+
 				" The addition of the standard parameters should be"+
-				" turned off when the ParamSet is created if"+
+				" turned off when the PSet is created if"+
 				" positional parameters are wanted.",
 			len(bp.ps.byName))
 	}
@@ -108,7 +108,7 @@ func SetAsTerminal(bp *ByPos) error {
 // if one of them has the flag indicating that the parameter is terminal then
 // it panics. it should be called before adding any extra positional
 // parameters
-func checkTerminalFlags(ps *ParamSet) {
+func checkTerminalFlags(ps *PSet) {
 	for i, bp := range ps.byPos {
 		if bp.isTerminal {
 			panic(fmt.Sprintf(
@@ -131,14 +131,14 @@ func (bp *ByPos) processParam(loc *location.L, val string) {
 	}
 }
 
-// StdWriter returns the standard writer of the ParamSet that this parameter
+// StdWriter returns the standard writer of the PSet that this parameter
 // belongs to
-func (p ByPos) StdWriter() io.Writer {
-	return p.ps.StdWriter()
+func (bp ByPos) StdWriter() io.Writer {
+	return bp.ps.StdWriter()
 }
 
-// ErrWriter returns the error writer of the ParamSet that this parameter
+// ErrWriter returns the error writer of the PSet that this parameter
 // belongs to
-func (p ByPos) ErrWriter() io.Writer {
-	return p.ps.ErrWriter()
+func (bp ByPos) ErrWriter() io.Writer {
+	return bp.ps.ErrWriter()
 }

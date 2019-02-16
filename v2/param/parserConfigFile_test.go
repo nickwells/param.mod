@@ -19,7 +19,7 @@ func TestConfigFile(t *testing.T) {
 
 	ps, err := paramset.NewNoHelpNoExitNoErrRpt(CFAddParams1, CFAddParams2)
 	if err != nil {
-		t.Fatal("TestConfigFile : couldn't construct the ParamSet: ", err)
+		t.Fatal("TestConfigFile : couldn't construct the PSet: ", err)
 	}
 	const mustExistDoes = "./testdata/config.test"
 	ps.SetConfigFile(mustExistDoes, filecheck.MustExist)
@@ -64,8 +64,8 @@ func TestConfigFile(t *testing.T) {
 	}
 }
 
-// CFAddParams1 will set the "example1" parameter in the ParamSet
-func CFAddParams1(ps *param.ParamSet) error {
+// CFAddParams1 will set the "example1" parameter in the PSet
+func CFAddParams1(ps *param.PSet) error {
 	ps.Add("example1",
 		psetter.BoolSetter{Value: &CFValExample1},
 		"here is where you would describe the parameter",
@@ -74,8 +74,8 @@ func CFAddParams1(ps *param.ParamSet) error {
 	return nil
 }
 
-// CFAddParams2 will set the "example2" parameter in the ParamSet
-func CFAddParams2(ps *param.ParamSet) error {
+// CFAddParams2 will set the "example2" parameter in the PSet
+func CFAddParams2(ps *param.PSet) error {
 	ps.Add("example2",
 		psetter.Int64Setter{Value: &CFValExample2},
 		"the description of the parameter",
@@ -124,7 +124,7 @@ func TestGroupConfigFile(t *testing.T) {
 			fileName: configFileNameB,
 			check:    filecheck.MustExist,
 			errsExpected: map[string][]string{
-				"unknown-param": []string{
+				"unknown-param": {
 					"this is not a parameter of this program",
 					"config file for " + groupCFName1,
 					configFileNameB,
@@ -138,7 +138,7 @@ func TestGroupConfigFile(t *testing.T) {
 			fileName: configFileNameC,
 			check:    filecheck.MustExist,
 			errsExpected: map[string][]string{
-				"pi2": []string{
+				"pi2": {
 					"this parameter is not a member of group: " + groupCFName1,
 					"config file for " + groupCFName1,
 					configFileNameC,
@@ -152,7 +152,7 @@ func TestGroupConfigFile(t *testing.T) {
 			fileName: configFileNameNonesuch,
 			check:    filecheck.MustExist,
 			errsExpected: map[string][]string{
-				"config file: " + configFileNameNonesuch: []string{
+				"config file: " + configFileNameNonesuch: {
 					"no such file or directory",
 					configFileNameNonesuch,
 				},
@@ -165,7 +165,7 @@ func TestGroupConfigFile(t *testing.T) {
 
 		ps, err := paramset.NewNoHelpNoExitNoErrRpt()
 		if err != nil {
-			t.Fatal(tcID, " : couldn't construct the ParamSet: ", err)
+			t.Fatal(tcID, " : couldn't construct the PSet: ", err)
 		}
 		addParamsForGroupCF(ps)
 		ps.AddGroupConfigFile(tc.gName, tc.fileName, tc.check)
@@ -217,7 +217,7 @@ func valsCheck(t *testing.T, testID string, vals expVals) {
 	}
 }
 
-func addParamsForGroupCF(ps *param.ParamSet) {
+func addParamsForGroupCF(ps *param.PSet) {
 	ps.SetGroupDescription(groupCFName1, "blah blah blah - 1")
 	ps.SetGroupDescription(groupCFName2, "blah blah blah - 2")
 	ps.Add("pi1", psetter.Int64Setter{Value: &paramInt1},

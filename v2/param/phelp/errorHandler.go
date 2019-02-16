@@ -15,7 +15,7 @@ import (
 // of errors and exiting; these flags can be set by means of standard
 // arguments as added by the StdHelp AddParams method, see the standard help
 // message for details. It is typically called from the Parse(...) method
-// being passed the ParamSet error writer, the program name and the ParamSet
+// being passed the PSet error writer, the program name and the PSet
 // error map
 func (h StdHelp) ErrorHandler(w io.Writer, name string, errMap param.ErrMap) {
 	if len(errMap) == 0 {

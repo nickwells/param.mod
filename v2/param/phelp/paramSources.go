@@ -8,7 +8,7 @@ import (
 // showParamSources will print a usage message showing the alternative
 // sources that can be used to set parameters: environment variables or
 // configuration files.
-func showParamSources(ps *param.ParamSet) {
+func showParamSources(ps *param.PSet) {
 	cf := ps.ConfigFiles()
 	ep := ps.EnvPrefixes()
 

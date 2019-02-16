@@ -11,9 +11,9 @@ parameter can be referenced. Similarly the GroupName function allows you to
 group related parameters together so that they will be reported together in
 the usage message.
 
-The way to use this package is to create a ParamSet and then to add
+The way to use this package is to create a PSet and then to add
 parameters to it and when you've set all the parameters you want, you call
-Parse on the ParamSet. You can create a ParamSet with the NewSet function but
+Parse on the PSet. You can create a PSet with the NewSet function but
 it is more convenient to use the convenience function from the paramset
 package: paramset.New as this will automatically set the mandatory helper to
 the Standard helper. This will provide a common set of parameters that give a

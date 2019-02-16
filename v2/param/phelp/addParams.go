@@ -18,14 +18,14 @@ const (
 const groupNamePfx = "pkg.param"
 
 // AddParams will add the help parameters into the parameter set
-func (h *StdHelp) AddParams(ps *param.ParamSet) {
+func (h *StdHelp) AddParams(ps *param.PSet) {
 	h.addParamHandlingParams(ps)
 	h.addUsageParams(ps)
 }
 
 // addParamHandlingParams will add the standard parameter-handling parameters
 // into the parameter set
-func (h *StdHelp) addParamHandlingParams(ps *param.ParamSet) {
+func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
 	groupName := groupNamePfx + "-params"
 
 	ps.SetGroupDescription(groupName,
@@ -81,7 +81,7 @@ Note that the program may perform some operations as the parameters are processe
 }
 
 // addUsageParams will add the usage parameters into the parameter set
-func (h *StdHelp) addUsageParams(ps *param.ParamSet) {
+func (h *StdHelp) addUsageParams(ps *param.PSet) {
 	groupListAF := (&h.groupListCounter).MakeActionFunc()
 	groupName := groupNamePfx + "-help"
 

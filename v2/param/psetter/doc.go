@@ -3,7 +3,7 @@ Package psetter contains a collection of useful types that can be used to
 set parameter values of a program.
 
 Each type satisfies the param.Setter interface. These can be used to supply
-the second argument of a ParamSet Add or AddByPos method - the action
+the second argument of a PSet Add or AddByPos method - the action
 associated with the parameter. When the parameter is found while parsing the
 params the Set method will be called.
 

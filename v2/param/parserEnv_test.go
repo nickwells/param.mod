@@ -11,7 +11,7 @@ import (
 
 type pfxFunc struct {
 	pfx string
-	f   func(*param.ParamSet, string)
+	f   func(*param.PSet, string)
 }
 
 func TestSetEnv(t *testing.T) {
@@ -26,7 +26,7 @@ func TestSetEnv(t *testing.T) {
 			seq: []pfxFunc{
 				{
 					pfx: "",
-					f:   (*param.ParamSet).SetEnvPrefix,
+					f:   (*param.PSet).SetEnvPrefix,
 				},
 			},
 			panicExpected: true,
@@ -40,7 +40,7 @@ func TestSetEnv(t *testing.T) {
 			seq: []pfxFunc{
 				{
 					pfx: "",
-					f:   (*param.ParamSet).AddEnvPrefix,
+					f:   (*param.PSet).AddEnvPrefix,
 				},
 			},
 			panicExpected: true,
@@ -54,11 +54,11 @@ func TestSetEnv(t *testing.T) {
 			seq: []pfxFunc{
 				{
 					pfx: "somePfx_",
-					f:   (*param.ParamSet).SetEnvPrefix,
+					f:   (*param.PSet).SetEnvPrefix,
 				},
 				{
 					pfx: "",
-					f:   (*param.ParamSet).AddEnvPrefix,
+					f:   (*param.PSet).AddEnvPrefix,
 				},
 			},
 			panicExpected: true,
@@ -72,7 +72,7 @@ func TestSetEnv(t *testing.T) {
 			seq: []pfxFunc{
 				{
 					pfx: "somePfx_",
-					f:   (*param.ParamSet).SetEnvPrefix,
+					f:   (*param.PSet).SetEnvPrefix,
 				},
 			},
 			panicExpected: false,
@@ -82,11 +82,11 @@ func TestSetEnv(t *testing.T) {
 			seq: []pfxFunc{
 				{
 					pfx: "somePfx_",
-					f:   (*param.ParamSet).SetEnvPrefix,
+					f:   (*param.PSet).SetEnvPrefix,
 				},
 				{
 					pfx: "another_good_prefix_",
-					f:   (*param.ParamSet).AddEnvPrefix,
+					f:   (*param.PSet).AddEnvPrefix,
 				},
 			},
 			panicExpected: false,
@@ -96,11 +96,11 @@ func TestSetEnv(t *testing.T) {
 			seq: []pfxFunc{
 				{
 					pfx: "some_Pfx_",
-					f:   (*param.ParamSet).SetEnvPrefix,
+					f:   (*param.PSet).SetEnvPrefix,
 				},
 				{
 					pfx: "some_",
-					f:   (*param.ParamSet).AddEnvPrefix,
+					f:   (*param.PSet).AddEnvPrefix,
 				},
 			},
 			panicExpected: true,
@@ -114,11 +114,11 @@ func TestSetEnv(t *testing.T) {
 			seq: []pfxFunc{
 				{
 					pfx: "some_",
-					f:   (*param.ParamSet).SetEnvPrefix,
+					f:   (*param.PSet).SetEnvPrefix,
 				},
 				{
 					pfx: "some_Pfx_",
-					f:   (*param.ParamSet).AddEnvPrefix,
+					f:   (*param.PSet).AddEnvPrefix,
 				},
 			},
 			panicExpected: true,
@@ -133,7 +133,7 @@ func TestSetEnv(t *testing.T) {
 
 		ps, err := paramset.NewNoHelpNoExitNoErrRpt()
 		if err != nil {
-			t.Fatal(tcID, " : couldn't construct the ParamSet: ", err)
+			t.Fatal(tcID, " : couldn't construct the PSet: ", err)
 		}
 		panicked, panicVal := panicEnvPrefix(t, tc.seq, ps)
 
@@ -144,7 +144,7 @@ func TestSetEnv(t *testing.T) {
 
 }
 
-func panicEnvPrefix(t *testing.T, seq []pfxFunc, ps *param.ParamSet) (panicked bool, panicVal interface{}) {
+func panicEnvPrefix(t *testing.T, seq []pfxFunc, ps *param.PSet) (panicked bool, panicVal interface{}) {
 	t.Helper()
 	defer func() {
 		if r := recover(); r != nil {

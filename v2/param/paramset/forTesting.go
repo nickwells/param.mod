@@ -9,9 +9,9 @@ import (
 
 type noHelpNoExit struct{}
 
-func (nh noHelpNoExit) ProcessArgs(ps *param.ParamSet)       {}
-func (nh noHelpNoExit) Help(ps *param.ParamSet, s ...string) {}
-func (nh noHelpNoExit) AddParams(ps *param.ParamSet)         {}
+func (nh noHelpNoExit) ProcessArgs(ps *param.PSet)       {}
+func (nh noHelpNoExit) Help(ps *param.PSet, s ...string) {}
+func (nh noHelpNoExit) AddParams(ps *param.PSet)         {}
 func (nh noHelpNoExit) ErrorHandler(w io.Writer, name string, errs param.ErrMap) {
 	phelp.ReportErrors(w, name, errs)
 }
@@ -23,15 +23,15 @@ var nhne noHelpNoExit
 // does report errors but doesn't exit if Parse errors are seen.
 //
 // This is only likely to be of any use for testing purposes
-func NewNoHelpNoExit(psof ...param.ParamSetOptFunc) (*param.ParamSet, error) {
+func NewNoHelpNoExit(psof ...param.PSetOptFunc) (*param.PSet, error) {
 	return param.NewSet(append(psof, param.SetHelper(nhne))...)
 }
 
 type noHelpNoExitNoErrRpt struct{}
 
-func (nh noHelpNoExitNoErrRpt) ProcessArgs(ps *param.ParamSet)                           {}
-func (nh noHelpNoExitNoErrRpt) Help(ps *param.ParamSet, s ...string)                     {}
-func (nh noHelpNoExitNoErrRpt) AddParams(ps *param.ParamSet)                             {}
+func (nh noHelpNoExitNoErrRpt) ProcessArgs(ps *param.PSet)                           {}
+func (nh noHelpNoExitNoErrRpt) Help(ps *param.PSet, s ...string)                     {}
+func (nh noHelpNoExitNoErrRpt) AddParams(ps *param.PSet)                             {}
 func (nh noHelpNoExitNoErrRpt) ErrorHandler(w io.Writer, name string, errs param.ErrMap) {}
 
 var nhnenr noHelpNoExitNoErrRpt
@@ -41,6 +41,6 @@ var nhnenr noHelpNoExitNoErrRpt
 // does report errors but doesn't exit if Parse errors are seen.
 //
 // This is only likely to be of any use for testing purposes
-func NewNoHelpNoExitNoErrRpt(psof ...param.ParamSetOptFunc) (*param.ParamSet, error) {
+func NewNoHelpNoExitNoErrRpt(psof ...param.PSetOptFunc) (*param.PSet, error) {
 	return param.NewSet(append(psof, param.SetHelper(nhnenr))...)
 }

@@ -127,7 +127,7 @@ func TestParamAdd(t *testing.T) {
 
 	ps, err := paramset.NewNoHelpNoExitNoErrRpt()
 	if err != nil {
-		t.Fatal("couldn't construct the ParamSet: ", err)
+		t.Fatal("couldn't construct the PSet: ", err)
 	}
 	for i, tc := range testCases {
 		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
@@ -195,7 +195,7 @@ func TestParamAddPos(t *testing.T) {
 		{
 			name: "good params",
 			pi: []paramInitialisers{
-				paramInitialisers{
+				{
 					npi: &namedParamInitialiser{
 						name:   "param-1",
 						setter: &psetter.Int64Setter{Value: &p1},
@@ -206,7 +206,7 @@ func TestParamAddPos(t *testing.T) {
 					},
 					npiShouldExist: true,
 				},
-				paramInitialisers{
+				{
 					npi: &namedParamInitialiser{
 						name:   "param-2",
 						setter: &psetter.Int64Setter{Value: &p1},
@@ -217,7 +217,7 @@ func TestParamAddPos(t *testing.T) {
 					},
 					npiShouldExist: true,
 				},
-				paramInitialisers{
+				{
 					ppi: &posParamInitialiser{
 						name:   "ppi1",
 						setter: &psetter.Int64Setter{Value: &p1},
@@ -231,7 +231,7 @@ func TestParamAddPos(t *testing.T) {
 		{
 			name: "bad params - name empty",
 			pi: []paramInitialisers{
-				paramInitialisers{
+				{
 					npi: &namedParamInitialiser{
 						name:   "",
 						setter: &psetter.Int64Setter{Value: &p1},
@@ -250,7 +250,7 @@ func TestParamAddPos(t *testing.T) {
 		{
 			name: "bad params - terminal ByPos and pre-existing ByName",
 			pi: []paramInitialisers{
-				paramInitialisers{
+				{
 					npi: &namedParamInitialiser{
 						name:   "param-1",
 						setter: &psetter.Int64Setter{Value: &p1},
@@ -261,7 +261,7 @@ func TestParamAddPos(t *testing.T) {
 					},
 					npiShouldExist: true,
 				},
-				paramInitialisers{
+				{
 					ppi: &posParamInitialiser{
 						name:   "ppi1",
 						setter: &psetter.Int64Setter{Value: &p1},
@@ -282,7 +282,7 @@ func TestParamAddPos(t *testing.T) {
 		{
 			name: "bad params - terminal ByPos and then add ByName",
 			pi: []paramInitialisers{
-				paramInitialisers{
+				{
 					ppi: &posParamInitialiser{
 						name:   "ppi1",
 						setter: &psetter.Int64Setter{Value: &p1},
@@ -292,7 +292,7 @@ func TestParamAddPos(t *testing.T) {
 					},
 					ppiShouldExist: true,
 				},
-				paramInitialisers{
+				{
 					npi: &namedParamInitialiser{
 						name:   "param-1",
 						setter: &psetter.Int64Setter{Value: &p1},
@@ -313,7 +313,7 @@ func TestParamAddPos(t *testing.T) {
 		{
 			name: "bad params - terminal ByPos not the last",
 			pi: []paramInitialisers{
-				paramInitialisers{
+				{
 					ppi: &posParamInitialiser{
 						name:   "ppi1",
 						setter: &psetter.Int64Setter{Value: &p1},
@@ -323,7 +323,7 @@ func TestParamAddPos(t *testing.T) {
 					},
 					ppiShouldExist: true,
 				},
-				paramInitialisers{
+				{
 					ppi: &posParamInitialiser{
 						name:   "ppi2",
 						setter: &psetter.Int64Setter{Value: &p1},
@@ -340,7 +340,7 @@ func TestParamAddPos(t *testing.T) {
 		{
 			name: "Parse(...) errors - ByPos: setter.Process(...) failure",
 			pi: []paramInitialisers{
-				paramInitialisers{
+				{
 					ppi: &posParamInitialiser{
 						name:   "ppi1",
 						setter: &failingSetter{errMsg: "ByPos param"},
@@ -351,7 +351,7 @@ func TestParamAddPos(t *testing.T) {
 			paramsToParse:     []string{"1"},
 			remainderExpected: []string{},
 			errsExpected: map[string][]string{
-				"Positional parameter: 1 (ppi1)": []string{
+				"Positional parameter: 1 (ppi1)": {
 					"failingSetter: ByPos param",
 				},
 			},
@@ -359,7 +359,7 @@ func TestParamAddPos(t *testing.T) {
 		{
 			name: "Parse(...) errors - ByName: setter.Process(...) failure",
 			pi: []paramInitialisers{
-				paramInitialisers{
+				{
 					npi: &namedParamInitialiser{
 						name:   "test99",
 						setter: &failingSetter{errMsg: "ByName param"},
@@ -370,7 +370,7 @@ func TestParamAddPos(t *testing.T) {
 			paramsToParse:     []string{"-test99", "val"},
 			remainderExpected: []string{},
 			errsExpected: map[string][]string{
-				"test99": []string{
+				"test99": {
 					"error with parameter:",
 					"failingSetter: ByName param",
 				},
@@ -382,7 +382,7 @@ func TestParamAddPos(t *testing.T) {
 		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
 		ps, err := paramset.NewNoHelpNoExitNoErrRpt()
 		if err != nil {
-			t.Fatal(tcID, " : couldn't construct the ParamSet: ", err)
+			t.Fatal(tcID, " : couldn't construct the PSet: ", err)
 		}
 		var panicked bool
 		var panicVal interface{}
@@ -479,7 +479,7 @@ func TestParamParse1(t *testing.T) {
 	ps, err := paramset.NewNoHelpNoExitNoErrRpt()
 
 	if err != nil {
-		t.Fatal("couldn't construct the ParamSet: ", err)
+		t.Fatal("couldn't construct the PSet: ", err)
 	}
 
 	testName := "param.Parse - first Parse"
@@ -557,7 +557,7 @@ func TestParamParse1(t *testing.T) {
 	if !testhelper.ReportUnexpectedPanic(t, testName,
 		panicked, panicVal, stackTrace) {
 		errMapCheck(t, testName, errMap, map[string][]string{
-			"": []string{
+			"": {
 				"param.Parse has already been called, previously from:",
 			},
 		})
@@ -575,7 +575,7 @@ func TestParamParse(t *testing.T) {
 		{
 			testName: "one param, no error - separate param and value",
 			params: []*namedParamInitialiser{
-				&namedParamInitialiser{
+				{
 					name:   "test1",
 					setter: &psetter.Int64Setter{Value: &p1},
 				},
@@ -587,7 +587,7 @@ func TestParamParse(t *testing.T) {
 		{
 			testName: "one param, no error - param=value",
 			params: []*namedParamInitialiser{
-				&namedParamInitialiser{
+				{
 					name:   "test1",
 					setter: &psetter.Int64Setter{Value: &p1},
 				},
@@ -599,7 +599,7 @@ func TestParamParse(t *testing.T) {
 		{
 			testName: "bad param, doesn't match",
 			params: []*namedParamInitialiser{
-				&namedParamInitialiser{
+				{
 					name:   "test1",
 					setter: &psetter.Int64Setter{Value: &p1},
 				},
@@ -608,13 +608,13 @@ func TestParamParse(t *testing.T) {
 				"-test2",
 			},
 			expectedEMap: map[string][]string{
-				"test2": []string{"is not a parameter"},
+				"test2": {"is not a parameter"},
 			},
 		},
 		{
 			testName: "bad param, no second part",
 			params: []*namedParamInitialiser{
-				&namedParamInitialiser{
+				{
 					name:   "test1",
 					setter: &psetter.Int64Setter{Value: &p1},
 				},
@@ -623,13 +623,13 @@ func TestParamParse(t *testing.T) {
 				"-test1",
 			},
 			expectedEMap: map[string][]string{
-				"test1": []string{"error with parameter"},
+				"test1": {"error with parameter"},
 			},
 		},
 		{
 			testName: "bad param, not a number",
 			params: []*namedParamInitialiser{
-				&namedParamInitialiser{
+				{
 					name:   "test1",
 					setter: &psetter.Int64Setter{Value: &p1},
 				},
@@ -638,7 +638,7 @@ func TestParamParse(t *testing.T) {
 				"-test1", "this is not a number",
 			},
 			expectedEMap: map[string][]string{
-				"test1": []string{"error with parameter"},
+				"test1": {"error with parameter"},
 			},
 		},
 	}
@@ -647,7 +647,7 @@ func TestParamParse(t *testing.T) {
 		tcID := fmt.Sprintf("test %d: %s", i, tc.testName)
 		ps, err := paramset.NewNoHelpNoExitNoErrRpt()
 		if err != nil {
-			t.Fatal("An error was detected while constructing the ParamSet:",
+			t.Fatal("An error was detected while constructing the PSet:",
 				err)
 		}
 		for _, p := range tc.params {
@@ -667,7 +667,7 @@ func TestParamByName(t *testing.T) {
 	val1InitialVal := fmt.Sprint(val1)
 	ps, err := paramset.NewNoHelpNoExitNoErrRpt()
 	if err != nil {
-		t.Fatal("Couldn't create the ParamSet: ", err)
+		t.Fatal("Couldn't create the PSet: ", err)
 	}
 
 	const (

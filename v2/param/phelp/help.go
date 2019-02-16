@@ -9,7 +9,7 @@ import (
 // ProcessArgs will process the values set after parsing is complete. This is
 // where any StdHelp parameters (as added by the StdHelp AddParams method)
 // will be processed.
-func (h StdHelp) ProcessArgs(ps *param.ParamSet) {
+func (h StdHelp) ProcessArgs(ps *param.PSet) {
 	var shouldExit = h.exitAfterParsing
 
 	if h.reportWhereParamsAreSet {
