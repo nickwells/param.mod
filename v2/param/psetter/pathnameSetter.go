@@ -21,6 +21,11 @@ type PathnameSetter struct {
 	Checks      []check.String
 }
 
+// CountChecks returns the number of check functions this setter has
+func (s PathnameSetter) CountChecks() int {
+	return len(s.Checks)
+}
+
 // ValueReq returns param.Mandatory indicating that some value must follow
 // the parameter
 func (s PathnameSetter) ValueReq() param.ValueReq { return param.Mandatory }
@@ -63,7 +68,7 @@ func (s PathnameSetter) SetWithVal(_ string, paramVal string) error {
 
 // AllowedValues returns a string describing the allowed values
 func (s PathnameSetter) AllowedValues() string {
-	rval := "a pathname"
+	rval := "a pathname" + HasChecks(s)
 
 	extras := s.Expectation.String()
 	if extras != "" {

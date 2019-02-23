@@ -211,7 +211,7 @@ func valsCheck(t *testing.T, testID string, vals expVals) {
 	}
 
 	if paramBool2 != vals.pb2Val {
-		nameLogged = logName(t, nameLogged, testID)
+		logName(t, nameLogged, testID)
 		t.Errorf("\t: unexpected values: paramBool2 = %v, should be %v\n",
 			paramBool2, vals.pb2Val)
 	}

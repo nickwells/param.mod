@@ -20,3 +20,9 @@ func (sls StrListSeparator) GetSeparator() string {
 	}
 	return sep
 }
+
+// ListValDesc returns that fragment of the description of what values are
+// allowed which explains how the list values are separated from one another.
+func (sls StrListSeparator) ListValDesc(name string) string {
+	return "a list of " + name + " separated by '" + sls.GetSeparator() + "'"
+}

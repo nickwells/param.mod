@@ -29,9 +29,9 @@ func NewNoHelpNoExit(psof ...param.PSetOptFunc) (*param.PSet, error) {
 
 type noHelpNoExitNoErrRpt struct{}
 
-func (nh noHelpNoExitNoErrRpt) ProcessArgs(ps *param.PSet)                           {}
-func (nh noHelpNoExitNoErrRpt) Help(ps *param.PSet, s ...string)                     {}
-func (nh noHelpNoExitNoErrRpt) AddParams(ps *param.PSet)                             {}
+func (nh noHelpNoExitNoErrRpt) ProcessArgs(ps *param.PSet)                               {}
+func (nh noHelpNoExitNoErrRpt) Help(ps *param.PSet, s ...string)                         {}
+func (nh noHelpNoExitNoErrRpt) AddParams(ps *param.PSet)                                 {}
 func (nh noHelpNoExitNoErrRpt) ErrorHandler(w io.Writer, name string, errs param.ErrMap) {}
 
 var nhnenr noHelpNoExitNoErrRpt

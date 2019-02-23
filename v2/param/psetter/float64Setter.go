@@ -3,9 +3,10 @@ package psetter
 import (
 	"errors"
 	"fmt"
+	"strconv"
+
 	"github.com/nickwells/check.mod/check"
 	"github.com/nickwells/param.mod/v2/param"
-	"strconv"
 )
 
 // Float64Setter allows you to specify a parameter that can be used to set an
@@ -18,6 +19,11 @@ import (
 type Float64Setter struct {
 	Value  *float64
 	Checks []check.Float64
+}
+
+// CountChecks returns the number of check functions this setter has
+func (s Float64Setter) CountChecks() int {
+	return len(s.Checks)
 }
 
 // ValueReq returns param.Mandatory indicating that some value must follow
@@ -60,11 +66,8 @@ func (s Float64Setter) SetWithVal(_ string, paramVal string) error {
 
 // AllowedValues returns a string describing the allowed values
 func (s Float64Setter) AllowedValues() string {
-	rval := "any value that can be read as a number with a decimal place"
-	if len(s.Checks) != 0 {
-		rval += " subject to checks"
-	}
-	return rval
+	return "any value that can be read as a number with a decimal place" +
+		HasChecks(s)
 }
 
 // CurrentValue returns the current setting of the parameter value

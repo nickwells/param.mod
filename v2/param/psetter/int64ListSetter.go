@@ -3,10 +3,11 @@ package psetter
 import (
 	"errors"
 	"fmt"
-	"github.com/nickwells/check.mod/check"
-	"github.com/nickwells/param.mod/v2/param"
 	"strconv"
 	"strings"
+
+	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/param.mod/v2/param"
 )
 
 // Int64ListSetter allows you to specify a parameter that can be used to set a
@@ -18,6 +19,11 @@ type Int64ListSetter struct {
 	Value *[]int64
 	StrListSeparator
 	Checks []check.Int64Slice
+}
+
+// CountChecks returns the number of check functions this setter has
+func (s Int64ListSetter) CountChecks() int {
+	return len(s.Checks)
 }
 
 // ValueReq returns param.Mandatory indicating that some value must follow
@@ -68,13 +74,7 @@ func (s Int64ListSetter) SetWithVal(_ string, paramVal string) error {
 // AllowedValues returns a description of the allowed values. It includes the
 // separator to be used
 func (s Int64ListSetter) AllowedValues() string {
-	rval := "a list of whole numbers separated by '" +
-		s.GetSeparator() + "'"
-
-	if len(s.Checks) != 0 {
-		rval += " subject to checks"
-	}
-	return rval
+	return s.ListValDesc("whole numbers") + HasChecks(s)
 }
 
 // CurrentValue returns the current setting of the parameter value

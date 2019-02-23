@@ -52,13 +52,13 @@ func ReportErrors(w io.Writer, name string, errMap param.ErrMap) {
 	}
 	sort.Strings(paramNames)
 
-	fmt.Fprint(w, name, ": ", len(errMap))
+	fmt.Fprint(w, name, ": ", len(errMap)) // nolint: errcheck
 	if len(errMap) == 1 {
-		fmt.Fprint(w, " error was")
+		fmt.Fprint(w, " error was") // nolint: errcheck
 	} else {
-		fmt.Fprint(w, " errors were")
+		fmt.Fprint(w, " errors were") // nolint: errcheck
 	}
-	fmt.Fprint(w, " detected while setting the parameters:\n")
+	fmt.Fprint(w, " detected while setting the parameters:\n") // nolint: errcheck
 
 	firstLineIndent := stdIndent
 	secondLineIndent := stdIndent + stdIndent
@@ -66,13 +66,13 @@ func ReportErrors(w io.Writer, name string, errMap param.ErrMap) {
 
 	paramSep := ""
 	for _, paramName := range paramNames {
-		fmt.Fprint(w, paramSep)
+		fmt.Fprint(w, paramSep) // nolint: errcheck
 		paramSep = firstLineIndent + "---\n"
 
 		sep := ""
-		fmt.Fprint(w, firstLineIndent, paramName, "\n")
+		fmt.Fprint(w, firstLineIndent, paramName, "\n") // nolint: errcheck
 		for _, e := range errMap[paramName] {
-			fmt.Fprint(w, sep)
+			fmt.Fprint(w, sep) // nolint: errcheck
 			sep = secondLineIndent + "---\n"
 			switch e := e.(type) {
 			case location.Err:

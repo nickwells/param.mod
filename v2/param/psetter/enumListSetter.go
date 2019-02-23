@@ -3,9 +3,10 @@ package psetter
 import (
 	"errors"
 	"fmt"
+	"strings"
+
 	"github.com/nickwells/check.mod/check"
 	"github.com/nickwells/param.mod/v2/param"
-	"strings"
 )
 
 // EnumListSetter sets the values in a slice of strings. The values must be in
@@ -15,6 +16,11 @@ type EnumListSetter struct {
 	AllowedVals AValMap // map[allowedValue] => description
 	StrListSeparator
 	Checks []check.StringSlice
+}
+
+// CountChecks returns the number of check functions this setter has
+func (s EnumListSetter) CountChecks() int {
+	return len(s.Checks)
 }
 
 // ValueReq returns param.Mandatory indicating that some value must follow
@@ -59,9 +65,10 @@ func (s EnumListSetter) SetWithVal(_ string, paramVal string) error {
 
 // AllowedValues returns a string listing the allowed values
 func (s EnumListSetter) AllowedValues() string {
-	return "a list of string values separated by '" + s.GetSeparator() +
-		"'. The values must be from the following:\n" +
-		allowedValues(s.AllowedVals)
+	return s.ListValDesc("string values") +
+		HasChecks(s) +
+		". The values must be from the following:\n" +
+		s.AllowedVals.String()
 }
 
 // CurrentValue returns the current setting of the parameter value
@@ -78,14 +85,21 @@ func (s EnumListSetter) CurrentValue() string {
 }
 
 // CheckSetter panics if the setter has not been properly created - if the
-// Value is nil or there are no allowed values.
+// Value is nil or there are no allowed values or the initial value is not
+// allowed.
 func (s EnumListSetter) CheckSetter(name string) {
+	intro := name + ": EnumListSetter Check failed: "
 	if s.Value == nil {
-		panic(name +
-			": EnumListSetter Check failed: the Value to be set is nil")
+		panic(intro + "the Value to be set is nil")
 	}
-	if len(s.AllowedVals) == 0 {
-		panic(name +
-			": EnumListSetter Check failed: there are no allowed values")
+	if err := s.AllowedVals.OK(); err != nil {
+		panic(intro + err.Error())
+	}
+	for i, v := range *s.Value {
+		if _, ok := s.AllowedVals[v]; !ok {
+			panic(fmt.Sprintf(
+				"%selement %d (%s) in the current list of entries is invalid",
+				intro, i, v))
+		}
 	}
 }

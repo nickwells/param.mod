@@ -48,9 +48,9 @@ func (s EnumMapSetter) SetWithVal(_ string, paramVal string) error {
 
 // AllowedValues returns a string listing the allowed values
 func (s EnumMapSetter) AllowedValues() string {
-	return "a list of string values separated by '" + s.GetSeparator() +
-		"'. The values must be from the following:\n" +
-		allowedValues(s.AllowedVals)
+	return s.ListValDesc("string values") +
+		". The values must be from the following:\n" +
+		s.AllowedVals.String()
 }
 
 // CurrentValue returns the current setting of the parameter value
@@ -69,16 +69,19 @@ func (s EnumMapSetter) CurrentValue() string {
 // Value is nil or the map has not been created yet or if there are no
 // allowed values.
 func (s EnumMapSetter) CheckSetter(name string) {
+	intro := name + ": EnumMapSetter Check failed: "
 	if s.Value == nil {
-		panic(name +
-			": EnumMapSetter Check failed: the Value to be set is nil")
+		panic(intro + "the Value to be set is nil")
 	}
 	if *s.Value == nil {
-		panic(name +
-			": EnumMapSetter Check failed: the map has not been created")
+		panic(intro + "the map has not been created")
 	}
-	if len(s.AllowedVals) == 0 {
-		panic(name +
-			": EnumMapSetter Check failed: there are no allowed values")
+	if err := s.AllowedVals.OK(); err != nil {
+		panic(intro + err.Error())
+	}
+	for k := range *s.Value {
+		if _, ok := s.AllowedVals[k]; !ok {
+			panic(fmt.Sprintf("%sthe map entry (%s) is invalid", intro, k))
+		}
 	}
 }

@@ -3,9 +3,10 @@ package psetter
 import (
 	"errors"
 	"fmt"
+	"strconv"
+
 	"github.com/nickwells/check.mod/check"
 	"github.com/nickwells/param.mod/v2/param"
-	"strconv"
 )
 
 // Int64Setter allows you to specify a parameter that can be used to set an
@@ -17,6 +18,11 @@ import (
 type Int64Setter struct {
 	Value  *int64
 	Checks []check.Int64
+}
+
+// CountChecks returns the number of check functions this setter has
+func (s Int64Setter) CountChecks() int {
+	return len(s.Checks)
 }
 
 // ValueReq returns param.Mandatory indicating that some value must follow
@@ -59,11 +65,7 @@ func (s Int64Setter) SetWithVal(_ string, paramVal string) error {
 
 // AllowedValues returns a string describing the allowed values
 func (s Int64Setter) AllowedValues() string {
-	rval := "any value that can be read as a whole number"
-	if len(s.Checks) != 0 {
-		rval += " subject to checks"
-	}
-	return rval
+	return "any value that can be read as a whole number" + HasChecks(s)
 }
 
 // CurrentValue returns the current setting of the parameter value

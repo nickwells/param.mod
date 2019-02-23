@@ -688,8 +688,9 @@ func TestParamByName(t *testing.T) {
 			len(altNames))
 	} else {
 		if altNames[0] != param1Name {
-			t.Error("the parameter should have had as a pricipal name: ",
-				param1Name, " was ", altNames[0])
+			t.Error("the parameter should have had ",
+				param1Name, " as a principal name: ",
+				" was ", altNames[0])
 		}
 		if altNames[1] != param1AltName {
 			t.Error("the parameter should have had as an alternative name: ",

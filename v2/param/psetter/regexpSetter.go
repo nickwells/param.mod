@@ -3,8 +3,9 @@ package psetter
 import (
 	"errors"
 	"fmt"
-	"github.com/nickwells/param.mod/v2/param"
 	"regexp"
+
+	"github.com/nickwells/param.mod/v2/param"
 )
 
 // RegexpSetter allows you to specify a parameter that can be used to set an
@@ -44,7 +45,10 @@ func (s RegexpSetter) AllowedValues() string {
 
 // CurrentValue returns the current setting of the parameter value
 func (s RegexpSetter) CurrentValue() string {
-	return fmt.Sprintf("%s", *s.Value)
+	if s.Value == nil {
+		return "Illegal value"
+	}
+	return (*s.Value).String()
 }
 
 // CheckSetter panics if the setter has not been properly created - if the

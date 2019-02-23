@@ -28,7 +28,7 @@ func (h *StdHelp) AddParams(ps *param.PSet) {
 func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
 	groupName := groupNamePfx + "-params"
 
-	ps.SetGroupDescription(groupName,
+	ps.AddGroup(groupName,
 		`These are the parameter-handling parameters.
 
 There are parameters for showing where parameters have been set and the handling of parameter errors.`)
@@ -85,7 +85,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 	groupListAF := (&h.groupListCounter).MakeActionFunc()
 	groupName := groupNamePfx + "-help"
 
-	ps.SetGroupDescription(groupName,
+	ps.AddGroup(groupName,
 		`These are the usage parameters. They can be used to show a usage message in various levels of detail.`)
 
 	ps.Add(usageArgName, helpType{h: h},

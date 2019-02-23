@@ -157,7 +157,7 @@ func (gpflp groupParamLineParser) ParseLine(line string, loc *location.L) error 
 //
 // Since a parameter file might be shared between several programs, a
 // parameter in a config file which is not found in the set of parameters for
-// that program is not reported as an error as it might be targetted at a
+// that program is not reported as an error as it might be targeted at a
 // different program. This is not the case for parameters which are marked as
 // being for a specific program by having the program name before the
 // parameter name. Similarly for parameters in files which are for a

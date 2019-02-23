@@ -76,7 +76,7 @@ type paramInitialisers struct {
 
 // panicSafeTestAddByPos adds a ByPos parameter to a parameter set and
 // catches any panics. Then it returns the added parameter (if any), a
-// boolean indicating if a panic occured and the value recovered from the
+// boolean indicating if a panic occurred and the value recovered from the
 // panic
 func panicSafeTestAddByPos(ps *param.PSet, ppi *posParamInitialiser) (pp *param.ByPos, panicked bool, panicVal interface{}) {
 	if ppi == nil {
@@ -95,7 +95,7 @@ func panicSafeTestAddByPos(ps *param.PSet, ppi *posParamInitialiser) (pp *param.
 
 // panicSafeTestAddByName adds a ByName parameter to a parameter set and
 // catches any panics. Then it returns the added parameter (if any), a
-// boolean indicating if a panic occured and the value recovered from the
+// boolean indicating if a panic occurred and the value recovered from the
 // panic
 func panicSafeTestAddByName(ps *param.PSet, npi *namedParamInitialiser) (p *param.ByName, panicked bool, panicVal interface{}) {
 	if npi == nil {
@@ -114,7 +114,7 @@ func panicSafeTestAddByName(ps *param.PSet, npi *namedParamInitialiser) (p *para
 
 // panicSafeTestParse parses the supplied parameters and catches any
 // panics. Then it returns a map of the errors (if any), a boolean indicating
-// if a panic occured and the value recovered from the panic
+// if a panic occurred and the value recovered from the panic
 func panicSafeTestParse(ps *param.PSet, params []string) (
 	errMap param.ErrMap, panicked bool, panicVal interface{}, stackTrace []byte) {
 	defer func() {
@@ -130,7 +130,7 @@ func panicSafeTestParse(ps *param.PSet, params []string) (
 }
 
 // panicSafeSetGroupDescription sets the group description and catches any
-// panics. Then it returns a boolean indicating if a panic occured and the
+// panics. Then it returns a boolean indicating if a panic occurred and the
 // value recovered from the panic
 func panicSafeSetGroupDescription(ps *param.PSet, groupName, desc string) (
 	panicked bool, panicVal interface{}, stackTrace []byte) {
@@ -152,9 +152,9 @@ func logErrMap(t *testing.T, errMap param.ErrMap) {
 	t.Helper()
 
 	for k, v := range errMap {
-		t.Log("\t\t", k, ":\n")
+		t.Log("\t: Errors for:", k, ":\n")
 		for _, err := range v {
-			t.Log("\t\t\t", err, "\n")
+			t.Log("\t:\t", err, "\n")
 		}
 	}
 }
@@ -215,11 +215,6 @@ func errMapCheck(t *testing.T, testID string, errMap param.ErrMap, expected map[
 	}
 
 	if nameLogged {
-		for k, v := range errMap {
-			t.Logf("\t: Errors for: %s", k)
-			for _, e := range v {
-				t.Logf("\t:     %v", e)
-			}
-		}
+		logErrMap(t, errMap)
 	}
 }

@@ -11,14 +11,14 @@ import (
 // print regardless of the depth of the indent
 const MinCharsToPrint = 30.0
 
-// TargetLineLength is teh number of characters that will be put on each line
+// TargetLineLength is the number of characters that will be put on each line
 // after any indent is taken into account
 const TargetLineLength = 80
 
 // printAsString prints a slice of runes as a string and clears the slice
 func printAsString(w io.Writer, word []rune) []rune {
 	if len(word) > 0 {
-		fmt.Fprint(w, string(word))
+		fmt.Fprint(w, string(word)) // nolint: errcheck
 		word = word[:0]
 	}
 	return word
@@ -37,7 +37,7 @@ func formatText(w io.Writer, text string, firstLineIndent, indent int) {
 	paras := strings.Split(text, "\n")
 
 	for _, para := range paras {
-		fmt.Fprint(w, strings.Repeat(" ", firstLineIndent))
+		fmt.Fprint(w, strings.Repeat(" ", firstLineIndent)) // nolint: errcheck
 		maxWidth := firstLineMaxWidth
 		sep := strings.Repeat(" ", indent)
 
@@ -56,9 +56,9 @@ func formatText(w io.Writer, text string, firstLineIndent, indent int) {
 						spaces = printAsString(w, spaces)
 						word = printAsString(w, word)
 					} else {
-						fmt.Fprintln(w)
+						fmt.Fprintln(w) // nolint: errcheck
 						maxWidth = nextMaxWidth
-						fmt.Fprint(w, sep)
+						fmt.Fprint(w, sep) // nolint: errcheck
 						lineLen = len(word)
 						word = printAsString(w, word)
 						spaces = spaces[:0]
@@ -78,12 +78,12 @@ func formatText(w io.Writer, text string, firstLineIndent, indent int) {
 				printAsString(w, spaces)
 				printAsString(w, word)
 			} else {
-				fmt.Fprintln(w)
-				fmt.Fprint(w, sep)
+				fmt.Fprintln(w)    // nolint: errcheck
+				fmt.Fprint(w, sep) // nolint: errcheck
 				printAsString(w, word)
 			}
 		}
 
-		fmt.Fprintln(w)
+		fmt.Fprintln(w) // nolint: errcheck
 	}
 }

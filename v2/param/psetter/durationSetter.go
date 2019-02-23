@@ -3,21 +3,24 @@ package psetter
 import (
 	"errors"
 	"fmt"
+	"time"
+
 	"github.com/nickwells/check.mod/check"
 	"github.com/nickwells/param.mod/v2/param"
-	"time"
 )
 
-// DurationSetter allows you to specify a parameter that can be used to set
-// a time.Duration value. You can also supply a check function that will
-// validate the Value. There are some helper functions given below (called
-// DurationCheck...) which will return functions that can perform a few
-// common checks. For instance you can ensure that the value is positive by
-// setting one of the Checks to the value returned by
-// DurationCheckGT(0)
+// DurationSetter allows you to specify a parameter that can be used to set a
+// time.Duration value. You can also supply a check function that will
+// validate the Value. See the check package for some common pre-defined
+// checks.
 type DurationSetter struct {
 	Value  *time.Duration
 	Checks []check.Duration
+}
+
+// CountChecks returns the number of check functions this setter has
+func (s DurationSetter) CountChecks() int {
+	return len(s.Checks)
 }
 
 // ValueReq returns param.Mandatory indicating that some value must follow
@@ -60,11 +63,7 @@ func (s DurationSetter) SetWithVal(_ string, paramVal string) error {
 
 // AllowedValues returns a string describing the allowed values
 func (s DurationSetter) AllowedValues() string {
-	rval := "any value that can be parsed to a duration"
-	if len(s.Checks) != 0 {
-		rval += " subject to checks"
-	}
-	return rval
+	return "any value that can be parsed as a duration" + HasChecks(s)
 }
 
 // CurrentValue returns the current setting of the parameter value

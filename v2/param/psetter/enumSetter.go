@@ -37,7 +37,7 @@ func (s EnumSetter) SetWithVal(_ string, paramVal string) error {
 
 // AllowedValues returns a string listing the allowed values
 func (s EnumSetter) AllowedValues() string {
-	return "one of\n" + allowedValues(s.AllowedVals)
+	return "one of\n" + s.AllowedVals.String()
 }
 
 // CurrentValue returns the current setting of the parameter value
@@ -48,10 +48,15 @@ func (s EnumSetter) CurrentValue() string {
 // CheckSetter panics if the setter has not been properly created - if the
 // Value is nil or there are no allowed values.
 func (s EnumSetter) CheckSetter(name string) {
+	intro := name + ": EnumSetter Check failed: "
 	if s.Value == nil {
-		panic(name + ": EnumSetter Check failed: the Value to be set is nil")
+		panic(intro + "the Value to be set is nil")
 	}
-	if len(s.AllowedVals) == 0 {
-		panic(name + ": EnumSetter Check failed: there are no allowed values")
+	if err := s.AllowedVals.OK(); err != nil {
+		panic(intro + err.Error())
+	}
+	if _, ok := s.AllowedVals[*s.Value]; !ok {
+		panic(fmt.Sprintf("%sthe initial value (%s) is not valid",
+			intro, *s.Value))
 	}
 }

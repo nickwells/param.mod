@@ -3,10 +3,11 @@ package psetter
 import (
 	"errors"
 	"fmt"
-	"github.com/nickwells/check.mod/check"
-	"github.com/nickwells/param.mod/v2/param"
 	"strings"
 	"time"
+
+	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/param.mod/v2/param"
 )
 
 // TimeLocationSetter allows you to specify a parameter that can be used to
@@ -15,6 +16,11 @@ import (
 type TimeLocationSetter struct {
 	Value  **time.Location
 	Checks []check.TimeLocation
+}
+
+// CountChecks returns the number of check functions this setter has
+func (s TimeLocationSetter) CountChecks() int {
+	return len(s.Checks)
 }
 
 // ValueReq returns param.Mandatory indicating that some value must follow
@@ -65,13 +71,10 @@ func (s TimeLocationSetter) SetWithVal(_ string, paramVal string) error {
 
 // AllowedValues returns a string describing the allowed values
 func (s TimeLocationSetter) AllowedValues() string {
-	rval := "any value that represents a location"
-	if len(s.Checks) != 0 {
-		rval += " subject to checks"
-	}
-	rval += ". Typically this will be a string of the form" +
+	return "any value that represents a location" +
+		HasChecks(s) +
+		". Typically this will be a string of the form" +
 		" Continent/City_Name, for instance, Europe/London or America/New_York"
-	return rval
 }
 
 // CurrentValue returns the current setting of the parameter value

@@ -31,7 +31,7 @@ name     : desc`,
 	}
 
 	for i, tc := range testCases {
-		s := allowedValues(tc.avMap)
+		s := tc.avMap.String()
 		if s != tc.allowedVals {
 			t.Logf("test %d: %s :\n", i, tc.name)
 			t.Logf("\t: allowed values: %s\n", s)

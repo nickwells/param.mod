@@ -2,6 +2,7 @@ package psetter
 
 import (
 	"errors"
+
 	"github.com/nickwells/check.mod/check"
 	"github.com/nickwells/param.mod/v2/param"
 )
@@ -11,6 +12,11 @@ import (
 type StringSetter struct {
 	Value  *string
 	Checks []check.String
+}
+
+// CountChecks returns the number of check functions this setter has
+func (s StringSetter) CountChecks() int {
+	return len(s.Checks)
 }
 
 // ValueReq returns param.Mandatory indicating that some value must follow
@@ -47,12 +53,7 @@ func (s StringSetter) SetWithVal(_ string, paramVal string) error {
 // AllowedValues simply returns "any string" since StringSetter
 // does not check its value
 func (s StringSetter) AllowedValues() string {
-	rval := "any string"
-
-	if len(s.Checks) != 0 {
-		rval += " subject to checks"
-	}
-	return rval
+	return "any string" + HasChecks(s)
 }
 
 // CurrentValue returns the current setting of the parameter value

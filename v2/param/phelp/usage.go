@@ -42,7 +42,7 @@ func badGroups(ps *param.PSet, groups map[string]bool, name string) bool {
 
 // printOptValNote prints an explanation of how optional values must be set
 func (h StdHelp) printOptValNote(w io.Writer) {
-	fmt.Fprint(w, "\n"+equals+"\n\n")
+	fmt.Fprint(w, "\n"+equals+"\n\n") // nolint: errcheck
 
 	pfx := "Note: "
 	formatPrefixedText(w, pfx,
@@ -64,13 +64,13 @@ func (h StdHelp) Help(ps *param.PSet, messages ...string) {
 		formatText(w, message, 0, 0)
 	}
 	if len(messages) > 0 {
-		fmt.Fprint(w, "\n"+equals+"\n\n")
+		fmt.Fprint(w, "\n"+equals+"\n\n") // nolint: errcheck
 	}
 
 	if h.style != Short &&
 		h.style != GroupNamesOnly {
 		formatText(w, ps.ProgDesc(), textIndent, textIndent)
-		fmt.Fprint(w, "\n")
+		fmt.Fprint(w, "\n") // nolint: errcheck
 	}
 
 	if h.includeGroups {
@@ -95,10 +95,10 @@ func (h StdHelp) Help(ps *param.PSet, messages ...string) {
 		h.excludeGroups = false
 	}
 
-	fmt.Fprint(w, "Usage: ", ps.ProgName())
+	fmt.Fprint(w, "Usage: ", ps.ProgName()) // nolint: errcheck
 
 	if h.style == GroupNamesOnly {
-		fmt.Fprintln(w, "\nParameter groups")
+		fmt.Fprintln(w, "\nParameter groups") // nolint: errcheck
 		h.printGroups(w, ps)
 	} else {
 		h.printPositionalParams(w, ps)
@@ -165,12 +165,12 @@ func (h StdHelp) printPositionalParams(w io.Writer, ps *param.PSet) {
 		if err != nil {
 			break
 		}
-		fmt.Fprint(w, " <", bp.Name(), ">")
+		fmt.Fprint(w, " <", bp.Name(), ">") // nolint: errcheck
 		intro = "\n  where\n"
 	}
 
 	if h.style != Short {
-		fmt.Fprint(w, intro)
+		fmt.Fprint(w, intro) // nolint: errcheck
 
 		for i := 0; ; i++ {
 			bp, err := ps.GetParamByPos(i)
@@ -182,26 +182,26 @@ func (h StdHelp) printPositionalParams(w io.Writer, ps *param.PSet) {
 				bp.Description(), descriptionIndent, descriptionIndent)
 		}
 	}
-	fmt.Fprintln(w)
+	fmt.Fprintln(w) // nolint: errcheck
 }
 
 // printGroupDetails prints the group name etc
 func printGroupDetails(w io.Writer, pg *param.Group, style helpStyle) {
-	fmt.Fprintln(w, "\n"+dashes)
-	fmt.Fprintf(w, "%s [ ", pg.Name)
+	fmt.Fprintln(w, "\n"+dashes)     // nolint: errcheck
+	fmt.Fprintf(w, "%s [ ", pg.Name) // nolint: errcheck
 	if len(pg.Params) == 1 {
-		fmt.Fprint(w, "1 parameter")
+		fmt.Fprint(w, "1 parameter") // nolint: errcheck
 	} else {
-		fmt.Fprintf(w, "%d parameters", len(pg.Params))
+		fmt.Fprintf(w, "%d parameters", len(pg.Params)) // nolint: errcheck
 	}
 	if pg.HiddenCount > 0 {
 		if pg.AllParamsHidden() {
-			fmt.Fprint(w, ", all hidden")
+			fmt.Fprint(w, ", all hidden") // nolint: errcheck
 		} else {
-			fmt.Fprintf(w, ", %d hidden", pg.HiddenCount)
+			fmt.Fprintf(w, ", %d hidden", pg.HiddenCount) // nolint: errcheck
 		}
 	}
-	fmt.Fprintln(w, " ]")
+	fmt.Fprintln(w, " ]") // nolint: errcheck
 	if style == Short {
 		return
 	}
@@ -210,7 +210,7 @@ func printGroupDetails(w io.Writer, pg *param.Group, style helpStyle) {
 		return
 	}
 	formatText(w, desc, textIndent, textIndent)
-	fmt.Fprintln(w)
+	fmt.Fprintln(w) // nolint: errcheck
 }
 
 // showGroup will return true if the group should be reported and false

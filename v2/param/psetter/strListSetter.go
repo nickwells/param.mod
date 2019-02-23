@@ -2,9 +2,10 @@ package psetter
 
 import (
 	"errors"
+	"strings"
+
 	"github.com/nickwells/check.mod/check"
 	"github.com/nickwells/param.mod/v2/param"
-	"strings"
 )
 
 // StrListSetter allows you to specify a parameter that can be used to set an
@@ -16,6 +17,11 @@ type StrListSetter struct {
 	Value *[]string
 	StrListSeparator
 	Checks []check.StringSlice
+}
+
+// CountChecks returns the number of check functions this setter has
+func (s StrListSetter) CountChecks() int {
+	return len(s.Checks)
 }
 
 // ValueReq returns param.Mandatory indicating that some value must follow
@@ -54,13 +60,7 @@ func (s StrListSetter) SetWithVal(_ string, paramVal string) error {
 // AllowedValues returns a description of the allowed values. It includes the
 // separator to be used
 func (s StrListSetter) AllowedValues() string {
-	rval := "a list of string values separated by '" +
-		s.GetSeparator() + "'"
-
-	if len(s.Checks) != 0 {
-		rval += " subject to checks"
-	}
-	return rval
+	return s.ListValDesc("string values") + HasChecks(s)
 }
 
 // CurrentValue returns the current setting of the parameter value
