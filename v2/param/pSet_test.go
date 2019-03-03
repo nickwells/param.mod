@@ -378,7 +378,7 @@ func TestGetParamGroups(t *testing.T) {
 			npi: []*namedParamInitialiser{
 				{
 					name:   "param",
-					setter: psetter.BoolSetter{Value: &boolVar},
+					setter: psetter.Bool{Value: &boolVar},
 					desc:   "desc",
 				},
 			},
@@ -396,12 +396,12 @@ func TestGetParamGroups(t *testing.T) {
 			npi: []*namedParamInitialiser{
 				{
 					name:   "param",
-					setter: psetter.BoolSetter{Value: &boolVar},
+					setter: psetter.Bool{Value: &boolVar},
 					desc:   "desc",
 				},
 				{
 					name:   "param2",
-					setter: psetter.BoolSetter{Value: &boolVar},
+					setter: psetter.Bool{Value: &boolVar},
 					desc:   "desc",
 				},
 			},
@@ -420,13 +420,13 @@ func TestGetParamGroups(t *testing.T) {
 			npi: []*namedParamInitialiser{
 				{
 					name:   "param",
-					setter: psetter.BoolSetter{Value: &boolVar},
+					setter: psetter.Bool{Value: &boolVar},
 					desc:   "desc",
 					opts:   []param.OptFunc{param.GroupName("abc")},
 				},
 				{
 					name:   "param2",
-					setter: psetter.BoolSetter{Value: &boolVar},
+					setter: psetter.Bool{Value: &boolVar},
 					desc:   "desc",
 					opts:   []param.OptFunc{param.GroupName("xyz")},
 				},
@@ -451,7 +451,7 @@ func TestGetParamGroups(t *testing.T) {
 			npi: []*namedParamInitialiser{
 				{
 					name:   "aaa",
-					setter: psetter.BoolSetter{Value: &boolVar},
+					setter: psetter.Bool{Value: &boolVar},
 					desc:   "desc",
 					opts: []param.OptFunc{
 						param.GroupName("abc"),
@@ -460,7 +460,7 @@ func TestGetParamGroups(t *testing.T) {
 				},
 				{
 					name:   "aab",
-					setter: psetter.BoolSetter{Value: &boolVar},
+					setter: psetter.Bool{Value: &boolVar},
 					desc:   "desc",
 					opts: []param.OptFunc{
 						param.GroupName("abc"),
@@ -469,7 +469,7 @@ func TestGetParamGroups(t *testing.T) {
 				},
 				{
 					name:   "param2",
-					setter: psetter.BoolSetter{Value: &boolVar},
+					setter: psetter.Bool{Value: &boolVar},
 					desc:   "desc",
 					opts:   []param.OptFunc{param.GroupName("xyz")},
 				},

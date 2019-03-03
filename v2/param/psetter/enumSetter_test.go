@@ -6,9 +6,9 @@ import (
 	"testing"
 )
 
-func TestEnumSetter(t *testing.T) {
+func TestEnum(t *testing.T) {
 	var value string
-	es := psetter.EnumSetter{
+	es := psetter.Enum{
 		Value: &value,
 		AllowedVals: psetter.AValMap{
 			"e1": "E1 explained",
@@ -18,12 +18,12 @@ func TestEnumSetter(t *testing.T) {
 
 	if pvr := es.ValueReq(); pvr != param.Mandatory {
 		t.Error(
-			"EnumSetter should need a value. ValueReq() returned ",
+			"Enum should need a value. ValueReq() returned ",
 			pvr.String())
 	}
 
 	if err := es.Set(""); err == nil {
-		t.Error("EnumSetter should have returned an error" +
+		t.Error("Enum should have returned an error" +
 			" when Set(...) was called")
 	}
 
@@ -57,9 +57,9 @@ func TestEnumSetter(t *testing.T) {
 	}
 }
 
-func TestEnumListSetter(t *testing.T) {
+func TestEnumList(t *testing.T) {
 	var value []string
-	els := psetter.EnumListSetter{Value: &value, AllowedVals: psetter.AValMap{
+	els := psetter.EnumList{Value: &value, AllowedVals: psetter.AValMap{
 		"e1": "E1 explained",
 		"e2": "E2 explained",
 		"e3": "E3 explained",
@@ -67,11 +67,11 @@ func TestEnumListSetter(t *testing.T) {
 
 	if pvr := els.ValueReq(); pvr != param.Mandatory {
 		t.Error(
-			"EnumListSetter should need a value. ValueReq() returned ", pvr.String())
+			"EnumList should need a value. ValueReq() returned ", pvr.String())
 	}
 
 	if err := els.Set(""); err == nil {
-		t.Error("EnumListSetter should have returned an error when Set(...) was called")
+		t.Error("EnumList should have returned an error when Set(...) was called")
 	}
 
 	testCases := [...]struct {
@@ -122,9 +122,9 @@ func TestEnumListSetter(t *testing.T) {
 	}
 }
 
-func TestEnumMapSetter(t *testing.T) {
+func TestEnumMap(t *testing.T) {
 	var value map[string]bool
-	ems := psetter.EnumMapSetter{Value: &value, AllowedVals: psetter.AValMap{
+	ems := psetter.EnumMap{Value: &value, AllowedVals: psetter.AValMap{
 		"e1": "E1 explained",
 		"e2": "E2 explained",
 		"e3": "E3 explained",
@@ -132,12 +132,12 @@ func TestEnumMapSetter(t *testing.T) {
 
 	if pvr := ems.ValueReq(); pvr != param.Mandatory {
 		t.Error(
-			"EnumMapSetter should need a value. ValueReq() returned ",
+			"EnumMap should need a value. ValueReq() returned ",
 			pvr.String())
 	}
 
 	if err := ems.Set(""); err == nil {
-		t.Error("EnumMapSetter should have returned an error" +
+		t.Error("EnumMap should have returned an error" +
 			" when Set(...) was called")
 	}
 

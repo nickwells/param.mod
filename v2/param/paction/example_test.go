@@ -2,6 +2,7 @@ package paction_test
 
 import (
 	"fmt"
+
 	"github.com/nickwells/param.mod/v2/param"
 	"github.com/nickwells/param.mod/v2/param/paction"
 	"github.com/nickwells/param.mod/v2/param/paramset"
@@ -33,10 +34,10 @@ func Example_count() {
 	// be called after they have been set to the action function created
 	// above. Note that we record the parameter we have created so that we
 	// can report the name we gave it below
-	p1 := ps.Add("p1", psetter.BoolSetter{Value: &param1},
+	p1 := ps.Add("p1", psetter.Bool{Value: &param1},
 		"the first flag (only set 1)",
 		param.PostAction(af)) // This sets the action function
-	p2 := ps.Add("p2", psetter.BoolSetter{Value: &param2},
+	p2 := ps.Add("p2", psetter.Bool{Value: &param2},
 		"the second flag (only set 1)",
 		param.PostAction(af)) // This sets the action function
 

@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func TestDurationSetter(t *testing.T) {
+func TestDuration(t *testing.T) {
 	testCases := []struct {
 		testName      string
 		val           string
@@ -56,7 +56,7 @@ func TestDurationSetter(t *testing.T) {
 
 	for i, tc := range testCases {
 		var d time.Duration
-		ds := psetter.DurationSetter{
+		ds := psetter.Duration{
 			Value:  &d,
 			Checks: []check.Duration{tc.check},
 		}

@@ -2,10 +2,11 @@ package param_test
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/nickwells/param.mod/v2/param"
 	"github.com/nickwells/param.mod/v2/param/paramset"
 	"github.com/nickwells/param.mod/v2/param/psetter"
-	"os"
 )
 
 // Example_setDirectly shows how to use the param package. It is generally
@@ -25,7 +26,7 @@ func Example_setDirectly() {
 	ps.SetProgramDescription("what this program does")
 
 	ps.Add("example1",
-		psetter.BoolSetter{Value: &example1},
+		psetter.Bool{Value: &example1},
 		"here is where you would describe the parameter",
 		// optional additional settings
 		param.AltName("e1"))
@@ -147,7 +148,7 @@ func AddParams1(ps *param.PSet) error {
 		"The parameters for my command")
 
 	ps.Add("example1",
-		psetter.BoolSetter{Value: &ValExample1},
+		psetter.Bool{Value: &ValExample1},
 		"here is where you would describe the parameter",
 		param.AltName("e1"),
 		param.GroupName(exampleGroupName))

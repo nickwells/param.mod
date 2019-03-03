@@ -1,17 +1,18 @@
 package param_test
 
 import (
+	"testing"
+
 	"github.com/nickwells/location.mod/location"
 	"github.com/nickwells/param.mod/v2/param"
 	"github.com/nickwells/param.mod/v2/param/paramset"
 	"github.com/nickwells/param.mod/v2/param/psetter"
-	"testing"
 )
 
 func TestSource(t *testing.T) {
 	var b bool
 	ps, _ := paramset.NewNoHelpNoExitNoErrRpt()
-	p := ps.Add("p", psetter.BoolSetter{Value: &b}, "desc")
+	p := ps.Add("p", psetter.Bool{Value: &b}, "desc")
 	loc := location.New("loc")
 	loc.Incr()
 	testCases := []struct {
@@ -68,7 +69,7 @@ func TestSource(t *testing.T) {
 func TestSources(t *testing.T) {
 	var b bool
 	ps, _ := paramset.NewNoHelpNoExitNoErrRpt()
-	p := ps.Add("p", psetter.BoolSetter{Value: &b}, "desc")
+	p := ps.Add("p", psetter.Bool{Value: &b}, "desc")
 	loc := location.New("loc")
 	loc.Incr()
 	expStr := "Param: p (at loc:1), Param: p (at loc:1)"

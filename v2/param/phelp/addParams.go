@@ -34,7 +34,7 @@ func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
 There are parameters for showing where parameters have been set and the handling of parameter errors.`)
 
 	ps.Add("params-show-where-set",
-		psetter.BoolSetter{Value: &h.reportWhereParamsAreSet},
+		psetter.Bool{Value: &h.reportWhereParamsAreSet},
 		`after all the parameters are set a message will be printed showing where they were set. This can be useful for debugging (especially if there are several config files in use).
 
 The program will exit if this parameter is set`,
@@ -42,7 +42,7 @@ The program will exit if this parameter is set`,
 		param.GroupName(groupName))
 
 	ps.Add("params-show-sources",
-		psetter.BoolSetter{Value: &h.reportParamSources},
+		psetter.Bool{Value: &h.reportParamSources},
 		`after all the parameters are set a message will be printed showing all the places (other than the command line) that a parameter can be set. This will list any configuration files and environment prefixes.
 
 The program will exit if this parameter is set`,
@@ -50,7 +50,7 @@ The program will exit if this parameter is set`,
 		param.GroupName(groupName))
 
 	ps.Add("params-show-unused",
-		psetter.BoolSetter{Value: &h.reportUnusedParams},
+		psetter.Bool{Value: &h.reportUnusedParams},
 		`after all the parameters are set a message will be printed showing any parameters (including those from config files or the environment) which were not recognised.
 
 Parameters set in any config files or through environment variables may be intended for other programs and so unused values are not classed as errors. Command line options are obviously intended for this program and so any command line parameter which is not recognised is treated as an error. Setting this parameter will allow you to check for spelling mistakes or other typos.
@@ -60,19 +60,19 @@ The program will exit if this parameter is set`,
 		param.GroupName(groupName))
 
 	ps.Add("params-dont-show-errors",
-		psetter.BoolSetter{Value: &h.dontReportErrors},
+		psetter.Bool{Value: &h.dontReportErrors},
 		"after all the parameters are set any errors detected will be reported unless this flag is set to true",
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.GroupName(groupName))
 
 	ps.Add("params-dont-exit-on-errors",
-		psetter.BoolSetter{Value: &h.dontExitOnErrors},
+		psetter.Bool{Value: &h.dontExitOnErrors},
 		"if errors are detected when processing the parameters the program will exit unless this flag is set to true",
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.GroupName(groupName))
 
 	ps.Add("params-exit-after-parsing",
-		psetter.BoolSetter{Value: &h.exitAfterParsing},
+		psetter.Bool{Value: &h.exitAfterParsing},
 		`exit after the parameters have been parsed. This can allow you to just check the parameters or investigate what would have been set and not actually run the program.
 
 Note that the program may perform some operations as the parameters are processed and these will still take place even if this parameter is set.`,
@@ -128,7 +128,7 @@ This can allow you to see the sets of parameters in a concise way and allow you 
 		param.GroupName(groupName))
 
 	ps.Add("help-groups-in-list",
-		psetter.MapSetter{
+		psetter.Map{
 			Value: &h.groupsToShow,
 		},
 		`when printing the help message only show help for parameters in the listed groups.`,
@@ -139,7 +139,7 @@ This can allow you to see the sets of parameters in a concise way and allow you 
 		param.PostAction(groupListAF))
 
 	ps.Add("help-groups-not-in-list",
-		psetter.MapSetter{
+		psetter.Map{
 			Value: &h.groupsToExclude,
 		},
 		`when printing the help message don't show help for parameters in the listed groups.`,

@@ -1,28 +1,20 @@
 package psetter
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 
 	"github.com/nickwells/param.mod/v2/param"
 )
 
-// EnumMapSetter sets the entry in a map of strings. The values must be in
+// EnumMap sets the entry in a map of strings. The values must be in
 // the allowed values map
-type EnumMapSetter struct {
+type EnumMap struct {
+	param.ValueReqMandatory
+
 	Value       *map[string]bool
 	AllowedVals AValMap // map[allowedValue] => description
 	StrListSeparator
-}
-
-// ValueReq returns param.Mandatory indicating that some value must follow
-// the parameter
-func (s EnumMapSetter) ValueReq() param.ValueReq { return param.Mandatory }
-
-// Set (called when there is no following value) returns an error
-func (s EnumMapSetter) Set(_ string) error {
-	return errors.New("no value given (it should be followed by '=...')")
 }
 
 // SetWithVal (called when a value follows the parameter) splits the value
@@ -30,7 +22,7 @@ func (s EnumMapSetter) Set(_ string) error {
 // only if all the values are in the allowed values list does it set the entry
 // in the map of strings pointed to by the Value. It returns a error for the
 // first invalid value.
-func (s EnumMapSetter) SetWithVal(_ string, paramVal string) error {
+func (s EnumMap) SetWithVal(_ string, paramVal string) error {
 	sep := s.GetSeparator()
 	values := strings.Split(paramVal, sep)
 	for i, v := range values {
@@ -47,14 +39,14 @@ func (s EnumMapSetter) SetWithVal(_ string, paramVal string) error {
 }
 
 // AllowedValues returns a string listing the allowed values
-func (s EnumMapSetter) AllowedValues() string {
+func (s EnumMap) AllowedValues() string {
 	return s.ListValDesc("string values") +
 		". The values must be from the following:\n" +
 		s.AllowedVals.String()
 }
 
 // CurrentValue returns the current setting of the parameter value
-func (s EnumMapSetter) CurrentValue() string {
+func (s EnumMap) CurrentValue() string {
 	cv := ""
 	sep := ""
 	for k, v := range *s.Value {
@@ -68,8 +60,8 @@ func (s EnumMapSetter) CurrentValue() string {
 // CheckSetter panics if the setter has not been properly created - if the
 // Value is nil or the map has not been created yet or if there are no
 // allowed values.
-func (s EnumMapSetter) CheckSetter(name string) {
-	intro := name + ": EnumMapSetter Check failed: "
+func (s EnumMap) CheckSetter(name string) {
+	intro := name + ": EnumMap Check failed: "
 	if s.Value == nil {
 		panic(intro + "the Value to be set is nil")
 	}

@@ -7,7 +7,7 @@ import (
 	"github.com/nickwells/param.mod/v2/param"
 )
 
-// BoolSetterNot is used to invert the normal meaning of a boolean parameter.
+// BoolNot is used to invert the normal meaning of a boolean parameter.
 // It is useful where you want to have a parameter of the form 'dont-xxx' but
 // use it to set the value of a bool variable (default value: true) such as
 // 'xxx' which you can then test by saying:
@@ -20,22 +20,20 @@ import (
 //      if !dontXXX { doXXX() }
 //
 // The benefit is that you can avoid the ugly double negative
-type BoolSetterNot struct {
+type BoolNot struct {
+	param.ValueReqOptional
+
 	Value *bool
 }
 
-// ValueReq returns param.Optional indicating that the parameter may have
-// but need not have a following value
-func (s BoolSetterNot) ValueReq() param.ValueReq { return param.Optional }
-
 // Set sets the parameter value to false
-func (s BoolSetterNot) Set(_ string) error {
+func (s BoolNot) Set(_ string) error {
 	*s.Value = false
 	return nil
 }
 
 // SetWithVal should be called when a value is given for the parameter
-func (s BoolSetterNot) SetWithVal(_, val string) error {
+func (s BoolNot) SetWithVal(_, val string) error {
 	b, err := strconv.ParseBool(val)
 	if err != nil {
 		return err
@@ -45,20 +43,20 @@ func (s BoolSetterNot) SetWithVal(_, val string) error {
 }
 
 // AllowedValues returns a description of the allowed values
-func (s BoolSetterNot) AllowedValues() string {
+func (s BoolNot) AllowedValues() string {
 	return "none (which will be taken as 'true')" +
 		" or some value that can be interpreted as true or false"
 }
 
 // CurrentValue returns the current setting of the parameter value
-func (s BoolSetterNot) CurrentValue() string {
+func (s BoolNot) CurrentValue() string {
 	return fmt.Sprintf("%v", !*s.Value)
 }
 
 // CheckSetter panics if the setter has not been properly created - if the
 // Value is nil
-func (s BoolSetterNot) CheckSetter(name string) {
+func (s BoolNot) CheckSetter(name string) {
 	if s.Value == nil {
-		panic(name + ": BoolSetterNot Check failed: the Value to be set is nil")
+		panic(name + ": BoolNot Check failed: the Value to be set is nil")
 	}
 }

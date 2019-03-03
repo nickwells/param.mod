@@ -1,7 +1,6 @@
 package psetter
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -14,8 +13,10 @@ import (
 // list (a slice) of int64's. You can override the list separator by setting
 // the Sep value.
 //
-// If you have a list of allowed values you should use EnumListSetter
+// If you have a list of allowed values you should use EnumList
 type Int64ListSetter struct {
+	param.ValueReqMandatory
+
 	Value *[]int64
 	StrListSeparator
 	Checks []check.Int64Slice
@@ -24,15 +25,6 @@ type Int64ListSetter struct {
 // CountChecks returns the number of check functions this setter has
 func (s Int64ListSetter) CountChecks() int {
 	return len(s.Checks)
-}
-
-// ValueReq returns param.Mandatory indicating that some value must follow
-// the parameter
-func (s Int64ListSetter) ValueReq() param.ValueReq { return param.Mandatory }
-
-// Set (called when there is no following value) returns an error
-func (s Int64ListSetter) Set(_ string) error {
-	return errors.New("no value given (it should be followed by '=...')")
 }
 
 // SetWithVal (called when a value follows the parameter) splits the value

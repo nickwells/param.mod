@@ -1,7 +1,6 @@
 package psetter
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 
@@ -17,6 +16,8 @@ import (
 // setting one of the Checks to the value returned by
 // Float64CheckGT(0)
 type Float64Setter struct {
+	param.ValueReqMandatory
+
 	Value  *float64
 	Checks []check.Float64
 }
@@ -24,15 +25,6 @@ type Float64Setter struct {
 // CountChecks returns the number of check functions this setter has
 func (s Float64Setter) CountChecks() int {
 	return len(s.Checks)
-}
-
-// ValueReq returns param.Mandatory indicating that some value must follow
-// the parameter
-func (s Float64Setter) ValueReq() param.ValueReq { return param.Mandatory }
-
-// Set (called when there is no following value) returns an error
-func (s Float64Setter) Set(_ string) error {
-	return errors.New("no number given (it should be followed by '=num')")
 }
 
 // SetWithVal (called when a value follows the parameter) checks that the value

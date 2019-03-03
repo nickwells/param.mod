@@ -1,7 +1,6 @@
 package psetter
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 
@@ -16,6 +15,8 @@ import (
 // ensure that the value is positive by setting one of the Checks to the
 // value returned by check.Int64GT(0)
 type Int64Setter struct {
+	param.ValueReqMandatory
+
 	Value  *int64
 	Checks []check.Int64
 }
@@ -23,15 +24,6 @@ type Int64Setter struct {
 // CountChecks returns the number of check functions this setter has
 func (s Int64Setter) CountChecks() int {
 	return len(s.Checks)
-}
-
-// ValueReq returns param.Mandatory indicating that some value must follow
-// the parameter
-func (s Int64Setter) ValueReq() param.ValueReq { return param.Mandatory }
-
-// Set (called when there is no following value) returns an error
-func (s Int64Setter) Set(_ string) error {
-	return errors.New("no number given (it should be followed by '=num')")
 }
 
 // SetWithVal (called when a value follows the parameter) checks that the

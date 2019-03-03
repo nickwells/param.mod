@@ -11,7 +11,7 @@ import (
 	"github.com/nickwells/testhelper.mod/testhelper"
 )
 
-func TestSetterCheck(t *testing.T) {
+func TestCheck(t *testing.T) {
 	var b bool
 	var dur time.Duration
 	var emptyStrList []string
@@ -51,41 +51,41 @@ func TestSetterCheck(t *testing.T) {
 		expVals       []string
 	}{
 		{
-			name:          "BoolSetter - ok",
-			s:             &psetter.BoolSetter{Value: &b},
+			name:          "Bool - ok",
+			s:             &psetter.Bool{Value: &b},
 			panicExpected: false,
 		},
 		{
-			name:          "BoolSetter - bad",
-			s:             &psetter.BoolSetter{},
+			name:          "Bool - bad",
+			s:             &psetter.Bool{},
 			panicExpected: true,
-			expVals:       []string{"test: BoolSetter " + nilValueMsg},
+			expVals:       []string{"test: Bool " + nilValueMsg},
 		},
 		{
-			name:          "BoolSetterNot - ok",
-			s:             &psetter.BoolSetterNot{Value: &b},
+			name:          "BoolNot - ok",
+			s:             &psetter.BoolNot{Value: &b},
 			panicExpected: false,
 		},
 		{
-			name:          "BoolSetterNot - bad",
-			s:             &psetter.BoolSetterNot{},
+			name:          "BoolNot - bad",
+			s:             &psetter.BoolNot{},
 			panicExpected: true,
-			expVals:       []string{"test: BoolSetterNot " + nilValueMsg},
+			expVals:       []string{"test: BoolNot " + nilValueMsg},
 		},
 		{
-			name:          "DurationSetter - ok",
-			s:             &psetter.DurationSetter{Value: &dur},
+			name:          "Duration - ok",
+			s:             &psetter.Duration{Value: &dur},
 			panicExpected: false,
 		},
 		{
-			name:          "DurationSetter - bad",
-			s:             &psetter.DurationSetter{},
+			name:          "Duration - bad",
+			s:             &psetter.Duration{},
 			panicExpected: true,
-			expVals:       []string{"test: DurationSetter " + nilValueMsg},
+			expVals:       []string{"test: Duration " + nilValueMsg},
 		},
 		{
-			name: "EnumListSetter - ok - no strings",
-			s: &psetter.EnumListSetter{
+			name: "EnumList - ok - no strings",
+			s: &psetter.EnumList{
 				Value: &emptyStrList,
 				AllowedVals: psetter.AValMap{
 					"aval":     "desc",
@@ -95,8 +95,8 @@ func TestSetterCheck(t *testing.T) {
 			panicExpected: false,
 		},
 		{
-			name: "EnumListSetter - ok - good strings",
-			s: &psetter.EnumListSetter{
+			name: "EnumList - ok - good strings",
+			s: &psetter.EnumList{
 				Value: &goodStrList,
 				AllowedVals: psetter.AValMap{
 					"aval":     "desc",
@@ -106,8 +106,8 @@ func TestSetterCheck(t *testing.T) {
 			panicExpected: false,
 		},
 		{
-			name: "EnumListSetter - bad initial value",
-			s: &psetter.EnumListSetter{
+			name: "EnumList - bad initial value",
+			s: &psetter.EnumList{
 				Value: &badStrList,
 				AllowedVals: psetter.AValMap{
 					"aval":     "desc",
@@ -115,49 +115,49 @@ func TestSetterCheck(t *testing.T) {
 				},
 			},
 			panicExpected: true,
-			expVals: append([]string{"test: EnumListSetter "},
+			expVals: append([]string{"test: EnumList "},
 				badInitialList...),
 		},
 		{
-			name:          "EnumListSetter - bad - no value",
-			s:             &psetter.EnumListSetter{},
+			name:          "EnumList - bad - no value",
+			s:             &psetter.EnumList{},
 			panicExpected: true,
-			expVals:       []string{"test: EnumListSetter " + nilValueMsg},
+			expVals:       []string{"test: EnumList " + nilValueMsg},
 		},
 		{
-			name: "EnumListSetter - bad - no allowedValues",
-			s: &psetter.EnumListSetter{
+			name: "EnumList - bad - no allowedValues",
+			s: &psetter.EnumList{
 				Value: &emptyStrList,
 			},
 			panicExpected: true,
-			expVals: append([]string{"test: EnumListSetter "},
+			expVals: append([]string{"test: EnumList "},
 				tooFewAValsMsg...),
 		},
 		{
-			name: "EnumListSetter - bad - empty allowedValues",
-			s: &psetter.EnumListSetter{
+			name: "EnumList - bad - empty allowedValues",
+			s: &psetter.EnumList{
 				Value:       &emptyStrList,
 				AllowedVals: psetter.AValMap{},
 			},
 			panicExpected: true,
-			expVals: append([]string{"test: EnumListSetter "},
+			expVals: append([]string{"test: EnumList "},
 				tooFewAValsMsg...),
 		},
 		{
-			name: "EnumListSetter - bad - allowedValues - only one entry",
-			s: &psetter.EnumListSetter{
+			name: "EnumList - bad - allowedValues - only one entry",
+			s: &psetter.EnumList{
 				Value: &emptyStrList,
 				AllowedVals: psetter.AValMap{
 					"aval": "desc",
 				},
 			},
 			panicExpected: true,
-			expVals: append([]string{"test: EnumListSetter "},
+			expVals: append([]string{"test: EnumList "},
 				tooFewAValsMsg...),
 		},
 		{
-			name: "EnumMapSetter - ok",
-			s: &psetter.EnumMapSetter{
+			name: "EnumMap - ok",
+			s: &psetter.EnumMap{
 				Value: &strToBoolMap,
 				AllowedVals: psetter.AValMap{
 					"aval":     "desc",
@@ -167,14 +167,14 @@ func TestSetterCheck(t *testing.T) {
 			panicExpected: false,
 		},
 		{
-			name:          "EnumMapSetter - bad - no value",
-			s:             &psetter.EnumMapSetter{},
+			name:          "EnumMap - bad - no value",
+			s:             &psetter.EnumMap{},
 			panicExpected: true,
-			expVals:       []string{"test: EnumMapSetter " + nilValueMsg},
+			expVals:       []string{"test: EnumMap " + nilValueMsg},
 		},
 		{
-			name: "EnumMapSetter - bad - nil map",
-			s: &psetter.EnumMapSetter{
+			name: "EnumMap - bad - nil map",
+			s: &psetter.EnumMap{
 				Value: &strToBoolMapNil,
 				AllowedVals: psetter.AValMap{
 					"aval":     "desc",
@@ -182,30 +182,30 @@ func TestSetterCheck(t *testing.T) {
 				},
 			},
 			panicExpected: true,
-			expVals:       []string{"test: EnumMapSetter " + mapNotCreatedMsg},
+			expVals:       []string{"test: EnumMap " + mapNotCreatedMsg},
 		},
 		{
-			name: "EnumMapSetter - bad - no allowedValues",
-			s: &psetter.EnumMapSetter{
+			name: "EnumMap - bad - no allowedValues",
+			s: &psetter.EnumMap{
 				Value: &strToBoolMap,
 			},
 			panicExpected: true,
-			expVals: append([]string{"test: EnumMapSetter "},
+			expVals: append([]string{"test: EnumMap "},
 				tooFewAValsMsg...),
 		},
 		{
-			name: "EnumMapSetter - bad - empty allowedValues",
-			s: &psetter.EnumMapSetter{
+			name: "EnumMap - bad - empty allowedValues",
+			s: &psetter.EnumMap{
 				Value:       &strToBoolMap,
 				AllowedVals: psetter.AValMap{},
 			},
 			panicExpected: true,
-			expVals: append([]string{"test: EnumMapSetter "},
+			expVals: append([]string{"test: EnumMap "},
 				tooFewAValsMsg...),
 		},
 		{
-			name: "EnumSetter - ok",
-			s: &psetter.EnumSetter{
+			name: "Enum - ok",
+			s: &psetter.Enum{
 				Value: &goodStr,
 				AllowedVals: psetter.AValMap{
 					"aval":     "desc",
@@ -215,8 +215,8 @@ func TestSetterCheck(t *testing.T) {
 			panicExpected: false,
 		},
 		{
-			name: "EnumSetter - bad initial value",
-			s: &psetter.EnumSetter{
+			name: "Enum - bad initial value",
+			s: &psetter.Enum{
 				Value: &badStr,
 				AllowedVals: psetter.AValMap{
 					"aval":     "desc",
@@ -224,31 +224,31 @@ func TestSetterCheck(t *testing.T) {
 				},
 			},
 			panicExpected: true,
-			expVals:       append([]string{"test: EnumSetter "}, badInitialVal...),
+			expVals:       append([]string{"test: Enum "}, badInitialVal...),
 		},
 		{
-			name:          "EnumSetter - bad - no value",
-			s:             &psetter.EnumSetter{},
+			name:          "Enum - bad - no value",
+			s:             &psetter.Enum{},
 			panicExpected: true,
-			expVals:       []string{"test: EnumSetter " + nilValueMsg},
+			expVals:       []string{"test: Enum " + nilValueMsg},
 		},
 		{
-			name: "EnumSetter - bad - no allowedValues",
-			s: &psetter.EnumSetter{
+			name: "Enum - bad - no allowedValues",
+			s: &psetter.Enum{
 				Value: &anyStr,
 			},
 			panicExpected: true,
-			expVals: append([]string{"test: EnumSetter "},
+			expVals: append([]string{"test: Enum "},
 				tooFewAValsMsg...),
 		},
 		{
-			name: "EnumSetter - bad - empty allowedValues",
-			s: &psetter.EnumSetter{
+			name: "Enum - bad - empty allowedValues",
+			s: &psetter.Enum{
 				Value:       &anyStr,
 				AllowedVals: psetter.AValMap{},
 			},
 			panicExpected: true,
-			expVals: append([]string{"test: EnumSetter "},
+			expVals: append([]string{"test: Enum "},
 				tooFewAValsMsg...),
 		},
 		{
@@ -285,85 +285,85 @@ func TestSetterCheck(t *testing.T) {
 			expVals:       []string{"test: Int64ListSetter " + nilValueMsg},
 		},
 		{
-			name: "MapSetter - ok",
-			s: &psetter.MapSetter{
+			name: "Map - ok",
+			s: &psetter.Map{
 				Value: &strToBoolMap,
 			},
 			panicExpected: false,
 		},
 		{
-			name:          "MapSetter - bad - no value",
-			s:             &psetter.MapSetter{},
+			name:          "Map - bad - no value",
+			s:             &psetter.Map{},
 			panicExpected: true,
-			expVals:       []string{"test: MapSetter " + nilValueMsg},
+			expVals:       []string{"test: Map " + nilValueMsg},
 		},
 		{
-			name: "MapSetter - bad - nil map",
-			s: &psetter.MapSetter{
+			name: "Map - bad - nil map",
+			s: &psetter.Map{
 				Value: &strToBoolMapNil,
 			},
 			panicExpected: true,
-			expVals:       []string{"test: MapSetter " + mapNotCreatedMsg},
+			expVals:       []string{"test: Map " + mapNotCreatedMsg},
 		},
 		{
-			name:          "NilSetter - ok",
-			s:             &psetter.NilSetter{},
+			name:          "Nil - ok",
+			s:             &psetter.Nil{},
 			panicExpected: false,
 		},
 		{
-			name:          "PathnameSetter - ok",
-			s:             &psetter.PathnameSetter{Value: &anyStr},
+			name:          "Pathname - ok",
+			s:             &psetter.Pathname{Value: &anyStr},
 			panicExpected: false,
 		},
 		{
-			name:          "PathnameSetter - bad",
-			s:             &psetter.PathnameSetter{},
+			name:          "Pathname - bad",
+			s:             &psetter.Pathname{},
 			panicExpected: true,
-			expVals:       []string{"test: PathnameSetter " + nilValueMsg},
+			expVals:       []string{"test: Pathname " + nilValueMsg},
 		},
 		{
-			name:          "RegexpSetter - ok",
-			s:             &psetter.RegexpSetter{Value: &re},
+			name:          "Regexp - ok",
+			s:             &psetter.Regexp{Value: &re},
 			panicExpected: false,
 		},
 		{
-			name:          "RegexpSetter - bad",
-			s:             &psetter.RegexpSetter{},
+			name:          "Regexp - bad",
+			s:             &psetter.Regexp{},
 			panicExpected: true,
-			expVals:       []string{"test: RegexpSetter " + nilValueMsg},
+			expVals:       []string{"test: Regexp " + nilValueMsg},
 		},
 		{
-			name:          "StrListSetter - ok",
-			s:             &psetter.StrListSetter{Value: &emptyStrList},
+			name:          "StrList - ok",
+			s:             &psetter.StrList{Value: &emptyStrList},
 			panicExpected: false,
 		},
 		{
-			name:          "StrListSetter - bad",
-			s:             &psetter.StrListSetter{},
+			name:          "StrList - bad",
+			s:             &psetter.StrList{},
 			panicExpected: true,
-			expVals:       []string{"test: StrListSetter " + nilValueMsg},
+			expVals:       []string{"test: StrList " + nilValueMsg},
 		},
 		{
-			name:          "StringSetter - ok",
-			s:             &psetter.StringSetter{Value: &anyStr},
+			name:          "String - ok",
+			s:             &psetter.String{Value: &anyStr},
 			panicExpected: false,
 		},
 		{
-			name:          "StringSetter - bad",
-			s:             &psetter.StringSetter{},
+			name:          "String - bad",
+			s:             &psetter.String{},
 			panicExpected: true,
-			expVals:       []string{"test: StringSetter " + nilValueMsg},
+			expVals:       []string{"test: String " + nilValueMsg},
 		},
 		{
-			name:          "TimeLocationSetter - ok",
-			s:             &psetter.TimeLocationSetter{Value: &timeLoc},
+			name:          "TimeLocation - ok",
+			s:             &psetter.TimeLocation{Value: &timeLoc},
 			panicExpected: false,
 		},
 		{
-			name:          "TimeLocationSetter - bad",
-			s:             &psetter.TimeLocationSetter{},
+			name:          "TimeLocation - bad",
+			s:             &psetter.TimeLocation{},
 			panicExpected: true,
-			expVals:       []string{"test: TimeLocationSetter " + nilValueMsg},
+			expVals:       []string{"test: TimeLocation " + nilValueMsg},
 		},
 	}
 

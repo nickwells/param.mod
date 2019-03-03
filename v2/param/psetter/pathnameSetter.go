@@ -1,7 +1,6 @@
 package psetter
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/nickwells/check.mod/check"
@@ -10,29 +9,22 @@ import (
 	"github.com/nickwells/param.mod/v2/param"
 )
 
-// PathnameSetter allows you to specify a parameter that can be used to set an
+// Pathname allows you to specify a parameter that can be used to set an
 // pathname value. You can specify some required attributes of the referenced
 // file-system object by setting the AttributesNeeded member. You can also
 // supply a check function that will validate the Value. For instance you
 // could check that the value was in a particular directory
-type PathnameSetter struct {
+type Pathname struct {
+	param.ValueReqMandatory
+
 	Value       *string
 	Expectation filecheck.Provisos
 	Checks      []check.String
 }
 
 // CountChecks returns the number of check functions this setter has
-func (s PathnameSetter) CountChecks() int {
+func (s Pathname) CountChecks() int {
 	return len(s.Checks)
-}
-
-// ValueReq returns param.Mandatory indicating that some value must follow
-// the parameter
-func (s PathnameSetter) ValueReq() param.ValueReq { return param.Mandatory }
-
-// Set (called when there is no following value) returns an error
-func (s PathnameSetter) Set(_ string) error {
-	return errors.New("no pathname given (it should be followed by '=...')")
 }
 
 // SetWithVal (called when a value follows the parameter) checks first that the
@@ -40,7 +32,7 @@ func (s PathnameSetter) Set(_ string) error {
 // error. If there is a check and the check is violated it returns an
 // error. Only if the value is parsed successfully and the check is not
 // violated is the Value set.
-func (s PathnameSetter) SetWithVal(_ string, paramVal string) error {
+func (s Pathname) SetWithVal(_ string, paramVal string) error {
 	pathname, err := fileparse.FixFileName(paramVal)
 	if err != nil {
 		return err
@@ -67,7 +59,7 @@ func (s PathnameSetter) SetWithVal(_ string, paramVal string) error {
 }
 
 // AllowedValues returns a string describing the allowed values
-func (s PathnameSetter) AllowedValues() string {
+func (s Pathname) AllowedValues() string {
 	rval := "a pathname" + HasChecks(s)
 
 	extras := s.Expectation.String()
@@ -79,15 +71,15 @@ func (s PathnameSetter) AllowedValues() string {
 }
 
 // CurrentValue returns the current setting of the parameter value
-func (s PathnameSetter) CurrentValue() string {
+func (s Pathname) CurrentValue() string {
 	return fmt.Sprintf("%v", *s.Value)
 }
 
 // CheckSetter panics if the setter has not been properly created - if the
 // Value is nil.
-func (s PathnameSetter) CheckSetter(name string) {
+func (s Pathname) CheckSetter(name string) {
 	if s.Value == nil {
 		panic(name +
-			": PathnameSetter Check failed: the Value to be set is nil")
+			": Pathname Check failed: the Value to be set is nil")
 	}
 }

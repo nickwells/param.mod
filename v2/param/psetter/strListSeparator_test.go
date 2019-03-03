@@ -1,11 +1,12 @@
 package psetter_test
 
 import (
-	"github.com/nickwells/param.mod/v2/param/psetter"
 	"testing"
+
+	"github.com/nickwells/param.mod/v2/param/psetter"
 )
 
-func TestStringList(t *testing.T) {
+func TestStrListSeparator(t *testing.T) {
 	var sls psetter.StrListSeparator
 
 	slsTestCases := [...]struct {
@@ -19,7 +20,8 @@ func TestStringList(t *testing.T) {
 		sls.Sep = tc.sep
 		val := sls.GetSeparator()
 		if val != tc.expectedSep {
-			t.Error("GetSeparator() returned: '" + val + "' but '" + tc.expectedSep + "' was expected")
+			t.Error("GetSeparator() returned: '" + val +
+				"' but '" + tc.expectedSep + "' was expected")
 		}
 	}
 }

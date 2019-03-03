@@ -6,18 +6,18 @@ import (
 	"testing"
 )
 
-func TestBoolSetter(t *testing.T) {
+func TestBool(t *testing.T) {
 	var b bool
-	bs := psetter.BoolSetter{Value: &b}
-	bsn := psetter.BoolSetterNot{Value: &b}
+	bs := psetter.Bool{Value: &b}
+	bsn := psetter.BoolNot{Value: &b}
 
 	paramTestCases := [...]struct {
 		name          string
 		ps            param.Setter
 		expectedValue bool
 	}{
-		{"BoolSetter", bs, true},
-		{"BoolSetterNot", bsn, false},
+		{"Bool", bs, true},
+		{"BoolNot", bsn, false},
 	}
 	for _, tc := range paramTestCases {
 		b = !tc.expectedValue // force the value to != the expected value

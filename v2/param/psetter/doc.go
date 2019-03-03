@@ -10,7 +10,7 @@ params the Set method will be called.
 A typical Setter is used to set the value of a parameter to the program.
 For example below, a bool variable
     exitOnErrors
-is set to true by the BoolSetter object's Set
+is set to true by the Bool object's Set
 method if the parameter
     exit-on-error
 is found among the command line arguments:
@@ -18,7 +18,7 @@ is found among the command line arguments:
     var exitOnErrors bool
     ps, err := paramset.New()
     p := ps.Add("exit-on-errors",
-        psetter.BoolSetter{Value: &exitOnErrors},
+        psetter.Bool{Value: &exitOnErrors},
         "Errors make the program exit if this flag is set to true",
         param.GroupName("MyTestGroup"))
 */

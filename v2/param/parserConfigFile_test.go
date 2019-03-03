@@ -67,7 +67,7 @@ func TestConfigFile(t *testing.T) {
 // CFAddParams1 will set the "example1" parameter in the PSet
 func CFAddParams1(ps *param.PSet) error {
 	ps.Add("example1",
-		psetter.BoolSetter{Value: &CFValExample1},
+		psetter.Bool{Value: &CFValExample1},
 		"here is where you would describe the parameter",
 		param.AltName("e1"))
 
@@ -226,10 +226,10 @@ func addParamsForGroupCF(ps *param.PSet) {
 	ps.Add("pi2", psetter.Int64Setter{Value: &paramInt2},
 		"param int val 2",
 		param.GroupName(groupCFName2))
-	ps.Add("pb1", psetter.BoolSetter{Value: &paramBool1},
+	ps.Add("pb1", psetter.Bool{Value: &paramBool1},
 		"param bool val 1",
 		param.GroupName(groupCFName1))
-	ps.Add("pb2", psetter.BoolSetter{Value: &paramBool2},
+	ps.Add("pb2", psetter.Bool{Value: &paramBool2},
 		"param bool val 2",
 		param.GroupName(groupCFName2))
 }

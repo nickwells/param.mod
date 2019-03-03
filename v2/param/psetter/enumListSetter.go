@@ -9,9 +9,11 @@ import (
 	"github.com/nickwells/param.mod/v2/param"
 )
 
-// EnumListSetter sets the values in a slice of strings. The values must be in
+// EnumList sets the values in a slice of strings. The values must be in
 // the allowed values map
-type EnumListSetter struct {
+type EnumList struct {
+	param.ValueReqMandatory
+
 	Value       *[]string
 	AllowedVals AValMap // map[allowedValue] => description
 	StrListSeparator
@@ -19,17 +21,8 @@ type EnumListSetter struct {
 }
 
 // CountChecks returns the number of check functions this setter has
-func (s EnumListSetter) CountChecks() int {
+func (s EnumList) CountChecks() int {
 	return len(s.Checks)
-}
-
-// ValueReq returns param.Mandatory indicating that some value must follow
-// the parameter
-func (s EnumListSetter) ValueReq() param.ValueReq { return param.Mandatory }
-
-// Set (called when there is no following value) returns an error
-func (s EnumListSetter) Set(_ string) error {
-	return errors.New("no value given (it should be followed by '=...')")
 }
 
 // SetWithVal (called when a value follows the parameter) splits the value
@@ -37,7 +30,7 @@ func (s EnumListSetter) Set(_ string) error {
 // only if all the values are in the allowed values list does it add them
 // to the slice of strings pointed to by the Value. It returns a error for
 // the first invalid value or if a check is breached.
-func (s EnumListSetter) SetWithVal(_ string, paramVal string) error {
+func (s EnumList) SetWithVal(_ string, paramVal string) error {
 	sep := s.GetSeparator()
 	values := strings.Split(paramVal, sep)
 	for _, v := range values {
@@ -64,7 +57,7 @@ func (s EnumListSetter) SetWithVal(_ string, paramVal string) error {
 }
 
 // AllowedValues returns a string listing the allowed values
-func (s EnumListSetter) AllowedValues() string {
+func (s EnumList) AllowedValues() string {
 	return s.ListValDesc("string values") +
 		HasChecks(s) +
 		". The values must be from the following:\n" +
@@ -72,7 +65,7 @@ func (s EnumListSetter) AllowedValues() string {
 }
 
 // CurrentValue returns the current setting of the parameter value
-func (s EnumListSetter) CurrentValue() string {
+func (s EnumList) CurrentValue() string {
 	str := ""
 	sep := ""
 
@@ -87,8 +80,8 @@ func (s EnumListSetter) CurrentValue() string {
 // CheckSetter panics if the setter has not been properly created - if the
 // Value is nil or there are no allowed values or the initial value is not
 // allowed.
-func (s EnumListSetter) CheckSetter(name string) {
-	intro := name + ": EnumListSetter Check failed: "
+func (s EnumList) CheckSetter(name string) {
+	intro := name + ": EnumList Check failed: "
 	if s.Value == nil {
 		panic(intro + "the Value to be set is nil")
 	}
