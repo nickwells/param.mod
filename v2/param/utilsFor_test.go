@@ -147,15 +147,22 @@ func panicSafeSetGroupDescription(ps *param.PSet, groupName, desc string) (
 
 // =======================================================
 
+// logErrs prints the errors out one per line
+func logErrs(t *testing.T, msg string, errs []error) {
+	t.Helper()
+
+	t.Log(msg)
+	for _, err := range errs {
+		t.Log("\t:\t", err, "\n")
+	}
+}
+
 // logErrMap reports the contents of the error map returned by param.Parse(...)
 func logErrMap(t *testing.T, errMap param.ErrMap) {
 	t.Helper()
 
-	for k, v := range errMap {
-		t.Log("\t: Errors for:", k, ":\n")
-		for _, err := range v {
-			t.Log("\t:\t", err, "\n")
-		}
+	for k, errs := range errMap {
+		logErrs(t, "\t: Errors for: "+k+":\n", errs)
 	}
 }
 
@@ -186,23 +193,20 @@ func errMapCheck(t *testing.T, testID string, errMap param.ErrMap, expected map[
 		expStrs, ok := expected[k]
 		if !ok {
 			nameLogged = logName(t, nameLogged, testID)
-			t.Errorf("\t: there are unexpected errors for: '%s':", k)
+			logErrs(t, "\t: there are unexpected errors for: "+k+":\n", errs)
+			continue
+		}
+		for _, s := range expStrs {
+			count := 0
 			for _, err := range errs {
-				t.Logf("\t\t: %s", err)
+				if strings.Contains(err.Error(), s) {
+					count++
+				}
 			}
-		} else {
-			for _, s := range expStrs {
-				count := 0
-				for _, err := range errs {
-					if strings.Contains(err.Error(), s) {
-						count++
-					}
-				}
-				if count == 0 {
-					nameLogged = logName(t, nameLogged, testID)
-					t.Errorf("\t: errors for '%s' should contain '%s' but don't",
-						k, s)
-				}
+			if count == 0 {
+				nameLogged = logName(t, nameLogged, testID)
+				t.Errorf("\t: errors for '%s' should contain '%s' but don't",
+					k, s)
 			}
 		}
 	}

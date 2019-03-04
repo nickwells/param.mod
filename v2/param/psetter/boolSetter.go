@@ -1,6 +1,7 @@
 package psetter
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 
@@ -8,15 +9,35 @@ import (
 )
 
 // Bool is used to set boolean flags
+//
+// The Invert flag is used to invert the normal meaning of a boolean parameter.
+// It is useful where you want to have a parameter of the form 'dont-xxx' but
+// use it to set the value of a bool variable (default value: true) such as
+// 'xxx' which you can then test by saying:
+//
+//      if xxx { doXXX() }
+//
+// rather than having to set the value of a variable which you would have to
+// call dontXXX and then test by saying:
+//
+//      if !dontXXX { doXXX() }
+//
+// The benefit is that you can avoid the ugly double negative
 type Bool struct {
 	param.ValueReqOptional
 
 	Value *bool
+
+	Invert bool
 }
 
 // Set sets the parameter value to true
 func (s Bool) Set(_ string) error {
-	*s.Value = true
+	if s.Invert {
+		*s.Value = false
+	} else {
+		*s.Value = true
+	}
 	return nil
 }
 
@@ -24,20 +45,32 @@ func (s Bool) Set(_ string) error {
 func (s Bool) SetWithVal(_, val string) error {
 	b, err := strconv.ParseBool(val)
 	if err != nil {
-		return err
+		return errors.New(
+			"cannot interpret '" +
+				val +
+				"' as either true or false")
 	}
-	*s.Value = b
+	if s.Invert {
+		*s.Value = !b
+	} else {
+		*s.Value = b
+	}
 	return nil
 }
 
 // AllowedValues returns a description of the allowed values.
 func (s Bool) AllowedValues() string {
 	return "none (which will be taken as 'true')" +
-		" or some value that can be interpreted as true or false"
+		" or some value that can be interpreted as true or false." +
+		" The value must be given after an '='," +
+		" not as a following value, as this is optional"
 }
 
 // CurrentValue returns the current setting of the parameter value
 func (s Bool) CurrentValue() string {
+	if s.Invert {
+		return fmt.Sprintf("%v", !*s.Value)
+	}
 	return fmt.Sprintf("%v", *s.Value)
 }
 

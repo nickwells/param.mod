@@ -51,9 +51,8 @@ func TestCheck(t *testing.T) {
 		expVals       []string
 	}{
 		{
-			name:          "Bool - ok",
-			s:             &psetter.Bool{Value: &b},
-			panicExpected: false,
+			name: "Bool - ok",
+			s:    &psetter.Bool{Value: &b},
 		},
 		{
 			name:          "Bool - bad",
@@ -62,20 +61,8 @@ func TestCheck(t *testing.T) {
 			expVals:       []string{"test: Bool " + nilValueMsg},
 		},
 		{
-			name:          "BoolNot - ok",
-			s:             &psetter.BoolNot{Value: &b},
-			panicExpected: false,
-		},
-		{
-			name:          "BoolNot - bad",
-			s:             &psetter.BoolNot{},
-			panicExpected: true,
-			expVals:       []string{"test: BoolNot " + nilValueMsg},
-		},
-		{
-			name:          "Duration - ok",
-			s:             &psetter.Duration{Value: &dur},
-			panicExpected: false,
+			name: "Duration - ok",
+			s:    &psetter.Duration{Value: &dur},
 		},
 		{
 			name:          "Duration - bad",
@@ -92,7 +79,6 @@ func TestCheck(t *testing.T) {
 					"aval-alt": "desc",
 				},
 			},
-			panicExpected: false,
 		},
 		{
 			name: "EnumList - ok - good strings",
@@ -103,7 +89,6 @@ func TestCheck(t *testing.T) {
 					"aval-alt": "desc",
 				},
 			},
-			panicExpected: false,
 		},
 		{
 			name: "EnumList - bad initial value",
@@ -164,7 +149,6 @@ func TestCheck(t *testing.T) {
 					"aval-alt": "desc",
 				},
 			},
-			panicExpected: false,
 		},
 		{
 			name:          "EnumMap - bad - no value",
@@ -212,7 +196,6 @@ func TestCheck(t *testing.T) {
 					"aval-alt": "desc",
 				},
 			},
-			panicExpected: false,
 		},
 		{
 			name: "Enum - bad initial value",
@@ -252,9 +235,8 @@ func TestCheck(t *testing.T) {
 				tooFewAValsMsg...),
 		},
 		{
-			name:          "Float64Setter - ok",
-			s:             &psetter.Float64Setter{Value: &f},
-			panicExpected: false,
+			name: "Float64Setter - ok",
+			s:    &psetter.Float64Setter{Value: &f},
 		},
 		{
 			name:          "Float64Setter - bad",
@@ -263,9 +245,8 @@ func TestCheck(t *testing.T) {
 			expVals:       []string{"test: Float64Setter " + nilValueMsg},
 		},
 		{
-			name:          "Int64Setter - ok",
-			s:             &psetter.Int64Setter{Value: &i},
-			panicExpected: false,
+			name: "Int64Setter - ok",
+			s:    &psetter.Int64Setter{Value: &i},
 		},
 		{
 			name:          "Int64Setter - bad",
@@ -274,9 +255,8 @@ func TestCheck(t *testing.T) {
 			expVals:       []string{"test: Int64Setter " + nilValueMsg},
 		},
 		{
-			name:          "Int64ListSetter - ok",
-			s:             &psetter.Int64ListSetter{Value: &intList},
-			panicExpected: false,
+			name: "Int64ListSetter - ok",
+			s:    &psetter.Int64ListSetter{Value: &intList},
 		},
 		{
 			name:          "Int64ListSetter - bad",
@@ -289,7 +269,6 @@ func TestCheck(t *testing.T) {
 			s: &psetter.Map{
 				Value: &strToBoolMap,
 			},
-			panicExpected: false,
 		},
 		{
 			name:          "Map - bad - no value",
@@ -306,14 +285,12 @@ func TestCheck(t *testing.T) {
 			expVals:       []string{"test: Map " + mapNotCreatedMsg},
 		},
 		{
-			name:          "Nil - ok",
-			s:             &psetter.Nil{},
-			panicExpected: false,
+			name: "Nil - ok",
+			s:    &psetter.Nil{},
 		},
 		{
-			name:          "Pathname - ok",
-			s:             &psetter.Pathname{Value: &anyStr},
-			panicExpected: false,
+			name: "Pathname - ok",
+			s:    &psetter.Pathname{Value: &anyStr},
 		},
 		{
 			name:          "Pathname - bad",
@@ -322,9 +299,8 @@ func TestCheck(t *testing.T) {
 			expVals:       []string{"test: Pathname " + nilValueMsg},
 		},
 		{
-			name:          "Regexp - ok",
-			s:             &psetter.Regexp{Value: &re},
-			panicExpected: false,
+			name: "Regexp - ok",
+			s:    &psetter.Regexp{Value: &re},
 		},
 		{
 			name:          "Regexp - bad",
@@ -333,9 +309,8 @@ func TestCheck(t *testing.T) {
 			expVals:       []string{"test: Regexp " + nilValueMsg},
 		},
 		{
-			name:          "StrList - ok",
-			s:             &psetter.StrList{Value: &emptyStrList},
-			panicExpected: false,
+			name: "StrList - ok",
+			s:    &psetter.StrList{Value: &emptyStrList},
 		},
 		{
 			name:          "StrList - bad",
@@ -344,9 +319,8 @@ func TestCheck(t *testing.T) {
 			expVals:       []string{"test: StrList " + nilValueMsg},
 		},
 		{
-			name:          "String - ok",
-			s:             &psetter.String{Value: &anyStr},
-			panicExpected: false,
+			name: "String - ok",
+			s:    &psetter.String{Value: &anyStr},
 		},
 		{
 			name:          "String - bad",
@@ -355,9 +329,8 @@ func TestCheck(t *testing.T) {
 			expVals:       []string{"test: String " + nilValueMsg},
 		},
 		{
-			name:          "TimeLocation - ok",
-			s:             &psetter.TimeLocation{Value: &timeLoc},
-			panicExpected: false,
+			name: "TimeLocation - ok",
+			s:    &psetter.TimeLocation{Value: &timeLoc},
 		},
 		{
 			name:          "TimeLocation - bad",
