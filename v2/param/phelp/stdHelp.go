@@ -21,6 +21,12 @@ const (
 // and processes them. This is the helper you are most likely to want and it
 // is the one that is used by the paramset.New func.
 type StdHelp struct {
+	groupsToShow     map[string]bool
+	groupsToExclude  map[string]bool
+	groupListCounter paction.Counter
+	includeGroups    bool
+	excludeGroups    bool
+
 	reportWhereParamsAreSet bool
 	reportUnusedParams      bool
 	reportParamSources      bool
@@ -32,12 +38,6 @@ type StdHelp struct {
 
 	showHelp      bool
 	showAllParams bool
-
-	includeGroups    bool
-	excludeGroups    bool
-	groupsToShow     map[string]bool
-	groupsToExclude  map[string]bool
-	groupListCounter paction.Counter
 
 	style helpStyle
 }

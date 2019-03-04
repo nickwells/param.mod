@@ -35,7 +35,6 @@ type ErrMap map[string][]error
 // member. This lets you know precisely which parameters have been enabled
 // before calling Parse
 type PSet struct {
-	parsed          bool
 	parseCalledFrom string
 
 	progName     string
@@ -61,6 +60,7 @@ type PSet struct {
 	helper Helper
 
 	exitOnParamSetupErr bool
+	parsed              bool
 }
 
 // PSetOptFunc is the type of a function that can be passed to
