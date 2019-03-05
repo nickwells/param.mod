@@ -19,7 +19,7 @@ import (
 // passed.
 //
 // A typical way of using this mechanism might be to select a new pre-created
-// PSet (or create a new on on the fly) based on the settings of any
+// PSet (or create a new one on the fly) based on the settings of any
 // previous parameters by the previous Parse call. Then Parse can be called
 // on the new PSet passing the remaining arguments given by the Remainder
 // method on the original PSet. This would be a typical use case where a
