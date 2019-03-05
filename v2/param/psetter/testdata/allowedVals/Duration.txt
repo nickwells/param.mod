@@ -1,0 +1,4 @@
+any value that can be parsed as a duration.
+A duration string is a sequence of numbers with an optional fraction and a unit. The allowed unit names are ns, us, µs, ms, s, m, h. The whole sequence can be signed and must not contain any spaces.
+
+For example: 300ms", "-1.5h" or "2h45m"

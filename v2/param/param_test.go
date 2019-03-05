@@ -23,7 +23,7 @@ func TestParamAdd(t *testing.T) {
 		{
 			name: "bad name - empty",
 			npi: &namedParamInitialiser{
-				setter: &psetter.Int64Setter{Value: &p1},
+				setter: &psetter.Int64{Value: &p1},
 			},
 			panicExpected: true,
 			panicMsgContains: []string{
@@ -35,7 +35,7 @@ func TestParamAdd(t *testing.T) {
 			name: "bad name - bad char",
 			npi: &namedParamInitialiser{
 				name:   "?",
-				setter: &psetter.Int64Setter{Value: &p1},
+				setter: &psetter.Int64{Value: &p1},
 			},
 			panicExpected: true,
 			panicMsgContains: []string{
@@ -47,7 +47,7 @@ func TestParamAdd(t *testing.T) {
 			name: "bad name - bad first char",
 			npi: &namedParamInitialiser{
 				name:   "-hello",
-				setter: &psetter.Int64Setter{Value: &p1},
+				setter: &psetter.Int64{Value: &p1},
 			},
 			panicExpected: true,
 			panicMsgContains: []string{
@@ -59,7 +59,7 @@ func TestParamAdd(t *testing.T) {
 			name: "good name",
 			npi: &namedParamInitialiser{
 				name:   "param-1",
-				setter: &psetter.Int64Setter{Value: &p1},
+				setter: &psetter.Int64{Value: &p1},
 				opts: []param.OptFunc{
 					param.AltName("param-1-alt"),
 					param.GroupName("test"),
@@ -71,7 +71,7 @@ func TestParamAdd(t *testing.T) {
 			name: "bad name - duplicate",
 			npi: &namedParamInitialiser{
 				name:   "param-1",
-				setter: &psetter.Int64Setter{Value: &p1},
+				setter: &psetter.Int64{Value: &p1},
 			},
 			panicExpected: true,
 			panicMsgContains: []string{
@@ -84,7 +84,7 @@ func TestParamAdd(t *testing.T) {
 			name: "bad alt name - already used",
 			npi: &namedParamInitialiser{
 				name:   "param-2",
-				setter: &psetter.Int64Setter{Value: &p1},
+				setter: &psetter.Int64{Value: &p1},
 				opts:   []param.OptFunc{param.AltName("param-1")},
 			},
 			panicExpected: true,
@@ -98,7 +98,7 @@ func TestParamAdd(t *testing.T) {
 			name: "bad alt name - invalid",
 			npi: &namedParamInitialiser{
 				name:   "param-3",
-				setter: &psetter.Int64Setter{Value: &p1},
+				setter: &psetter.Int64{Value: &p1},
 				opts:   []param.OptFunc{param.AltName("?")},
 			},
 			panicExpected: true,
@@ -112,7 +112,7 @@ func TestParamAdd(t *testing.T) {
 			name: "bad alt name - already used as alt",
 			npi: &namedParamInitialiser{
 				name:   "param-4",
-				setter: &psetter.Int64Setter{Value: &p1},
+				setter: &psetter.Int64{Value: &p1},
 				opts:   []param.OptFunc{param.AltName("param-1-alt")},
 			},
 			panicExpected: true,
@@ -198,7 +198,7 @@ func TestParamAddPos(t *testing.T) {
 				{
 					npi: &namedParamInitialiser{
 						name:   "param-1",
-						setter: &psetter.Int64Setter{Value: &p1},
+						setter: &psetter.Int64{Value: &p1},
 						opts: []param.OptFunc{
 							param.AltName("param-1-alt"),
 							param.GroupName("test"),
@@ -209,7 +209,7 @@ func TestParamAddPos(t *testing.T) {
 				{
 					npi: &namedParamInitialiser{
 						name:   "param-2",
-						setter: &psetter.Int64Setter{Value: &p1},
+						setter: &psetter.Int64{Value: &p1},
 						opts: []param.OptFunc{
 							param.AltName("param-2-alt"),
 							param.GroupName("test"),
@@ -220,7 +220,7 @@ func TestParamAddPos(t *testing.T) {
 				{
 					ppi: &posParamInitialiser{
 						name:   "ppi1",
-						setter: &psetter.Int64Setter{Value: &p1},
+						setter: &psetter.Int64{Value: &p1},
 					},
 					ppiShouldExist: true,
 				},
@@ -234,7 +234,7 @@ func TestParamAddPos(t *testing.T) {
 				{
 					npi: &namedParamInitialiser{
 						name:   "",
-						setter: &psetter.Int64Setter{Value: &p1},
+						setter: &psetter.Int64{Value: &p1},
 						opts: []param.OptFunc{
 							param.GroupName("test"),
 						},
@@ -253,7 +253,7 @@ func TestParamAddPos(t *testing.T) {
 				{
 					npi: &namedParamInitialiser{
 						name:   "param-1",
-						setter: &psetter.Int64Setter{Value: &p1},
+						setter: &psetter.Int64{Value: &p1},
 						opts: []param.OptFunc{
 							param.AltName("param-1-alt"),
 							param.GroupName("test"),
@@ -264,7 +264,7 @@ func TestParamAddPos(t *testing.T) {
 				{
 					ppi: &posParamInitialiser{
 						name:   "ppi1",
-						setter: &psetter.Int64Setter{Value: &p1},
+						setter: &psetter.Int64{Value: &p1},
 						opts: []param.PosOptFunc{
 							param.SetAsTerminal,
 						},
@@ -285,7 +285,7 @@ func TestParamAddPos(t *testing.T) {
 				{
 					ppi: &posParamInitialiser{
 						name:   "ppi1",
-						setter: &psetter.Int64Setter{Value: &p1},
+						setter: &psetter.Int64{Value: &p1},
 						opts: []param.PosOptFunc{
 							param.SetAsTerminal,
 						},
@@ -295,7 +295,7 @@ func TestParamAddPos(t *testing.T) {
 				{
 					npi: &namedParamInitialiser{
 						name:   "param-1",
-						setter: &psetter.Int64Setter{Value: &p1},
+						setter: &psetter.Int64{Value: &p1},
 						opts: []param.OptFunc{
 							param.AltName("param-1-alt"),
 							param.GroupName("test"),
@@ -316,7 +316,7 @@ func TestParamAddPos(t *testing.T) {
 				{
 					ppi: &posParamInitialiser{
 						name:   "ppi1",
-						setter: &psetter.Int64Setter{Value: &p1},
+						setter: &psetter.Int64{Value: &p1},
 						opts: []param.PosOptFunc{
 							param.SetAsTerminal,
 						},
@@ -326,7 +326,7 @@ func TestParamAddPos(t *testing.T) {
 				{
 					ppi: &posParamInitialiser{
 						name:   "ppi2",
-						setter: &psetter.Int64Setter{Value: &p1},
+						setter: &psetter.Int64{Value: &p1},
 						opts:   []param.PosOptFunc{},
 					},
 				},
@@ -483,8 +483,8 @@ func TestParamParse1(t *testing.T) {
 	}
 
 	testName := "param.Parse - first Parse"
-	ps.Add("param1", &psetter.Int64Setter{Value: &p1}, "a param")
-	ps.Add("param2", &psetter.Int64Setter{Value: &p2}, "a param")
+	ps.Add("param1", &psetter.Int64{Value: &p1}, "a param")
+	ps.Add("param2", &psetter.Int64{Value: &p2}, "a param")
 
 	if ps.AreSet() {
 		t.Errorf("%s: params haven't been set but AreSet() says they have",
@@ -527,7 +527,7 @@ func TestParamParse1(t *testing.T) {
 	_, panicked, panicVal = panicSafeTestAddByName(ps,
 		&namedParamInitialiser{
 			name:   "test99",
-			setter: &psetter.Int64Setter{Value: &p1},
+			setter: &psetter.Int64{Value: &p1},
 			desc:   "desc - this should not be added",
 		})
 
@@ -541,7 +541,7 @@ func TestParamParse1(t *testing.T) {
 	_, panicked, panicVal = panicSafeTestAddByPos(ps,
 		&posParamInitialiser{
 			name:   "ppi1",
-			setter: &psetter.Int64Setter{Value: &p1},
+			setter: &psetter.Int64{Value: &p1},
 		})
 	testhelper.PanicCheckString(t,
 		"Adding a positional param after parsing",
@@ -577,7 +577,7 @@ func TestParamParse(t *testing.T) {
 			params: []*namedParamInitialiser{
 				{
 					name:   "test1",
-					setter: &psetter.Int64Setter{Value: &p1},
+					setter: &psetter.Int64{Value: &p1},
 				},
 			},
 			paramsPassed: []string{
@@ -589,7 +589,7 @@ func TestParamParse(t *testing.T) {
 			params: []*namedParamInitialiser{
 				{
 					name:   "test1",
-					setter: &psetter.Int64Setter{Value: &p1},
+					setter: &psetter.Int64{Value: &p1},
 				},
 			},
 			paramsPassed: []string{
@@ -601,7 +601,7 @@ func TestParamParse(t *testing.T) {
 			params: []*namedParamInitialiser{
 				{
 					name:   "test1",
-					setter: &psetter.Int64Setter{Value: &p1},
+					setter: &psetter.Int64{Value: &p1},
 				},
 			},
 			paramsPassed: []string{
@@ -616,7 +616,7 @@ func TestParamParse(t *testing.T) {
 			params: []*namedParamInitialiser{
 				{
 					name:   "test1",
-					setter: &psetter.Int64Setter{Value: &p1},
+					setter: &psetter.Int64{Value: &p1},
 				},
 			},
 			paramsPassed: []string{
@@ -631,7 +631,7 @@ func TestParamParse(t *testing.T) {
 			params: []*namedParamInitialiser{
 				{
 					name:   "test1",
-					setter: &psetter.Int64Setter{Value: &p1},
+					setter: &psetter.Int64{Value: &p1},
 				},
 			},
 			paramsPassed: []string{
@@ -676,7 +676,7 @@ func TestParamByName(t *testing.T) {
 	)
 
 	p := ps.Add(param1Name,
-		psetter.Int64Setter{
+		psetter.Int64{
 			Value: &val1,
 		},
 		"an int64 parameter",
@@ -711,12 +711,12 @@ func TestParamByName(t *testing.T) {
 	}
 
 	if pvr := p.ValueReq(); pvr != param.Mandatory {
-		t.Error("a parameter value should be required for an Int64Setter"+
+		t.Error("a parameter value should be required for an Int64"+
 			" ValueReq() returned: ", pvr.String())
 	}
 
 	if p.AllowedValues() == "" {
 		t.Error(
-			"a non-empty allowed values string is expected for an Int64Setter")
+			"a non-empty allowed values string is expected for an Int64")
 	}
 }

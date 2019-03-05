@@ -9,12 +9,12 @@ import (
 	"github.com/nickwells/param.mod/v2/param"
 )
 
-// Int64ListSetter allows you to specify a parameter that can be used to set a
+// Int64List allows you to specify a parameter that can be used to set a
 // list (a slice) of int64's. You can override the list separator by setting
 // the Sep value.
 //
 // If you have a list of allowed values you should use EnumList
-type Int64ListSetter struct {
+type Int64List struct {
 	param.ValueReqMandatory
 
 	Value *[]int64
@@ -23,14 +23,14 @@ type Int64ListSetter struct {
 }
 
 // CountChecks returns the number of check functions this setter has
-func (s Int64ListSetter) CountChecks() int {
+func (s Int64List) CountChecks() int {
 	return len(s.Checks)
 }
 
 // SetWithVal (called when a value follows the parameter) splits the value
 // into a slice of int64's and sets the Value accordingly. It will return
 // an error if a check is breached.
-func (s Int64ListSetter) SetWithVal(_ string, paramVal string) error {
+func (s Int64List) SetWithVal(_ string, paramVal string) error {
 	sep := s.GetSeparator()
 	sv := strings.Split(paramVal, sep)
 
@@ -65,12 +65,12 @@ func (s Int64ListSetter) SetWithVal(_ string, paramVal string) error {
 
 // AllowedValues returns a description of the allowed values. It includes the
 // separator to be used
-func (s Int64ListSetter) AllowedValues() string {
+func (s Int64List) AllowedValues() string {
 	return s.ListValDesc("whole numbers") + HasChecks(s)
 }
 
 // CurrentValue returns the current setting of the parameter value
-func (s Int64ListSetter) CurrentValue() string {
+func (s Int64List) CurrentValue() string {
 	cv := ""
 	sep := ""
 
@@ -84,9 +84,9 @@ func (s Int64ListSetter) CurrentValue() string {
 
 // CheckSetter panics if the setter has not been properly created - if the
 // Value is nil.
-func (s Int64ListSetter) CheckSetter(name string) {
+func (s Int64List) CheckSetter(name string) {
 	if s.Value == nil {
 		panic(name +
-			": Int64ListSetter Check failed: the Value to be set is nil")
+			": Int64List Check failed: the Value to be set is nil")
 	}
 }

@@ -32,7 +32,7 @@ func Example_setDirectly() {
 		param.AltName("e1"))
 
 	ps.Add("example2",
-		psetter.Int64Setter{Value: &example2},
+		psetter.Int64{Value: &example2},
 		"the description of the parameter",
 		// optional additional settings
 		param.AltName("e2"))
@@ -159,7 +159,7 @@ func AddParams1(ps *param.PSet) error {
 // AddParams2 will set the "example2" parameter in the PSet
 func AddParams2(ps *param.PSet) error {
 	ps.Add("example2",
-		psetter.Int64Setter{Value: &ValExample2},
+		psetter.Int64{Value: &ValExample2},
 		"the description of the parameter",
 		param.AltName("e2"),
 		param.GroupName(exampleGroupName))

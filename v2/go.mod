@@ -6,5 +6,5 @@ require (
 	github.com/nickwells/fileparse.mod v1.1.3
 	github.com/nickwells/location.mod v1.2.0
 	github.com/nickwells/strdist.mod v1.0.4
-	github.com/nickwells/testhelper.mod v1.1.0
+	github.com/nickwells/testhelper.mod v1.2.0
 )

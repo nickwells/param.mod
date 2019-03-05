@@ -2,6 +2,7 @@ package psetter
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/nickwells/check.mod/check"
@@ -55,7 +56,18 @@ func (s Duration) SetWithVal(_ string, paramVal string) error {
 
 // AllowedValues returns a string describing the allowed values
 func (s Duration) AllowedValues() string {
-	return "any value that can be parsed as a duration" + HasChecks(s)
+	unitStrings := []string{"ns", "us", "µs", "ms", "s", "m", "h"}
+	aval := `any value that can be parsed as a duration.
+A duration string is a sequence of numbers with an optional fraction and a unit.`
+	aval += ` The allowed unit names are `
+	aval += strings.Join(unitStrings, ", ")
+	aval += `. The whole sequence can be signed and must not contain any spaces.
+
+For example: 300ms", "-1.5h" or "2h45m"
+`
+	aval += HasChecks(s)
+
+	return aval
 }
 
 // CurrentValue returns the current setting of the parameter value

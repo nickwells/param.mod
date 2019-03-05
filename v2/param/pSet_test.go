@@ -273,7 +273,7 @@ func ExamplePSet_Add() {
 
 	p := ps.Add(
 		"param-name",
-		psetter.Float64Setter{Value: &f},
+		psetter.Float64{Value: &f},
 		"a parameter description",
 		param.GroupName("test.group"),
 		param.Attrs(param.DontShowInStdUsage))
