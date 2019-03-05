@@ -176,6 +176,17 @@ func logName(t *testing.T, nameLogged bool, name string) bool {
 	return true
 }
 
+// errsContainStr returns true if any of the errors contains the string,
+// false otherwise
+func errsContainStr(t *testing.T, testID string, errs []error, s string) bool {
+	for _, err := range errs {
+		if strings.Contains(err.Error(), s) {
+			return true
+		}
+	}
+	return false
+}
+
 // errMapCheck checks the error map and reports any discrepancies with the
 // expected values
 func errMapCheck(t *testing.T, testID string, errMap param.ErrMap, expected map[string][]string) {
@@ -197,13 +208,7 @@ func errMapCheck(t *testing.T, testID string, errMap param.ErrMap, expected map[
 			continue
 		}
 		for _, s := range expStrs {
-			count := 0
-			for _, err := range errs {
-				if strings.Contains(err.Error(), s) {
-					count++
-				}
-			}
-			if count == 0 {
+			if !errsContainStr(t, testID, errs, s) {
 				nameLogged = logName(t, nameLogged, testID)
 				t.Errorf("\t: errors for '%s' should contain '%s' but don't",
 					k, s)
