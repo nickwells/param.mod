@@ -13,7 +13,7 @@ through parameter files and environment variables.
 
 ## How to use the param package
 
-Define a ParamSet and populate it, then parse the command line arguments.
+Define a `param.PSet` and populate it, then parse the command line arguments.
 
 ```go
 var param1 int64
@@ -29,19 +29,19 @@ func main() {
 ```
 
 The work is done mostly in the addParam function which should take a pointer to a
-param.ParamSet and return an error.
+`param.PSet` and return an error.
 
 ```go
-func addParams(ps *param.ParamSet) error {
+func addParams(ps *param.PSet) error {
 	ps.Add("param-1",
-		psetter.Int64Setter{
+		psetter.Int64{
 			Value:  &param1,
 			Checks: []check.Int64{check.Int64LT(42)},
 		},
 		"this sets the value of param1",
 		param.AltName("p1"))
 		
-	ps.Add("param-2", psetter.BoolSetter{Value: &param2},
+	ps.Add("param-2", psetter.Bool{Value: &param2},
 		"this sets the value of param2")
 		
 	return nil
@@ -51,10 +51,18 @@ func addParams(ps *param.ParamSet) error {
 This illustrates the simplest use of the param package but you can specify
 the behaviour much more precisely.
 
-Additionally you can have positional parameters as well as named parameters.
+Additionally you can have positional parameters as well as named
+parameters. These must come at the front of the supplied parameters and can
+only be set through the command line.
 
 You can specify a terminal parameter (by default `--`) and the remaining
-parameters will be available for further processing without being parsed.
+parameters will be available for further processing without being parsed. If
+you intend for your users to supply additional parameters you must set a
+handler function using the `PSet.SetRemHandler` method. The handler can
+either process the additional arguments or else, if `param.NullRemHandler`
+has been given, you can process the remainder after `PSet.Parse` has
+completed. If you haven't done either of these things the default behaviour
+is to report the additional arguments as an error.
 
 ## Standard parameters
 The default behaviour of the package is to add some standard
@@ -77,9 +85,9 @@ parameter it will show:
 * the allowed values and whether there are any additional constraints
 
 Additionally if there are any configuration files that have been specified
-(use the `SetConfigFile` and `AddConfigFile` functions on the ParamSet) or
+(use the `SetConfigFile` and `AddConfigFile` functions on the `PSet`) or
 any environment variable prefixes have been given (use the `SetEnvPrefix` and
-`AddEnvPrefix` functions on the ParamSet) these will be reported at the end
+`AddEnvPrefix` functions on the `PSet`) these will be reported at the end
 of the help message.
 
 ## Parameter Groups
@@ -90,4 +98,4 @@ message just for specified parameter groups. You can add a description to be
 shown for the parameter group and you can have configuration files and
 environment variable prefixes which are specific to just the parameters in
 the group (use corresponding `SetGroup...` and `AddGroup...` functions on the
-ParamSet).
+`PSet`).
