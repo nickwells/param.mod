@@ -79,7 +79,6 @@ func (s Pathname) CurrentValue() string {
 // Value is nil.
 func (s Pathname) CheckSetter(name string) {
 	if s.Value == nil {
-		panic(name +
-			": Pathname Check failed: the Value to be set is nil")
+		panic(NilValueMessage(name, "psetter.Pathname"))
 	}
 }

@@ -81,10 +81,10 @@ func (s EnumList) CurrentValue() string {
 // Value is nil or there are no allowed values or the initial value is not
 // allowed.
 func (s EnumList) CheckSetter(name string) {
-	intro := name + ": EnumList Check failed: "
 	if s.Value == nil {
-		panic(intro + "the Value to be set is nil")
+		panic(NilValueMessage(name, "psetter.EnumList"))
 	}
+	intro := name + ": psetter.EnumList Check failed: "
 	if err := s.AllowedVals.OK(); err != nil {
 		panic(intro + err.Error())
 	}

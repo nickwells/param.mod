@@ -86,7 +86,6 @@ func (s Int64List) CurrentValue() string {
 // Value is nil.
 func (s Int64List) CheckSetter(name string) {
 	if s.Value == nil {
-		panic(name +
-			": Int64List Check failed: the Value to be set is nil")
+		panic(NilValueMessage(name, "psetter.Int64List"))
 	}
 }

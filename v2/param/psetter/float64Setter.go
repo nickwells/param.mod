@@ -71,6 +71,6 @@ func (s Float64) CurrentValue() string {
 // Value is nil.
 func (s Float64) CheckSetter(name string) {
 	if s.Value == nil {
-		panic(name + ": Float64 Check failed: the Value to be set is nil")
+		panic(NilValueMessage(name, "psetter.Float64"))
 	}
 }

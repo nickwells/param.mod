@@ -56,6 +56,6 @@ func (s String) CurrentValue() string {
 // Value is nil.
 func (s String) CheckSetter(name string) {
 	if s.Value == nil {
-		panic(name + ": String Check failed: the Value to be set is nil")
+		panic(NilValueMessage(name, "psetter.String"))
 	}
 }

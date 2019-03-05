@@ -72,6 +72,6 @@ func (s StrList) CurrentValue() string {
 // Value is nil.
 func (s StrList) CheckSetter(name string) {
 	if s.Value == nil {
-		panic(name + ": StrList Check failed: the Value to be set is nil")
+		panic(NilValueMessage(name, "psetter.StrList"))
 	}
 }

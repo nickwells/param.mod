@@ -79,7 +79,6 @@ func (s Duration) CurrentValue() string {
 // Value is nil
 func (s Duration) CheckSetter(name string) {
 	if s.Value == nil {
-		panic(name +
-			": Duration Check failed: the Value to be set is nil")
+		panic(NilValueMessage(name, "psetter.Duration"))
 	}
 }

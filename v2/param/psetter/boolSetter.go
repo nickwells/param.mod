@@ -78,6 +78,6 @@ func (s Bool) CurrentValue() string {
 // Value is nil
 func (s Bool) CheckSetter(name string) {
 	if s.Value == nil {
-		panic(name + ": Bool Check failed: the Value to be set is nil")
+		panic(NilValueMessage(name, "psetter.Bool"))
 	}
 }

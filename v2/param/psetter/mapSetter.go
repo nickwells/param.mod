@@ -49,9 +49,9 @@ func (s Map) CurrentValue() string {
 // Value is nil or the map has not been created yet.
 func (s Map) CheckSetter(name string) {
 	if s.Value == nil {
-		panic(name + ": Map Check failed: the Value to be set is nil")
+		panic(NilValueMessage(name, "psetter.Map"))
 	}
 	if *s.Value == nil {
-		panic(name + ": Map Check failed: the map has not been created")
+		panic(name + ": psetter.Map Check failed: the map has not been created")
 	}
 }

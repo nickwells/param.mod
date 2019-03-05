@@ -61,10 +61,10 @@ func (s EnumMap) CurrentValue() string {
 // Value is nil or the map has not been created yet or if there are no
 // allowed values.
 func (s EnumMap) CheckSetter(name string) {
-	intro := name + ": EnumMap Check failed: "
 	if s.Value == nil {
-		panic(intro + "the Value to be set is nil")
+		panic(NilValueMessage(name, "psetter.EnumMap"))
 	}
+	intro := name + ": psetter.EnumMap Check failed: "
 	if *s.Value == nil {
 		panic(intro + "the map has not been created")
 	}

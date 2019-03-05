@@ -58,7 +58,7 @@ func TestCheck(t *testing.T) {
 			name:          "Bool - bad",
 			s:             &psetter.Bool{},
 			panicExpected: true,
-			expVals:       []string{"test: Bool " + nilValueMsg},
+			expVals:       []string{"test: psetter.Bool " + nilValueMsg},
 		},
 		{
 			name: "Duration - ok",
@@ -68,7 +68,7 @@ func TestCheck(t *testing.T) {
 			name:          "Duration - bad",
 			s:             &psetter.Duration{},
 			panicExpected: true,
-			expVals:       []string{"test: Duration " + nilValueMsg},
+			expVals:       []string{"test: psetter.Duration " + nilValueMsg},
 		},
 		{
 			name: "EnumList - ok - no strings",
@@ -100,14 +100,14 @@ func TestCheck(t *testing.T) {
 				},
 			},
 			panicExpected: true,
-			expVals: append([]string{"test: EnumList "},
+			expVals: append([]string{"test: psetter.EnumList "},
 				badInitialList...),
 		},
 		{
 			name:          "EnumList - bad - no value",
 			s:             &psetter.EnumList{},
 			panicExpected: true,
-			expVals:       []string{"test: EnumList " + nilValueMsg},
+			expVals:       []string{"test: psetter.EnumList " + nilValueMsg},
 		},
 		{
 			name: "EnumList - bad - no allowedValues",
@@ -115,7 +115,7 @@ func TestCheck(t *testing.T) {
 				Value: &emptyStrList,
 			},
 			panicExpected: true,
-			expVals: append([]string{"test: EnumList "},
+			expVals: append([]string{"test: psetter.EnumList "},
 				tooFewAValsMsg...),
 		},
 		{
@@ -125,7 +125,7 @@ func TestCheck(t *testing.T) {
 				AllowedVals: psetter.AValMap{},
 			},
 			panicExpected: true,
-			expVals: append([]string{"test: EnumList "},
+			expVals: append([]string{"test: psetter.EnumList "},
 				tooFewAValsMsg...),
 		},
 		{
@@ -137,7 +137,7 @@ func TestCheck(t *testing.T) {
 				},
 			},
 			panicExpected: true,
-			expVals: append([]string{"test: EnumList "},
+			expVals: append([]string{"test: psetter.EnumList "},
 				tooFewAValsMsg...),
 		},
 		{
@@ -154,7 +154,7 @@ func TestCheck(t *testing.T) {
 			name:          "EnumMap - bad - no value",
 			s:             &psetter.EnumMap{},
 			panicExpected: true,
-			expVals:       []string{"test: EnumMap " + nilValueMsg},
+			expVals:       []string{"test: psetter.EnumMap " + nilValueMsg},
 		},
 		{
 			name: "EnumMap - bad - nil map",
@@ -166,7 +166,7 @@ func TestCheck(t *testing.T) {
 				},
 			},
 			panicExpected: true,
-			expVals:       []string{"test: EnumMap " + mapNotCreatedMsg},
+			expVals:       []string{"test: psetter.EnumMap " + mapNotCreatedMsg},
 		},
 		{
 			name: "EnumMap - bad - no allowedValues",
@@ -174,7 +174,7 @@ func TestCheck(t *testing.T) {
 				Value: &strToBoolMap,
 			},
 			panicExpected: true,
-			expVals: append([]string{"test: EnumMap "},
+			expVals: append([]string{"test: psetter.EnumMap "},
 				tooFewAValsMsg...),
 		},
 		{
@@ -184,7 +184,7 @@ func TestCheck(t *testing.T) {
 				AllowedVals: psetter.AValMap{},
 			},
 			panicExpected: true,
-			expVals: append([]string{"test: EnumMap "},
+			expVals: append([]string{"test: psetter.EnumMap "},
 				tooFewAValsMsg...),
 		},
 		{
@@ -207,13 +207,13 @@ func TestCheck(t *testing.T) {
 				},
 			},
 			panicExpected: true,
-			expVals:       append([]string{"test: Enum "}, badInitialVal...),
+			expVals:       append([]string{"test: psetter.Enum "}, badInitialVal...),
 		},
 		{
 			name:          "Enum - bad - no value",
 			s:             &psetter.Enum{},
 			panicExpected: true,
-			expVals:       []string{"test: Enum " + nilValueMsg},
+			expVals:       []string{"test: psetter.Enum " + nilValueMsg},
 		},
 		{
 			name: "Enum - bad - no allowedValues",
@@ -221,7 +221,7 @@ func TestCheck(t *testing.T) {
 				Value: &anyStr,
 			},
 			panicExpected: true,
-			expVals: append([]string{"test: Enum "},
+			expVals: append([]string{"test: psetter.Enum "},
 				tooFewAValsMsg...),
 		},
 		{
@@ -231,7 +231,7 @@ func TestCheck(t *testing.T) {
 				AllowedVals: psetter.AValMap{},
 			},
 			panicExpected: true,
-			expVals: append([]string{"test: Enum "},
+			expVals: append([]string{"test: psetter.Enum "},
 				tooFewAValsMsg...),
 		},
 		{
@@ -242,7 +242,7 @@ func TestCheck(t *testing.T) {
 			name:          "Float64 - bad",
 			s:             &psetter.Float64{},
 			panicExpected: true,
-			expVals:       []string{"test: Float64 " + nilValueMsg},
+			expVals:       []string{"test: psetter.Float64 " + nilValueMsg},
 		},
 		{
 			name: "Int64 - ok",
@@ -252,7 +252,7 @@ func TestCheck(t *testing.T) {
 			name:          "Int64 - bad",
 			s:             &psetter.Int64{},
 			panicExpected: true,
-			expVals:       []string{"test: Int64 " + nilValueMsg},
+			expVals:       []string{"test: psetter.Int64 " + nilValueMsg},
 		},
 		{
 			name: "Int64List - ok",
@@ -262,7 +262,7 @@ func TestCheck(t *testing.T) {
 			name:          "Int64List - bad",
 			s:             &psetter.Int64List{},
 			panicExpected: true,
-			expVals:       []string{"test: Int64List " + nilValueMsg},
+			expVals:       []string{"test: psetter.Int64List " + nilValueMsg},
 		},
 		{
 			name: "Map - ok",
@@ -274,7 +274,7 @@ func TestCheck(t *testing.T) {
 			name:          "Map - bad - no value",
 			s:             &psetter.Map{},
 			panicExpected: true,
-			expVals:       []string{"test: Map " + nilValueMsg},
+			expVals:       []string{"test: psetter.Map " + nilValueMsg},
 		},
 		{
 			name: "Map - bad - nil map",
@@ -282,7 +282,7 @@ func TestCheck(t *testing.T) {
 				Value: &strToBoolMapNil,
 			},
 			panicExpected: true,
-			expVals:       []string{"test: Map " + mapNotCreatedMsg},
+			expVals:       []string{"test: psetter.Map " + mapNotCreatedMsg},
 		},
 		{
 			name: "Nil - ok",
@@ -296,7 +296,7 @@ func TestCheck(t *testing.T) {
 			name:          "Pathname - bad",
 			s:             &psetter.Pathname{},
 			panicExpected: true,
-			expVals:       []string{"test: Pathname " + nilValueMsg},
+			expVals:       []string{"test: psetter.Pathname " + nilValueMsg},
 		},
 		{
 			name: "Regexp - ok",
@@ -306,7 +306,7 @@ func TestCheck(t *testing.T) {
 			name:          "Regexp - bad",
 			s:             &psetter.Regexp{},
 			panicExpected: true,
-			expVals:       []string{"test: Regexp " + nilValueMsg},
+			expVals:       []string{"test: psetter.Regexp " + nilValueMsg},
 		},
 		{
 			name: "StrList - ok",
@@ -316,7 +316,7 @@ func TestCheck(t *testing.T) {
 			name:          "StrList - bad",
 			s:             &psetter.StrList{},
 			panicExpected: true,
-			expVals:       []string{"test: StrList " + nilValueMsg},
+			expVals:       []string{"test: psetter.StrList " + nilValueMsg},
 		},
 		{
 			name: "String - ok",
@@ -326,7 +326,7 @@ func TestCheck(t *testing.T) {
 			name:          "String - bad",
 			s:             &psetter.String{},
 			panicExpected: true,
-			expVals:       []string{"test: String " + nilValueMsg},
+			expVals:       []string{"test: psetter.String " + nilValueMsg},
 		},
 		{
 			name: "TimeLocation - ok",
@@ -336,7 +336,7 @@ func TestCheck(t *testing.T) {
 			name:          "TimeLocation - bad",
 			s:             &psetter.TimeLocation{},
 			panicExpected: true,
-			expVals:       []string{"test: TimeLocation " + nilValueMsg},
+			expVals:       []string{"test: psetter.TimeLocation " + nilValueMsg},
 		},
 	}
 

@@ -41,10 +41,10 @@ func (s Enum) CurrentValue() string {
 // CheckSetter panics if the setter has not been properly created - if the
 // Value is nil or there are no allowed values.
 func (s Enum) CheckSetter(name string) {
-	intro := name + ": Enum Check failed: "
 	if s.Value == nil {
-		panic(intro + "the Value to be set is nil")
+		panic(NilValueMessage(name, "psetter.Enum"))
 	}
+	intro := name + ": psetter.Enum Check failed: "
 	if err := s.AllowedVals.OK(); err != nil {
 		panic(intro + err.Error())
 	}
