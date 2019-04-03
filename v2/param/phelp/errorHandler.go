@@ -8,6 +8,7 @@ import (
 
 	"github.com/nickwells/location.mod/location"
 	"github.com/nickwells/param.mod/v2/param"
+	"github.com/nickwells/twrap.mod/twrap"
 )
 
 // ErrorHandler will, by default, check for errors and if there are any
@@ -24,13 +25,17 @@ func (h StdHelp) ErrorHandler(w io.Writer, name string, errMap param.ErrMap) {
 
 	if !h.dontReportErrors {
 		ReportErrors(w, name, errMap)
+		twc, err := twrap.NewTWConf(twrap.SetWriter(w))
+		if err != nil {
+			fmt.Fprint(os.Stderr, "Couldn't build the text wrapper:", err)
+			return
+		}
 
-		formatText(w,
-			"\nFor help with the correct use of the parameters"+
-				" and to see which parameters are available please use the '-"+
-				usageArgName+
-				"' parameter which will print a usage message\n",
-			textIndent, textIndent)
+		twc.Wrap("\nFor help with the correct use of the parameters"+
+			" and to see which parameters are available please use the '-"+
+			usageArgName+
+			"' parameter which will print a usage message\n",
+			textIndent)
 	}
 
 	if h.dontExitOnErrors {
@@ -45,6 +50,11 @@ func ReportErrors(w io.Writer, name string, errMap param.ErrMap) {
 	if len(errMap) == 0 {
 		return
 	}
+	twc, err := twrap.NewTWConf(twrap.SetWriter(w))
+	if err != nil {
+		fmt.Fprint(os.Stderr, "Couldn't build the text wrapper:", err)
+		return
+	}
 
 	paramNames := make([]string, 0, len(errMap))
 	for paramName := range errMap {
@@ -52,13 +62,13 @@ func ReportErrors(w io.Writer, name string, errMap param.ErrMap) {
 	}
 	sort.Strings(paramNames)
 
-	fmt.Fprint(w, name, ": ", len(errMap)) // nolint: errcheck
+	fmt.Fprint(w, name, ": ", len(errMap))
 	if len(errMap) == 1 {
-		fmt.Fprint(w, " error was") // nolint: errcheck
+		fmt.Fprint(w, " an error was")
 	} else {
-		fmt.Fprint(w, " errors were") // nolint: errcheck
+		fmt.Fprint(w, " errors were")
 	}
-	fmt.Fprint(w, " detected while setting the parameters:\n") // nolint: errcheck
+	fmt.Fprint(w, " detected while setting the parameters:\n")
 
 	firstLineIndent := stdIndent
 	secondLineIndent := stdIndent + stdIndent
@@ -66,23 +76,21 @@ func ReportErrors(w io.Writer, name string, errMap param.ErrMap) {
 
 	paramSep := ""
 	for _, paramName := range paramNames {
-		fmt.Fprint(w, paramSep) // nolint: errcheck
+		fmt.Fprint(w, paramSep)
 		paramSep = firstLineIndent + "---\n"
 
 		sep := ""
-		fmt.Fprint(w, firstLineIndent, paramName, "\n") // nolint: errcheck
+		fmt.Fprint(w, firstLineIndent, paramName, "\n")
 		for _, e := range errMap[paramName] {
-			fmt.Fprint(w, sep) // nolint: errcheck
+			fmt.Fprint(w, sep)
 			sep = secondLineIndent + "---\n"
+
 			switch e := e.(type) {
 			case location.Err:
-				formatText(w, e.Msg,
-					indent2Len, indent2Len)
-				formatText(w, "parameter set at: "+e.Loc.String(),
-					indent2Len, indent2Len)
+				twc.Wrap(e.Msg+
+					"\nparameter set at: "+e.Loc.String(), indent2Len)
 			default:
-				formatText(w, e.Error(),
-					indent2Len, indent2Len)
+				twc.Wrap(e.Error(), indent2Len)
 			}
 		}
 	}

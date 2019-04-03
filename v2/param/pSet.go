@@ -398,6 +398,11 @@ func (ps *PSet) GetParamByPos(idx int) (p *ByPos, err error) {
 	return ps.byPos[idx], nil
 }
 
+// CountByPosParams will return the number of positional parameters
+func (ps *PSet) CountByPosParams() int {
+	return len(ps.byPos)
+}
+
 // AddFinalCheck will add a function to the list of functions to be called
 // after all the parameters have been set. Note that multiple functions can
 // be set and they will be called in the order that they are added. Each

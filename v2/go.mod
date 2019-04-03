@@ -1,10 +1,11 @@
 module github.com/nickwells/param.mod/v2
 
 require (
-	github.com/nickwells/check.mod v1.1.4
-	github.com/nickwells/filecheck.mod v1.0.4
-	github.com/nickwells/fileparse.mod v1.1.3
-	github.com/nickwells/location.mod v1.2.0
-	github.com/nickwells/strdist.mod v1.0.4
-	github.com/nickwells/testhelper.mod v1.2.0
+	github.com/nickwells/check.mod v1.3.1
+	github.com/nickwells/filecheck.mod v1.0.5
+	github.com/nickwells/fileparse.mod v1.1.5
+	github.com/nickwells/location.mod v1.2.1
+	github.com/nickwells/strdist.mod v1.0.6
+	github.com/nickwells/testhelper.mod v1.3.0
+	github.com/nickwells/twrap.mod v1.1.0
 )

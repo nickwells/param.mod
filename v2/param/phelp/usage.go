@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/nickwells/param.mod/v2/param"
+	"github.com/nickwells/twrap.mod/twrap"
 )
 
 const stdIndent = "    "
@@ -21,38 +22,47 @@ const textIndent = 4
 // error if not. It returns a count of the number of problems found
 func badGroups(ps *param.PSet, groups map[string]bool, name string) bool {
 	badGroups := 0
-	prefix := "Error: "
+	msg := ""
 	for g := range groups {
 		if !ps.HasGroupName(g) {
 			if badGroups == 0 {
-				formatPrefixedText(ps.ErrWriter(), prefix,
-					"group: '"+g+"' in the list of "+name+","+
-						" is not the name of a parameter group."+
-						" Please check the spelling.",
-					0)
+				msg = "group: '" + g + "' in the list of " + name + "," +
+					" is not the name of a parameter group." +
+					" Please check the spelling."
 			} else {
-				formatText(ps.ErrWriter(), "also: '"+g+"'",
-					len(prefix), len(prefix))
+				msg += "\nalso: '" + g + "'"
 			}
 			badGroups++
 		}
+	}
+	if badGroups > 0 {
+		twc, err := twrap.NewTWConf(twrap.SetWriter(ps.ErrWriter()))
+		if err != nil {
+			fmt.Fprint(os.Stderr, "Couldn't build the text wrapper:", err)
+			return true
+		}
+
+		twc.WrapPrefixed("Error: ", msg, 0)
 	}
 	return badGroups > 0
 }
 
 // printOptValNote prints an explanation of how optional values must be set
 func (h StdHelp) printOptValNote(w io.Writer) {
-	fmt.Fprint(w, "\n"+equals+"\n\n") // nolint: errcheck
+	twc, err := twrap.NewTWConf(twrap.SetWriter(w))
+	if err != nil {
+		fmt.Fprint(os.Stderr, "Couldn't build the text wrapper:", err)
+		return
+	}
+	fmt.Fprint(w, "\n"+equals+"\n\n")
 
-	pfx := "Note: "
-	formatPrefixedText(w, pfx,
+	prefix := "Note: "
+	twc.WrapPrefixed(prefix,
 		"Optional values (those with a parameter name followed by [=...])"+
 			" must be given with the parameter,"+
 			" after an '=' rather than as a following argument."+
-			" For instance,",
+			" For instance,\n\n-xxx=...\nrather than\n-xxx ...",
 		0)
-	formatText(w, "\n-xxx=...\nrather than\n-xxx ...",
-		len(pfx), len(pfx))
 }
 
 // Help prints the messages and then a standardised usage message based on
@@ -60,17 +70,22 @@ func (h StdHelp) printOptValNote(w io.Writer) {
 // status of 1
 func (h StdHelp) Help(ps *param.PSet, messages ...string) {
 	w := ps.ErrWriter()
+	twc, err := twrap.NewTWConf(twrap.SetWriter(w))
+	if err != nil {
+		fmt.Fprint(os.Stderr, "Couldn't build the text wrapper:", err)
+		return
+	}
+
 	for _, message := range messages {
-		formatText(w, message, 0, 0)
+		twc.Wrap(message, 0)
 	}
 	if len(messages) > 0 {
-		fmt.Fprint(w, "\n"+equals+"\n\n") // nolint: errcheck
+		fmt.Fprint(w, "\n"+equals+"\n\n")
 	}
 
 	if h.style != Short &&
 		h.style != GroupNamesOnly {
-		formatText(w, ps.ProgDesc(), textIndent, textIndent)
-		fmt.Fprint(w, "\n") // nolint: errcheck
+		twc.Wrap(ps.ProgDesc()+"\n", textIndent)
 	}
 
 	if h.includeGroups {
@@ -86,19 +101,20 @@ func (h StdHelp) Help(ps *param.PSet, messages ...string) {
 		}
 	}
 	if h.groupListCounter.Count() > 1 {
-		formatText(w, "Error: only include OR exclude parameter groups"+
-			" not both at the same time."+
-			" Excluded groups will be ignored."+
-			" They have been set at:",
-			0, textIndent)
-		formatText(w, h.groupListCounter.SetBy(), textIndent, textIndent)
+		twc.WrapPrefixed("Error: ",
+			"only include OR exclude parameter groups"+
+				" not both at the same time."+
+				" Excluded groups will be ignored."+
+				" They have been set at:"+
+				h.groupListCounter.SetBy(),
+			0)
 		h.excludeGroups = false
 	}
 
-	fmt.Fprint(w, "Usage: ", ps.ProgName()) // nolint: errcheck
+	fmt.Fprint(w, "Usage: ", ps.ProgName())
 
 	if h.style == GroupNamesOnly {
-		fmt.Fprintln(w, "\nParameter groups") // nolint: errcheck
+		fmt.Fprintln(w, "\nParameter groups")
 		h.printGroups(w, ps)
 	} else {
 		h.printPositionalParams(w, ps)
@@ -124,13 +140,12 @@ func valueNeededStr(vr param.ValueReq) string {
 	return ""
 }
 
-// formatPrefixedText formats prefixed text such that the second line
-// indent lines up with the start of the text
-func formatPrefixedText(w io.Writer, prefix, text string, indent int) {
-	formatText(w, prefix+text, indent, indent+len(prefix))
-}
-
 func (h StdHelp) printParamUsage(w io.Writer, p *param.ByName) {
+	twc, err := twrap.NewTWConf(twrap.SetWriter(w))
+	if err != nil {
+		fmt.Fprint(os.Stderr, "Couldn't build the text wrapper:", err)
+		return
+	}
 	prefix := "-"
 	suffix := valueNeededStr(p.ValueReq())
 	if !p.AttrIsSet(param.MustBeSet) {
@@ -145,63 +160,63 @@ func (h StdHelp) printParamUsage(w io.Writer, p *param.ByName) {
 		paramNames += sep + prefix + altParamName + suffix
 		sep = " or "
 	}
-	formatText(w, paramNames, paramIndent, paramIndent)
+	twc.Wrap(paramNames, paramIndent)
 
 	if h.style == Short {
 		return
 	}
 
-	formatText(w, p.Description(), descriptionIndent, descriptionIndent)
-	formatPrefixedText(w,
-		"Allowed values: ", p.AllowedValues(), descriptionIndent)
-	formatPrefixedText(w,
-		"Initial value: ", p.InitialValue(), descriptionIndent)
+	twc.Wrap(p.Description(), descriptionIndent)
+	twc.WrapPrefixed("Allowed values: ", p.AllowedValues(), descriptionIndent)
+	twc.WrapPrefixed("Initial value: ", p.InitialValue(), descriptionIndent)
 }
 
 func (h StdHelp) printPositionalParams(w io.Writer, ps *param.PSet) {
-	intro := ""
-	for i := 0; ; i++ {
-		bp, err := ps.GetParamByPos(i)
-		if err != nil {
-			break
-		}
-		fmt.Fprint(w, " <", bp.Name(), ">") // nolint: errcheck
-		intro = "\n  where\n"
+	bppCount := ps.CountByPosParams()
+	if bppCount == 0 {
+		return
 	}
 
-	if h.style != Short {
-		fmt.Fprint(w, intro) // nolint: errcheck
-
-		for i := 0; ; i++ {
-			bp, err := ps.GetParamByPos(i)
-			if err != nil {
-				break
-			}
-			formatText(w, "\n   "+bp.Name(), paramIndent, paramIndent)
-			formatText(w,
-				bp.Description(), descriptionIndent, descriptionIndent)
-		}
+	twc, err := twrap.NewTWConf(twrap.SetWriter(w))
+	if err != nil {
+		fmt.Fprint(os.Stderr, "Couldn't build the text wrapper:", err)
+		return
 	}
-	fmt.Fprintln(w) // nolint: errcheck
+	for i := 0; i < bppCount; i++ {
+		bp, _ := ps.GetParamByPos(i)
+		fmt.Fprint(w, " <", bp.Name(), ">")
+	}
+
+	fmt.Fprintln(w)
+	if h.style == Short {
+		return
+	}
+	fmt.Fprintln(w, "where")
+
+	for i := 0; i < bppCount; i++ {
+		bp, _ := ps.GetParamByPos(i)
+		twc.Wrap(bp.Name(), paramIndent)
+		twc.Wrap(bp.Description(), descriptionIndent)
+	}
 }
 
 // printGroupDetails prints the group name etc
 func printGroupDetails(w io.Writer, pg *param.Group, style helpStyle) {
-	fmt.Fprintln(w, "\n"+dashes)     // nolint: errcheck
-	fmt.Fprintf(w, "%s [ ", pg.Name) // nolint: errcheck
+	fmt.Fprintln(w, "\n"+dashes)
+	fmt.Fprintf(w, "%s [ ", pg.Name)
 	if len(pg.Params) == 1 {
-		fmt.Fprint(w, "1 parameter") // nolint: errcheck
+		fmt.Fprint(w, "1 parameter")
 	} else {
-		fmt.Fprintf(w, "%d parameters", len(pg.Params)) // nolint: errcheck
+		fmt.Fprintf(w, "%d parameters", len(pg.Params))
 	}
 	if pg.HiddenCount > 0 {
 		if pg.AllParamsHidden() {
-			fmt.Fprint(w, ", all hidden") // nolint: errcheck
+			fmt.Fprint(w, ", all hidden")
 		} else {
-			fmt.Fprintf(w, ", %d hidden", pg.HiddenCount) // nolint: errcheck
+			fmt.Fprintf(w, ", %d hidden", pg.HiddenCount)
 		}
 	}
-	fmt.Fprintln(w, " ]") // nolint: errcheck
+	fmt.Fprintln(w, " ]")
 	if style == Short {
 		return
 	}
@@ -209,8 +224,13 @@ func printGroupDetails(w io.Writer, pg *param.Group, style helpStyle) {
 	if desc == "" {
 		return
 	}
-	formatText(w, desc, textIndent, textIndent)
-	fmt.Fprintln(w) // nolint: errcheck
+	twc, err := twrap.NewTWConf(twrap.SetWriter(w))
+	if err != nil {
+		fmt.Fprint(os.Stderr, "Couldn't build the text wrapper:", err)
+		return
+	}
+	twc.Wrap(desc, textIndent)
+	fmt.Fprintln(w)
 }
 
 // showGroup will return true if the group should be reported and false
@@ -257,7 +277,13 @@ func printGroupConfigFile(w io.Writer, pg *param.Group) {
 
 		msg += altSrcConfigFiles(pg.ConfigFiles)
 
-		formatText(w, msg, textIndent, textIndent)
+		twc, err := twrap.NewTWConf(twrap.SetWriter(w))
+		if err != nil {
+			fmt.Fprint(os.Stderr, "Couldn't build the text wrapper:", err)
+			return
+		}
+
+		twc.Wrap(msg, textIndent)
 	}
 }
 
@@ -297,7 +323,13 @@ func (h StdHelp) printAlternativeSources(ps *param.PSet) {
 
 		message += altSrcEnvVars(ep) + "\n"
 
-		formatText(ps.ErrWriter(), message, 0, 0)
+		twc, err := twrap.NewTWConf(twrap.SetWriter(ps.ErrWriter()))
+		if err != nil {
+			fmt.Fprint(os.Stderr, "Couldn't build the text wrapper:", err)
+			return
+		}
+
+		twc.Wrap(message, 0)
 	}
 }
 

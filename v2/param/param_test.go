@@ -14,49 +14,42 @@ import (
 func TestParamAdd(t *testing.T) {
 	var p1 int64
 	testCases := []struct {
-		name             string
+		testhelper.ID
+		testhelper.ExpPanic
 		npi              *namedParamInitialiser
-		panicExpected    bool
-		panicMsgContains []string
 		paramShouldExist bool
 	}{
 		{
-			name: "bad name - empty",
+			ID: testhelper.MkID("bad name - empty"),
 			npi: &namedParamInitialiser{
 				setter: &psetter.Int64{Value: &p1},
 			},
-			panicExpected: true,
-			panicMsgContains: []string{
+			ExpPanic: testhelper.MkExpPanic(
 				"the parameter name",
-				"is invalid. It must match",
-			},
+				"is invalid. It must match"),
 		},
 		{
-			name: "bad name - bad char",
+			ID: testhelper.MkID("bad name - bad char"),
 			npi: &namedParamInitialiser{
 				name:   "?",
 				setter: &psetter.Int64{Value: &p1},
 			},
-			panicExpected: true,
-			panicMsgContains: []string{
+			ExpPanic: testhelper.MkExpPanic(
 				"the parameter name",
-				"is invalid. It must match",
-			},
+				"is invalid. It must match"),
 		},
 		{
-			name: "bad name - bad first char",
+			ID: testhelper.MkID("bad name - bad first char"),
 			npi: &namedParamInitialiser{
 				name:   "-hello",
 				setter: &psetter.Int64{Value: &p1},
 			},
-			panicExpected: true,
-			panicMsgContains: []string{
+			ExpPanic: testhelper.MkExpPanic(
 				"the parameter name",
-				"is invalid. It must match",
-			},
+				"is invalid. It must match"),
 		},
 		{
-			name: "good name",
+			ID: testhelper.MkID("good name"),
 			npi: &namedParamInitialiser{
 				name:   "param-1",
 				setter: &psetter.Int64{Value: &p1},
@@ -68,59 +61,51 @@ func TestParamAdd(t *testing.T) {
 			paramShouldExist: true,
 		},
 		{
-			name: "bad name - duplicate",
+			ID: testhelper.MkID("bad name - duplicate"),
 			npi: &namedParamInitialiser{
 				name:   "param-1",
 				setter: &psetter.Int64{Value: &p1},
 			},
-			panicExpected: true,
-			panicMsgContains: []string{
+			ExpPanic: testhelper.MkExpPanic(
 				"parameter name",
-				"has already been used",
-			},
+				"has already been used"),
 			paramShouldExist: true,
 		},
 		{
-			name: "bad alt name - already used",
+			ID: testhelper.MkID("bad alt name - already used"),
 			npi: &namedParamInitialiser{
 				name:   "param-2",
 				setter: &psetter.Int64{Value: &p1},
 				opts:   []param.OptFunc{param.AltName("param-1")},
 			},
-			panicExpected: true,
-			panicMsgContains: []string{
+			ExpPanic: testhelper.MkExpPanic(
 				"parameter name",
-				"has already been used",
-			},
+				"has already been used"),
 			paramShouldExist: true,
 		},
 		{
-			name: "bad alt name - invalid",
+			ID: testhelper.MkID("bad alt name - invalid"),
 			npi: &namedParamInitialiser{
 				name:   "param-3",
 				setter: &psetter.Int64{Value: &p1},
 				opts:   []param.OptFunc{param.AltName("?")},
 			},
-			panicExpected: true,
-			panicMsgContains: []string{
+			ExpPanic: testhelper.MkExpPanic(
 				"parameter name",
-				"is invalid. It must match",
-			},
+				"is invalid. It must match"),
 			paramShouldExist: true,
 		},
 		{
-			name: "bad alt name - already used as alt",
+			ID: testhelper.MkID("bad alt name - already used as alt"),
 			npi: &namedParamInitialiser{
 				name:   "param-4",
 				setter: &psetter.Int64{Value: &p1},
 				opts:   []param.OptFunc{param.AltName("param-1-alt")},
 			},
-			panicExpected: true,
-			panicMsgContains: []string{
+			ExpPanic: testhelper.MkExpPanic(
 				"parameter name",
 				"has already been used as an alternative to 'param-1'",
-				"a member of parameter group test",
-			},
+				"a member of parameter group test"),
 			paramShouldExist: true,
 		},
 	}
@@ -129,34 +114,31 @@ func TestParamAdd(t *testing.T) {
 	if err != nil {
 		t.Fatal("couldn't construct the PSet: ", err)
 	}
-	for i, tc := range testCases {
-		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
+	for _, tc := range testCases {
 		p, panicked, panicVal := panicSafeTestAddByName(ps, tc.npi)
-		testhelper.PanicCheckString(t, tcID,
-			panicked, tc.panicExpected,
-			panicVal, tc.panicMsgContains)
+		testhelper.CheckExpPanic(t, panicked, panicVal, tc)
 
 		p2, err := ps.GetParamByName(tc.npi.name)
 		if tc.paramShouldExist {
 			if p2 == nil {
-				t.Log(tcID)
+				t.Log(tc.IDStr())
 				t.Errorf("\t: param: '%s' should exist\n",
 					tc.npi.name)
 			}
 			if err != nil {
-				t.Log(tcID)
+				t.Log(tc.IDStr())
 				t.Errorf("\t: GetParamByName(...) returned an error: %s\n",
 					err)
 			}
 		} else {
 			if p2 != nil {
-				t.Log(tcID)
+				t.Log(tc.IDStr())
 				t.Errorf(
 					"\t: param: '%s' should not exist if Add(...) panicked\n",
 					tc.npi.name)
 			}
 			if err == nil {
-				t.Log(tcID)
+				t.Log(tc.IDStr())
 				t.Errorf(
 					"\t: GetParamByName(...) should have returned an error\n")
 			}
@@ -164,15 +146,15 @@ func TestParamAdd(t *testing.T) {
 
 		if p != nil {
 			if p.Name() != tc.npi.name {
-				t.Log(tcID)
+				t.Log(tc.IDStr())
 				t.Errorf("\t: the name did not match: '%s' != '%s'\n",
 					p.Name(), tc.npi.name)
 			} else if p.Description() != tc.npi.desc {
-				t.Log(tcID)
+				t.Log(tc.IDStr())
 				t.Errorf("\t: the description did not match: '%s' != '%s'\n",
 					p.Description(), tc.npi.desc)
 			} else if p.HasBeenSet() {
-				t.Log(tcID)
+				t.Log(tc.IDStr())
 				t.Errorf(
 					"\t: param has been set but params haven't been parsed\n")
 			}
@@ -183,17 +165,16 @@ func TestParamAdd(t *testing.T) {
 func TestParamAddPos(t *testing.T) {
 	var p1 int64
 	testCases := []struct {
-		name             string
-		pi               []paramInitialisers
-		panicExpected    bool
-		panicMsgContains []string
+		testhelper.ID
+		testhelper.ExpPanic
+		pi []paramInitialisers
 
 		paramsToParse     []string
 		errsExpected      map[string][]string
 		remainderExpected []string
 	}{
 		{
-			name: "good params",
+			ID: testhelper.MkID("good params"),
 			pi: []paramInitialisers{
 				{
 					npi: &namedParamInitialiser{
@@ -229,7 +210,7 @@ func TestParamAddPos(t *testing.T) {
 			remainderExpected: []string{"another param"},
 		},
 		{
-			name: "bad params - name empty",
+			ID: testhelper.MkID("bad params - name empty"),
 			pi: []paramInitialisers{
 				{
 					npi: &namedParamInitialiser{
@@ -241,14 +222,13 @@ func TestParamAddPos(t *testing.T) {
 					},
 				},
 			},
-			panicExpected: true,
-			panicMsgContains: []string{
+			ExpPanic: testhelper.MkExpPanic(
 				"the parameter name",
-				"is invalid. It must match",
-			},
+				"is invalid. It must match"),
 		},
 		{
-			name: "bad params - terminal ByPos and pre-existing ByName",
+			ID: testhelper.MkID(
+				"bad params - terminal ByPos and pre-existing ByName"),
 			pi: []paramInitialisers{
 				{
 					npi: &namedParamInitialiser{
@@ -271,16 +251,15 @@ func TestParamAddPos(t *testing.T) {
 					},
 				},
 			},
-			panicExpected: true,
-			panicMsgContains: []string{
+			ExpPanic: testhelper.MkExpPanic(
 				"error setting the options for positional parameter 0:",
 				"The param set has 1 non-positional parameters.",
-				" It cannot also have a terminal positional parameter as" +
-					" the non-positional parameters will never be used.",
-			},
+				" It cannot also have a terminal positional parameter as"+
+					" the non-positional parameters will never be used."),
 		},
 		{
-			name: "bad params - terminal ByPos and then add ByName",
+			ID: testhelper.MkID(
+				"bad params - terminal ByPos and then add ByName"),
 			pi: []paramInitialisers{
 				{
 					ppi: &posParamInitialiser{
@@ -303,15 +282,13 @@ func TestParamAddPos(t *testing.T) {
 					},
 				},
 			},
-			panicExpected: true,
-			panicMsgContains: []string{
+			ExpPanic: testhelper.MkExpPanic(
 				"The param set has a terminal positional parameter.",
-				"The non-positional parameter param-1 cannot be added" +
-					" as it will never be used",
-			},
+				"The non-positional parameter param-1 cannot be added"+
+					" as it will never be used"),
 		},
 		{
-			name: "bad params - terminal ByPos not the last",
+			ID: testhelper.MkID("bad params - terminal ByPos not the last"),
 			pi: []paramInitialisers{
 				{
 					ppi: &posParamInitialiser{
@@ -331,14 +308,12 @@ func TestParamAddPos(t *testing.T) {
 					},
 				},
 			},
-			panicExpected: true,
-			panicMsgContains: []string{
+			ExpPanic: testhelper.MkExpPanic(
 				"Positional parameter 0 is marked as terminal but" +
-					" is not the last positional parameter",
-			},
+					" is not the last positional parameter"),
 		},
 		{
-			name: "Parse(...) errors - ByPos: setter.Process(...) failure",
+			ID: testhelper.MkID("Parse(...) errors - ByPos: setter.Process(...) failure"),
 			pi: []paramInitialisers{
 				{
 					ppi: &posParamInitialiser{
@@ -357,7 +332,7 @@ func TestParamAddPos(t *testing.T) {
 			},
 		},
 		{
-			name: "Parse(...) errors - ByName: setter.Process(...) failure",
+			ID: testhelper.MkID("Parse(...) errors - ByName: setter.Process(...) failure"),
 			pi: []paramInitialisers{
 				{
 					npi: &namedParamInitialiser{
@@ -378,11 +353,10 @@ func TestParamAddPos(t *testing.T) {
 		},
 	}
 
-	for i, tc := range testCases {
-		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
+	for _, tc := range testCases {
 		ps, err := paramset.NewNoHelpNoExitNoErrRpt()
 		if err != nil {
-			t.Fatal(tcID, " : couldn't construct the PSet: ", err)
+			t.Fatal(tc.IDStr(), " : couldn't construct the PSet: ", err)
 		}
 		var panicked bool
 		var panicVal interface{}
@@ -399,12 +373,12 @@ func TestParamAddPos(t *testing.T) {
 				}
 				if pi.npiShouldExist != exists {
 					if exists {
-						t.Log(tcID)
+						t.Log(tc.IDStr())
 						t.Errorf("\t: named parameter: '%s'"+
 							" should not exist but does\n",
 							pi.npi.name)
 					} else {
-						t.Log(tcID)
+						t.Log(tc.IDStr())
 						t.Errorf("\t: named parameter: '%s'"+
 							" should exist but doesn't. Err: %s\n",
 							pi.npi.name, err)
@@ -426,12 +400,12 @@ func TestParamAddPos(t *testing.T) {
 				}
 				if pi.ppiShouldExist != exists {
 					if exists {
-						t.Log(tcID)
+						t.Log(tc.IDStr())
 						t.Errorf("\t: positional parameter: %d"+
 							" should not exist but does\n",
 							posIdx)
 					} else {
-						t.Log(tcID)
+						t.Log(tc.IDStr())
 						t.Errorf("\t: positional parameter: %d"+
 							" should exist but doesn't. Err: %s\n",
 							posIdx, err)
@@ -444,17 +418,15 @@ func TestParamAddPos(t *testing.T) {
 				posIdx++
 			}
 		}
-		testhelper.PanicCheckString(t, tcID,
-			panicked, tc.panicExpected,
-			panicVal, tc.panicMsgContains)
+		testhelper.CheckExpPanic(t, panicked, panicVal, tc)
 
 		if !panicked {
 			errMap, panicked, panicVal, stackTrace :=
 				panicSafeTestParse(ps, tc.paramsToParse)
-			if !testhelper.PanicCheckStringWithStack(t, tcID,
+			if !testhelper.PanicCheckStringWithStack(t, tc.IDStr(),
 				panicked, false,
 				panicVal, []string{}, stackTrace) {
-				errMapCheck(t, tcID, errMap, tc.errsExpected)
+				errMapCheck(t, tc.IDStr(), errMap, tc.errsExpected)
 
 				if tc.remainderExpected != nil &&
 					len(tc.remainderExpected) == 0 {
@@ -462,7 +434,7 @@ func TestParamAddPos(t *testing.T) {
 				}
 
 				if !reflect.DeepEqual(ps.Remainder(), tc.remainderExpected) {
-					t.Log(tcID)
+					t.Log(tc.IDStr())
 					t.Logf("\t: remainder received: %v\n", ps.Remainder())
 					t.Logf("\t: remainder expected: %v\n", tc.remainderExpected)
 					t.Errorf("\t: unexpected remainder\n")
@@ -567,13 +539,13 @@ func TestParamParse1(t *testing.T) {
 func TestParamParse(t *testing.T) {
 	var p1 int64
 	testCases := []struct {
-		testName     string
+		testhelper.ID
 		expectedEMap map[string][]string
 		paramsPassed []string
 		params       []*namedParamInitialiser
 	}{
 		{
-			testName: "one param, no error - separate param and value",
+			ID: testhelper.MkID("one param, no error - separate param and value"),
 			params: []*namedParamInitialiser{
 				{
 					name:   "test1",
@@ -585,7 +557,7 @@ func TestParamParse(t *testing.T) {
 			},
 		},
 		{
-			testName: "one param, no error - param=value",
+			ID: testhelper.MkID("one param, no error - param=value"),
 			params: []*namedParamInitialiser{
 				{
 					name:   "test1",
@@ -597,7 +569,7 @@ func TestParamParse(t *testing.T) {
 			},
 		},
 		{
-			testName: "bad param, doesn't match",
+			ID: testhelper.MkID("bad param, doesn't match"),
 			params: []*namedParamInitialiser{
 				{
 					name:   "test1",
@@ -612,7 +584,7 @@ func TestParamParse(t *testing.T) {
 			},
 		},
 		{
-			testName: "bad param, no second part",
+			ID: testhelper.MkID("bad param, no second part"),
 			params: []*namedParamInitialiser{
 				{
 					name:   "test1",
@@ -627,7 +599,7 @@ func TestParamParse(t *testing.T) {
 			},
 		},
 		{
-			testName: "bad param, not a number",
+			ID: testhelper.MkID("bad param, not a number"),
 			params: []*namedParamInitialiser{
 				{
 					name:   "test1",
@@ -643,8 +615,7 @@ func TestParamParse(t *testing.T) {
 		},
 	}
 
-	for i, tc := range testCases {
-		tcID := fmt.Sprintf("test %d: %s", i, tc.testName)
+	for _, tc := range testCases {
 		ps, err := paramset.NewNoHelpNoExitNoErrRpt()
 		if err != nil {
 			t.Fatal("An error was detected while constructing the PSet:",
@@ -654,9 +625,9 @@ func TestParamParse(t *testing.T) {
 			panicSafeTestAddByName(ps, p)
 		}
 		errMap, panicked, panicVal, stackTrace := panicSafeTestParse(ps, tc.paramsPassed)
-		if !testhelper.ReportUnexpectedPanic(t, tcID,
+		if !testhelper.ReportUnexpectedPanic(t, tc.IDStr(),
 			panicked, panicVal, stackTrace) {
-			errMapCheck(t, tcID, errMap, tc.expectedEMap)
+			errMapCheck(t, tc.IDStr(), errMap, tc.expectedEMap)
 		}
 	}
 
