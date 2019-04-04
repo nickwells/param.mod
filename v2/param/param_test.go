@@ -11,7 +11,7 @@ import (
 	"github.com/nickwells/testhelper.mod/testhelper"
 )
 
-func TestParamAdd(t *testing.T) {
+func TestParamAdd(t *testing.T) { // nolint: gocyclo
 	var p1 int64
 	testCases := []struct {
 		testhelper.ID
@@ -162,7 +162,7 @@ func TestParamAdd(t *testing.T) {
 	}
 }
 
-func TestParamAddPos(t *testing.T) {
+func TestParamAddPos(t *testing.T) { // nolint: gocyclo
 	var p1 int64
 	testCases := []struct {
 		testhelper.ID
@@ -444,7 +444,7 @@ func TestParamAddPos(t *testing.T) {
 	}
 }
 
-func TestParamParse1(t *testing.T) {
+func TestParamParse1(t *testing.T) { // nolint: gocyclo
 	var p1 int64
 	var p2 int64
 

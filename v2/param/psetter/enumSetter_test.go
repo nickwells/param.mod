@@ -1,9 +1,10 @@
 package psetter_test
 
 import (
+	"testing"
+
 	"github.com/nickwells/param.mod/v2/param"
 	"github.com/nickwells/param.mod/v2/param/psetter"
-	"testing"
 )
 
 func TestEnum(t *testing.T) {
@@ -122,7 +123,7 @@ func TestEnumList(t *testing.T) {
 	}
 }
 
-func TestEnumMap(t *testing.T) {
+func TestEnumMap(t *testing.T) { // nolint: gocyclo
 	var value map[string]bool
 	ems := psetter.EnumMap{Value: &value, AllowedVals: psetter.AValMap{
 		"e1": "E1 explained",
