@@ -1,3 +1,5 @@
 a list of string values separated by ','. The values must be from the following:
 aval    : desc
 aval-alt: desc
+
+Each value can be set to false by following the value with '=false'; by default the value will be set to true.

@@ -1,7 +1,6 @@
 package psetter_test
 
 import (
-	"fmt"
 	"regexp"
 	"testing"
 	"time"
@@ -12,21 +11,33 @@ import (
 )
 
 func TestCheck(t *testing.T) {
+	var goodStr = "aval"
+	var goodStrAlt = "aval-alt"
+	var badStr = "bad val"
+	var anyStr = ""
 	var b bool
 	var dur time.Duration
 	var emptyStrList []string
-	var goodStrList = []string{"aval"}
-	var badStrList = []string{"bad val"}
+	var goodStrList = []string{goodStr}
+	var badStrList = []string{badStr}
 	var strToBoolMap = make(map[string]bool)
 	var strToBoolMapNil map[string]bool
-	var goodStr = "aval"
-	var badStr = "bad val"
-	var anyStr = ""
+	var strToBoolMapWithEntriesGood = map[string]bool{goodStr: true}
+	var strToBoolMapWithEntriesBad = map[string]bool{
+		goodStr: true,
+		badStr:  true,
+	}
 	var f float64
 	var i int64
 	var intList []int64
 	var re *regexp.Regexp
 	var timeLoc *time.Location
+	var avalMapEmpty = psetter.AValMap{}
+	var avalMapOneEntry = psetter.AValMap{goodStr: "desc"}
+	var avalMapGood = psetter.AValMap{
+		goodStr:    "desc",
+		goodStrAlt: "desc",
+	}
 
 	nilValueMsg := "Check failed: the Value to be set is nil"
 	tooFewAValsMsg := []string{
@@ -45,307 +56,306 @@ func TestCheck(t *testing.T) {
 	mapNotCreatedMsg := "Check failed: the map has not been created"
 
 	testCases := []struct {
-		name          string
-		s             param.Setter
-		panicExpected bool
-		expVals       []string
+		testhelper.ID
+		testhelper.ExpPanic
+		s param.Setter
 	}{
 		{
-			name: "Bool - ok",
-			s:    &psetter.Bool{Value: &b},
+			ID: testhelper.MkID("Bool - ok"),
+			s:  &psetter.Bool{Value: &b},
 		},
 		{
-			name:          "Bool - bad",
-			s:             &psetter.Bool{},
-			panicExpected: true,
-			expVals:       []string{"test: psetter.Bool " + nilValueMsg},
+			ID: testhelper.MkID("Bool - bad"),
+			s:  &psetter.Bool{},
+			ExpPanic: testhelper.MkExpPanic("test: psetter.Bool " +
+				nilValueMsg),
 		},
 		{
-			name: "Duration - ok",
-			s:    &psetter.Duration{Value: &dur},
+			ID: testhelper.MkID("Duration - ok"),
+			s:  &psetter.Duration{Value: &dur},
 		},
 		{
-			name:          "Duration - bad",
-			s:             &psetter.Duration{},
-			panicExpected: true,
-			expVals:       []string{"test: psetter.Duration " + nilValueMsg},
+			ID: testhelper.MkID("Duration - bad"),
+			s:  &psetter.Duration{},
+			ExpPanic: testhelper.MkExpPanic("test: psetter.Duration " +
+				nilValueMsg),
 		},
 		{
-			name: "EnumList - ok - no strings",
-			s: &psetter.EnumList{
-				Value: &emptyStrList,
-				AllowedVals: psetter.AValMap{
-					"aval":     "desc",
-					"aval-alt": "desc",
-				},
-			},
-		},
-		{
-			name: "EnumList - ok - good strings",
-			s: &psetter.EnumList{
-				Value: &goodStrList,
-				AllowedVals: psetter.AValMap{
-					"aval":     "desc",
-					"aval-alt": "desc",
-				},
-			},
-		},
-		{
-			name: "EnumList - bad initial value",
-			s: &psetter.EnumList{
-				Value: &badStrList,
-				AllowedVals: psetter.AValMap{
-					"aval":     "desc",
-					"aval-alt": "desc",
-				},
-			},
-			panicExpected: true,
-			expVals: append([]string{"test: psetter.EnumList "},
-				badInitialList...),
-		},
-		{
-			name:          "EnumList - bad - no value",
-			s:             &psetter.EnumList{},
-			panicExpected: true,
-			expVals:       []string{"test: psetter.EnumList " + nilValueMsg},
-		},
-		{
-			name: "EnumList - bad - no allowedValues",
-			s: &psetter.EnumList{
-				Value: &emptyStrList,
-			},
-			panicExpected: true,
-			expVals: append([]string{"test: psetter.EnumList "},
-				tooFewAValsMsg...),
-		},
-		{
-			name: "EnumList - bad - empty allowedValues",
+			ID: testhelper.MkID("EnumList - ok - no strings"),
 			s: &psetter.EnumList{
 				Value:       &emptyStrList,
-				AllowedVals: psetter.AValMap{},
+				AllowedVals: avalMapGood,
 			},
-			panicExpected: true,
-			expVals: append([]string{"test: psetter.EnumList "},
-				tooFewAValsMsg...),
 		},
 		{
-			name: "EnumList - bad - allowedValues - only one entry",
+			ID: testhelper.MkID("EnumList - ok - good strings"),
+			s: &psetter.EnumList{
+				Value:       &goodStrList,
+				AllowedVals: avalMapGood,
+			},
+		},
+		{
+			ID: testhelper.MkID("EnumList - bad initial value"),
+			s: &psetter.EnumList{
+				Value:       &badStrList,
+				AllowedVals: avalMapGood,
+			},
+			ExpPanic: testhelper.MkExpPanic(
+				append([]string{"test: psetter.EnumList "},
+					badInitialList...)...),
+		},
+		{
+			ID: testhelper.MkID("EnumList - bad - no value"),
+			s:  &psetter.EnumList{},
+			ExpPanic: testhelper.MkExpPanic("test: psetter.EnumList " +
+				nilValueMsg),
+		},
+		{
+			ID: testhelper.MkID("EnumList - bad - no allowedValues"),
 			s: &psetter.EnumList{
 				Value: &emptyStrList,
-				AllowedVals: psetter.AValMap{
-					"aval": "desc",
-				},
 			},
-			panicExpected: true,
-			expVals: append([]string{"test: psetter.EnumList "},
-				tooFewAValsMsg...),
+			ExpPanic: testhelper.MkExpPanic(
+				append([]string{"test: psetter.EnumList "},
+					tooFewAValsMsg...)...),
 		},
 		{
-			name: "EnumMap - ok",
-			s: &psetter.EnumMap{
-				Value: &strToBoolMap,
-				AllowedVals: psetter.AValMap{
-					"aval":     "desc",
-					"aval-alt": "desc",
-				},
+			ID: testhelper.MkID("EnumList - bad - empty allowedValues"),
+			s: &psetter.EnumList{
+				Value:       &emptyStrList,
+				AllowedVals: avalMapEmpty,
 			},
+			ExpPanic: testhelper.MkExpPanic(
+				append([]string{"test: psetter.EnumList "},
+					tooFewAValsMsg...)...),
 		},
 		{
-			name:          "EnumMap - bad - no value",
-			s:             &psetter.EnumMap{},
-			panicExpected: true,
-			expVals:       []string{"test: psetter.EnumMap " + nilValueMsg},
-		},
-		{
-			name: "EnumMap - bad - nil map",
-			s: &psetter.EnumMap{
-				Value: &strToBoolMapNil,
-				AllowedVals: psetter.AValMap{
-					"aval":     "desc",
-					"aval-alt": "desc",
-				},
+			ID: testhelper.MkID("EnumList - bad - allowedValues" +
+				" - only one entry"),
+			s: &psetter.EnumList{
+				Value:       &emptyStrList,
+				AllowedVals: avalMapOneEntry,
 			},
-			panicExpected: true,
-			expVals:       []string{"test: psetter.EnumMap " + mapNotCreatedMsg},
+			ExpPanic: testhelper.MkExpPanic(
+				append([]string{"test: psetter.EnumList "},
+					tooFewAValsMsg...)...),
 		},
 		{
-			name: "EnumMap - bad - no allowedValues",
-			s: &psetter.EnumMap{
-				Value: &strToBoolMap,
-			},
-			panicExpected: true,
-			expVals: append([]string{"test: psetter.EnumMap "},
-				tooFewAValsMsg...),
-		},
-		{
-			name: "EnumMap - bad - empty allowedValues",
+			ID: testhelper.MkID("EnumMap - ok"),
 			s: &psetter.EnumMap{
 				Value:       &strToBoolMap,
-				AllowedVals: psetter.AValMap{},
+				AllowedVals: avalMapGood,
 			},
-			panicExpected: true,
-			expVals: append([]string{"test: psetter.EnumMap "},
-				tooFewAValsMsg...),
 		},
 		{
-			name: "Enum - ok",
+			ID: testhelper.MkID("EnumMap - ok - Values has entries"),
+			s: &psetter.EnumMap{
+				Value:       &strToBoolMapWithEntriesGood,
+				AllowedVals: avalMapGood,
+			},
+		},
+		{
+			ID: testhelper.MkID(
+				"EnumMap - ok - Values has entries - missing allowed"),
+			s: &psetter.EnumMap{
+				Value:                 &strToBoolMapWithEntriesBad,
+				AllowedVals:           avalMapGood,
+				AllowHiddenMapEntries: true,
+			},
+		},
+		{
+			ID: testhelper.MkID(
+				"EnumMap - bad - Values has entries - missing not allowed"),
+			s: &psetter.EnumMap{
+				Value:       &strToBoolMapWithEntriesBad,
+				AllowedVals: avalMapGood,
+			},
+			ExpPanic: testhelper.MkExpPanic(
+				append([]string{"test: psetter.EnumMap"},
+					"the map entry with key",
+					"is invalid - it is not in the allowed values map")...),
+		},
+		{
+			ID: testhelper.MkID("EnumMap - bad - no value"),
+			s:  &psetter.EnumMap{},
+			ExpPanic: testhelper.MkExpPanic("test: psetter.EnumMap " +
+				nilValueMsg),
+		},
+		{
+			ID: testhelper.MkID("EnumMap - bad - nil map"),
+			s: &psetter.EnumMap{
+				Value:       &strToBoolMapNil,
+				AllowedVals: avalMapGood,
+			},
+			ExpPanic: testhelper.MkExpPanic("test: psetter.EnumMap " +
+				mapNotCreatedMsg),
+		},
+		{
+			ID: testhelper.MkID("EnumMap - bad - no allowedValues"),
+			s: &psetter.EnumMap{
+				Value: &strToBoolMap,
+			},
+			ExpPanic: testhelper.MkExpPanic(
+				append([]string{"test: psetter.EnumMap "},
+					tooFewAValsMsg...)...),
+		},
+		{
+			ID: testhelper.MkID("EnumMap - bad - empty allowedValues"),
+			s: &psetter.EnumMap{
+				Value:       &strToBoolMap,
+				AllowedVals: avalMapEmpty,
+			},
+			ExpPanic: testhelper.MkExpPanic(
+				append([]string{"test: psetter.EnumMap "},
+					tooFewAValsMsg...)...),
+		},
+		{
+			ID: testhelper.MkID("Enum - ok"),
 			s: &psetter.Enum{
-				Value: &goodStr,
-				AllowedVals: psetter.AValMap{
-					"aval":     "desc",
-					"aval-alt": "desc",
-				},
+				Value:       &goodStr,
+				AllowedVals: avalMapGood,
 			},
 		},
 		{
-			name: "Enum - bad initial value",
+			ID: testhelper.MkID("Enum - bad initial value"),
 			s: &psetter.Enum{
-				Value: &badStr,
-				AllowedVals: psetter.AValMap{
-					"aval":     "desc",
-					"aval-alt": "desc",
-				},
+				Value:       &badStr,
+				AllowedVals: avalMapGood,
 			},
-			panicExpected: true,
-			expVals:       append([]string{"test: psetter.Enum "}, badInitialVal...),
+			ExpPanic: testhelper.MkExpPanic(
+				append([]string{"test: psetter.Enum "}, badInitialVal...)...),
 		},
 		{
-			name:          "Enum - bad - no value",
-			s:             &psetter.Enum{},
-			panicExpected: true,
-			expVals:       []string{"test: psetter.Enum " + nilValueMsg},
+			ID: testhelper.MkID("Enum - bad - no value"),
+			s:  &psetter.Enum{},
+			ExpPanic: testhelper.MkExpPanic("test: psetter.Enum " +
+				nilValueMsg),
 		},
 		{
-			name: "Enum - bad - no allowedValues",
+			ID: testhelper.MkID("Enum - bad - no allowedValues"),
 			s: &psetter.Enum{
 				Value: &anyStr,
 			},
-			panicExpected: true,
-			expVals: append([]string{"test: psetter.Enum "},
-				tooFewAValsMsg...),
+			ExpPanic: testhelper.MkExpPanic(
+				append([]string{"test: psetter.Enum "}, tooFewAValsMsg...)...),
 		},
 		{
-			name: "Enum - bad - empty allowedValues",
+			ID: testhelper.MkID("Enum - bad - empty allowedValues"),
 			s: &psetter.Enum{
 				Value:       &anyStr,
-				AllowedVals: psetter.AValMap{},
+				AllowedVals: avalMapEmpty,
 			},
-			panicExpected: true,
-			expVals: append([]string{"test: psetter.Enum "},
-				tooFewAValsMsg...),
+			ExpPanic: testhelper.MkExpPanic(
+				append([]string{"test: psetter.Enum "}, tooFewAValsMsg...)...),
 		},
 		{
-			name: "Float64 - ok",
-			s:    &psetter.Float64{Value: &f},
+			ID: testhelper.MkID("Float64 - ok"),
+			s:  &psetter.Float64{Value: &f},
 		},
 		{
-			name:          "Float64 - bad",
-			s:             &psetter.Float64{},
-			panicExpected: true,
-			expVals:       []string{"test: psetter.Float64 " + nilValueMsg},
+			ID: testhelper.MkID("Float64 - bad"),
+			s:  &psetter.Float64{},
+			ExpPanic: testhelper.MkExpPanic("test: psetter.Float64 " +
+				nilValueMsg),
 		},
 		{
-			name: "Int64 - ok",
-			s:    &psetter.Int64{Value: &i},
+			ID: testhelper.MkID("Int64 - ok"),
+			s:  &psetter.Int64{Value: &i},
 		},
 		{
-			name:          "Int64 - bad",
-			s:             &psetter.Int64{},
-			panicExpected: true,
-			expVals:       []string{"test: psetter.Int64 " + nilValueMsg},
+			ID: testhelper.MkID("Int64 - bad"),
+			s:  &psetter.Int64{},
+			ExpPanic: testhelper.MkExpPanic("test: psetter.Int64 " +
+				nilValueMsg),
 		},
 		{
-			name: "Int64List - ok",
-			s:    &psetter.Int64List{Value: &intList},
+			ID: testhelper.MkID("Int64List - ok"),
+			s:  &psetter.Int64List{Value: &intList},
 		},
 		{
-			name:          "Int64List - bad",
-			s:             &psetter.Int64List{},
-			panicExpected: true,
-			expVals:       []string{"test: psetter.Int64List " + nilValueMsg},
+			ID: testhelper.MkID("Int64List - bad"),
+			s:  &psetter.Int64List{},
+			ExpPanic: testhelper.MkExpPanic("test: psetter.Int64List " +
+				nilValueMsg),
 		},
 		{
-			name: "Map - ok",
+			ID: testhelper.MkID("Map - ok"),
 			s: &psetter.Map{
 				Value: &strToBoolMap,
 			},
 		},
 		{
-			name:          "Map - bad - no value",
-			s:             &psetter.Map{},
-			panicExpected: true,
-			expVals:       []string{"test: psetter.Map " + nilValueMsg},
+			ID: testhelper.MkID("Map - bad - no value"),
+			s:  &psetter.Map{},
+			ExpPanic: testhelper.MkExpPanic("test: psetter.Map " +
+				nilValueMsg),
 		},
 		{
-			name: "Map - bad - nil map",
+			ID: testhelper.MkID("Map - bad - nil map"),
 			s: &psetter.Map{
 				Value: &strToBoolMapNil,
 			},
-			panicExpected: true,
-			expVals:       []string{"test: psetter.Map " + mapNotCreatedMsg},
+			ExpPanic: testhelper.MkExpPanic("test: psetter.Map " +
+				mapNotCreatedMsg),
 		},
 		{
-			name: "Nil - ok",
-			s:    &psetter.Nil{},
+			ID: testhelper.MkID("Nil - ok"),
+			s:  &psetter.Nil{},
 		},
 		{
-			name: "Pathname - ok",
-			s:    &psetter.Pathname{Value: &anyStr},
+			ID: testhelper.MkID("Pathname - ok"),
+			s:  &psetter.Pathname{Value: &anyStr},
 		},
 		{
-			name:          "Pathname - bad",
-			s:             &psetter.Pathname{},
-			panicExpected: true,
-			expVals:       []string{"test: psetter.Pathname " + nilValueMsg},
+			ID: testhelper.MkID("Pathname - bad"),
+			s:  &psetter.Pathname{},
+			ExpPanic: testhelper.MkExpPanic("test: psetter.Pathname " +
+				nilValueMsg),
 		},
 		{
-			name: "Regexp - ok",
-			s:    &psetter.Regexp{Value: &re},
+			ID: testhelper.MkID("Regexp - ok"),
+			s:  &psetter.Regexp{Value: &re},
 		},
 		{
-			name:          "Regexp - bad",
-			s:             &psetter.Regexp{},
-			panicExpected: true,
-			expVals:       []string{"test: psetter.Regexp " + nilValueMsg},
+			ID: testhelper.MkID("Regexp - bad"),
+			s:  &psetter.Regexp{},
+			ExpPanic: testhelper.MkExpPanic("test: psetter.Regexp " +
+				nilValueMsg),
 		},
 		{
-			name: "StrList - ok",
-			s:    &psetter.StrList{Value: &emptyStrList},
+			ID: testhelper.MkID("StrList - ok"),
+			s:  &psetter.StrList{Value: &emptyStrList},
 		},
 		{
-			name:          "StrList - bad",
-			s:             &psetter.StrList{},
-			panicExpected: true,
-			expVals:       []string{"test: psetter.StrList " + nilValueMsg},
+			ID: testhelper.MkID("StrList - bad"),
+			s:  &psetter.StrList{},
+			ExpPanic: testhelper.MkExpPanic("test: psetter.StrList " +
+				nilValueMsg),
 		},
 		{
-			name: "String - ok",
-			s:    &psetter.String{Value: &anyStr},
+			ID: testhelper.MkID("String - ok"),
+			s:  &psetter.String{Value: &anyStr},
 		},
 		{
-			name:          "String - bad",
-			s:             &psetter.String{},
-			panicExpected: true,
-			expVals:       []string{"test: psetter.String " + nilValueMsg},
+			ID: testhelper.MkID("String - bad"),
+			s:  &psetter.String{},
+			ExpPanic: testhelper.MkExpPanic("test: psetter.String " +
+				nilValueMsg),
 		},
 		{
-			name: "TimeLocation - ok",
-			s:    &psetter.TimeLocation{Value: &timeLoc},
+			ID: testhelper.MkID("TimeLocation - ok"),
+			s:  &psetter.TimeLocation{Value: &timeLoc},
 		},
 		{
-			name:          "TimeLocation - bad",
-			s:             &psetter.TimeLocation{},
-			panicExpected: true,
-			expVals:       []string{"test: psetter.TimeLocation " + nilValueMsg},
+			ID: testhelper.MkID("TimeLocation - bad"),
+			s:  &psetter.TimeLocation{},
+			ExpPanic: testhelper.MkExpPanic("test: psetter.TimeLocation " +
+				nilValueMsg),
 		},
 	}
 
-	for i, tc := range testCases {
-		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
+	for _, tc := range testCases {
 		panicked, panicVal := panicSafeCheck(tc.s)
-
-		testhelper.PanicCheckString(t, tcID,
-			panicked, tc.panicExpected,
-			panicVal, tc.expVals)
+		testhelper.CheckExpPanic(t, panicked, panicVal, tc)
 	}
 }

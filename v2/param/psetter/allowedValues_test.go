@@ -2,7 +2,6 @@ package psetter_test
 
 import (
 	"flag"
-	"fmt"
 	"regexp"
 	"testing"
 	"time"
@@ -38,19 +37,19 @@ func TestAllowedValues(t *testing.T) {
 	var timeLoc *time.Location
 
 	testCases := []struct {
-		name string
-		s    param.Setter
+		testhelper.ID
+		s param.Setter
 	}{
 		{
-			name: "Bool",
-			s:    &psetter.Bool{Value: &b},
+			ID: testhelper.MkID("Bool"),
+			s:  &psetter.Bool{Value: &b},
 		},
 		{
-			name: "Duration",
-			s:    &psetter.Duration{Value: &dur},
+			ID: testhelper.MkID("Duration"),
+			s:  &psetter.Duration{Value: &dur},
 		},
 		{
-			name: "EnumList",
+			ID: testhelper.MkID("EnumList"),
 			s: &psetter.EnumList{
 				Value: &emptyStrList,
 				AllowedVals: psetter.AValMap{
@@ -60,7 +59,7 @@ func TestAllowedValues(t *testing.T) {
 			},
 		},
 		{
-			name: "EnumMap",
+			ID: testhelper.MkID("EnumMap"),
 			s: &psetter.EnumMap{
 				Value: &strToBoolMap,
 				AllowedVals: psetter.AValMap{
@@ -70,7 +69,7 @@ func TestAllowedValues(t *testing.T) {
 			},
 		},
 		{
-			name: "Enum",
+			ID: testhelper.MkID("Enum"),
 			s: &psetter.Enum{
 				Value: &goodStr,
 				AllowedVals: psetter.AValMap{
@@ -80,54 +79,52 @@ func TestAllowedValues(t *testing.T) {
 			},
 		},
 		{
-			name: "Float64",
-			s:    &psetter.Float64{Value: &f},
+			ID: testhelper.MkID("Float64"),
+			s:  &psetter.Float64{Value: &f},
 		},
 		{
-			name: "Int64",
-			s:    &psetter.Int64{Value: &i},
+			ID: testhelper.MkID("Int64"),
+			s:  &psetter.Int64{Value: &i},
 		},
 		{
-			name: "Int64List",
-			s:    &psetter.Int64List{Value: &intList},
+			ID: testhelper.MkID("Int64List"),
+			s:  &psetter.Int64List{Value: &intList},
 		},
 		{
-			name: "Map",
+			ID: testhelper.MkID("Map"),
 			s: &psetter.Map{
 				Value: &strToBoolMap,
 			},
 		},
 		{
-			name: "Nil",
-			s:    &psetter.Nil{},
+			ID: testhelper.MkID("Nil"),
+			s:  &psetter.Nil{},
 		},
 		{
-			name: "Pathname",
-			s:    &psetter.Pathname{Value: &anyStr},
+			ID: testhelper.MkID("Pathname"),
+			s:  &psetter.Pathname{Value: &anyStr},
 		},
 		{
-			name: "Regexp",
-			s:    &psetter.Regexp{Value: &re},
+			ID: testhelper.MkID("Regexp"),
+			s:  &psetter.Regexp{Value: &re},
 		},
 		{
-			name: "StrList",
-			s:    &psetter.StrList{Value: &emptyStrList},
+			ID: testhelper.MkID("StrList"),
+			s:  &psetter.StrList{Value: &emptyStrList},
 		},
 		{
-			name: "String",
-			s:    &psetter.String{Value: &anyStr},
+			ID: testhelper.MkID("String"),
+			s:  &psetter.String{Value: &anyStr},
 		},
 		{
-			name: "TimeLocation",
-			s:    &psetter.TimeLocation{Value: &timeLoc},
+			ID: testhelper.MkID("TimeLocation"),
+			s:  &psetter.TimeLocation{Value: &timeLoc},
 		},
 	}
 
-	for i, tc := range testCases {
-		tcID := fmt.Sprintf("test %d: %s.AllowedValues", i, tc.name)
-
+	for _, tc := range testCases {
 		val := []byte(tc.s.AllowedValues())
-		testhelper.CheckAgainstGoldenFile(t, tcID, val,
-			gfc.PathName(tc.name), *updateAVals)
+		testhelper.CheckAgainstGoldenFile(t, tc.IDStr(), val,
+			gfc.PathName(tc.ID.Name), *updateAVals)
 	}
 }

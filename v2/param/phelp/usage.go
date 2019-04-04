@@ -14,8 +14,8 @@ const stdIndent = "    "
 const dashes = "---------------"
 const equals = "==============="
 
-const paramIndent = 8
-const descriptionIndent = 16
+const paramIndent = 6
+const descriptionIndent = 12
 const textIndent = 4
 
 // badGroups checks that all the groups are in the PSet and reports the
@@ -168,6 +168,9 @@ func (h StdHelp) printParamUsage(w io.Writer, p *param.ByName) {
 
 	twc.Wrap(p.Description(), descriptionIndent)
 	twc.WrapPrefixed("Allowed values: ", p.AllowedValues(), descriptionIndent)
+	if p.ValueReq() == param.None {
+		return
+	}
 	twc.WrapPrefixed("Initial value: ", p.InitialValue(), descriptionIndent)
 }
 
