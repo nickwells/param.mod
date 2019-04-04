@@ -20,31 +20,25 @@ const textIndent = 4
 
 // badGroups checks that all the groups are in the PSet and reports the
 // error if not. It returns a count of the number of problems found
-func badGroups(ps *param.PSet, groups map[string]bool, name string) bool {
-	badGroups := 0
+func badGroups(ps *param.PSet, twc *twrap.TWConf, groups map[string]bool, name string) bool {
+	errCount := 0
 	msg := ""
 	for g := range groups {
 		if !ps.HasGroupName(g) {
-			if badGroups == 0 {
+			if errCount == 0 {
 				msg = "group: '" + g + "' in the list of " + name + "," +
 					" is not the name of a parameter group." +
 					" Please check the spelling."
 			} else {
 				msg += "\nalso: '" + g + "'"
 			}
-			badGroups++
+			errCount++
 		}
 	}
-	if badGroups > 0 {
-		twc, err := twrap.NewTWConf(twrap.SetWriter(ps.ErrWriter()))
-		if err != nil {
-			fmt.Fprint(os.Stderr, "Couldn't build the text wrapper:", err)
-			return true
-		}
-
+	if errCount > 0 {
 		twc.WrapPrefixed("Error: ", msg, 0)
 	}
-	return badGroups > 0
+	return errCount > 0
 }
 
 // printOptValNote prints an explanation of how optional values must be set
@@ -65,37 +59,34 @@ func (h StdHelp) printOptValNote(w io.Writer) {
 		0)
 }
 
-// Help prints the messages and then a standardised usage message based on
-// the parameters supplied to the param set. It then exits with an exit
-// status of 1
-func (h StdHelp) Help(ps *param.PSet, messages ...string) {
-	w := ps.ErrWriter()
-	twc, err := twrap.NewTWConf(twrap.SetWriter(w))
-	if err != nil {
-		fmt.Fprint(os.Stderr, "Couldn't build the text wrapper:", err)
-		return
-	}
-
+// printHelpIntro prints the messages and any program description
+func (h StdHelp) printHelpIntro(twc *twrap.TWConf, progDesc string, messages ...string) {
 	for _, message := range messages {
 		twc.Wrap(message, 0)
 	}
 	if len(messages) > 0 {
-		fmt.Fprint(w, "\n"+equals+"\n\n")
+		fmt.Fprint(twc.W, "\n"+equals+"\n\n")
 	}
 
 	if h.style != Short &&
 		h.style != GroupNamesOnly {
-		twc.Wrap(ps.ProgDesc()+"\n", textIndent)
+		twc.Wrap(progDesc+"\n", textIndent)
 	}
+}
 
+// checkGroups checks the parameter group settings for consistency and
+// correctness and reports any errors found. It will change the settings of
+// the helper to fix any problems or to report valid group names if invalid
+// names have been given.
+func (h StdHelp) checkGroups(ps *param.PSet, twc *twrap.TWConf) {
 	if h.includeGroups {
-		if badGroups(ps, h.groupsToShow, "groups to show") {
+		if badGroups(ps, twc, h.groupsToShow, "groups to show") {
 			h.includeGroups = false
 			h.style = GroupNamesOnly
 		}
 	}
 	if h.excludeGroups {
-		if badGroups(ps, h.groupsToExclude, "excluded groups") {
+		if badGroups(ps, twc, h.groupsToExclude, "excluded groups") {
 			h.excludeGroups = false
 			h.style = GroupNamesOnly
 		}
@@ -110,6 +101,22 @@ func (h StdHelp) Help(ps *param.PSet, messages ...string) {
 			0)
 		h.excludeGroups = false
 	}
+}
+
+// Help prints the messages and then a standardised usage message based on
+// the parameters supplied to the param set. It then exits with an exit
+// status of 1
+func (h StdHelp) Help(ps *param.PSet, messages ...string) {
+	w := ps.ErrWriter()
+	twc, err := twrap.NewTWConf(twrap.SetWriter(w))
+	if err != nil {
+		fmt.Fprint(os.Stderr, "Couldn't build the text wrapper:", err)
+		return
+	}
+
+	h.printHelpIntro(twc, ps.ProgDesc(), messages...)
+
+	h.checkGroups(ps, twc)
 
 	fmt.Fprint(w, "Usage: ", ps.ProgName())
 
