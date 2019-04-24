@@ -78,6 +78,14 @@ The program will exit if this parameter is set`,
 Note that the program may perform some operations as the parameters are processed and these will still take place even if this parameter is set.`,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.GroupName(groupName))
+
+	ps.Add("params-file",
+		configFileSetter{seenBefore: make(map[string]bool)},
+		`read in parameters from the given file`,
+		param.AltName("params-from"),
+		param.PostAction(param.ConfigFileActionFunc),
+		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
+		param.GroupName(groupName))
 }
 
 // addUsageParams will add the usage parameters into the parameter set

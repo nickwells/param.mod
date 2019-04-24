@@ -19,5 +19,18 @@ package: paramset.New as this will automatically set the mandatory helper to
 the Standard helper. This will provide a common set of parameters that give a
 consistent interface to your command line tools.
 
+When adding a new parameter you need to choose the Setter that you want it to
+use. The psetter package provides a lot of standard ones but you can write
+your own if you have a package where you want to instantiate a parameter that
+is not covered by the standard setters.
+
+Optionally you can choose to provide actions to be performed once the
+parameter has been seen. The paction package provides some standard actions
+but you can write your own. These can be useful to set parameters where if
+one is set it implies that another should take a certain valuu. Actions can
+also be used to record how many of a group of parameters have been set so
+that you could, for instance, check that only one of a group of mutually
+exclusive parameters has been set.
+
 */
 package param

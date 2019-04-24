@@ -27,11 +27,11 @@ func (s Pathname) CountChecks() int {
 	return len(s.Checks)
 }
 
-// SetWithVal (called when a value follows the parameter) checks first that the
-// value, if it cannot be parsed successfully it returns an
-// error. If there is a check and the check is violated it returns an
-// error. Only if the value is parsed successfully and the check is not
-// violated is the Value set.
+// SetWithVal (called when a value follows the parameter) checks first that
+// the value can be converted into a pathname. Then it confirms that the file
+// conforms to the supplied provisos. If there are checks and any check is
+// violated it returns an error. Only if the value is converted successfully
+// and no checks are violated is the Value set and a nil error is returned.
 func (s Pathname) SetWithVal(_ string, paramVal string) error {
 	pathname, err := fileparse.FixFileName(paramVal)
 	if err != nil {

@@ -81,7 +81,7 @@ const (
 	MustBeSet
 	// SetOnlyOnce means that only the first time it is set will have any
 	// effect and any subsequent attempts to set it will be ignored. You can
-	// control the behaviour when multiple attempts are made through an
+	// control the behaviour when multiple attempts are made through a
 	// SetterFunc (see the SetOnce type in the paction package)
 	SetOnlyOnce
 	// DontShowInStdUsage means that the parameter name will be suppressed

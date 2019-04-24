@@ -59,11 +59,8 @@ func (ps *PSet) Parse(args ...[]string) ErrMap {
 		ps.progBaseName = filepath.Base(ps.progName)
 	}
 
-	ps.getParamsFromConfigFile()
-
-	if len(ps.envPrefixes) != 0 {
-		ps.getParamsFromEnvironment()
-	}
+	ps.getParamsFromConfigFiles()
+	ps.getParamsFromEnvironment()
 
 	var loc *location.L
 	if len(args) == 0 {

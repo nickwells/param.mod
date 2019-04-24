@@ -1,6 +1,7 @@
 package param
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -76,7 +77,6 @@ func (pflp paramLineParser) ParseLine(line string, loc *location.L) error {
 		if progName == pflp.ps.progBaseName {
 			eRule = paramMustExist
 		} else {
-			pflp.ps.markAsUnused(paramName, loc)
 			return nil
 		}
 	}
@@ -87,7 +87,7 @@ func (pflp paramLineParser) ParseLine(line string, loc *location.L) error {
 		paramParts[1] = strings.TrimSpace(paramParts[1])
 	}
 
-	pflp.ps.setValueFromFile(paramParts, loc, eRule)
+	pflp.ps.setValue(paramParts, loc, eRule, "")
 
 	return nil
 }
@@ -106,7 +106,6 @@ func (gpflp groupParamLineParser) ParseLine(line string, loc *location.L) error 
 	progName, paramName := splitParamName(paramParts[0])
 	if progName != "" {
 		if progName != gpflp.ps.progBaseName {
-			gpflp.ps.markAsUnused(paramName, loc)
 			return nil
 		}
 	}
@@ -117,7 +116,7 @@ func (gpflp groupParamLineParser) ParseLine(line string, loc *location.L) error 
 		paramParts[1] = strings.TrimSpace(paramParts[1])
 	}
 
-	gpflp.ps.setValueFromGroupFile(paramParts, loc, gpflp.gName)
+	gpflp.ps.setValue(paramParts, loc, paramMustExist, gpflp.gName)
 
 	return nil
 }
@@ -279,10 +278,10 @@ func checkErrors(ps *PSet, errors []error, cf ConfigFileDetails) {
 	}
 }
 
-// getParamsFromConfigFile will construct a line parser and then parse the
+// getParamsFromConfigFiles will construct a line parser and then parse the
 // config files - the group-specific config files first and then the common
 // files.
-func (ps *PSet) getParamsFromConfigFile() {
+func (ps *PSet) getParamsFromConfigFiles() {
 
 	for gName, g := range ps.groups {
 		var lp = groupParamLineParser{
@@ -304,4 +303,26 @@ func (ps *PSet) getParamsFromConfigFile() {
 
 		checkErrors(ps, errors, cf)
 	}
+}
+
+// ConfigFileActionFunc can be called as an action func and will take the
+// second entry in the paramValues (which is expected to exist) as the name
+// of a config file from which to take parameters.
+func ConfigFileActionFunc(source string, loc location.L, p *ByName, paramValues []string) error {
+	if len(paramValues) != 2 {
+		return errors.New("no config file name parameter has been given")
+	}
+	p.ps.getParamsFromFile(paramValues[1],
+		"supplied config file: "+loc.String())
+	return nil
+}
+
+// getParamsFromFile will construct a line parser and then parse the
+// supplied config file
+func (ps *PSet) getParamsFromFile(name, desc string) {
+	cf := ConfigFileDetails{Name: name, CfConstraint: filecheck.MustExist}
+	var lp = paramLineParser{ps: ps}
+	fp := fileparse.New(desc, lp)
+	errors := fp.Parse(cf.Name)
+	checkErrors(ps, errors, cf)
 }

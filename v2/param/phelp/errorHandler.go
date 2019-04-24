@@ -62,11 +62,11 @@ func ReportErrors(w io.Writer, name string, errMap param.ErrMap) {
 	}
 	sort.Strings(paramNames)
 
-	fmt.Fprint(w, name, ": ", len(errMap))
+	fmt.Fprint(w, name, ": ")
 	if len(errMap) == 1 {
-		fmt.Fprint(w, " an error was")
+		fmt.Fprint(w, "an error was")
 	} else {
-		fmt.Fprint(w, " errors were")
+		fmt.Fprint(w, len(errMap), " errors were")
 	}
 	fmt.Fprint(w, " detected while setting the parameters:\n")
 

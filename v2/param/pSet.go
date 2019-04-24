@@ -198,8 +198,7 @@ func NewSet(psof ...PSetOptFunc) (*PSet, error) {
 	for _, f := range psof {
 		err := f(ps)
 		if err != nil {
-			fmt.Fprintf( // nolint: errcheck
-				ps.errWriter,
+			fmt.Fprintf(ps.errWriter,
 				"An error was detected while creating the PSet: %s\n",
 				err)
 			if ps.exitOnParamSetupErr {
@@ -215,7 +214,7 @@ func NewSet(psof ...PSetOptFunc) (*PSet, error) {
 
 	if ps.helper == nil {
 		var err = errors.New("A helper must be passed when creating a PSet")
-		fmt.Fprintln(ps.errWriter, err) // nolint: errcheck
+		fmt.Fprintln(ps.errWriter, err)
 		if ps.exitOnParamSetupErr {
 			os.Exit(1)
 		}
@@ -253,6 +252,7 @@ func (ps *PSet) AreSet() bool { return ps.parsed }
 func (ps *PSet) UnusedParams() map[string][]string {
 	up := make(map[string][]string, len(ps.unusedParams))
 	for pName := range ps.unusedParams {
+		up[pName] = make([]string, len(ps.unusedParams[pName]))
 		copy(up[pName], ps.unusedParams[pName])
 	}
 	return up
@@ -300,26 +300,6 @@ func (ps *PSet) recordUnexpectedParam(paramName string, loc *location.L) {
 	ps.errors[paramName] = append(ps.errors[paramName], loc.Error(msg))
 }
 
-func (ps *PSet) setValueFromEnv(paramParts []string, loc *location.L) bool {
-	paramName := paramParts[0]
-	p, exists := ps.nameToParam[paramName]
-
-	if !exists {
-		ps.markAsUnused(paramName, loc)
-		return false
-	}
-
-	if ps.cmdLineOnly(p) {
-		ps.recordCmdLineOnlyErr(paramName, loc)
-		return false
-	}
-
-	paramParts = cleanParamParts(p, paramParts)
-
-	p.processParam(loc, paramParts)
-	return true
-}
-
 type existenceRule int
 
 const (
@@ -327,32 +307,7 @@ const (
 	paramNeedNotExist
 )
 
-func (ps *PSet) setValueFromGroupFile(paramParts []string, loc *location.L, gName string) {
-	//XXX - needs to be changed
-	paramName := paramParts[0]
-	p, exists := ps.nameToParam[paramName]
-
-	if !exists {
-		ps.recordUnexpectedParam(paramName, loc)
-		return
-	}
-	if p.groupName != gName {
-		ps.errors[paramName] = append(ps.errors[paramName],
-			loc.Error("this parameter is not a member of group: "+gName))
-		return
-	}
-
-	if ps.cmdLineOnly(p) {
-		ps.recordCmdLineOnlyErr(paramName, loc)
-		return
-	}
-
-	paramParts = cleanParamParts(p, paramParts)
-
-	p.processParam(loc, paramParts)
-}
-
-func (ps *PSet) setValueFromFile(paramParts []string, loc *location.L, eRule existenceRule) {
+func (ps *PSet) setValue(paramParts []string, loc *location.L, eRule existenceRule, gName string) {
 	paramName := paramParts[0]
 	p, exists := ps.nameToParam[paramName]
 
@@ -362,6 +317,12 @@ func (ps *PSet) setValueFromFile(paramParts []string, loc *location.L, eRule exi
 		} else {
 			ps.markAsUnused(paramName, loc)
 		}
+		return
+	}
+
+	if gName != "" && p.groupName != gName {
+		ps.errors[paramName] = append(ps.errors[paramName],
+			loc.Error("this parameter is not a member of group: "+gName))
 		return
 	}
 

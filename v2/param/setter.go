@@ -50,6 +50,15 @@ const (
 // pointer is to a map, that the map being pointed at has been
 // created. Correct behaviour of this func would be to panic if the setter
 // has not been properly set up.
+//
+// When creating your own Setter implementation you may find it useful to use
+// one of the ValueReq types as an embedded type.So, for instance, if your
+// Setter must have a following value then you can embed the
+// param.ValueReqMandatory struct in your struct and this will provide
+// correct ValueReq and Set methods. Similarly if your Setter must not have a
+// following value embed the param.ValueReqNone struct and it will provide
+// correct ValueReq and SetWithVal methods. For examples of how this is done
+// see any of the Setter instances in the psetter package.
 type Setter interface {
 	Set(string) error
 	SetWithVal(string, string) error

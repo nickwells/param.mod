@@ -71,6 +71,10 @@ func ConvertEnvVarNameToParamName(name string) string {
 }
 
 func (ps *PSet) getParamsFromEnvironment() {
+	if len(ps.envPrefixes) == 0 {
+		return
+	}
+
 	loc := location.New("environment")
 
 	for _, param := range os.Environ() {
@@ -82,7 +86,7 @@ func (ps *PSet) getParamsFromEnvironment() {
 			if trimmedParam != paramParts[0] {
 				paramParts[0] = ConvertEnvVarNameToParamName(trimmedParam)
 				loc.SetContent(param)
-				ps.setValueFromEnv(paramParts, loc)
+				ps.setValue(paramParts, loc, paramNeedNotExist, "")
 				break // we've found a match so stop looking
 			}
 		}
