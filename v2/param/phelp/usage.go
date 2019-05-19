@@ -1,6 +1,7 @@
 package phelp
 
 import (
+	"crypto/md5"
 	"fmt"
 	"io"
 	"os"
@@ -174,11 +175,29 @@ func (h StdHelp) printParamUsage(w io.Writer, p *param.ByName) {
 	}
 
 	twc.Wrap(p.Description(), descriptionIndent)
-	twc.WrapPrefixed("Allowed values: ", p.AllowedValues(), descriptionIndent)
+	h.showAllowedValues(twc, p)
 	if p.ValueReq() == param.None {
 		return
 	}
 	twc.WrapPrefixed("Initial value: ", p.InitialValue(), descriptionIndent)
+}
+
+// showAllowedValues shows the allowed values for the parameter but it will
+// print a reference to an earlier parameter if the allowed value text has
+// been seen already
+func (h StdHelp) showAllowedValues(twc *twrap.TWConf, p *param.ByName) {
+	if p.ValueReq() == param.None {
+		return
+	}
+
+	aval := p.AllowedValues()
+	key := md5.Sum([]byte(aval))
+	if name, alreadyShown := h.avalShownAlready[key]; alreadyShown {
+		aval = "(see parameter: " + name + ")"
+	} else {
+		h.avalShownAlready[key] = p.Name()
+	}
+	twc.WrapPrefixed("Allowed values: ", aval, descriptionIndent)
 }
 
 func (h StdHelp) printPositionalParams(w io.Writer, ps *param.PSet) {

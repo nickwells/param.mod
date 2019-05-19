@@ -1,6 +1,10 @@
 package phelp
 
-import "github.com/nickwells/param.mod/v2/param/paction"
+import (
+	"crypto/md5"
+
+	"github.com/nickwells/param.mod/v2/param/paction"
+)
 
 // helpStyle records the style of help message to generate - it can be
 // standard, full or short
@@ -27,6 +31,8 @@ type StdHelp struct {
 	includeGroups    bool
 	excludeGroups    bool
 
+	avalShownAlready map[[md5.Size]byte]string
+
 	reportWhereParamsAreSet bool
 	reportUnusedParams      bool
 	reportParamSources      bool
@@ -44,6 +50,7 @@ type StdHelp struct {
 
 // SH is the instance of the standard help type
 var SH = StdHelp{
-	groupsToShow:    make(map[string]bool),
-	groupsToExclude: make(map[string]bool),
+	groupsToShow:     make(map[string]bool),
+	groupsToExclude:  make(map[string]bool),
+	avalShownAlready: make(map[[md5.Size]byte]string),
 }

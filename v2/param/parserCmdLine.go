@@ -137,9 +137,11 @@ func trimParam(param string) (string, error) {
 	}
 	trimmedParam = strings.TrimPrefix(param, "-")
 	if trimmedParam != param {
+		if trimmedParam == "" {
+			return param, errors.New("the parameter name is blank")
+		}
 		return trimmedParam, nil
 	}
 	return param, fmt.Errorf(
-		"'%s' is a parameter but does not start with either '--' or '-'",
-		param)
+		"parameter %q does not start with either '--' or '-'", param)
 }
