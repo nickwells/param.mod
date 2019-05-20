@@ -1,9 +1,7 @@
-github.com/nickwells/check.mod v1.3.1 h1:w8eAdNTlkjT9ojXsgo537CVuUAHwblMSMZVAAlEfFe8=
-github.com/nickwells/check.mod v1.3.1/go.mod h1:2utZ06Ey8/ZUGl9J7NuSo8P6Pevo83N453Bj3msrZx0=
 github.com/nickwells/check.mod v1.4.0 h1:+CZ9NiirJxdKJfpbCpdiPm4X8AOPoGQq1v4yBFNSyo8=
 github.com/nickwells/check.mod v1.4.0/go.mod h1:2utZ06Ey8/ZUGl9J7NuSo8P6Pevo83N453Bj3msrZx0=
-github.com/nickwells/filecheck.mod v1.0.5 h1:DQPMS5VmSkwa21vyreo38f9XH9xIOMUMhH3xFyuZccs=
-github.com/nickwells/filecheck.mod v1.0.5/go.mod h1:CpfZ+yPhZnd/ThlNlYvhFBNbPK4sZ0TkL0a5EmJnYVs=
+github.com/nickwells/filecheck.mod v1.0.6 h1:1Ts05ilrjHyySNmpraJXqdx3JZ+De2664RGNJjP3p2s=
+github.com/nickwells/filecheck.mod v1.0.6/go.mod h1:smS2GeHd3rTLXZnATnqM88gZWh0Z4fMdDOcHgWvVObk=
 github.com/nickwells/fileparse.mod v1.1.5 h1:iXzFk6CpMEOddsWng6koZfn/Dvqt4K+4D1NFrhXSkNM=
 github.com/nickwells/fileparse.mod v1.1.5/go.mod h1:npxmCEJQ+XjFRLWAZS62oRFA9wYH29BUAyA1CZM/XnQ=
 github.com/nickwells/location.mod v1.2.1 h1:aCaQpxE0MBSSXQtQeprZf8lqGkYhvl9staKGFotYGLg=
@@ -14,5 +12,5 @@ github.com/nickwells/strdist.mod v1.0.6 h1:B5UYCRIVU4KAnWZ2x34JckpyJMt/Lxl+fX4WV
 github.com/nickwells/strdist.mod v1.0.6/go.mod h1:zI0gCgXT3oW3JNrn0f8TbXE9r5wurZAeW4BWhWbfTjY=
 github.com/nickwells/testhelper.mod v1.3.0 h1:OLo5AiCDJGB8G3P5T0YXbq9UwNdVIAROEifV41zLdww=
 github.com/nickwells/testhelper.mod v1.3.0/go.mod h1:Ct/U2PjL0n9hGc+US6uR/s4NxSRI33NM+0ZkrDkG0XI=
-github.com/nickwells/twrap.mod v1.1.0 h1:uFd36OGx71agKlfVUz7WiZGDtv7Q3ywTdMCEIiMeMwU=
-github.com/nickwells/twrap.mod v1.1.0/go.mod h1:GLO8FsJldP7SA/gq5XX3iLjBnq3UpLl2tciPJVvyM4s=
+github.com/nickwells/twrap.mod v1.1.1 h1:T0JwSF0rLSeJfKXF4oJBMpDvc4KXuqjhWt+xOv9qQAI=
+github.com/nickwells/twrap.mod v1.1.1/go.mod h1:GLO8FsJldP7SA/gq5XX3iLjBnq3UpLl2tciPJVvyM4s=
