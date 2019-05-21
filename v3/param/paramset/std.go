@@ -1,6 +1,7 @@
 package paramset
 
 import (
+	"fmt"
 	"io"
 	"os"
 
@@ -8,13 +9,35 @@ import (
 	"github.com/nickwells/param.mod/v3/param/phelp"
 )
 
-// New creates a new PSet with the standard helper set. This is the
-// one you should use in most cases
-func New(psof ...param.PSetOptFunc) (*param.PSet, error) {
+// addHelperToOpts will take the slice of param set option functions and a
+// SetHelper function to the start.
+func addHelperToOpts(psof []param.PSetOptFunc) []param.PSetOptFunc {
 	opts := make([]param.PSetOptFunc, 0, len(psof)+1)
 	opts = append(opts, param.SetHelper(&phelp.SH))
 	opts = append(opts, psof...)
+	return opts
+}
+
+// New creates a new PSet with the standard helper set. This is a suitable
+// choice in most cases.
+func New(psof ...param.PSetOptFunc) (*param.PSet, error) {
+	opts := addHelperToOpts(psof)
 	return param.NewSet(opts...)
+}
+
+// NewOrDie creates a new PSet with the standard helper set. It then checks
+// the error returned and if it is not nil it will report the error on stderr
+// and exit with a non-zero exit status. This is a suitable choice unless you
+// want to perform any special erro handling.
+func NewOrDie(psof ...param.PSetOptFunc) *param.PSet {
+	opts := addHelperToOpts(psof)
+	ps, err := param.NewSet(opts...)
+	if err != nil {
+		fmt.Fprintf(os.Stderr,
+			"The program parameter set could not be created: %s", err)
+		os.Exit(1)
+	}
+	return ps
 }
 
 // noHelp is a minimal implementation of the param.Helper interface. In
