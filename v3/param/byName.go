@@ -223,7 +223,7 @@ func AltName(altName string) OptFunc {
 func GroupName(name string) OptFunc {
 	return func(p *ByName) error {
 		name = strings.TrimSpace(name)
-		err := groupNameCheck(name)
+		err := GroupNameCheck(name)
 		if err != nil {
 			return err
 		}

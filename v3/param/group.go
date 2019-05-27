@@ -20,9 +20,9 @@ func init() {
 	groupNameCheckRE = regexp.MustCompile("^[a-zA-Z][-._a-zA-Z0-9]*$")
 }
 
-// groupNameCheck checks that the group name is valid and returns an error if
+// GroupNameCheck checks that the group name is valid and returns an error if
 // not
-func groupNameCheck(name string) error {
+func GroupNameCheck(name string) error {
 	if !groupNameCheckRE.MatchString(name) {
 		return fmt.Errorf(
 			"the group name '%s' is invalid. It must match: '%s'",
@@ -93,7 +93,7 @@ func (ps *PSet) SetGroupDescription(name, desc string) {
 // use.
 func (ps *PSet) AddGroup(name, desc string) {
 	name = strings.TrimSpace(name)
-	if err := groupNameCheck(name); err != nil {
+	if err := GroupNameCheck(name); err != nil {
 		panic("Invalid group name: " + err.Error())
 	}
 
