@@ -2,72 +2,91 @@ package param
 
 import (
 	"testing"
+
+	"github.com/nickwells/testhelper.mod/testhelper"
 )
 
 func TestSplitParamName(t *testing.T) {
 	testCases := []struct {
-		testName     string
+		testhelper.ID
 		pName        string
-		expProgName  string
+		expProgNames []string
 		expParamName string
 	}{
 		{
-			testName:     "nil",
-			pName:        "",
-			expProgName:  "",
-			expParamName: "",
+			ID: testhelper.MkID("nil"),
 		},
 		{
-			testName:     "param only",
+			ID:           testhelper.MkID("param only"),
 			pName:        "param",
-			expProgName:  "",
 			expParamName: "param",
 		},
 		{
-			testName:     "param only (with whitespace)",
+			ID:           testhelper.MkID("param only (with whitespace)"),
 			pName:        "   param   ",
-			expProgName:  "",
 			expParamName: "param",
 		},
 		{
-			testName:     "progname only",
+			ID:           testhelper.MkID("progname only"),
 			pName:        "progname/",
-			expProgName:  "progname",
-			expParamName: "",
+			expProgNames: []string{"progname"},
 		},
 		{
-			testName:     "progname only (with whitespace)",
+			ID:           testhelper.MkID("progname only (with whitespace)"),
 			pName:        "  progname  /  ",
-			expProgName:  "progname",
-			expParamName: "",
+			expProgNames: []string{"progname"},
 		},
 		{
-			testName:     "progname and param",
+			ID:           testhelper.MkID("progname and param"),
 			pName:        "progname/param",
-			expProgName:  "progname",
+			expProgNames: []string{"progname"},
 			expParamName: "param",
 		},
 		{
-			testName:     "progname and param (with whitespace)",
+			ID: testhelper.MkID(
+				"progname and param (with whitespace)"),
 			pName:        "  progname  /  param  ",
-			expProgName:  "progname",
+			expProgNames: []string{"progname"},
+			expParamName: "param",
+		},
+		{
+			ID:           testhelper.MkID("progname only"),
+			pName:        "progname1,progname2/",
+			expProgNames: []string{"progname1", "progname2"},
+		},
+		{
+			ID:           testhelper.MkID("progname only (with whitespace)"),
+			pName:        "  progname1 , progname2  /  ",
+			expProgNames: []string{"progname1", "progname2"},
+		},
+		{
+			ID:           testhelper.MkID("progname and param"),
+			pName:        "progname1,progname2/param",
+			expProgNames: []string{"progname1", "progname2"},
+			expParamName: "param",
+		},
+		{
+			ID: testhelper.MkID(
+				"progname and param (with whitespace)"),
+			pName:        "  progname1 , progname2  /  param  ",
+			expProgNames: []string{"progname1", "progname2"},
 			expParamName: "param",
 		},
 	}
 
-	for i, tc := range testCases {
-		progName, paramName := splitParamName(tc.pName)
-		if progName != tc.expProgName {
-			t.Logf("test %d: %s : Unexpected program name.\n",
-				i, tc.testName)
-			t.Errorf("\t: Got %s, expected: %s\n",
-				progName, tc.expProgName)
+	for _, tc := range testCases {
+		progNames, paramName := splitParamName(tc.pName)
+		if testhelper.StringSliceDiff(progNames, tc.expProgNames) {
+			t.Log(tc.IDStr())
+			t.Logf("\t: expected: %v\n", tc.expProgNames)
+			t.Logf("\t:      got: %v\n", progNames)
+			t.Errorf("\t: Unexpected program names")
 		}
 		if paramName != tc.expParamName {
-			t.Logf("test %d: %s : Unexpected param name.\n",
-				i, tc.testName)
-			t.Errorf("\t: Got %s, expected: %s\n",
-				paramName, tc.expParamName)
+			t.Log(tc.IDStr())
+			t.Logf("\t: expected: %s\n", tc.expParamName)
+			t.Logf("\t:      got: %s\n", paramName)
+			t.Errorf("\t: Unexpected param name")
 		}
 	}
 

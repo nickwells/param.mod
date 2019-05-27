@@ -42,22 +42,36 @@ type paramLineParser struct {
 }
 
 // splitParamName splits the parameter name into two parts around a
-// slash. The intention is that the part before the slash is a program name
-// and the part after the slash is a parameter name.  If there is no slash
-// then it will set the program name to the empty string and the paramName to
-// the whole string. In either case the names are stripped of any surrounding
-// whitespace
-func splitParamName(pName string) (progName, paramName string) {
+// slash. The intention is that the part before the slash is a program name,
+// or a comma-separated list of program names and the part after the slash is
+// a parameter name.  If there is no slash then it will set the program name
+// to the empty string and the paramName to the whole string. In either case
+// the names are stripped of any surrounding whitespace
+func splitParamName(pName string) (progNames []string, paramName string) {
 	parts := strings.SplitN(pName, "/", 2)
 
 	if len(parts) == 2 {
-		progName = strings.TrimSpace(parts[0])
+		progNames = strings.Split(parts[0], ",")
+		for i, pn := range progNames {
+			progNames[i] = strings.TrimSpace(pn)
+		}
 		paramName = strings.TrimSpace(parts[1])
 	} else {
 		paramName = strings.TrimSpace(parts[0])
 	}
 
 	return
+}
+
+// sliceContains returns true if the slice contains the passed string, false
+// otherwise
+func sliceContains(slc []string, s string) bool {
+	for _, e := range slc {
+		if e == s {
+			return true
+		}
+	}
+	return false
 }
 
 // ParseLine processes the line.
@@ -72,13 +86,12 @@ func (pflp paramLineParser) ParseLine(line string, loc *location.L) error {
 	paramParts := strings.SplitN(line, "=", 2)
 
 	eRule := paramNeedNotExist
-	progName, paramName := splitParamName(paramParts[0])
-	if progName != "" {
-		if progName == pflp.ps.progBaseName {
-			eRule = paramMustExist
-		} else {
+	progNames, paramName := splitParamName(paramParts[0])
+	if len(progNames) != 0 {
+		if !sliceContains(progNames, pflp.ps.progBaseName) {
 			return nil
 		}
+		eRule = paramMustExist
 	}
 
 	paramParts[0] = paramName
@@ -103,9 +116,9 @@ func (pflp paramLineParser) ParseLine(line string, loc *location.L) error {
 func (gpflp groupParamLineParser) ParseLine(line string, loc *location.L) error {
 	paramParts := strings.SplitN(line, "=", 2)
 
-	progName, paramName := splitParamName(paramParts[0])
-	if progName != "" {
-		if progName != gpflp.ps.progBaseName {
+	progNames, paramName := splitParamName(paramParts[0])
+	if len(progNames) != 0 {
+		if !sliceContains(progNames, gpflp.ps.progBaseName) {
 			return nil
 		}
 	}
@@ -136,16 +149,16 @@ func (gpflp groupParamLineParser) ParseLine(line string, loc *location.L) error 
 //     myParam  = 42
 //     myParam=42
 //
-// The parameter name can be preceded by a program name and a slash in which
-// case the parameter will only be applied when the config file is being
-// parsed by that program. The match is applied to the basename of the
-// program (the part after the last pathname separator). This is particularly
-// useful if there is a config file which is shared amongst a number of
-// different programs. It could also be used to give different default
-// behaviour when a given program has several different names (one binary
-// with different names linked to it). As for the parameter name and value
-// any surrounding whitespace is stripped from the program name before
-// comparison. For instance:
+// The parameter name can be preceded by a comma-separated list of program
+// names and a slash in which case the parameter will only be applied when
+// the config file is being parsed by one of the listed programs. The match
+// is applied to the basename of the program (the part after the last
+// pathname separator). This is particularly useful if there is a config file
+// which is shared amongst a number of different programs. It could also be
+// used to give different default behaviour when a given program has several
+// different names (one binary with different names linked to it). As for the
+// parameter name and value any surrounding whitespace is stripped from the
+// program name before comparison. For instance:
 //
 //    myProg/myProgParam = 99
 //
@@ -158,7 +171,7 @@ func (gpflp groupParamLineParser) ParseLine(line string, loc *location.L) error 
 // parameter in a config file which is not found in the set of parameters for
 // that program is not reported as an error as it might be targeted at a
 // different program. This is not the case for parameters which are marked as
-// being for a specific program by having the program name before the
+// being for specific programs by having a list of program names before the
 // parameter name. Similarly for parameters in files which are for a
 // particular parameter group, the parameter must be recognised or else it is
 // reported as an error.
