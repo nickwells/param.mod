@@ -10,7 +10,8 @@ legitimate values.
 Parameters can be set not only through the command line but also, optionally,
 through parameter files and environment variables.
 
-You should use version 2 of this module.
+You should use the latest version of this module. Old versions are not
+maintained and bugs are not fixed in them.
 
 
 ## How to use the param package

@@ -16,6 +16,14 @@ import (
 type ConfigFileDetails struct {
 	Name         string
 	CfConstraint filecheck.Exists
+	eRule        existenceRule
+}
+
+// ParamsMustExist will return true if the existence rule for the file is set
+// to paramMustExist, that is, if the file should only contain valid
+// parameters
+func (cfd ConfigFileDetails) ParamsMustExist() bool {
+	return cfd.eRule == paramMustExist
 }
 
 // String returns a string describing the ConfigFileDetails
@@ -134,6 +142,14 @@ func (gpflp groupParamLineParser) ParseLine(line string, loc *location.L) error 
 	return nil
 }
 
+// checkExistenceConstraint will panic if the existence constraint is
+// MustNotExist
+func checkExistenceConstraint(fName string, c filecheck.Exists) {
+	if c == filecheck.MustNotExist {
+		panic(fmt.Sprintf("config file %q: bad existence constraint.", fName))
+	}
+}
+
 // SetConfigFile will set the list of config files from which to read
 // parameter values to just the value given. If it is used with the
 // AddConfigFile method below then it should be the first method called.
@@ -179,14 +195,30 @@ func (gpflp groupParamLineParser) ParseLine(line string, loc *location.L) error 
 // The config file supports the features of a file parsed by the
 // fileparse.FP such as comments and include files.
 func (ps *PSet) SetConfigFile(fName string, c filecheck.Exists) {
-	if c == filecheck.MustNotExist {
-		panic(fmt.Sprintf("config file '%s': bad existence constraint.", fName))
-	}
+	checkExistenceConstraint(fName, c)
 
 	ps.configFiles = []ConfigFileDetails{
 		{
 			Name:         fName,
 			CfConstraint: c,
+			eRule:        paramNeedNotExist,
+		},
+	}
+}
+
+// SetConfigFileStrict behaves as for SetConfigFile except that parameters
+// given in the file must exist for the given program. This is suitable for
+// program-specific config files where it can be expected that any parameter
+// given in the config file will exist and so it should be reported as an
+// error if it does not.
+func (ps *PSet) SetConfigFileStrict(fName string, c filecheck.Exists) {
+	checkExistenceConstraint(fName, c)
+
+	ps.configFiles = []ConfigFileDetails{
+		{
+			Name:         fName,
+			CfConstraint: c,
+			eRule:        paramMustExist,
 		},
 	}
 }
@@ -213,6 +245,7 @@ func (ps *PSet) SetGroupConfigFile(gName, fName string, c filecheck.Exists) {
 		{
 			Name:         fName,
 			CfConstraint: c,
+			eRule:        paramMustExist,
 		},
 	}
 }
@@ -223,14 +256,29 @@ func (ps *PSet) SetGroupConfigFile(gName, fName string, c filecheck.Exists) {
 // This can be used to set a system-wide config file and a per-user config
 // file that can be used to provide personal preferences.
 func (ps *PSet) AddConfigFile(fName string, c filecheck.Exists) {
-	if c == filecheck.MustNotExist {
-		panic(fmt.Sprintf("config file '%s': bad existence constraint.", fName))
-	}
+	checkExistenceConstraint(fName, c)
 
 	ps.configFiles = append(ps.configFiles,
 		ConfigFileDetails{
 			Name:         fName,
 			CfConstraint: c,
+			eRule:        paramNeedNotExist,
+		})
+}
+
+// AddConfigFileStrict behaves as for AddConfigFile except that parameters
+// given in the file must exist for the given program. This is suitable for
+// program-specific config files where it can be expected that any parameter
+// given in the config file will exist and so it should be reported as an
+// error if it does not.
+func (ps *PSet) AddConfigFileStrict(fName string, c filecheck.Exists) {
+	checkExistenceConstraint(fName, c)
+
+	ps.configFiles = append(ps.configFiles,
+		ConfigFileDetails{
+			Name:         fName,
+			CfConstraint: c,
+			eRule:        paramMustExist,
 		})
 }
 
@@ -251,6 +299,7 @@ func (ps *PSet) AddGroupConfigFile(gName, fName string, c filecheck.Exists) {
 		ConfigFileDetails{
 			Name:         fName,
 			CfConstraint: c,
+			eRule:        paramMustExist,
 		})
 }
 
