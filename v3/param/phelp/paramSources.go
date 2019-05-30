@@ -82,6 +82,22 @@ func showEnvironmentVariables(twc *twrap.TWConf, ep []string) {
 	twc.Wrap("The program can also be configured "+altSrcEnvVars(ep), 4)
 }
 
+// getGroupConfigFiles this returns the collection of group config files
+func getGroupConfigFiles(ps *param.PSet) []groupCF {
+	gf := []groupCF{}
+
+	groups := ps.GetGroups()
+	for _, grp := range groups {
+		for _, configFile := range grp.ConfigFiles {
+			gf = append(gf, groupCF{
+				groupName: grp.Name,
+				cf:        configFile,
+			})
+		}
+	}
+	return gf
+}
+
 // showParamSources will print a usage message showing the alternative
 // sources that can be used to set parameters: environment variables or
 // configuration files.
@@ -93,18 +109,8 @@ func showParamSources(ps *param.PSet) {
 	}
 
 	cf := ps.ConfigFiles()
-	gf := []groupCF{}
+	gf := getGroupConfigFiles(ps)
 	ep := ps.EnvPrefixes()
-
-	groups := ps.GetGroups()
-	for _, grp := range groups {
-		for _, configFile := range grp.ConfigFiles {
-			gf = append(gf, groupCF{
-				groupName: grp.Name,
-				cf:        configFile,
-			})
-		}
-	}
 
 	fmt.Fprintln(twc.W, "\nAdditional Sources")
 	if len(cf) == 0 && len(gf) == 0 && len(ep) == 0 {
@@ -116,22 +122,14 @@ func showParamSources(ps *param.PSet) {
 	showConfigFiles(twc, cf)
 	showEnvironmentVariables(twc, ep)
 
-	if len(cf) > 0 && len(gf) > 0 {
-		fmt.Fprintln(twc.W)
-		twc.WrapPrefixed("Note: ",
-			"the group configuration files are processed"+
-				" before the common configuration files.",
-			altSrcCommonNoteIndent)
-	}
-	if len(ep) > 0 && (len(cf) > 0 || len(gf) > 0) {
-		fmt.Fprintln(twc.W)
-		twc.WrapPrefixed("Note: ",
-			"the environment variables are processed"+
-				" after the configuration files.", altSrcCommonNoteIndent)
-	}
 	fmt.Fprintln(twc.W)
 	twc.WrapPrefixed("Note: ",
-		"the command line parameters are processed"+
-			" after all the additional sources and so take precedence.",
+		"the alternative sources are processed in the order shown above"+
+			" and then the command line parameters are processed."+
+			" This means that a value given on the command line will"+
+			" replace any other settings in configuration files or"+
+			" environment variables. Similarly, settings in sources"+
+			" higher up this page can be replaced by settings lower"+
+			" in the page",
 		altSrcCommonNoteIndent)
 }

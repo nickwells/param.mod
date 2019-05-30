@@ -1,3 +1,5 @@
+[![GoDoc](https://godoc.org/github.com/nickwells/param.mod?status.png)](https://godoc.org/github.com/nickwells/param.mod)
+
 # param
 This provides parameter setting and value checking.
 
