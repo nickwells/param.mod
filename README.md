@@ -24,11 +24,8 @@ Here is the simplest possible way of using it:
 
 ```go
 func main() {
-	var who string
-	ps, err := paramset.New()
-	if err != nil {
-		log.Fatal("Couldn't construct the param set: ", err)
-	}
+	var who = "World!"
+	ps := paramset.NewOrDie()
 	ps.Add("who", psetter.String{Value: &who}, "who to greet")
 	ps.Parse()
 	fmt.Println("Hello,", who)
@@ -41,11 +38,8 @@ var param1 int64
 var param2 bool
 
 func main() {
-	ps, err := paramset.New(addParams,
+	ps := paramset.NewOrDie(addParams,
 		param.SetProgramDescription("this program will do cool stuff"))
-	if err != nil {
-		log.Fatal("Couldn't construct the param set: ", err)
-	}
 	ps.Parse()
 ```
 
@@ -71,7 +65,7 @@ func addParams(ps *param.PSet) error {
 
 This illustrates a simple use of the param package with a simple boolean flag
 and an integer which is checked to ensure it's less than 42. You can specify
-the behaviour much more precisely however.
+the behaviour much more precisely if you want.
 
 Additionally you can have positional parameters as well as named
 parameters. These must come at the front of the supplied parameters and can

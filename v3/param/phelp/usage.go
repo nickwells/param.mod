@@ -71,7 +71,7 @@ func (h StdHelp) printHelpIntro(twc *twrap.TWConf, progDesc string, messages ...
 
 	if h.style != Short &&
 		h.style != GroupNamesOnly {
-		twc.Wrap(progDesc+"\n", textIndent)
+		twc.Wrap(progDesc+"\n", 0)
 	}
 }
 

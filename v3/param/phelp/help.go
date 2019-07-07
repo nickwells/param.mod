@@ -1,6 +1,7 @@
 package phelp
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/nickwells/param.mod/v3/param"
@@ -11,23 +12,37 @@ import (
 // will be processed.
 func (h StdHelp) ProcessArgs(ps *param.PSet) {
 	var shouldExit = h.exitAfterParsing
+	separator := ""
+	const dfltSep = "\n" + equals + "\n\n"
 
 	if h.reportWhereParamsAreSet {
-		showWhereParamsAreSet(ps)
+		fmt.Fprint(ps.StdWriter(), separator)
+		separator = dfltSep
 		shouldExit = true
+
+		showWhereParamsAreSet(ps)
 	}
 	if h.reportUnusedParams {
-		showUnusedParams(ps)
+		fmt.Fprint(ps.StdWriter(), separator)
+		separator = dfltSep
 		shouldExit = true
+
+		showUnusedParams(ps)
 	}
 	if h.reportParamSources {
-		showParamSources(ps)
+		fmt.Fprint(ps.StdWriter(), separator)
+		separator = dfltSep
 		shouldExit = true
+
+		showParamSources(ps)
 	}
 
 	if h.showHelp {
-		h.Help(ps)
+		fmt.Fprint(ps.StdWriter(), separator)
+		separator = dfltSep // nolint
 		shouldExit = true
+
+		h.Help(ps)
 	}
 
 	if shouldExit {
