@@ -28,7 +28,7 @@ func New(psof ...param.PSetOptFunc) (*param.PSet, error) {
 // NewOrDie creates a new PSet with the standard helper set. It then checks
 // the error returned and if it is not nil it will report the error on stderr
 // and exit with a non-zero exit status. This is a suitable choice unless you
-// want to perform any special erro handling.
+// want to perform any special error handling.
 func NewOrDie(psof ...param.PSetOptFunc) *param.PSet {
 	opts := addHelperToOpts(psof)
 	ps, err := param.NewSet(opts...)
