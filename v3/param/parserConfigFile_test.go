@@ -13,6 +13,31 @@ import (
 var CFValExample1 bool
 var CFValExample2 int64
 
+func TestConfigFileStrict(t *testing.T) {
+	CFValExample1 = false
+	CFValExample2 = 0
+
+	ps, err := paramset.NewNoHelpNoExitNoErrRpt(CFAddParams1, CFAddParams2)
+	if err != nil {
+		t.Fatal("TestConfigFile : couldn't construct the PSet: ", err)
+	}
+	const fname = "./testdata/config-strict.test"
+	ps.SetConfigFileStrict(fname, filecheck.MustExist)
+
+	ps.Parse([]string{})
+
+	errs := ps.Errors()["config file: "+fname]
+	if len(errs) != 0 {
+		t.Logf("Unexpected error in config file:\n")
+		t.Errorf("\t: %s\n", fname)
+		t.Errorf("\t: got: %v\n", errs)
+	}
+
+	if CFValExample2 != 5 {
+		t.Errorf("CFValExample2 should be 5 but is: %d\n", CFValExample2)
+	}
+}
+
 func TestConfigFile(t *testing.T) {
 	CFValExample1 = false
 	CFValExample2 = 0

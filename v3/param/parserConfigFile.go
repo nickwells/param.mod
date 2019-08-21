@@ -46,17 +46,18 @@ type groupParamLineParser struct {
 // paramLineParser is a type which satisfies the LineParser interface and
 // is used to parse parameter files for the paramSet member
 type paramLineParser struct {
-	ps *PSet
+	ps    *PSet
+	eRule existenceRule
 }
 
 // splitParamName splits the parameter name into two parts around a
 // slash. The intention is that the part before the slash is a program name,
 // or a comma-separated list of program names and the part after the slash is
-// a parameter name.  If there is no slash then it will set the program name
-// to the empty string and the paramName to the whole string. In either case
-// the names are stripped of any surrounding whitespace
+// a parameter name.  If there is no slash then the program names list will
+// be empty and the paramName will be the whole string. In either case the
+// names are stripped of any surrounding whitespace
 func splitParamName(pName string) (progNames []string, paramName string) {
-	parts := strings.SplitN(pName, "/", 2)
+	parts := strings.Split(pName, "/")
 
 	if len(parts) == 2 {
 		progNames = strings.Split(parts[0], ",")
@@ -93,7 +94,7 @@ func sliceContains(slc []string, s string) bool {
 func (pflp paramLineParser) ParseLine(line string, loc *location.L) error {
 	paramParts := strings.SplitN(line, "=", 2)
 
-	eRule := paramNeedNotExist
+	eRule := pflp.eRule
 	progNames, paramName := splitParamName(paramParts[0])
 	if len(progNames) != 0 {
 		if !sliceContains(progNames, pflp.ps.progBaseName) {
@@ -357,11 +358,13 @@ func (ps *PSet) getParamsFromConfigFiles() {
 		}
 	}
 
-	var lp = paramLineParser{ps: ps}
-	fp := fileparse.New("parameter config file", lp)
 	for _, cf := range ps.configFiles {
+		var lp = paramLineParser{
+			ps:    ps,
+			eRule: cf.eRule,
+		}
+		fp := fileparse.New("parameter config file", lp)
 		errors := fp.Parse(cf.Name)
-
 		checkErrors(ps, errors, cf)
 	}
 }
