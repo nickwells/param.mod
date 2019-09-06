@@ -131,6 +131,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			" Parameters, including this one, which would normally be"+
 			" suppressed are also shown.",
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
+		param.AltName("help-a"),
 		param.AltName("help-all"),
 		param.AltName("help-show-all"),
 		param.GroupName(groupName))
@@ -147,6 +148,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			"The program will exit if this parameter is set.",
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.AltName("help-as"),
+		param.AltName("help-sa"),
 		param.PostAction(paction.SetBool(&h.showAllParams, true)),
 		param.GroupName(groupName))
 
@@ -163,6 +165,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			" and the "+usageFullArgName+" parameter.\n\n"+
 			"The program will exit if this parameter is set.",
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
+		param.AltName("help-s"),
 		param.AltName("help-short"),
 		param.GroupName(groupName))
 
