@@ -127,12 +127,12 @@ func (h StdHelp) Help(ps *param.PSet, messages ...string) {
 	} else {
 		h.printPositionalParams(w, ps)
 		h.printParams(w, ps)
-	}
 
-	if h.style != Short {
-		h.printAlternativeSources(ps)
+		if h.style != Short {
+			h.printAlternativeSources(ps)
 
-		h.printOptValNote(w)
+			h.printOptValNote(w)
+		}
 	}
 
 	os.Exit(1)
