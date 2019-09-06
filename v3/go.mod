@@ -9,3 +9,5 @@ require (
 	github.com/nickwells/testhelper.mod v1.3.6
 	github.com/nickwells/twrap.mod v1.1.4
 )
+
+go 1.13
