@@ -1,1 +1,0 @@
-none (which will be taken as 'true') or some value that can be interpreted as true or false. The value must be given after an '=', not as a following value, as this is optional

@@ -1,3 +1,0 @@
-a list of string values separated by ','. The values must be from the following:
-aval    : desc
-aval-alt: desc

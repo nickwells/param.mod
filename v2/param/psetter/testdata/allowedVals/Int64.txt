@@ -1,1 +1,0 @@
-any value that can be read as a whole number

@@ -1,1 +1,0 @@
-any value that can be compiled as a regular expression by the standard regexp package
