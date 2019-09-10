@@ -64,7 +64,7 @@ type PSet struct {
 }
 
 // PSetOptFunc is the type of a function that can be passed to
-// NewSet. These functions can be used to set optional behavioiur on the
+// NewSet. These functions can be used to set optional behaviour on the
 // parameter set.
 type PSetOptFunc func(ps *PSet) error
 
@@ -173,7 +173,8 @@ func (ps *PSet) ProgDesc() string {
 }
 
 // NewSet creates a new PSet with the various maps and slices
-// initialised
+// initialised. Generally you would be better off creating a PSet through the
+// paramset.New function which will automatically set the default helper
 func NewSet(psof ...PSetOptFunc) (*PSet, error) {
 	ps := &PSet{
 		parseCalledFrom: "Parse() not yet called",

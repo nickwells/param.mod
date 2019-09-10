@@ -69,7 +69,6 @@ func (_ NilAVM) AllowedValuesMap() AValMap {
 // AVM is a mixin type that can be embedded in a Setter to provide an allowed
 // values map for the Setter. It provides an implementation for the
 // AllowedValuesMap method of the interface
-
 type AVM struct{ AllowedVals AValMap }
 
 // AllowedValuesMap returns the map of allowed values. Use this if your setter

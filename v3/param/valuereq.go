@@ -1,6 +1,6 @@
 package param
 
-import "errors"
+import "fmt"
 
 // ValueReq encodes whether or not a value is required after a
 // parameter
@@ -29,9 +29,9 @@ func (v ValueReqMandatory) ValueReq() ValueReq { return Mandatory }
 
 // Set returns an error because if the value is Mandatory then a value must
 // follow the parameter for this setter
-func (v ValueReqMandatory) Set(_ string) error {
-	return errors.New("a value must follow this parameter," +
-		" either following an '=' or as a next parameter")
+func (v ValueReqMandatory) Set(name string) error {
+	return fmt.Errorf("a value must follow this parameter: %q,"+
+		" either following an '=' or as a next parameter", name)
 }
 
 // ValueReqOptional is a mixin type that can be embedded in a Setter to
@@ -54,7 +54,7 @@ func (v ValueReqNone) ValueReq() ValueReq { return None }
 
 // SetWithVal returns an error because if the value is None then a value must
 // not follow the parameter for this setter
-func (v ValueReqNone) SetWithVal(_, _ string) error {
-	return errors.New("a value must not follow this parameter. " +
-		"Remove the '=' and any following text")
+func (v ValueReqNone) SetWithVal(name, _ string) error {
+	return fmt.Errorf("a value must not follow this parameter: %q"+
+		"Remove the '=' and any following text", name)
 }
