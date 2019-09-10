@@ -24,17 +24,14 @@ func (s String) CountChecks() int {
 // returns an error if the check is not satisfied. Only if the check
 // is not violated is the Value set.
 func (s String) SetWithVal(_ string, paramVal string) error {
+	for _, check := range s.Checks {
+		if check == nil {
+			continue
+		}
 
-	if len(s.Checks) != 0 {
-		for _, check := range s.Checks {
-			if check == nil {
-				continue
-			}
-
-			err := check(paramVal)
-			if err != nil {
-				return err
-			}
+		err := check(paramVal)
+		if err != nil {
+			return err
 		}
 	}
 

@@ -2,6 +2,7 @@ package psetter
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/nickwells/param.mod/v3/param"
@@ -22,8 +23,31 @@ type Map struct {
 func (s Map) SetWithVal(_ string, paramVal string) error {
 	sep := s.GetSeparator()
 	values := strings.Split(paramVal, sep)
+
+	for i, v := range values {
+		parts := strings.SplitN(v, "=", 2)
+		if len(parts) == 2 {
+			// check that the bool can be parsed
+			_, err := strconv.ParseBool(parts[1])
+			if err != nil {
+				return fmt.Errorf("bad value: %q:"+
+					" part: %d (%q) is invalid."+
+					" The value (%q) cannot be interpreted"+
+					" as true or false: %s",
+					paramVal, i+1, v, parts[1], err)
+			}
+		}
+	}
+
 	for _, v := range values {
-		(*s.Value)[v] = true
+		parts := strings.SplitN(v, "=", 2)
+		switch len(parts) {
+		case 1:
+			(*s.Value)[v] = true
+		case 2:
+			b, _ := strconv.ParseBool(parts[1])
+			(*s.Value)[parts[0]] = b
+		}
 	}
 	return nil
 }

@@ -1,7 +1,6 @@
 package psetter
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 
@@ -35,20 +34,18 @@ func (s EnumList) SetWithVal(_ string, paramVal string) error {
 	values := strings.Split(paramVal, sep)
 	for _, v := range values {
 		if !s.ValueAllowed(v) {
-			return errors.New("invalid value: '" + v + "'")
+			return fmt.Errorf("value is not allowed: %q", v)
 		}
 	}
 
-	if len(s.Checks) != 0 {
-		for _, check := range s.Checks {
-			if check == nil {
-				continue
-			}
+	for _, check := range s.Checks {
+		if check == nil {
+			continue
+		}
 
-			err := check(values)
-			if err != nil {
-				return err
-			}
+		err := check(values)
+		if err != nil {
+			return err
 		}
 	}
 	*s.Value = values

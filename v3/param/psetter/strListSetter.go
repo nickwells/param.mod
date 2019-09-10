@@ -33,18 +33,17 @@ func (s StrList) SetWithVal(_ string, paramVal string) error {
 	sep := s.GetSeparator()
 	v := strings.Split(paramVal, sep)
 
-	if len(s.Checks) != 0 {
-		for _, check := range s.Checks {
-			if check == nil {
-				continue
-			}
+	for _, check := range s.Checks {
+		if check == nil {
+			continue
+		}
 
-			err := check(v)
-			if err != nil {
-				return err
-			}
+		err := check(v)
+		if err != nil {
+			return err
 		}
 	}
+
 	*s.Value = v
 
 	return nil

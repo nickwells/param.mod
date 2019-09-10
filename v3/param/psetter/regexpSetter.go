@@ -22,7 +22,7 @@ type Regexp struct {
 func (s Regexp) SetWithVal(_ string, paramVal string) error {
 	v, err := regexp.Compile(paramVal)
 	if err != nil {
-		return fmt.Errorf("could not parse '%s' to a regular expression: %s",
+		return fmt.Errorf("could not parse %q into a regular expression: %s",
 			paramVal, err)
 	}
 

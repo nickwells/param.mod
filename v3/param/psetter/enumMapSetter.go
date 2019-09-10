@@ -29,40 +29,38 @@ type EnumMap struct {
 
 // SetWithVal (called when a value follows the parameter) splits the value
 // using the list separator. It then checks all the values for validity and
-// only if all the values are in the allowed values list does it set the entry
-// in the map of strings pointed to by the Value. It returns a error for the
-// first invalid value.
+// only if all the values are in the allowed values list does it set the
+// entries in the map of strings pointed to by the Value. It returns a error
+// for the first invalid value.
 func (s EnumMap) SetWithVal(_ string, paramVal string) error {
 	sep := s.GetSeparator()
 	values := strings.Split(paramVal, sep)
+
 	for i, v := range values {
-		parts := strings.Split(v, "=")
+		parts := strings.SplitN(v, "=", 2)
+		// check the name is an allowed value
 		if !s.ValueAllowed(parts[0]) {
-			return fmt.Errorf("invalid value: '%s':"+
-				" part: %d (='%s') is not an allowed value",
-				paramVal, i+1, v)
+			return fmt.Errorf("bad value: %q: part: %d (%q) is invalid."+
+				" The name (%q) is not allowed",
+				paramVal, i+1, v, parts[0])
 		}
 		switch len(parts) {
 		case 1:
 			continue
 		case 2:
+			// check that the bool can be parsed
 			_, err := strconv.ParseBool(parts[1])
 			if err != nil {
-				return fmt.Errorf("invalid value: '%s':"+
-					" part: %d (='%s') is not an allowed value."+
-					" The value after the '=' cannot be interpretted"+
+				return fmt.Errorf("bad value: %q:"+
+					" part: %d (%q) is invalid."+
+					" The value (%q) cannot be interpreted"+
 					" as true or false: %s",
-					paramVal, i+1, v, err)
+					paramVal, i+1, v, parts[1], err)
 			}
-		default:
-			return fmt.Errorf("invalid value: '%s':"+
-				" part: %d (='%s') is not an allowed value."+
-				" There must be at most one '='",
-				paramVal, i+1, v)
 		}
 	}
 	for _, v := range values {
-		parts := strings.Split(v, "=")
+		parts := strings.SplitN(v, "=", 2)
 		switch len(parts) {
 		case 1:
 			(*s.Value)[v] = true

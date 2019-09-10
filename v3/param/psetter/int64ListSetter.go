@@ -39,26 +39,24 @@ func (s Int64List) SetWithVal(_ string, paramVal string) error {
 	for i, strVal := range sv {
 		intVal, err := strconv.ParseInt(strVal, 0, 0)
 		if err != nil {
-			return fmt.Errorf(
-				"list entry: %d (%s)"+
-					" could not be parsed as an integer value: %s",
-				i, strVal, err)
+			return fmt.Errorf("bad value: %q:"+
+				" part: %d (%s) cannot be interpreted as a whole number: %s",
+				paramVal, i+1, strVal, err)
 		}
 		v = append(v, intVal)
 	}
 
-	if len(s.Checks) != 0 {
-		for _, check := range s.Checks {
-			if check == nil {
-				continue
-			}
+	for _, check := range s.Checks {
+		if check == nil {
+			continue
+		}
 
-			err := check(v)
-			if err != nil {
-				return err
-			}
+		err := check(v)
+		if err != nil {
+			return err
 		}
 	}
+
 	*s.Value = v
 
 	return nil

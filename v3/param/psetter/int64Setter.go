@@ -35,20 +35,18 @@ func (s Int64) CountChecks() int {
 func (s Int64) SetWithVal(_ string, paramVal string) error {
 	v, err := strconv.ParseInt(paramVal, 0, 0)
 	if err != nil {
-		return fmt.Errorf("could not parse '%s' as an integer value: %s",
+		return fmt.Errorf("could not interpret %q as a whole number: %s",
 			paramVal, err)
 	}
 
-	if len(s.Checks) != 0 {
-		for _, check := range s.Checks {
-			if check == nil {
-				continue
-			}
+	for _, check := range s.Checks {
+		if check == nil {
+			continue
+		}
 
-			err := check(v)
-			if err != nil {
-				return err
-			}
+		err := check(v)
+		if err != nil {
+			return err
 		}
 	}
 

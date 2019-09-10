@@ -1,7 +1,6 @@
 package psetter
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/nickwells/param.mod/v3/param"
@@ -25,7 +24,7 @@ func (s Enum) SetWithVal(_ string, paramVal string) error {
 		*s.Value = paramVal
 		return nil
 	}
-	return errors.New("invalid value: '" + paramVal + "'")
+	return fmt.Errorf("value not allowed: %q", paramVal)
 }
 
 // AllowedValues returns a string listing the allowed values

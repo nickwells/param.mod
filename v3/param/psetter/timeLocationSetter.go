@@ -40,21 +40,19 @@ func (s TimeLocation) SetWithVal(_ string, paramVal string) error {
 		var e2 error
 		v, e2 = time.LoadLocation(convertedVal)
 		if e2 != nil {
-			return fmt.Errorf("could not parse '%s' as a location: %s",
+			return fmt.Errorf("could not find %q as a time location: %s",
 				paramVal, err)
 		}
 	}
 
-	if len(s.Checks) != 0 {
-		for _, check := range s.Checks {
-			if check == nil {
-				continue
-			}
+	for _, check := range s.Checks {
+		if check == nil {
+			continue
+		}
 
-			err := check(v)
-			if err != nil {
-				return err
-			}
+		err := check(v)
+		if err != nil {
+			return err
 		}
 	}
 

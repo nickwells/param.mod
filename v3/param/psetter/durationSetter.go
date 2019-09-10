@@ -38,16 +38,14 @@ func (s Duration) SetWithVal(_ string, paramVal string) error {
 			paramVal, err)
 	}
 
-	if len(s.Checks) != 0 {
-		for _, check := range s.Checks {
-			if check == nil {
-				continue
-			}
+	for _, check := range s.Checks {
+		if check == nil {
+			continue
+		}
 
-			err := check(v)
-			if err != nil {
-				return err
-			}
+		err := check(v)
+		if err != nil {
+			return err
 		}
 	}
 
