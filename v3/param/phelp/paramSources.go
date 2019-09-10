@@ -124,12 +124,12 @@ func showParamSources(ps *param.PSet) {
 
 	fmt.Fprintln(twc.W)
 	twc.WrapPrefixed("Note: ",
-		"these addional sources are processed in the order shown above"+
+		"these additional sources are processed in the order shown above"+
 			" and then the command line parameters are processed."+
 			" This means that a value given on the command line will"+
 			" replace any other settings in configuration files or"+
 			" environment variables. Similarly, settings in sources"+
-			" higher up this page can be replaced by settings lower"+
-			" in the page",
+			" higher up this page can be replaced by settings in sources"+
+			" lower in the page",
 		altSrcCommonNoteIndent)
 }
