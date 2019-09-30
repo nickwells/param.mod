@@ -119,6 +119,10 @@ func TestAllowedValues(t *testing.T) {
 			s:  &psetter.StrList{Value: &emptyStrList},
 		},
 		{
+			ID: testhelper.MkID("StrListAppender"),
+			s:  &psetter.StrListAppender{Value: &emptyStrList},
+		},
+		{
 			ID: testhelper.MkID("String"),
 			s:  &psetter.String{Value: &anyStr},
 		},
