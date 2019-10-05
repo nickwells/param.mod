@@ -344,7 +344,7 @@ func (ps *PSet) GetParamByName(name string) (p *ByName, err error) {
 
 	p, exists := ps.nameToParam[name]
 	if !exists {
-		return nil, fmt.Errorf("parameter %s does not exist", name)
+		return nil, fmt.Errorf("parameter %q does not exist", name)
 	}
 
 	return p, nil
