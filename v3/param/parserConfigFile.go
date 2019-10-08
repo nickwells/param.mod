@@ -328,7 +328,7 @@ func isOpenErr(err error) bool {
 
 // checkErrors will add the errors to the PSet if the error is not a
 // missing optional file
-func checkErrors(ps *PSet, errors []error, cf ConfigFileDetails) {
+func checkErrors(ps *PSet, errors []error, cf ConfigFileDetails, desc string) {
 	if len(errors) > 0 {
 		if len(errors) == 1 {
 			err := errors[0]
@@ -336,7 +336,7 @@ func checkErrors(ps *PSet, errors []error, cf ConfigFileDetails) {
 				return
 			}
 		}
-		errorName := "config file: " + cf.Name
+		errorName := desc + ": " + cf.Name
 		ps.errors[errorName] = append(ps.errors[errorName], errors...)
 	}
 }
@@ -350,11 +350,12 @@ func (ps *PSet) getParamsFromConfigFiles() {
 			ps:    ps,
 			gName: gName,
 		}
-		fp := fileparse.New("parameter config file for "+gName, lp)
+		desc := "config file for " + gName
+		fp := fileparse.New(desc, lp)
 		for _, cf := range g.ConfigFiles {
 			errors := fp.Parse(cf.Name)
 
-			checkErrors(ps, errors, cf)
+			checkErrors(ps, errors, cf, desc)
 		}
 	}
 
@@ -363,9 +364,10 @@ func (ps *PSet) getParamsFromConfigFiles() {
 			ps:    ps,
 			eRule: cf.eRule,
 		}
-		fp := fileparse.New("parameter config file", lp)
+		desc := "config file"
+		fp := fileparse.New(desc, lp)
 		errors := fp.Parse(cf.Name)
-		checkErrors(ps, errors, cf)
+		checkErrors(ps, errors, cf, desc)
 	}
 }
 
@@ -376,8 +378,7 @@ func ConfigFileActionFunc(loc location.L, p *ByName, paramVals []string) error {
 	if len(paramVals) != 2 {
 		return errors.New("no config file name parameter has been given")
 	}
-	p.ps.getParamsFromFile(paramVals[1],
-		"supplied config file: "+loc.String())
+	p.ps.getParamsFromFile(paramVals[1], "supplied config file")
 	return nil
 }
 
@@ -388,5 +389,5 @@ func (ps *PSet) getParamsFromFile(name, desc string) {
 	var lp = paramLineParser{ps: ps}
 	fp := fileparse.New(desc, lp)
 	errors := fp.Parse(cf.Name)
-	checkErrors(ps, errors, cf)
+	checkErrors(ps, errors, cf, desc)
 }
