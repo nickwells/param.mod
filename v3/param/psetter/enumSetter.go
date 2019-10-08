@@ -29,7 +29,7 @@ func (s Enum) SetWithVal(_ string, paramVal string) error {
 
 // AllowedValues returns a string listing the allowed values
 func (s Enum) AllowedValues() string {
-	return ""
+	return "a string"
 }
 
 // CurrentValue returns the current setting of the parameter value

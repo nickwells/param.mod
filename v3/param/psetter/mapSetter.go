@@ -36,7 +36,7 @@ func (s Map) SetWithVal(_ string, paramVal string) error {
 		parts := strings.SplitN(v, "=", 2)
 		switch len(parts) {
 		case 1:
-			m[v] = true
+			m[parts[0]] = true
 		case 2:
 			// check that the bool can be parsed
 			b, err := strconv.ParseBool(parts[1])
@@ -46,7 +46,7 @@ func (s Map) SetWithVal(_ string, paramVal string) error {
 					" as true or false: %s",
 					paramVal, i+1, v, parts[1], err)
 			}
-			m[v] = b
+			m[parts[0]] = b
 		}
 	}
 

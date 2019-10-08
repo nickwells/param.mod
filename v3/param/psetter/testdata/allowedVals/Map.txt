@@ -1,1 +1,1 @@
-a list of string values separated by ','.
+a list of string values separated by ','
