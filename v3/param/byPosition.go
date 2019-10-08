@@ -31,6 +31,21 @@ func (bp ByPos) Name() string { return bp.name }
 // Description returns the parameter description
 func (bp ByPos) Description() string { return bp.description }
 
+// InitialValue returns the initialValue of the ByPos parameter
+func (p ByPos) InitialValue() string { return p.initialValue }
+
+// AllowedValues returns a description of the values that the ByPos
+// parameter can accept
+func (p ByPos) AllowedValues() string {
+	return p.setter.AllowedValues()
+}
+
+// AllowedValuesMap returns the map (which may be nil) of values to
+// descriptions for the values that the ByPos parameter can accept
+func (p ByPos) AllowedValuesMap() AValMap {
+	return p.setter.AllowedValuesMap()
+}
+
 // =============================================
 
 // PosOptFunc is the type of a option func used to set various flags on a
@@ -58,6 +73,13 @@ func (ps *PSet) AddByPos(name string,
 			" A new positional parameter (" + name + ") cannot be added.")
 	}
 
+	if setter.ValueReq() == None {
+		panic(fmt.Sprintf(
+			"Couldn't add positional parameter %d (%q):"+
+				" a positional parameter must take a value",
+			len(ps.byPos)+1, name))
+	}
+
 	setter.CheckSetter(name)
 
 	checkTerminalFlags(ps)
@@ -73,8 +95,8 @@ func (ps *PSet) AddByPos(name string,
 	for _, optFunc := range opts {
 		if err := optFunc(bp); err != nil {
 			panic(fmt.Sprintf(
-				"error setting the options for positional parameter %d: %s",
-				len(ps.byPos), err))
+				"Couldn't set the options for positional parameter %d (%q): %s",
+				len(ps.byPos)+1, name, err))
 		}
 	}
 
