@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/nickwells/check.mod/check"
 	"github.com/nickwells/param.mod/v3/param"
 )
 
@@ -14,8 +15,14 @@ type Map struct {
 	param.ValueReqMandatory
 	param.NilAVM
 
-	Value *map[string]bool
+	Value  *map[string]bool
+	Checks []check.MapStringBool
 	StrListSeparator
+}
+
+// CountChecks returns the number of check functions this setter has
+func (s Map) CountChecks() int {
+	return len(s.Checks)
 }
 
 // SetWithVal (called when a value follows the parameter) splits the value
@@ -23,31 +30,39 @@ type Map struct {
 func (s Map) SetWithVal(_ string, paramVal string) error {
 	sep := s.GetSeparator()
 	values := strings.Split(paramVal, sep)
+	m := map[string]bool{}
 
 	for i, v := range values {
 		parts := strings.SplitN(v, "=", 2)
-		if len(parts) == 2 {
+		switch len(parts) {
+		case 1:
+			m[v] = true
+		case 2:
 			// check that the bool can be parsed
-			_, err := strconv.ParseBool(parts[1])
+			b, err := strconv.ParseBool(parts[1])
 			if err != nil {
-				return fmt.Errorf("bad value: %q:"+
-					" part: %d (%q) is invalid."+
+				return fmt.Errorf("bad value: %q: part: %d (%q) is invalid."+
 					" The value (%q) cannot be interpreted"+
 					" as true or false: %s",
 					paramVal, i+1, v, parts[1], err)
 			}
+			m[v] = b
 		}
 	}
 
-	for _, v := range values {
-		parts := strings.SplitN(v, "=", 2)
-		switch len(parts) {
-		case 1:
-			(*s.Value)[v] = true
-		case 2:
-			b, _ := strconv.ParseBool(parts[1])
-			(*s.Value)[parts[0]] = b
+	for _, check := range s.Checks {
+		if check == nil {
+			continue
 		}
+
+		err := check(m)
+		if err != nil {
+			return err
+		}
+	}
+
+	for k, b := range m {
+		(*s.Value)[k] = b
 	}
 	return nil
 }
@@ -55,7 +70,7 @@ func (s Map) SetWithVal(_ string, paramVal string) error {
 // AllowedValues returns a string listing the allowed values
 func (s Map) AllowedValues() string {
 	return "a list of string values separated by '" +
-		s.GetSeparator() + "'."
+		s.GetSeparator() + "'" + HasChecks(s)
 }
 
 // CurrentValue returns the current setting of the parameter value
