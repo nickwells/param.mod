@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	allowedValsDir    = "testdata"
+	testDataDir       = "testdata"
 	allowedValsSubDir = "allowedVals"
 )
 
@@ -21,7 +21,7 @@ var updateAVals = flag.Bool("upd-avals", false,
 
 func TestAllowedValues(t *testing.T) {
 	gfc := testhelper.GoldenFileCfg{
-		DirNames: []string{allowedValsDir, allowedValsSubDir},
+		DirNames: []string{testDataDir, allowedValsSubDir},
 		Sfx:      "txt",
 	}
 	var b bool
