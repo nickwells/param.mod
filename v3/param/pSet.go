@@ -41,18 +41,21 @@ type PSet struct {
 	progBaseName string
 	progDesc     string
 
-	byPos           []*ByPos
-	byName          []*ByName
-	nameToParam     map[string]*ByName
-	groups          map[string]*Group
-	unusedParams    map[string][]string
-	errors          ErrMap
-	finalChecks     []FinalCheckFunc
-	envPrefixes     []string
-	configFiles     []ConfigFileDetails
-	remainingParams []string
-	terminalParam   string
-	remHandler      RemHandler
+	byPos        []*ByPos
+	byName       []*ByName
+	nameToParam  map[string]*ByName
+	groups       map[string]*Group
+	unusedParams map[string][]string
+	errors       ErrMap
+	finalChecks  []FinalCheckFunc
+	envPrefixes  []string
+	configFiles  []ConfigFileDetails
+
+	remainingParams        []string
+	terminalParam          string
+	remHandler             RemHandler
+	trailingParamsExpected bool
+	trailingParamsName     string
 
 	errWriter io.Writer
 	stdWriter io.Writer
@@ -106,8 +109,29 @@ func (ps *PSet) SetRemHandler(rh RemHandler) error {
 
 	}
 	ps.remHandler = rh
+	ps.trailingParamsExpected = true
 	return nil
 }
+
+// SetNamedRemHandler calls SetRemHandler to set the remainder handler and if
+// that succeeds it will set the text to be used for the remaining arguments.
+// This name will be used in the help message
+func (ps *PSet) SetNamedRemHandler(rh RemHandler, name string) error {
+	err := ps.SetRemHandler(rh)
+	if err != nil {
+		return err
+	}
+	ps.trailingParamsName = name
+	return nil
+}
+
+// TrailingParamsExpected returns true if a remainder handler has been set
+// successfully and false otherwise
+func (ps *PSet) TrailingParamsExpected() bool { return ps.trailingParamsExpected }
+
+// TrailingParamsName returns the name that has been given to the trailing
+// parameters (if any)
+func (ps *PSet) TrailingParamsName() string { return ps.trailingParamsName }
 
 // DontExitOnParamSetupErr turns off the standard behaviour of exiting if an
 // error is detected while initialising the param set. The error is reported
@@ -211,6 +235,7 @@ func NewSet(psof ...PSetOptFunc) (*PSet, error) {
 	}
 	if ps.remHandler == nil {
 		ps.remHandler = dfltRemHandler{}
+		ps.trailingParamsExpected = false
 	}
 
 	if ps.helper == nil {

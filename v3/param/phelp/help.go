@@ -120,7 +120,13 @@ func (h StdHelp) printStdUsage(twc *twrap.TWConf, ps *param.PSet) {
 	}
 	twc.Print("Usage: ", ps.ProgName())
 	if !h.printPositionalParams(twc, ps) {
-		twc.Println(" ...") //nolint: errcheck
+		if ps.TrailingParamsExpected() {
+			twc.Println(" ... " + //nolint: errcheck
+				ps.TerminalParam() + " " +
+				ps.TrailingParamsName() + "...")
+		} else {
+			twc.Println(" ...") //nolint: errcheck
+		}
 	}
 	printMinorSeparator(twc)
 	h.printByNameParams(twc, ps)
@@ -253,12 +259,24 @@ func (h StdHelp) printPositionalParams(twc *twrap.TWConf, ps *param.PSet) bool {
 		return false
 	}
 
+	var hasTerminalParam bool
 	for i := 0; i < bppCount; i++ {
 		bp, _ := ps.GetParamByPos(i)
 		twc.Print(" <", bp.Name(), ">")
+		if bp.IsTerminal() {
+			hasTerminalParam = true
+		}
 	}
 
-	twc.Println(" ...") //nolint: errcheck
+	if hasTerminalParam {
+		if ps.TrailingParamsExpected() {
+			twc.Println(" " + //nolint: errcheck
+				ps.TrailingParamsName() + "...")
+		}
+	} else {
+		twc.Println(" ...") //nolint: errcheck
+	}
+
 	if !h.showFullHelp {
 		return true
 	}

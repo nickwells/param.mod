@@ -222,6 +222,17 @@ func TestHelp(t *testing.T) { //nolint: gocyclo
 			addByNameParams: true,
 		},
 		{
+			ID:       testhelper.MkID("help-params-multi-bad-param"),
+			progDesc: "a description of what the program does",
+			params: []string{
+				"-help-params",
+				"help-groups,help,no-such-param,not-a-param",
+				"-param2=99",
+			},
+			errsExpected:    true,
+			addByNameParams: true,
+		},
+		{
 			ID:              testhelper.MkID("help-show-groups"),
 			progDesc:        "a description of what the program does",
 			params:          []string{"-help-groups", "-param2=99"},
