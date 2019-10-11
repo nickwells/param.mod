@@ -29,6 +29,9 @@ type ByName struct {
 	postAction      []ActionFunc
 }
 
+// PSet returns the parameter set to which the ByName parameter belongs
+func (p ByName) PSet() *PSet { return p.ps }
+
 // Name returns the name of the ByName parameter
 func (p ByName) Name() string { return p.name }
 
@@ -80,7 +83,12 @@ type Attributes int32
 const (
 	// CommandLineOnly means that the parameter can only be set on the
 	// command line. Note that this also includes being set through values
-	// passed to the Parse func as a slice of strings
+	// passed to the Parse func as a slice of strings. You might want to set
+	// this attribute on parameters which would always be different between
+	// command invocations or where setting it would make the program
+	// terminate. For instance, it is set on the standard help attributes as
+	// setting these in a configuration file would never allow the program to
+	// execute.
 	CommandLineOnly Attributes = 1 << iota
 	// MustBeSet means that the parameter must be given - it cannot be
 	// omitted
@@ -88,7 +96,10 @@ const (
 	// SetOnlyOnce means that only the first time it is set will have any
 	// effect and any subsequent attempts to set it will be ignored. You can
 	// control the behaviour when multiple attempts are made through a
-	// SetterFunc (see the SetOnce type in the paction package)
+	// SetterFunc (see the SetOnce type in the paction package). You might
+	// want to set this on a parameter that you want to set for all users in
+	// a global configuration file that only the system administrator can
+	// edit. This would allow you to set a system-wide policy.
 	SetOnlyOnce
 	// DontShowInStdUsage means that the parameter name will be suppressed
 	// when the usage message is printed unless the expanded usage message
@@ -237,7 +248,7 @@ func GroupName(name string) OptFunc {
 func (p *ByName) processParam(loc *location.L, paramParts []string) {
 	var err error
 
-	if (p.attributes&SetOnlyOnce) == SetOnlyOnce &&
+	if p.AttrIsSet(SetOnlyOnce) &&
 		len(p.whereIsParamSet) > 0 {
 		// it's already been set so don't process the value
 	} else if len(paramParts) == 1 {
