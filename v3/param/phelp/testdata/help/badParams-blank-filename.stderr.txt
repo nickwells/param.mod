@@ -1,0 +1,8 @@
+PROGRAM NAME UNKNOWN: 1 error detected while setting the parameters
+      params-file [1 error]
+            error with parameter: no file name has been given
+            parameter set at: supplied parameters:2: -params-file
+
+For help with the correct use of the parameters and to see which parameters are
+available please use the '-help' parameter which will print a usage message
+

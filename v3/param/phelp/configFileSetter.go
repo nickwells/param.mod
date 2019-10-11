@@ -2,6 +2,7 @@ package phelp
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/nickwells/param.mod/v3/param"
 )
@@ -21,11 +22,11 @@ type configFileSetter struct {
 // reports it as an error if so.
 func (s configFileSetter) SetWithVal(_ string, paramVal string) error {
 	if paramVal == "" {
-		return errors.New("no config file name has been given")
+		return errors.New("no file name has been given")
 	}
 
 	if s.seenBefore[paramVal] {
-		return errors.New("the config file name has been seen before")
+		return fmt.Errorf("the file name (%q) has been seen before", paramVal)
 	}
 
 	s.seenBefore[paramVal] = true
@@ -35,7 +36,7 @@ func (s configFileSetter) SetWithVal(_ string, paramVal string) error {
 // AllowedValues returns a string describing the allowed values
 func (s configFileSetter) AllowedValues() string {
 	return "a pathname to a file which must exist," +
-		" containing config parameter settings"
+		" containing configuration parameters"
 }
 
 // CurrentValue returns none
@@ -47,6 +48,6 @@ func (s configFileSetter) CurrentValue() string {
 func (s configFileSetter) CheckSetter(name string) {
 	if s.seenBefore == nil {
 		panic(name + ": phelp.configFileSetter Check failed:" +
-			" the map of previously seen config files has not been set")
+			" the map of previously seen filenames has not been set")
 	}
 }

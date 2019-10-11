@@ -1,0 +1,7 @@
+PROGRAM NAME UNKNOWN: 1 error detected while setting the parameters
+      param2 [1 error]
+            this parameter must be set somewhere
+
+For help with the correct use of the parameters and to see which parameters are
+available please use the '-help' parameter which will print a usage message
+

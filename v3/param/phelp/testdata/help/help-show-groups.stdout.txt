@@ -1,0 +1,16 @@
+
+Parameter groups
+common.params-help [ 10 parameters, 9 hidden ]
+    These are parameters which control whether and how to print a message
+    explaining how the program can be used.
+
+---------------
+common.params-params [ 6 parameters, all hidden ]
+    These are the parameter-handling parameters. There are parameters for
+    showing where parameters have been set and for the handling of parameter
+    errors.
+
+---------------
+test-group1 [ 6 parameters, 1 hidden ]
+    test parameters.
+

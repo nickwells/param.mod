@@ -1,9 +1,6 @@
 package phelp
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/nickwells/param.mod/v3/param"
 	"github.com/nickwells/twrap.mod/twrap"
 )
@@ -28,46 +25,38 @@ const (
 
 // printWhereSetIntro prints the introduction to the parameter name
 // indicating whether or not it has been set and if there are any errors
-func printWhereSetIntro(ps *param.PSet, p *param.ByName) {
-	w := ps.StdWriter()
-
+func printWhereSetIntro(twc *twrap.TWConf, ps *param.PSet, p *param.ByName) {
 	errCount := paramErrorCnt(ps, p)
 
 	if errCount > 0 {
 		if errCount < 10 {
-			fmt.Fprintf(w, "Errs %d : ", errCount)
+			twc.Printf("Errs %d : ", errCount)
 		} else {
-			fmt.Fprint(w, manyErrsIntro)
+			twc.Print(manyErrsIntro)
 		}
 	} else if p.HasBeenSet() {
-		fmt.Fprint(w, setIntro)
+		twc.Print(setIntro)
 	} else {
-		fmt.Fprint(w, notSetIntro)
+		twc.Print(notSetIntro)
 	}
 
 }
 
-func showWhereParamsAreSet(ps *param.PSet) {
-	paramGroups := ps.GetGroups()
-	w := ps.StdWriter()
-	twc, err := twrap.NewTWConf(twrap.SetWriter(w))
-	if err != nil {
-		fmt.Fprint(os.Stderr, "Couldn't build the text wrapper:", err)
-		return
-	}
+func (h StdHelp) showWhereParamsAreSet(twc *twrap.TWConf, ps *param.PSet) {
+	groups := ps.GetGroups()
 
-	for _, pg := range paramGroups {
-		printGroupDetails(w, pg, Short)
-		for _, p := range pg.Params {
-			printWhereSetIntro(ps, p)
+	for _, g := range groups {
+		h.printGroupDetails(twc, g)
+		for _, p := range g.Params {
+			printWhereSetIntro(twc, ps, p)
 
-			fmt.Fprint(w, p.Name())
+			twc.Print(p.Name())
 			for _, altName := range p.AltNames() {
 				if altName != p.Name() {
-					fmt.Fprint(w, " or ", altName)
+					twc.Print(" or ", altName)
 				}
 			}
-			fmt.Fprintln(w)
+			twc.Println() //nolint: errcheck
 
 			intro := "at : "
 			whereSet := p.WhereSet()

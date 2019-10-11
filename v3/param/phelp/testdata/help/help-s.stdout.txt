@@ -1,0 +1,11 @@
+Usage: PROGRAM NAME UNKNOWN ...
+---------------
+common.params-help [ 10 parameters, 9 hidden ]
+      [-help] or [-usage]
+---------------
+test-group1 [ 6 parameters, 1 hidden ]
+      [-param1=...] or [-param1-alt1=...]
+      -param2=... or -param2-alt2=...
+      [-param4[=...]]
+      [-param5=...]
+      [-param6=...]

@@ -3,7 +3,8 @@ package phelp
 import (
 	"crypto/md5"
 
-	"github.com/nickwells/param.mod/v3/param/paction"
+	"github.com/nickwells/location.mod/location"
+	"github.com/nickwells/param.mod/v3/param"
 )
 
 // helpStyle records the style of help message to generate - it can be
@@ -16,41 +17,57 @@ type helpStyle byte
 //    Short meaning that a concise message is generated
 //    GroupNamesOnly meaning that only group names should be shown
 const (
-	Std helpStyle = iota
-	Short
-	GroupNamesOnly
+	noHelp helpStyle = iota
+	stdHelp
+	paramsByName
+	paramsInGroups
+	paramsNotInGroups
+	groupNamesOnly
+	progDescOnly
+	altSourcesOnly
 )
 
 // StdHelp implements the Helper interface. It adds the standard arguments
 // and processes them. This is the helper you are most likely to want and it
 // is the one that is used by the paramset.New func.
 type StdHelp struct {
-	groupsToShow     map[string]bool
-	groupsToExclude  map[string]bool
-	groupListCounter paction.Counter
-	includeGroups    bool
-	excludeGroups    bool
+	groupsSelected map[string]bool
+	paramsToShow   []string
 
 	avalShownAlready map[[md5.Size]byte]string
 
-	reportWhereParamsAreSet bool
-	reportUnusedParams      bool
-	reportParamSources      bool
+	paramsShowWhereSet bool
+	paramsShowUnused   bool
 
 	dontReportErrors bool
 	dontExitOnErrors bool
-
+	exitAfterHelp    bool // this can only be set in the test code
 	exitAfterParsing bool
 
-	showHelp      bool
-	showAllParams bool
+	paramsShowHidden  bool
+	showFullHelp      bool
+	styleNeedsSetting bool // if either of the previous is set then this is set
 
 	style helpStyle
 }
 
-// SH is the instance of the standard help type
-var SH = StdHelp{
-	groupsToShow:     make(map[string]bool),
-	groupsToExclude:  make(map[string]bool),
-	avalShownAlready: make(map[[md5.Size]byte]string),
+// setStyle returns an ActionFunc to set the style element of the StdHelp
+// structure to the given value.
+func setStyle(h *StdHelp, setTo helpStyle) param.ActionFunc {
+	return func(_ location.L, _ *param.ByName, _ []string) error {
+		h.style = setTo
+		return nil
+	}
+}
+
+// NewStdHelp returns a pointer to a well-constructed instance of the
+// standard help type ready to be used as the helper for a new param.PSet
+// (the standard paramset.New() function will use this)
+func NewStdHelp() *StdHelp {
+	return &StdHelp{
+		groupsSelected:   make(map[string]bool),
+		avalShownAlready: make(map[[md5.Size]byte]string),
+		showFullHelp:     true,
+		exitAfterHelp:    true,
+	}
 }

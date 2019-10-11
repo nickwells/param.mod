@@ -13,7 +13,7 @@ import (
 // SetHelper function to the start.
 func addHelperToOpts(psof []param.PSetOptFunc) []param.PSetOptFunc {
 	opts := make([]param.PSetOptFunc, 0, len(psof)+1)
-	opts = append(opts, param.SetHelper(&phelp.SH))
+	opts = append(opts, param.SetHelper(phelp.NewStdHelp()))
 	opts = append(opts, psof...)
 	return opts
 }

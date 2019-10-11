@@ -3,139 +3,134 @@ package phelp
 import (
 	"crypto/md5"
 	"fmt"
-	"io"
 	"os"
+	"strings"
 
 	"github.com/nickwells/param.mod/v3/param"
 	"github.com/nickwells/twrap.mod/twrap"
 )
 
-const stdIndent = "    "
-
-const dashes = "---------------"
-const equals = "==============="
-
 const paramIndent = 6
 const descriptionIndent = 12
 const textIndent = 4
 
-// badGroups checks that all the groups are in the PSet and reports the
-// error if not. It returns a count of the number of problems found
-func badGroups(ps *param.PSet, twc *twrap.TWConf, groups map[string]bool, name string) bool {
-	errCount := 0
-	msg := ""
-	for g := range groups {
-		if !ps.HasGroupName(g) {
-			if errCount == 0 {
-				msg = "group: '" + g + "' in the list of " + name + "," +
-					" is not the name of a parameter group." +
-					" Please check the spelling."
-			} else {
-				msg += "\nalso: '" + g + "'"
-			}
-			errCount++
-		}
-	}
-	if errCount > 0 {
-		twc.WrapPrefixed("Error: ", msg, 0)
-	}
-	return errCount > 0
+// printMajorSeparator prints the separator between major parts of the help
+// text
+func printMajorSeparator(twc *twrap.TWConf) {
+	twc.Print("\n===============\n\n")
 }
 
-// printOptValNote prints an explanation of how optional values must be set
-func (h StdHelp) printOptValNote(w io.Writer) {
-	twc, err := twrap.NewTWConf(twrap.SetWriter(w))
-	if err != nil {
-		fmt.Fprint(os.Stderr, "Couldn't build the text wrapper:", err)
-		return
-	}
-	fmt.Fprint(w, "\n"+equals+"\n\n")
-
-	prefix := "Note: "
-	twc.WrapPrefixed(prefix,
-		"Optional values (those with a parameter name followed by [=...])"+
-			" must be given with the parameter,"+
-			" after an '=' rather than as a following argument."+
-			" For instance,\n\n-xxx=...\nrather than\n-xxx ...",
-		0)
+// printMinorSeparator prints the separator between minor parts of the help
+// text
+func printMinorSeparator(twc *twrap.TWConf) {
+	twc.Print("---------------\n")
 }
 
-// printHelpIntro prints the messages and any program description
-func (h StdHelp) printHelpIntro(twc *twrap.TWConf, progDesc string, messages ...string) {
+// printSetValNote prints an explanation of how optional and mandatory values
+// may be set
+func (h StdHelp) printSetValNote(twc *twrap.TWConf) {
+	printMinorSeparator(twc)
+	twc.Println() //nolint: errcheck
+
+	twc.WrapPrefixed("Note: ",
+		"Optional parameter values (where the name is followed by [=...])"+
+			" must come after an '=' rather than as the next argument."+
+			" As follows,"+
+			"\n\n"+
+			"-xxx=false not -xxx false"+
+			"\n\n"+
+			"For parameters which must have a value it may be given in"+
+			" either way",
+		textIndent)
+}
+
+// printHelpMessages prints the messages
+func (h StdHelp) printHelpMessages(twc *twrap.TWConf, messages ...string) {
 	for _, message := range messages {
 		twc.Wrap(message, 0)
 	}
 	if len(messages) > 0 {
-		fmt.Fprint(twc.W, "\n"+equals+"\n\n")
-	}
-
-	if h.style != Short &&
-		h.style != GroupNamesOnly {
-		twc.Wrap(progDesc+"\n", 0)
+		printMajorSeparator(twc)
 	}
 }
 
-// checkGroups checks the parameter group settings for consistency and
-// correctness and reports any errors found. It will change the settings of
-// the helper to fix any problems or to report valid group names if invalid
-// names have been given.
-func (h StdHelp) checkGroups(ps *param.PSet, twc *twrap.TWConf) {
-	if h.includeGroups {
-		if badGroups(ps, twc, h.groupsToShow, "groups to show") {
-			h.includeGroups = false
-			h.style = GroupNamesOnly
-		}
-	}
-	if h.excludeGroups {
-		if badGroups(ps, twc, h.groupsToExclude, "excluded groups") {
-			h.excludeGroups = false
-			h.style = GroupNamesOnly
-		}
-	}
-	if h.groupListCounter.Count() > 1 {
-		twc.WrapPrefixed("Error: ",
-			"only include OR exclude parameter groups"+
-				" not both at the same time."+
-				" Excluded groups will be ignored."+
-				" They have been set at:"+
-				h.groupListCounter.SetBy(),
-			0)
-		h.excludeGroups = false
-	}
-}
+// Help prints any messages and then a standardised usage message based on
+// the parameters supplied to the param set. If it is called directly (that
+// is if the help style is set to noHelp) then the output will be written to
+// the param.PSet's error writer (by default stderr) rather than to its
+// standard writer (stdout) and os.Exit will be called with an exit status of
+// 1 to indicate an error.
+func (h StdHelp) Help(ps *param.PSet, messages ...string) { //nolint: gocyclo
+	var twc *twrap.TWConf
+	var err error
+	exitAfterHelp := false
 
-// Help prints the messages and then a standardised usage message based on
-// the parameters supplied to the param set. It then exits with an exit
-// status of 1
-func (h StdHelp) Help(ps *param.PSet, messages ...string) {
-	w := ps.ErrWriter()
-	twc, err := twrap.NewTWConf(twrap.SetWriter(w))
+	if h.style == noHelp {
+		h.style = stdHelp
+		twc, err = twrap.NewTWConf(twrap.SetWriter(ps.ErrWriter()))
+		exitAfterHelp = h.exitAfterHelp
+	} else {
+		twc, err = twrap.NewTWConf(twrap.SetWriter(ps.StdWriter()))
+	}
+
 	if err != nil {
 		fmt.Fprint(os.Stderr, "Couldn't build the text wrapper:", err)
 		return
 	}
 
-	h.printHelpIntro(twc, ps.ProgDesc(), messages...)
+	h.printHelpMessages(twc, messages...)
 
-	h.checkGroups(ps, twc)
+	switch h.style {
+	case stdHelp:
+		h.printStdUsage(twc, ps)
 
-	fmt.Fprint(w, "Usage: ", ps.ProgName())
+	case paramsByName:
+		h.printParamsByName(twc, ps)
 
-	if h.style == GroupNamesOnly {
-		fmt.Fprintln(w, "\nParameter groups")
-		h.printGroups(w, ps)
-	} else {
-		h.printPositionalParams(w, ps)
-		h.printParams(w, ps)
+	case paramsInGroups:
+		h.printParamsInGroups(twc, ps)
 
-		if h.style != Short {
-			h.printAlternativeSources(ps)
+	case paramsNotInGroups:
+		h.printParamsNotInGroups(twc, ps)
 
-			h.printOptValNote(w)
+	case groupNamesOnly:
+		h.printGroups(twc, ps)
+
+	case progDescOnly:
+		twc.Wrap(ps.ProgDesc()+"\n", 0)
+
+	case altSourcesOnly:
+		if !h.showAltSources(twc, ps) {
+			twc.Wrap(
+				"There are no alternative sources, parameters can only"+
+					" be set through the command line",
+				textIndent)
 		}
 	}
 
-	os.Exit(1)
+	if exitAfterHelp {
+		os.Exit(1)
+	}
+}
+
+// printStdUsage will print the standard usage message
+func (h StdHelp) printStdUsage(twc *twrap.TWConf, ps *param.PSet) {
+	if h.showFullHelp {
+		twc.Wrap(ps.ProgDesc()+"\n", 0)
+	}
+	twc.Print("Usage: ", ps.ProgName())
+	if !h.printPositionalParams(twc, ps) {
+		twc.Println(" ...") //nolint: errcheck
+	}
+	printMinorSeparator(twc)
+	h.printByNameParams(twc, ps)
+	if h.showFullHelp {
+		h.printSetValNote(twc)
+		if ps.HasAltSources() {
+			printMinorSeparator(twc)
+			h.showAltSources(twc, ps)
+		}
+	}
 }
 
 func valueNeededStr(vr param.ValueReq) string {
@@ -148,17 +143,12 @@ func valueNeededStr(vr param.ValueReq) string {
 	return ""
 }
 
-func (h StdHelp) printParamUsage(w io.Writer, p *param.ByName) {
-	twc, err := twrap.NewTWConf(twrap.SetWriter(w))
-	if err != nil {
-		fmt.Fprint(os.Stderr, "Couldn't build the text wrapper:", err)
-		return
-	}
+func (h StdHelp) printParamUsage(twc *twrap.TWConf, p *param.ByName) {
 	prefix := "-"
 	suffix := valueNeededStr(p.ValueReq())
 	if !p.AttrIsSet(param.MustBeSet) {
-		prefix = "[ " + prefix
-		suffix += " ]"
+		prefix = "[" + prefix
+		suffix += "]"
 	}
 
 	paramNames := ""
@@ -170,39 +160,64 @@ func (h StdHelp) printParamUsage(w io.Writer, p *param.ByName) {
 	}
 	twc.Wrap(paramNames, paramIndent)
 
-	if h.style == Short {
+	if !h.showFullHelp {
 		return
 	}
 
 	twc.Wrap(p.Description(), descriptionIndent)
-	h.showAllowedValues(twc, p)
+	if p.AttrIsSet(param.SetOnlyOnce) {
+		twc.Wrap(
+			"\nThis parameter value may only be set once."+
+				" Any appearances after the first will not be used",
+			descriptionIndent)
+	}
+	if p.AttrIsSet(param.CommandLineOnly) && p.PSet().HasAltSources() {
+		twc.Wrap(
+			"\nThis parameter value may only be given on the command line"+
+				" not in configuration files or as an environment variable.",
+			descriptionIndent)
+	}
+	h.showAllowedValsByName(twc, p)
 	if p.ValueReq() == param.None {
 		return
 	}
 	twc.WrapPrefixed("Initial value: ", p.InitialValue(), descriptionIndent)
 }
 
-// showAllowedValues shows the allowed values for the parameter but it will
-// print a reference to an earlier parameter if the allowed value text has
-// been seen already
-func (h StdHelp) showAllowedValues(twc *twrap.TWConf, p *param.ByName) {
+// showAllowedValsByName shows the allowed values for the ByName parameter
+func (h StdHelp) showAllowedValsByName(twc *twrap.TWConf, p *param.ByName) {
 	if p.ValueReq() == param.None {
 		return
 	}
+	h.showAllowedValues(twc, p.Name(), p.AllowedValues(), p.AllowedValuesMap())
+}
 
-	aval := p.AllowedValues()
+// showAllowedValsByPos shows the allowed values for the ByPos parameter
+func (h StdHelp) showAllowedValsByPos(twc *twrap.TWConf, p *param.ByPos) {
+	h.showAllowedValues(twc, p.Name(), p.AllowedValues(), p.AllowedValuesMap())
+}
+
+// showAllowedValues prints the allowed values for a parameter. It will print
+// a reference to an earlier parameter if the allowed value text has been
+// seen already
+func (h StdHelp) showAllowedValues(twc *twrap.TWConf, pName, aval string, avalMap param.AValMap) {
+	const prefix = "Allowed values: "
+
 	keyStr := aval
-	avalMap := p.AllowedValuesMap()
 	if avalMap != nil {
 		keyStr += avalMap.String()
 	}
+
 	key := md5.Sum([]byte(keyStr))
+
 	if name, alreadyShown := h.avalShownAlready[key]; alreadyShown {
-		aval = "(see parameter: " + name + ")"
-	} else {
-		h.avalShownAlready[key] = p.Name()
+		twc.WrapPrefixed(prefix,
+			"(see parameter: "+name+")",
+			descriptionIndent)
+		return
 	}
-	const prefix = "Allowed values: "
+
+	h.avalShownAlready[key] = pName
 	twc.WrapPrefixed(prefix, aval, descriptionIndent)
 	if avalMap != nil {
 		indent := descriptionIndent + len(prefix)
@@ -211,165 +226,165 @@ func (h StdHelp) showAllowedValues(twc *twrap.TWConf, p *param.ByName) {
 	}
 }
 
-func (h StdHelp) printPositionalParams(w io.Writer, ps *param.PSet) {
+// printParamsByName will print just the named parameters
+func (h StdHelp) printParamsByName(twc *twrap.TWConf, ps *param.PSet) {
+	var shown = map[string]bool{}
+	for _, pName := range h.paramsToShow {
+		trimmedName := strings.TrimLeft(pName, "-")
+		p, err := ps.GetParamByName(trimmedName)
+		if err != nil {
+			continue
+		}
+
+		if shown[p.Name()] {
+			continue
+		}
+		h.printParamUsage(twc, p)
+		shown[p.Name()] = true
+	}
+}
+
+// printPositionalParams will print the positional parameters and their
+// descriptions. It will return true if any positional parameters are printed
+// and false otherwise
+func (h StdHelp) printPositionalParams(twc *twrap.TWConf, ps *param.PSet) bool {
 	bppCount := ps.CountByPosParams()
 	if bppCount == 0 {
-		return
+		return false
 	}
 
-	twc, err := twrap.NewTWConf(twrap.SetWriter(w))
-	if err != nil {
-		fmt.Fprint(os.Stderr, "Couldn't build the text wrapper:", err)
-		return
-	}
 	for i := 0; i < bppCount; i++ {
 		bp, _ := ps.GetParamByPos(i)
-		fmt.Fprint(w, " <", bp.Name(), ">")
+		twc.Print(" <", bp.Name(), ">")
 	}
 
-	fmt.Fprintln(w)
-	if h.style == Short {
-		return
+	twc.Println(" ...") //nolint: errcheck
+	if !h.showFullHelp {
+		return true
 	}
-	fmt.Fprintln(w, "where")
+	twc.Println("where") //nolint: errcheck
 
 	for i := 0; i < bppCount; i++ {
 		bp, _ := ps.GetParamByPos(i)
 		twc.Wrap(bp.Name(), paramIndent)
 		twc.Wrap(bp.Description(), descriptionIndent)
-	}
-}
-
-// printGroupDetails prints the group name etc
-func printGroupDetails(w io.Writer, pg *param.Group, style helpStyle) {
-	fmt.Fprintln(w, "\n"+dashes)
-	fmt.Fprintf(w, "%s [ ", pg.Name)
-	if len(pg.Params) == 1 {
-		fmt.Fprint(w, "1 parameter")
-	} else {
-		fmt.Fprintf(w, "%d parameters", len(pg.Params))
-	}
-	if pg.HiddenCount > 0 {
-		if pg.AllParamsHidden() {
-			fmt.Fprint(w, ", all hidden")
-		} else {
-			fmt.Fprintf(w, ", %d hidden", pg.HiddenCount)
-		}
-	}
-	fmt.Fprintln(w, " ]")
-	if style == Short {
-		return
-	}
-	desc := pg.Desc
-	if desc == "" {
-		return
-	}
-	twc, err := twrap.NewTWConf(twrap.SetWriter(w))
-	if err != nil {
-		fmt.Fprint(os.Stderr, "Couldn't build the text wrapper:", err)
-		return
-	}
-	twc.Wrap(desc, textIndent)
-	fmt.Fprintln(w)
-}
-
-// showGroup will return true if the group should be reported and false
-// otherwise
-func (h StdHelp) showGroup(g string) bool {
-	if h.includeGroups && !h.groupsToShow[g] {
-		return false
-	}
-	if h.excludeGroups && h.groupsToExclude[g] {
-		return false
+		h.showAllowedValsByPos(twc, bp)
+		twc.WrapPrefixed("Initial value: ", bp.InitialValue(),
+			descriptionIndent)
 	}
 	return true
 }
 
-func (h StdHelp) printParams(w io.Writer, ps *param.PSet) {
-	paramGroups := ps.GetGroups()
+// printGroupDetails prints the group name etc
+func (h StdHelp) printGroupDetails(twc *twrap.TWConf, pg *param.Group) {
+	twc.Printf("%s [ ", pg.Name)
+	if len(pg.Params) == 1 {
+		twc.Print("1 parameter")
+	} else {
+		twc.Printf("%d parameters", len(pg.Params))
+	}
+	if pg.HiddenCount > 0 {
+		if pg.AllParamsHidden() {
+			twc.Print(", all hidden")
+		} else {
+			twc.Printf(", %d hidden", pg.HiddenCount)
+		}
+	}
+	twc.Println(" ]") //nolint: errcheck
+	if !h.showFullHelp {
+		return
+	}
+	twc.Wrap(pg.Desc, textIndent)
+	printGroupConfigFile(twc, pg)
+	twc.Println() //nolint: errcheck
+}
 
-	for _, pg := range paramGroups {
-		if !h.showGroup(pg.Name) {
+// printGroupParams prints the parameters in the group
+func (h StdHelp) printGroupParams(twc *twrap.TWConf, pg *param.Group) {
+	for _, p := range pg.Params {
+		if p.AttrIsSet(param.DontShowInStdUsage) &&
+			!h.paramsShowHidden {
 			continue
 		}
-
-		if pg.AllParamsHidden() && !h.showAllParams {
-			continue
-		}
-
-		printGroupDetails(w, pg, h.style)
-
-		for _, p := range pg.Params {
-			if p.AttrIsSet(param.DontShowInStdUsage) &&
-				!h.showAllParams {
-				continue
-			}
-			h.printParamUsage(w, p)
-		}
-
-		printGroupConfigFile(w, pg)
+		h.printParamUsage(twc, p)
 	}
 }
 
-func printGroupConfigFile(w io.Writer, pg *param.Group) {
+func (h StdHelp) printByNameParams(twc *twrap.TWConf, ps *param.PSet) {
+	paramGroups := ps.GetGroups()
+
+	sep := false
+	for _, pg := range paramGroups {
+		if pg.AllParamsHidden() && !h.paramsShowHidden {
+			continue
+		}
+		if sep {
+			printMinorSeparator(twc)
+		}
+		sep = true
+
+		h.printGroupDetails(twc, pg)
+		h.printGroupParams(twc, pg)
+	}
+}
+
+func (h StdHelp) printParamsInGroups(twc *twrap.TWConf, ps *param.PSet) {
+	paramGroups := ps.GetGroups()
+
+	sep := false
+	for _, pg := range paramGroups {
+		if !h.groupsSelected[pg.Name] {
+			continue
+		}
+		if sep {
+			printMinorSeparator(twc)
+		}
+		sep = true
+
+		h.printGroupDetails(twc, pg)
+		h.printGroupParams(twc, pg)
+	}
+}
+
+func (h StdHelp) printParamsNotInGroups(twc *twrap.TWConf, ps *param.PSet) {
+	paramGroups := ps.GetGroups()
+
+	sep := false
+	for _, pg := range paramGroups {
+		if h.groupsSelected[pg.Name] {
+			continue
+		}
+		if sep {
+			printMinorSeparator(twc)
+		}
+		sep = true
+
+		h.printGroupDetails(twc, pg)
+		h.printGroupParams(twc, pg)
+	}
+}
+
+func printGroupConfigFile(twc *twrap.TWConf, pg *param.Group) {
 	if len(pg.ConfigFiles) > 0 {
-		msg := "\nParameters in this group may also be set "
-
-		msg += altSrcConfigFiles(pg.ConfigFiles)
-
-		twc, err := twrap.NewTWConf(twrap.SetWriter(w))
-		if err != nil {
-			fmt.Fprint(os.Stderr, "Couldn't build the text wrapper:", err)
-			return
-		}
-
-		twc.Wrap(msg, textIndent)
+		twc.Wrap(
+			"\nParameters in this group may also be set "+
+				altSrcConfigFiles(pg.ConfigFiles),
+			textIndent)
 	}
 }
 
-func (h StdHelp) printGroups(w io.Writer, ps *param.PSet) {
+func (h StdHelp) printGroups(twc *twrap.TWConf, ps *param.PSet) {
+	twc.Println("\nParameter groups") //nolint: errcheck
 	paramGroups := ps.GetGroups()
 
+	sep := false
 	for _, pg := range paramGroups {
-		if h.showGroup(pg.Name) {
-			printGroupDetails(w, pg, h.style)
+		if sep {
+			printMinorSeparator(twc)
 		}
-	}
-}
+		sep = true
 
-// printAlternativeSources prints the name(s) of the configuration file
-// and any environment variable prefixes (if set)
-func (h StdHelp) printAlternativeSources(ps *param.PSet) {
-	ep := ps.EnvPrefixes()
-	var hasEnvPrefixes bool
-	if len(ep) > 0 {
-		hasEnvPrefixes = true
-	}
-
-	cf := ps.ConfigFiles()
-	var hasConfigFiles bool
-	if len(cf) > 0 {
-		hasConfigFiles = true
-	}
-
-	if hasConfigFiles || hasEnvPrefixes {
-		message := "\n" + dashes + "\nAny of these parameters may also be set "
-
-		message += altSrcConfigFiles(cf)
-
-		if hasConfigFiles && hasEnvPrefixes {
-			message += "    or "
-		}
-
-		message += altSrcEnvVars(ep) + "\n"
-
-		twc, err := twrap.NewTWConf(twrap.SetWriter(ps.ErrWriter()))
-		if err != nil {
-			fmt.Fprint(os.Stderr, "Couldn't build the text wrapper:", err)
-			return
-		}
-
-		twc.Wrap(message, 0)
+		h.printGroupDetails(twc, pg)
 	}
 }
 
@@ -396,31 +411,12 @@ func altSrcConfigFiles(cf []param.ConfigFileDetails) string {
 // the allowed environment variable prefixes and returns it. If there are no
 // valid prefixes it returns the empty string
 func altSrcEnvVars(ep []string) string {
-	epLen := len(ep)
-	if epLen == 0 {
+	switch len(ep) {
+	case 0:
 		return ""
+	case 1:
+		return ep[0]
+	default:
+		return strings.Join(ep[:len(ep)-1], ",\n") + " or\n" + ep[len(ep)-1]
 	}
-
-	message := "through environment variables prefixed with"
-	if epLen == 1 {
-		message += ": "
-	} else {
-		message += " one of: "
-	}
-	sep := ""
-	for i, pfx := range ep {
-		message += sep + pfx
-		sep = ", "
-		if i == (epLen - 2) {
-			sep = " or "
-		}
-	}
-	message += `
-
-The prefix is stripped off and any underscores ('_') in the environment variable name after the prefix will be replaced with dashes ('-') when matching the parameter name.
-
-For instance, if the environment variables prefixes include 'XX_' an environment variable called 'XX_a_b' will match a parameter called 'a-b'
-`
-
-	return message
 }

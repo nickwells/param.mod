@@ -1,0 +1,12 @@
+PROGRAM NAME UNKNOWN: 1 error detected while setting the parameters
+      help-groups-in-list [1 error]
+            error with parameter: group: 'nonesuch1', is not the name of a
+            parameter group. Please check the spelling.
+            also: 'nonesuch2'
+            also: 'nonesuch3'
+            parameter set at: supplied parameters:2: -help-groups-in-list
+            nonesuch1,nonesuch2,nonesuch3
+
+For help with the correct use of the parameters and to see which parameters are
+available please use the '-help' parameter which will print a usage message
+

@@ -1,0 +1,135 @@
+a description of what the program does
+
+With embedded new lines (help-with-config)
+
+Usage: PROGRAM NAME UNKNOWN ...
+---------------
+common.params-help [ 10 parameters, 9 hidden ]
+    These are parameters which control whether and how to print a message
+    explaining how the program can be used.
+
+      [-help] or [-usage]
+            print a help message explaining what the program does and the
+            available parameters.
+            
+            The parameters are arranged into named groups which can be selected
+            or suppressed through other help parameters. Within each group the
+            parameters are displayed in alphabetical order. To see all the
+            available parameter groups use the help-groups parameter.
+            
+            Optional parameters are shown surrounded by square brackets
+            [like-this]. Parameters which take a value are shown with a
+            following '=...', this is itself bracketed if the value may be
+            omitted.
+            
+            Parameters which are less commonly useful will not be shown. To see
+            these hidden parameters use the help-full parameter.
+            
+            For a shorter help message use the help-summary parameter
+            
+            The program will exit after the parameters are processed.
+            
+            This parameter value may only be given on the command line not in
+            configuration files or as an environment variable.
+---------------
+test-group1 [ 6 parameters, 1 hidden ]
+    test parameters.
+    
+    Parameters in this group may also be set in one of the configuration files:
+    testdata/configFiles/cfg1 (must exist)
+    testdata/configFiles/cfg2
+    
+
+      [-param1=...] or [-param1-alt1=...]
+            help text for param1
+            
+            This parameter value may only be given on the command line not in
+            configuration files or as an environment variable.
+            Allowed values: any value that can be read as a whole number
+            Initial value: 1
+      -param2=... or -param2-alt2=...
+            help text for param2.
+            With an embedded new line and a lot of text to demonstrate the
+            behaviour when text is wrapped across multiple lines
+            Allowed values: (see parameter: param1)
+            Initial value: 2
+      [-param4[=...]]
+            help...
+            
+            This parameter value may only be set once. Any appearances after the
+            first will not be used
+            Allowed values: none (which will be taken as 'true') or some value
+                            that can be interpreted as true or false. The value
+                            must be given after an '=', not as a following
+                            value, as this is optional
+            Initial value: false
+      [-param5=...]
+            help...
+            Allowed values: a string
+                            The value must be one of the following:
+                            v1: a value
+                            v2: another value
+            Initial value: v1
+      [-param6=...]
+            help...
+            Allowed values: (see parameter: param5)
+            Initial value: v2
+---------------
+
+    Note: Optional parameter values (where the name is followed by [=...]) must
+          come after an '=' rather than as the next argument. As follows,
+          
+          -xxx=false not -xxx false
+          
+          For parameters which must have a value it may be given in either way
+---------------
+
+Alternative Sources
+
+This program may also be configured through the following alternative sources.
+These are in addition to the parameters supplied on the command line.
+
+
+  Group Configuration Files
+
+    test-group1:  testdata/configFiles/cfg1 (must exist)
+    test-group1:  testdata/configFiles/cfg2
+
+    Note: the order in which groups are processed is indeterminate but within
+          each group the files are processed in the order listed above.
+
+    Note: parameters given in the group config files must be valid parameters of
+          the program and they must be members of the parameter group.
+
+  Common Configuration Files
+
+      testdata/configFiles/cfg3 (must exist)
+      testdata/configFiles/cfg4
+    * testdata/configFiles/cfg5 (must exist)
+    * testdata/configFiles/cfg6
+
+    Note: the files marked with a '*' should only contain parameters valid for
+          this program.
+
+  Environment Variables
+
+    The program can also be configured through environment variables prefixed
+    with:
+    A_,
+    B_ or
+    C_
+
+    Note: The prefix is stripped off and any underscores ('_') in the
+          environment variable name after the prefix will be replaced with
+          dashes ('-') when matching the parameter name.
+          
+          For instance, if the environment variables prefixes include 'XX_' an
+          environment variable called 'XX_a_b' will match a parameter called
+          'a-b'
+
+Note: these additional sources are processed in the order shown above and then
+      the command line parameters are processed. This means that a value given
+      on the command line will replace any other settings in configuration files
+      or environment variables (unless the parameter may only be set once).
+      Similarly, settings in sources higher up this page can be replaced by
+      settings in sources lower in the page

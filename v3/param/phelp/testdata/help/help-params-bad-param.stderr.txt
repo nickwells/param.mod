@@ -1,0 +1,10 @@
+PROGRAM NAME UNKNOWN: 1 error detected while setting the parameters
+      help-params [1 error]
+            error with parameter: "no-such-param" is not a parameter of this
+            program
+            parameter set at: supplied parameters:2: -help-params
+            help-groups,help,no-such-param
+
+For help with the correct use of the parameters and to see which parameters are
+available please use the '-help' parameter which will print a usage message
+

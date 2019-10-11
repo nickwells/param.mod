@@ -33,9 +33,9 @@ func (h StdHelp) ErrorHandler(w io.Writer, name string, errMap param.ErrMap) {
 
 		twc.Wrap("\nFor help with the correct use of the parameters"+
 			" and to see which parameters are available please use the '-"+
-			usageArgName+
+			helpArgName+
 			"' parameter which will print a usage message\n",
-			textIndent)
+			0)
 	}
 
 	if h.dontExitOnErrors {
@@ -62,36 +62,40 @@ func ReportErrors(w io.Writer, name string, errMap param.ErrMap) {
 	}
 	sort.Strings(paramNames)
 
-	fmt.Fprint(w, name, ": ")
-	if len(errMap) == 1 {
-		fmt.Fprint(w, "an error was")
-	} else {
-		fmt.Fprint(w, len(errMap), " errors were")
-	}
-	fmt.Fprint(w, " detected while setting the parameters:\n")
-
-	firstLineIndent := stdIndent
-	secondLineIndent := stdIndent + stdIndent
-	indent2Len := len(secondLineIndent)
-
-	paramSep := ""
+	totErrs := 0
 	for _, paramName := range paramNames {
-		fmt.Fprint(w, paramSep)
-		paramSep = firstLineIndent + "---\n"
+		totErrs += len(errMap[paramName])
+	}
+	twc.WrapPrefixed(name+": ",
+		fmt.Sprintf("%d %s detected while setting the parameters",
+			totErrs, errOrErrs(totErrs)),
+		0)
 
-		sep := ""
-		fmt.Fprint(w, firstLineIndent, paramName, "\n")
-		for _, e := range errMap[paramName] {
-			fmt.Fprint(w, sep)
-			sep = secondLineIndent + "---\n"
-
+	for _, pName := range paramNames {
+		errCount := len(errMap[pName])
+		twc.Wrap(
+			fmt.Sprintf("%s [%d %s]", pName, errCount, errOrErrs(errCount)),
+			paramIndent)
+		for i, e := range errMap[pName] {
+			prefix := ""
+			if errCount > 1 {
+				prefix = fmt.Sprintf("%d : ", i+1)
+			}
 			switch e := e.(type) {
 			case location.Err:
-				twc.Wrap(e.Msg+
-					"\nparameter set at: "+e.Loc.String(), indent2Len)
+				twc.WrapPrefixed(prefix, e.Msg+
+					"\nparameter set at: "+e.Loc.String(), descriptionIndent)
 			default:
-				twc.Wrap(e.Error(), indent2Len)
+				twc.WrapPrefixed(prefix, e.Error(), descriptionIndent)
 			}
 		}
 	}
+}
+
+// errOrErrs returns "error" or "errors" depending on the value of n
+func errOrErrs(n int) string {
+	if n == 1 {
+		return "error"
+	}
+	return "errors"
 }
