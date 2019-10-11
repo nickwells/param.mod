@@ -50,6 +50,13 @@ type paramLineParser struct {
 	eRule existenceRule
 }
 
+// cmdLineParamLineParser is a type which satisfies the LineParser interface
+// and is used to parse command-line supplied parameter files for the
+// paramSet member
+type cmdLineParamLineParser struct {
+	ps *PSet
+}
+
 // splitParamName splits the parameter name into two parts around a
 // slash. The intention is that the part before the slash is a program name,
 // or a comma-separated list of program names and the part after the slash is
@@ -83,7 +90,42 @@ func sliceContains(slc []string, s string) bool {
 	return false
 }
 
-// ParseLine processes the line.
+// ParseLine processes the line for a command-line supplied config file.
+//
+// Firstly it splits the line into two parts around an equal sign, the two
+// parts being the parameter specification and the parameter value. Then it
+// checks that if the parameter specification has a program part then the
+// program name matches the current program name. Finally it attempts to set
+// the parameter value from the parameter name and the value string which has
+// been stripped of any surrounding whitespace
+func (lp cmdLineParamLineParser) ParseLine(line string, loc *location.L) error {
+	paramParts := strings.SplitN(line, "=", 2)
+
+	progNames, paramName := splitParamName(paramParts[0])
+	if len(progNames) != 0 {
+		if !sliceContains(progNames, lp.ps.progBaseName) {
+			return nil
+		}
+	}
+
+	paramParts[0] = paramName
+
+	if len(paramParts) == 2 {
+		paramParts[1] = strings.TrimSpace(paramParts[1])
+	}
+
+	p, exists := lp.ps.nameToParam[paramName]
+	if !exists {
+		lp.ps.recordUnexpectedParam(paramName, loc)
+		return nil
+	}
+
+	p.processParam(loc, paramParts)
+
+	return nil
+}
+
+// ParseLine processes the line for a config file.
 //
 // Firstly it splits the line into two parts around an equal sign, the two
 // parts being the parameter specification and the parameter value. Then it
@@ -114,7 +156,7 @@ func (pflp paramLineParser) ParseLine(line string, loc *location.L) error {
 	return nil
 }
 
-// ParseLine processes the line.
+// ParseLine processes the line for a group config file.
 //
 // Firstly it splits the line into two parts around an equal sign, the two
 // parts being the parameter specification and the parameter value. Then it
@@ -319,26 +361,22 @@ func (ps *PSet) ConfigFilesForGroup(gName string) []ConfigFileDetails {
 	return cf
 }
 
-// isOpenErr returns true if the error is an os.PathError and the operation
-// was "open", false otherwise.
-func isOpenErr(err error) bool {
-	perr, ok := err.(*os.PathError)
-	return ok && perr.Op == "open"
-}
-
-// checkErrors will add the errors to the PSet if the error is not a
+// checkCFErrs will add the errors to the PSet if the error is not a
 // missing optional file
-func checkErrors(ps *PSet, errors []error, cf ConfigFileDetails, desc string) {
-	if len(errors) > 0 {
-		if len(errors) == 1 {
-			err := errors[0]
-			if isOpenErr(err) && cf.CfConstraint == filecheck.Optional {
-				return
-			}
-		}
-		errorName := desc + ": " + cf.Name
-		ps.errors[errorName] = append(ps.errors[errorName], errors...)
+func checkCFErrs(ps *PSet, errs []error, cf ConfigFileDetails, desc string) {
+	if len(errs) == 0 {
+		return
 	}
+
+	if len(errs) == 1 {
+		err := errs[0]
+		if errors.Is(err, os.ErrNotExist) &&
+			cf.CfConstraint == filecheck.Optional {
+			return
+		}
+	}
+	errorName := desc + ": " + cf.Name
+	ps.errors[errorName] = append(ps.errors[errorName], errs...)
 }
 
 // getParamsFromConfigFiles will construct a line parser and then parse the
@@ -353,9 +391,9 @@ func (ps *PSet) getParamsFromConfigFiles() {
 		desc := "config file for " + gName
 		fp := fileparse.New(desc, lp)
 		for _, cf := range g.ConfigFiles {
-			errors := fp.Parse(cf.Name)
+			errs := fp.Parse(cf.Name)
 
-			checkErrors(ps, errors, cf, desc)
+			checkCFErrs(ps, errs, cf, desc)
 		}
 	}
 
@@ -366,8 +404,8 @@ func (ps *PSet) getParamsFromConfigFiles() {
 		}
 		desc := "config file"
 		fp := fileparse.New(desc, lp)
-		errors := fp.Parse(cf.Name)
-		checkErrors(ps, errors, cf, desc)
+		errs := fp.Parse(cf.Name)
+		checkCFErrs(ps, errs, cf, desc)
 	}
 }
 
@@ -378,16 +416,14 @@ func ConfigFileActionFunc(loc location.L, p *ByName, paramVals []string) error {
 	if len(paramVals) != 2 {
 		return errors.New("no config file name parameter has been given")
 	}
-	p.ps.getParamsFromFile(paramVals[1], "supplied config file")
-	return nil
-}
+	name := paramVals[1]
+	desc := "supplied config file"
 
-// getParamsFromFile will construct a line parser and then parse the
-// supplied config file
-func (ps *PSet) getParamsFromFile(name, desc string) {
 	cf := ConfigFileDetails{Name: name, CfConstraint: filecheck.MustExist}
-	var lp = paramLineParser{ps: ps}
+	var lp = cmdLineParamLineParser{ps: p.ps}
 	fp := fileparse.New(desc, lp)
-	errors := fp.Parse(cf.Name)
-	checkErrors(ps, errors, cf, desc)
+	errs := fp.Parse(cf.Name)
+	checkCFErrs(p.ps, errs, cf, desc)
+
+	return nil
 }
