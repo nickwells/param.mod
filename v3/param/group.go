@@ -53,7 +53,7 @@ func (g Group) AllParamsHidden() bool {
 func (g *Group) SetHiddenCount() int {
 	g.HiddenCount = 0
 	for _, p := range g.Params {
-		if p.attributes&DontShowInStdUsage == DontShowInStdUsage {
+		if p.AttrIsSet(DontShowInStdUsage) {
 			g.HiddenCount++
 		}
 	}

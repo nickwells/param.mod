@@ -116,7 +116,7 @@ func (ps *PSet) setParsed() {
 
 func (ps *PSet) detectMandatoryParamsNotSet() {
 	for _, p := range ps.byName {
-		if p.attributes&MustBeSet == MustBeSet &&
+		if p.AttrIsSet(MustBeSet) &&
 			len(p.whereIsParamSet) == 0 {
 			ps.errors[p.name] = append(ps.errors[p.name],
 				errors.New("this parameter must be set somewhere"))

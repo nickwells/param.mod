@@ -264,12 +264,6 @@ func (ps *PSet) markAsUnused(name string, loc *location.L) {
 	ps.unusedParams[name] = append(ps.unusedParams[name], loc.String())
 }
 
-// cmdLineOnly returns true if the parameter should only be set from the
-// command line.
-func (ps *PSet) cmdLineOnly(p *ByName) bool {
-	return p.attributes&CommandLineOnly == CommandLineOnly
-}
-
 // recordCmdLineOnlyErr records as an error the attempt to set a command-line
 // only parameter from a non-command line source
 func (ps *PSet) recordCmdLineOnlyErr(paramName string, loc *location.L) {
@@ -327,7 +321,7 @@ func (ps *PSet) setValue(paramParts []string, loc *location.L, eRule existenceRu
 		return
 	}
 
-	if ps.cmdLineOnly(p) {
+	if p.AttrIsSet(CommandLineOnly) {
 		ps.recordCmdLineOnlyErr(paramName, loc)
 		return
 	}
@@ -440,4 +434,22 @@ func (ps *PSet) GetGroups() []*Group {
 	})
 
 	return grpParams
+}
+
+// HasAltSources returns true if there are any alternative sources
+// (configuration files, either general or group-specific, or environment
+// variable prefixes) false otherwise
+func (ps PSet) HasAltSources() bool {
+	if len(ps.configFiles) > 0 {
+		return true
+	}
+	if len(ps.envPrefixes) > 0 {
+		return true
+	}
+	for _, g := range ps.groups {
+		if len(g.ConfigFiles) > 0 {
+			return true
+		}
+	}
+	return false
 }
