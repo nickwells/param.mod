@@ -166,7 +166,7 @@ func addConfigFiles(ps *param.PSet, configFiles []configFileDetails) {
 	}
 }
 
-func TestHelp(t *testing.T) {
+func TestHelp(t *testing.T) { //nolint: gocyclo
 	gfc := testhelper.GoldenFileCfg{
 		DirNames: []string{testDataDir, helpSubDir},
 		Sfx:      "txt",
