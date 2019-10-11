@@ -252,7 +252,7 @@ func TestParamAddPos(t *testing.T) { // nolint: gocyclo
 				},
 			},
 			ExpPanic: testhelper.MkExpPanic(
-				"error setting the options for positional parameter 0:",
+				`Couldn't set the options for positional parameter 1 ("ppi1"):`,
 				"The param set has 1 non-positional parameters.",
 				" It cannot also have a terminal positional parameter as"+
 					" the non-positional parameters will never be used."),
