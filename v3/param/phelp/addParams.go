@@ -126,7 +126,8 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		"print a help message explaining what the program does and"+
 			" the available parameters."+
 			"\n\n"+
-			"The parameters are arranged into named groups which can"+
+			"The parameters are arranged into named groups"+
+			" (this parameter is in '"+groupName+"') which can"+
 			" be selected or suppressed through other help parameters."+
 			" Within each group the parameters are displayed in"+
 			" alphabetical order."+

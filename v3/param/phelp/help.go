@@ -312,7 +312,9 @@ func (h StdHelp) printGroupDetails(twc *twrap.TWConf, pg *param.Group) {
 	if !h.showFullHelp {
 		return
 	}
-	twc.Wrap(pg.Desc, textIndent)
+	if pg.Desc != "" {
+		twc.Wrap(pg.Desc, textIndent)
+	}
 	printGroupConfigFile(twc, pg)
 	twc.Println() //nolint: errcheck
 }

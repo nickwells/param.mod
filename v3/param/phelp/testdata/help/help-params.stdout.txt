@@ -10,10 +10,11 @@
             print a help message explaining what the program does and the
             available parameters.
             
-            The parameters are arranged into named groups which can be selected
-            or suppressed through other help parameters. Within each group the
-            parameters are displayed in alphabetical order. To see all the
-            available parameter groups use the help-groups parameter.
+            The parameters are arranged into named groups (this parameter is in
+            'common.params-help') which can be selected or suppressed through
+            other help parameters. Within each group the parameters are
+            displayed in alphabetical order. To see all the available parameter
+            groups use the help-groups parameter.
             
             Optional parameters are shown surrounded by square brackets
             [like-this]. Parameters which take a value are shown with a
