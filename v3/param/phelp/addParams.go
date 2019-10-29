@@ -213,6 +213,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		"when printing the help message only show help for parameters"+
 			" in the listed groups."+exitIfSet,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
+		param.AltName("help-groups-in"),
 		param.PostAction(setStyle(h, paramsInGroups)),
 		param.PostAction(styleCounterAF),
 		param.PostAction(checkGroups(h, ps)),
@@ -228,6 +229,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		"when printing the help message don't show help for parameters"+
 			" in the listed groups."+exitIfSet,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
+		param.AltName("help-groups-not-in"),
 		param.PostAction(setStyle(h, paramsNotInGroups)),
 		param.PostAction(styleCounterAF),
 		param.PostAction(checkGroups(h, ps)),
@@ -240,6 +242,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		"when printing the help message only show help for the"+
 			" listed parameters"+exitIfSet,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
+		param.AltName("help-p"),
 		param.PostAction(setStyle(h, paramsByName)),
 		param.PostAction(styleCounterAF),
 		param.PostAction(checkParams(h, ps)),

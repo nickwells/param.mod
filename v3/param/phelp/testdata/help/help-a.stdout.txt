@@ -48,7 +48,7 @@ common.params-help [ 10 parameters, 9 hidden ]
             which you want to select for closer examination.
             
             The program will exit after the parameters are processed.
-      [-help-groups-in-list=...]
+      [-help-groups-in-list=...] or [-help-groups-in=...]
             when printing the help message only show help for parameters in the
             listed groups.
             
@@ -56,7 +56,7 @@ common.params-help [ 10 parameters, 9 hidden ]
             Allowed values: a list of string values separated by ',' subject to
                             checks
             Initial value:
-      [-help-groups-not-in-list=...]
+      [-help-groups-not-in-list=...] or [-help-groups-not-in=...]
             when printing the help message don't show help for parameters in the
             listed groups.
             
@@ -69,7 +69,7 @@ common.params-help [ 10 parameters, 9 hidden ]
             configuration files and environment prefixes.
             
             The program will exit after the parameters are processed.
-      [-help-params=...]
+      [-help-params=...] or [-help-p=...]
             when printing the help message only show help for the listed
             parameters
             

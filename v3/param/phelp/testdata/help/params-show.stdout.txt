@@ -3,10 +3,10 @@ common.params-help [ 10 parameters, 9 hidden ]
 ---    : help-all-short or help-as or help-sa
 ---    : help-full or help-a or help-all or help-show-all or help-show-hidden
 ---    : help-groups or help-show-groups
----    : help-groups-in-list
----    : help-groups-not-in-list
+---    : help-groups-in-list or help-groups-in
+---    : help-groups-not-in-list or help-groups-not-in
 ---    : help-param-sources or help-show-sources
----    : help-params
+---    : help-params or help-p
 ---    : help-program-description or help-prog-desc or help-show-prog-desc
 Set    : help-summary or help-s or help-short
              at : supplied parameters:3: -help-s
