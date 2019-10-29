@@ -7,7 +7,7 @@ require (
 	github.com/nickwells/location.mod v1.2.5
 	github.com/nickwells/strdist.mod v1.0.10
 	github.com/nickwells/testhelper.mod v1.3.7
-	github.com/nickwells/twrap.mod v1.2.1
+	github.com/nickwells/twrap.mod v1.3.0
 )
 
 go 1.13

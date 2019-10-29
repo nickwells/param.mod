@@ -12,5 +12,5 @@ github.com/nickwells/strdist.mod v1.0.10 h1:mzZcl/hSCOSZ3N5/pGyRZ/rrBUvb9164osuc
 github.com/nickwells/strdist.mod v1.0.10/go.mod h1:AFgwKOF2GcWbNkO+XERn2WqmtjSViB1Lz+1ZWWzH7NQ=
 github.com/nickwells/testhelper.mod v1.3.7 h1:JZ5ut/AcF0F44HULeHKxzccq2eZizmfANamEVqjfax4=
 github.com/nickwells/testhelper.mod v1.3.7/go.mod h1:Ct/U2PjL0n9hGc+US6uR/s4NxSRI33NM+0ZkrDkG0XI=
-github.com/nickwells/twrap.mod v1.2.1 h1:jBhI04cXCNerkbP4uuW4vqmXakIQpjixwXa/CWn3/pQ=
-github.com/nickwells/twrap.mod v1.2.1/go.mod h1:73OYoyYwzk9DDw37SPqXsSiaNfQGzU3ApoytW2cf8LE=
+github.com/nickwells/twrap.mod v1.3.0 h1:njmyZdGzkWdMNDRM5h/NST8SFdYzSZoZk5uKToU6YJc=
+github.com/nickwells/twrap.mod v1.3.0/go.mod h1:73OYoyYwzk9DDw37SPqXsSiaNfQGzU3ApoytW2cf8LE=
