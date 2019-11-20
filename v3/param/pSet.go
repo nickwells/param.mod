@@ -50,6 +50,8 @@ type PSet struct {
 	finalChecks  []FinalCheckFunc
 	envPrefixes  []string
 	configFiles  []ConfigFileDetails
+	examples     []Example
+	references   []Reference
 
 	remainingParams        []string
 	terminalParam          string

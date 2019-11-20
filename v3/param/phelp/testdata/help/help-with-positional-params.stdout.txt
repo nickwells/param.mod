@@ -13,7 +13,7 @@ where
             Allowed values: (see parameter: pos1)
             Initial value: 102
 ---------------
-common.params-help [ 10 parameters, 9 hidden ]
+common.params-help [ 12 parameters, 11 hidden ]
     These are parameters which control whether and how to print a message
     explaining how the program can be used.
 
@@ -25,7 +25,7 @@ common.params-help [ 10 parameters, 9 hidden ]
             'common.params-help') which can be selected or suppressed through
             other help parameters. Within each group the parameters are
             displayed in alphabetical order. To see all the available parameter
-            groups use the help-groups parameter.
+            groups use the help-show-groups parameter.
             
             Optional parameters are shown surrounded by square brackets
             [like-this]. Parameters which take a value are shown with a
@@ -37,7 +37,7 @@ common.params-help [ 10 parameters, 9 hidden ]
             
             For a shorter help message use the help-summary parameter
             
-            The program will exit after the parameters are processed.
+            The program will exit after the help message is shown.
 ---------------
 test-group1 [ 6 parameters, 1 hidden ]
     test parameters.

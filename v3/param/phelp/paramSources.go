@@ -113,7 +113,7 @@ func (h StdHelp) showAltSources(twc *twrap.TWConf, ps *param.PSet) bool {
 		return false
 	}
 
-	twc.Println("\nAlternative Sources") //nolint: errcheck
+	twc.Println("Alternative Sources") //nolint: errcheck
 
 	twc.Println() //nolint: errcheck
 	twc.Wrap("This program may also be configured through the"+

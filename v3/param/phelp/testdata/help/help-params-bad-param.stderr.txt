@@ -1,5 +1,5 @@
 PROGRAM NAME UNKNOWN: 1 error detected while setting the parameters
-      help-params [1 error]
+      help-show-params [1 error]
             error with parameter: "no-such-param" is not a parameter of this
             program
             parameter set at: supplied parameters:2: -help-params

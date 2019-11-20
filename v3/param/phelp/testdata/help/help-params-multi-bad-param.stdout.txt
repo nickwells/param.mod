@@ -1,11 +1,11 @@
-      [-help-groups] or [-help-show-groups]
+      [-help-show-groups] or [-help-groups]
             print the parameter groups that have been set up. Do not show the
             individual parameters in those groups.
             
             This lets you see just the available groups of parameters and choose
             which you want to select for closer examination.
             
-            The program will exit after the parameters are processed.
+            The program will exit after the help message is shown.
       [-help] or [-usage]
             print a help message explaining what the program does and the
             available parameters.
@@ -14,7 +14,7 @@
             'common.params-help') which can be selected or suppressed through
             other help parameters. Within each group the parameters are
             displayed in alphabetical order. To see all the available parameter
-            groups use the help-groups parameter.
+            groups use the help-show-groups parameter.
             
             Optional parameters are shown surrounded by square brackets
             [like-this]. Parameters which take a value are shown with a
@@ -26,4 +26,4 @@
             
             For a shorter help message use the help-summary parameter
             
-            The program will exit after the parameters are processed.
+            The program will exit after the help message is shown.

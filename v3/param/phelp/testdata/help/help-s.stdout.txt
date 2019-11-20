@@ -1,6 +1,6 @@
 Usage: PROGRAM NAME UNKNOWN ...
 ---------------
-common.params-help [ 10 parameters, 9 hidden ]
+common.params-help [ 12 parameters, 11 hidden ]
       [-help] or [-usage]
 ---------------
 test-group1 [ 6 parameters, 1 hidden ]

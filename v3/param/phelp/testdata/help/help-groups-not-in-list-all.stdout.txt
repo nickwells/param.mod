@@ -1,4 +1,4 @@
-common.params-help [ 10 parameters, 9 hidden ]
+common.params-help [ 12 parameters, 11 hidden ]
     These are parameters which control whether and how to print a message
     explaining how the program can be used.
 
@@ -10,7 +10,7 @@ common.params-help [ 10 parameters, 9 hidden ]
             'common.params-help') which can be selected or suppressed through
             other help parameters. Within each group the parameters are
             displayed in alphabetical order. To see all the available parameter
-            groups use the help-groups parameter.
+            groups use the help-show-groups parameter.
             
             Optional parameters are shown surrounded by square brackets
             [like-this]. Parameters which take a value are shown with a
@@ -22,33 +22,25 @@ common.params-help [ 10 parameters, 9 hidden ]
             
             For a shorter help message use the help-summary parameter
             
-            The program will exit after the parameters are processed.
+            The program will exit after the help message is shown.
       [-help-all-short] or [-help-as] or [-help-sa]
             print a summarised help message giving all the valid parameters.
             This is the equivalent of giving both the help-full and the
             help-summary parameters.
             
-            The program will exit after the parameters are processed.
+            The program will exit after the help message is shown.
       [-help-full] or [-help-a] or [-help-all] or [-help-show-all] or
-      [-help-show-hidden]
+         [-help-show-hidden]
             show all the parameters when printing the help message. Parameters,
             including this one, which would not normally be shown as part of the
             help message will be printed.
             
-            The program will exit after the parameters are processed.
-      [-help-groups] or [-help-show-groups]
-            print the parameter groups that have been set up. Do not show the
-            individual parameters in those groups.
-            
-            This lets you see just the available groups of parameters and choose
-            which you want to select for closer examination.
-            
-            The program will exit after the parameters are processed.
+            The program will exit after the help message is shown.
       [-help-groups-in-list=...] or [-help-groups-in=...]
             when printing the help message only show help for parameters in the
             listed groups.
             
-            The program will exit after the parameters are processed.
+            The program will exit after the help message is shown.
             Allowed values: a list of string values separated by ',' subject to
                             checks
             Initial value:
@@ -56,33 +48,52 @@ common.params-help [ 10 parameters, 9 hidden ]
             when printing the help message don't show help for parameters in the
             listed groups.
             
-            The program will exit after the parameters are processed.
+            The program will exit after the help message is shown.
             Allowed values: (see parameter: help-groups-in-list)
             Initial value:
-      [-help-param-sources] or [-help-show-sources]
+      [-help-show-desc] or [-help-show-prog-desc] or [-help-prog-desc] or
+         [-help-program-description]
+            when printing the help message only show the program description
+            
+            The program will exit after the help message is shown.
+      [-help-show-examples] or [-help-examples]
+            when printing the help message only show the examples, if any.
+            
+            The program will exit after the help message is shown.
+      [-help-show-groups] or [-help-groups]
+            print the parameter groups that have been set up. Do not show the
+            individual parameters in those groups.
+            
+            This lets you see just the available groups of parameters and choose
+            which you want to select for closer examination.
+            
+            The program will exit after the help message is shown.
+      [-help-show-params=...] or [-help-p=...] or [-help-params=...]
+            when printing the help message only show help for the listed
+            parameters
+            
+            The program will exit after the help message is shown.
+            Allowed values: a list of string values separated by ','
+            Initial value:
+      [-help-show-references] or [-help-show-refs] or [-help-refs] or
+         [-help-references] or [-help-see-also] or [-help-show-see-also]
+            when printing the help message only show the references (the See
+            Also section), if any.
+            
+            The program will exit after the help message is shown.
+      [-help-show-sources] or [-help-param-sources]
             when printing the help message only show the places (other than the
             command line) where parameters may be set. This will list any
             configuration files and environment prefixes.
             
-            The program will exit after the parameters are processed.
-      [-help-params=...] or [-help-p=...]
-            when printing the help message only show help for the listed
-            parameters
-            
-            The program will exit after the parameters are processed.
-            Allowed values: a list of string values separated by ','
-            Initial value:
-      [-help-program-description] or [-help-prog-desc] or [-help-show-prog-desc]
-            when printing the help message only show the program description
-            
-            The program will exit after the parameters are processed.
+            The program will exit after the help message is shown.
       [-help-summary] or [-help-s] or [-help-short]
             print a summary of the help message. Whether the hidden parameters
             are shown is determined by the help-full parameter. To see all the
             parameters (including hidden ones) in a summarised form you will
             need to give both this parameter and the help-full parameter.
             
-            The program will exit after the parameters are processed.
+            The program will exit after the help message is shown.
 ---------------
 common.params-params [ 6 parameters, all hidden ]
     These are the parameter-handling parameters. There are parameters for

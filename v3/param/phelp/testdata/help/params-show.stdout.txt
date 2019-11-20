@@ -1,13 +1,15 @@
-common.params-help [ 10 parameters, 9 hidden ]
+common.params-help [ 12 parameters, 11 hidden ]
 ---    : help or usage
 ---    : help-all-short or help-as or help-sa
 ---    : help-full or help-a or help-all or help-show-all or help-show-hidden
----    : help-groups or help-show-groups
 ---    : help-groups-in-list or help-groups-in
 ---    : help-groups-not-in-list or help-groups-not-in
----    : help-param-sources or help-show-sources
----    : help-params or help-p
----    : help-program-description or help-prog-desc or help-show-prog-desc
+---    : help-show-desc or help-show-prog-desc or help-prog-desc or help-program-description
+---    : help-show-examples or help-examples
+---    : help-show-groups or help-groups
+---    : help-show-params or help-p or help-params
+---    : help-show-references or help-show-refs or help-refs or help-references or help-see-also or help-show-see-also
+---    : help-show-sources or help-param-sources
 Set    : help-summary or help-s or help-short
              at : supplied parameters:3: -help-s
 common.params-params [ 6 parameters, all hidden ]
@@ -38,7 +40,7 @@ Unused Parameters:  1
 
 Usage: PROGRAM NAME UNKNOWN ...
 ---------------
-common.params-help [ 10 parameters, 9 hidden ]
+common.params-help [ 12 parameters, 11 hidden ]
       [-help] or [-usage]
 ---------------
 test-group1 [ 6 parameters, 1 hidden ]

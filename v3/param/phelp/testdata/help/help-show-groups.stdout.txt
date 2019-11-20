@@ -1,6 +1,6 @@
 
 Parameter groups
-common.params-help [ 10 parameters, 9 hidden ]
+common.params-help [ 12 parameters, 11 hidden ]
     These are parameters which control whether and how to print a message
     explaining how the program can be used.
 

@@ -11,6 +11,7 @@ import (
 )
 
 const paramIndent = 6
+const paramLine2Indent = 9
 const descriptionIndent = 12
 const textIndent = 4
 
@@ -106,6 +107,16 @@ func (h StdHelp) Help(ps *param.PSet, messages ...string) { //nolint: gocyclo
 					" be set through the command line",
 				textIndent)
 		}
+
+	case examplesOnly:
+		if !h.showExamples(twc, ps) {
+			twc.Wrap("There are no examples", textIndent)
+		}
+
+	case referencesOnly:
+		if !h.showReferences(twc, ps) {
+			twc.Wrap("There are no references", textIndent)
+		}
 	}
 
 	if exitAfterHelp {
@@ -134,7 +145,18 @@ func (h StdHelp) printStdUsage(twc *twrap.TWConf, ps *param.PSet) {
 		h.printSetValNote(twc)
 		if ps.HasAltSources() {
 			printMinorSeparator(twc)
+			twc.Println() //nolint: errcheck
 			h.showAltSources(twc, ps)
+		}
+		if ps.HasReferences() {
+			printMinorSeparator(twc)
+			twc.Println() //nolint: errcheck
+			h.showReferences(twc, ps)
+		}
+		if ps.HasExamples() {
+			printMinorSeparator(twc)
+			twc.Println() //nolint: errcheck
+			h.showExamples(twc, ps)
 		}
 	}
 }
@@ -164,7 +186,7 @@ func (h StdHelp) printParamUsage(twc *twrap.TWConf, p *param.ByName) {
 		paramNames += sep + prefix + altParamName + suffix
 		sep = " or "
 	}
-	twc.Wrap(paramNames, paramIndent)
+	twc.Wrap2Indent(paramNames, paramIndent, paramLine2Indent)
 
 	if !h.showFullHelp {
 		return

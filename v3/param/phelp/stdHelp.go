@@ -25,6 +25,8 @@ const (
 	groupNamesOnly
 	progDescOnly
 	altSourcesOnly
+	examplesOnly
+	referencesOnly
 )
 
 // StdHelp implements the Helper interface. It adds the standard arguments

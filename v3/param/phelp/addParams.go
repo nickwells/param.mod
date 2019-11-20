@@ -17,7 +17,7 @@ const (
 	helpArgName        = "help"
 	helpFullArgName    = "help-full"
 	helpSummaryArgName = "help-summary"
-	helpGroupsArgName  = "help-groups"
+	helpGroupsArgName  = "help-show-groups"
 )
 
 // groupNamePfx is the name of the group in which all the param package
@@ -25,8 +25,12 @@ const (
 // the same name (it'll be confusing)
 const groupNamePfx = "common.params"
 
-const exitIfSet = "\n\nThe program will exit" +
-	" after the parameters are processed."
+const (
+	exitAfterParamProcessing = "\n\nThe program will exit" +
+		" after the parameters are processed."
+	exitAfterHelpMessage = "\n\nThe program will exit" +
+		" after the help message is shown."
+)
 
 // AddParams will add the help parameters into the parameter set
 func (h *StdHelp) AddParams(ps *param.PSet) {
@@ -49,7 +53,8 @@ func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
 		"after all the parameters are set a message will be printed"+
 			" showing where they were set. This can be useful for"+
 			" debugging (especially if there are several config"+
-			" files in use)."+exitIfSet,
+			" files in use)."+
+			exitAfterParamProcessing,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.GroupName(groupName))
 
@@ -66,7 +71,8 @@ func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
 			" so any command line parameter which is not recognised is"+
 			" treated as an error. Setting this parameter will let you"+
 			" check for spelling mistakes in parameters"+
-			" that you've set in your alternative sources."+exitIfSet,
+			" that you've set in your alternative sources."+
+			exitAfterParamProcessing,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.GroupName(groupName))
 
@@ -144,7 +150,8 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			" parameter."+
 			"\n\n"+
 			"For a shorter help message use the "+helpSummaryArgName+
-			" parameter"+exitIfSet,
+			" parameter"+
+			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly),
 		param.AltName("usage"),
 		param.PostAction(setStyle(h, stdHelp)),
@@ -154,7 +161,8 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 	ps.Add(helpFullArgName, psetter.Nil{},
 		" show all the parameters when printing the help message."+
 			" Parameters, including this one, which would not normally be"+
-			" shown as part of the help message will be printed."+exitIfSet,
+			" shown as part of the help message will be printed."+
+			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.AltName("help-a"),
 		param.AltName("help-all"),
@@ -170,7 +178,8 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			" determined by the "+helpFullArgName+" parameter."+
 			" To see all the parameters (including hidden ones) in"+
 			" a summarised form you will need to give both this parameter"+
-			" and the "+helpFullArgName+" parameter."+exitIfSet,
+			" and the "+helpFullArgName+" parameter."+
+			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.AltName("help-s"),
 		param.AltName("help-short"),
@@ -181,7 +190,8 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 	ps.Add("help-all-short", psetter.Nil{},
 		"print a summarised help message giving all the valid parameters."+
 			" This is the equivalent of giving both the "+helpFullArgName+
-			" and the "+helpSummaryArgName+" parameters."+exitIfSet,
+			" and the "+helpSummaryArgName+" parameters."+
+			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.AltName("help-as"),
 		param.AltName("help-sa"),
@@ -196,9 +206,10 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			"\n\n"+
 			"This lets you see just the available groups of"+
 			" parameters and choose"+
-			" which you want to select for closer examination."+exitIfSet,
+			" which you want to select for closer examination."+
+			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.AltName("help-show-groups"),
+		param.AltName("help-groups"),
 		param.PostAction(setStyle(h, groupNamesOnly)),
 		param.PostAction(styleCounterAF),
 		param.GroupName(groupName))
@@ -211,7 +222,8 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			},
 		},
 		"when printing the help message only show help for parameters"+
-			" in the listed groups."+exitIfSet,
+			" in the listed groups."+
+			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.AltName("help-groups-in"),
 		param.PostAction(setStyle(h, paramsInGroups)),
@@ -227,7 +239,8 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			},
 		},
 		"when printing the help message don't show help for parameters"+
-			" in the listed groups."+exitIfSet,
+			" in the listed groups."+
+			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.AltName("help-groups-not-in"),
 		param.PostAction(setStyle(h, paramsNotInGroups)),
@@ -235,37 +248,66 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		param.PostAction(checkGroups(h, ps)),
 		param.GroupName(groupName))
 
-	ps.Add("help-params",
+	ps.Add("help-show-params",
 		psetter.StrList{
 			Value: &h.paramsToShow,
 		},
 		"when printing the help message only show help for the"+
-			" listed parameters"+exitIfSet,
+			" listed parameters"+
+			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.AltName("help-p"),
+		param.AltName("help-params"),
 		param.PostAction(setStyle(h, paramsByName)),
 		param.PostAction(styleCounterAF),
 		param.PostAction(checkParams(h, ps)),
 		param.GroupName(groupName))
 
-	ps.Add("help-program-description", psetter.Nil{},
+	ps.Add("help-show-desc", psetter.Nil{},
 		"when printing the help message only show the"+
-			" program description"+exitIfSet,
+			" program description"+
+			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.AltName("help-prog-desc"),
 		param.AltName("help-show-prog-desc"),
+		param.AltName("help-prog-desc"),
+		param.AltName("help-program-description"),
 		param.PostAction(setStyle(h, progDescOnly)),
 		param.PostAction(styleCounterAF),
 		param.GroupName(groupName))
 
-	ps.Add("help-param-sources", psetter.Nil{},
+	ps.Add("help-show-sources", psetter.Nil{},
 		"when printing the help message only show the"+
 			" places (other than the command line) where"+
 			" parameters may be set. This will list any"+
-			" configuration files and environment prefixes."+exitIfSet,
+			" configuration files and environment prefixes."+
+			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.AltName("help-show-sources"),
+		param.AltName("help-param-sources"),
 		param.PostAction(setStyle(h, altSourcesOnly)),
+		param.PostAction(styleCounterAF),
+		param.GroupName(groupName))
+
+	ps.Add("help-show-examples", psetter.Nil{},
+		"when printing the help message only show the"+
+			" examples, if any."+
+			exitAfterHelpMessage,
+		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
+		param.AltName("help-examples"),
+		param.PostAction(setStyle(h, examplesOnly)),
+		param.PostAction(styleCounterAF),
+		param.GroupName(groupName))
+
+	ps.Add("help-show-references", psetter.Nil{},
+		"when printing the help message only show the"+
+			" references (the See Also section), if any."+
+			exitAfterHelpMessage,
+		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
+		param.AltName("help-show-refs"),
+		param.AltName("help-refs"),
+		param.AltName("help-references"),
+		param.AltName("help-see-also"),
+		param.AltName("help-show-see-also"),
+		param.PostAction(setStyle(h, referencesOnly)),
 		param.PostAction(styleCounterAF),
 		param.GroupName(groupName))
 
