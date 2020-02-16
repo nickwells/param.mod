@@ -47,11 +47,17 @@ func (rh dfltRemHandler) HandleRemainder(ps *PSet, loc *location.L) {
 	}
 	args := ""
 	sep := "'"
+	close := "'"
 	const maxLen = 20
 	for i, r := range ps.Remainder() {
 		charsToTake := int(math.Min(
 			float64(len(r)),
 			float64(maxLen-len(args)-len(sep))))
+		if charsToTake <= 0 {
+			args += "' ..."
+			close = ""
+			break
+		}
 		args += sep + r[:charsToTake]
 		sep = "' '"
 		if charsToTake < len(r) {
@@ -59,9 +65,11 @@ func (rh dfltRemHandler) HandleRemainder(ps *PSet, loc *location.L) {
 			if i < remCount-1 {
 				args += " ..."
 			}
+			close = ""
 			break
 		}
 	}
+	args += close
 
 	var err error
 	if remCount == 1 {
@@ -86,5 +94,4 @@ type NullRemHandler struct{}
 // this as the RemHandler for the PSet then you will have to handle the
 // remaining arguments after the program has been called by calling the
 // Remainder method on the PSet.
-func (rh NullRemHandler) HandleRemainder(ps *PSet, loc *location.L) {
-}
+func (rh NullRemHandler) HandleRemainder(ps *PSet, loc *location.L) {}
