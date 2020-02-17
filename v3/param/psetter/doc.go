@@ -5,7 +5,7 @@ set parameter values of a program.
 Each type satisfies the param.Setter interface. These can be used to supply
 the second argument of a PSet Add or AddByPos method - the action
 associated with the parameter. When the parameter is found while parsing the
-params the Set method will be called.
+params the appropriate Set method will be called.
 
 A typical Setter is used to set the value of a parameter to the program.
 For example below, a bool variable
@@ -19,7 +19,9 @@ is found among the command line arguments:
     ps, err := paramset.New()
     p := ps.Add("exit-on-errors",
         psetter.Bool{Value: &exitOnErrors},
-        "Errors make the program exit if this flag is set to true",
-        param.GroupName("MyTestGroup"))
+        "Errors make the program exit if this flag is set to true")
+
+It is expected that the most common use of this package will be to pass
+instances of the various setters as a parameter to the Add(...) method.
 */
 package psetter
