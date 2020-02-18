@@ -62,40 +62,59 @@ func ReportErrors(w io.Writer, name string, errMap param.ErrMap) {
 	}
 	sort.Strings(paramNames)
 
-	totErrs := 0
-	for _, paramName := range paramNames {
-		totErrs += len(errMap[paramName])
-	}
-	twc.WrapPrefixed(name+": ",
-		fmt.Sprintf("%d %s detected while setting the parameters",
-			totErrs, errOrErrs(totErrs)),
-		0)
+	reportErrorCount(twc, name, errMap)
 
 	for _, pName := range paramNames {
-		errCount := len(errMap[pName])
-		twc.Wrap(
-			fmt.Sprintf("%s [%d %s]", pName, errCount, errOrErrs(errCount)),
-			paramIndent)
-		for i, e := range errMap[pName] {
-			prefix := ""
-			if errCount > 1 {
-				prefix = fmt.Sprintf("%d : ", i+1)
-			}
-			switch e := e.(type) {
-			case location.Err:
-				twc.WrapPrefixed(prefix, e.Msg+
-					"\nparameter set at: "+e.Loc.String(), descriptionIndent)
-			default:
-				twc.WrapPrefixed(prefix, e.Error(), descriptionIndent)
-			}
-		}
+		reportParamError(twc, pName, errMap[pName])
 	}
 }
 
-// errOrErrs returns "error" or "errors" depending on the value of n
-func errOrErrs(n int) string {
-	if n == 1 {
-		return "error"
+// reportErrorCount calculates the number of errors in errMap and reports it
+func reportErrorCount(twc *twrap.TWConf, name string, errMap param.ErrMap) {
+	totErrs := 0
+	paramsWithErrs := len(errMap)
+	for _, errs := range errMap {
+		totErrs += len(errs)
 	}
-	return "errors"
+	if totErrs == 1 {
+		twc.WrapPrefixed(name+": ",
+			"an error was detected while setting the parameters:",
+			0)
+	} else if paramsWithErrs == 1 {
+		twc.WrapPrefixed(name+": ",
+			fmt.Sprintf("%d errors were detected while setting the parameters:",
+				totErrs),
+			0)
+	} else {
+		twc.WrapPrefixed(name+": ",
+			fmt.Sprintf(
+				"%d errors with %d parameters were detected"+
+					" while setting the parameters:",
+				totErrs, paramsWithErrs),
+			0)
+	}
+}
+
+// reportParamError reports all the errors for an individual parameter
+func reportParamError(twc *twrap.TWConf, pName string, errs []error) {
+	errCount := len(errs)
+	if errCount == 1 {
+		twc.Wrap(pName, paramIndent)
+	} else {
+		twc.Wrap(fmt.Sprintf("%s - %d errors:", pName, errCount),
+			paramIndent)
+	}
+	for i, e := range errs {
+		prefix := ""
+		if errCount > 1 {
+			prefix = fmt.Sprintf("%d : ", i+1)
+		}
+		switch e := e.(type) {
+		case location.Err:
+			twc.WrapPrefixed(prefix, e.Msg+
+				"\nparameter set at: "+e.Loc.String(), descriptionIndent)
+		default:
+			twc.WrapPrefixed(prefix, e.Error(), descriptionIndent)
+		}
+	}
 }
