@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"fmt"
 	"os"
+	"sort"
 	"strings"
 
 	"github.com/nickwells/param.mod/v3/param"
@@ -143,20 +144,30 @@ func (h StdHelp) printStdUsage(twc *twrap.TWConf, ps *param.PSet) {
 	h.printByNameParams(twc, ps)
 	if h.showFullHelp {
 		h.printSetValNote(twc)
+
 		if ps.HasAltSources() {
 			printMinorSeparator(twc)
-			twc.Println() //nolint: errcheck
-			h.showAltSources(twc, ps)
+			twc.Wrap(
+				"Some parameters may also be set from alternative sources"+
+					" such as configuration files or environment variables."+
+					" For more details use the "+helpAltSourcesArgName+
+					" parameter.",
+				0)
 		}
 		if ps.HasReferences() {
 			printMinorSeparator(twc)
-			twc.Println() //nolint: errcheck
-			h.showReferences(twc, ps)
+			twc.Wrap(
+				"References to other sources of information are available."+
+					" To see them use the "+helpShowRefsArgName+" parameter.",
+				0)
 		}
 		if ps.HasExamples() {
 			printMinorSeparator(twc)
-			twc.Println() //nolint: errcheck
-			h.showExamples(twc, ps)
+			twc.Wrap(
+				"Examples are available."+
+					" To see them use the "+helpShowExamplesArgName+
+					" parameter.",
+				0)
 		}
 	}
 }
@@ -200,10 +211,23 @@ func (h StdHelp) printParamUsage(twc *twrap.TWConf, p *param.ByName) {
 			descriptionIndent)
 	}
 	if p.AttrIsSet(param.CommandLineOnly) && p.PSet().HasAltSources() {
-		twc.Wrap(
-			"\nThis parameter value may only be given on the command line"+
-				" not in configuration files or as an environment variable.",
-			descriptionIndent)
+		text := "\nThis parameter may only be given on the command line, not "
+		var sources []string
+		if p.PSet().HasGlobalConfigFiles() {
+			sources = append(sources, "in the configuration files")
+		} else {
+			grpCF := p.PSet().ConfigFilesForGroup(p.GroupName())
+			if len(grpCF) > 0 {
+				sources = append(sources,
+					"in the configuration files for this group")
+			}
+		}
+		if p.PSet().HasEnvPrefixes() {
+			sources = append(sources, "as an environment variable")
+		}
+		if len(sources) > 0 {
+			twc.Wrap(text+strings.Join(sources, " or "), descriptionIndent)
+		}
 	}
 	h.showAllowedValsByName(twc, p)
 	if p.ValueReq() == param.None {
@@ -257,10 +281,12 @@ func (h StdHelp) showAllowedValues(twc *twrap.TWConf, pName, aval string, avalMa
 // printParamsByName will print just the named parameters
 func (h StdHelp) printParamsByName(twc *twrap.TWConf, ps *param.PSet) {
 	var shown = map[string]bool{}
+	var badParams = []string{}
 	for _, pName := range h.paramsToShow {
 		trimmedName := strings.TrimLeft(pName, "-")
 		p, err := ps.GetParamByName(trimmedName)
 		if err != nil {
+			badParams = append(badParams, pName)
 			continue
 		}
 
@@ -269,6 +295,18 @@ func (h StdHelp) printParamsByName(twc *twrap.TWConf, ps *param.PSet) {
 		}
 		h.printParamUsage(twc, p)
 		shown[p.Name()] = true
+	}
+	switch len(badParams) {
+	case 0:
+		return
+	case 1:
+		twc.Wrap("parameter: "+badParams[0]+
+			" is not a parameter of this program",
+			0)
+	default:
+		twc.Wrap("The following are not parameters of this program: "+
+			strings.Join(badParams, ", "),
+			0)
 	}
 }
 
@@ -370,7 +408,44 @@ func (h StdHelp) printByNameParams(twc *twrap.TWConf, ps *param.PSet) {
 	}
 }
 
+// hasBadGroupNames checks the selected group names for validity and reports
+// any unknown names. It returns true if any bad names were found
+func (h StdHelp) hasBadGroupNames(twc *twrap.TWConf, ps *param.PSet) bool {
+	var badGroupNames = []string{}
+
+	for name := range h.groupsSelected {
+		if ps.GetGroupByName(name) == nil {
+			badGroupNames = append(badGroupNames, name)
+		}
+	}
+
+	if len(badGroupNames) == 0 {
+		return false
+	}
+	if len(badGroupNames) == 1 {
+		twc.Wrap(badGroupNames[0]+
+			" : is not a valid parameter group name", 0)
+	} else {
+		sort.Strings(badGroupNames)
+		twc.Println("The following are not valid parameter group names:")
+		for _, bgn := range badGroupNames {
+			twc.Wrap(bgn, textIndent)
+		}
+	}
+	twc.Println("possible group names are:")
+	for _, pg := range ps.GetGroups() {
+		if !h.groupsSelected[pg.Name] {
+			twc.Wrap(pg.Name, textIndent)
+		}
+	}
+	return true
+}
+
 func (h StdHelp) printParamsInGroups(twc *twrap.TWConf, ps *param.PSet) {
+	if h.hasBadGroupNames(twc, ps) {
+		return
+	}
+
 	paramGroups := ps.GetGroups()
 
 	sep := false
@@ -389,6 +464,10 @@ func (h StdHelp) printParamsInGroups(twc *twrap.TWConf, ps *param.PSet) {
 }
 
 func (h StdHelp) printParamsNotInGroups(twc *twrap.TWConf, ps *param.PSet) {
+	if h.hasBadGroupNames(twc, ps) {
+		return
+	}
+
 	paramGroups := ps.GetGroups()
 
 	sep := false
@@ -443,8 +522,10 @@ func altSrcConfigFiles(cf []param.ConfigFileDetails) string {
 		s = "in one of the configuration files:\n"
 	}
 
+	sep := ""
 	for _, f := range cf {
-		s += f.String() + "\n"
+		s += sep + f.String()
+		sep = "\n"
 	}
 	return s
 }

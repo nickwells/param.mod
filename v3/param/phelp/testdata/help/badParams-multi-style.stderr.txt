@@ -1,5 +1,5 @@
-PROGRAM NAME UNKNOWN: 1 error detected while setting the parameters
-      [1 error]
+PROGRAM NAME UNKNOWN: an error was detected while setting the parameters:
+      Final Checks
             you have chosen conflicting types of help: Param: help (at supplied
             parameters:1: -help), Param: help-groups-in-list (at supplied
             parameters:3: -help-groups-in-list test-group1)

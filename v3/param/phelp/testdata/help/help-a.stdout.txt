@@ -2,6 +2,48 @@ a description of what the program does (help-a)
 
 Usage: PROGRAM NAME UNKNOWN ...
 ---------------
+common.params-completion [ 2 parameters, all hidden ]
+    These are the parameters concerned with specifying and creating shell
+    completion functions. There are parameters for specifying which directory
+    the completion files should be written to, for triggering the generation of
+    the files and for specifying whether they should be overwritten.
+    
+    Parameters in this group may also be set in the configuration file:
+    /home/ngw/.config/github.com/nickwells/param.mod/v3/param/phelp/group-common.params-completion.cfg
+
+      [-completions-zsh-dir=...]
+            which directory should a zsh completions function for this program
+            be written to. The directory should be in the list of directories
+            given in the fpath shell variable. See the zsh manual for more
+            details.
+            Allowed values: a pathname. The filesystem object must exist and
+                            must satisfy further checks
+            Initial value:
+      [-completions-zsh-make=...]
+            how to create the zsh completions file. This specifies whether or if
+            the file should be created. If it is set to any value other than
+            'none' then the program will exit after the parameters are
+            processed.
+            
+            This parameter may only be given on the command line, not in the
+            configuration files for this group
+            Allowed values: a string
+                            The value must be one of the following:
+                            new    : only generate the zsh completions file if
+                                it doesn't already exist. Any pre-existing file
+                                is protected and an error will be reported. The
+                                zsh completions directory name must be
+                                specified.
+                            none   : do nothing.
+                            replace: any existing zsh completions file for the
+                                program will be overwritten or a new file will
+                                be generated. The zsh completions directory name
+                                must be specified.
+                            show   : don't generate the zsh completions file.
+                                The file that would have been generated is
+                                instead printed to standard output.
+            Initial value: none
+---------------
 common.params-help [ 12 parameters, 11 hidden ]
     These are parameters which control whether and how to print a message
     explaining how the program can be used.
@@ -10,12 +52,6 @@ common.params-help [ 12 parameters, 11 hidden ]
             print a help message explaining what the program does and the
             available parameters.
             
-            The parameters are arranged into named groups (this parameter is in
-            'common.params-help') which can be selected or suppressed through
-            other help parameters. Within each group the parameters are
-            displayed in alphabetical order. To see all the available parameter
-            groups use the help-show-groups parameter.
-            
             Optional parameters are shown surrounded by square brackets
             [like-this]. Parameters which take a value are shown with a
             following '=...', this is itself bracketed if the value may be
@@ -23,6 +59,15 @@ common.params-help [ 12 parameters, 11 hidden ]
             
             Parameters which are less commonly useful will not be shown. To see
             these hidden parameters use the help-full parameter.
+            
+            The parameters are arranged into named groups (this parameter is in
+            'common.params-help') which can be selected or suppressed through
+            other help parameters. Within each group the parameters are
+            displayed in alphabetical order.
+            
+            Groups where all the parameters are hidden will not be shown. To see
+            all the available parameter groups use the help-show-groups
+            parameter.
             
             For a shorter help message use the help-summary parameter
             
@@ -80,7 +125,7 @@ common.params-help [ 12 parameters, 11 hidden ]
             Allowed values: a list of string values separated by ','
             Initial value:
       [-help-show-references] or [-help-show-refs] or [-help-refs] or
-         [-help-references] or [-help-see-also] or [-help-show-see-also]
+         [-help-see-also]
             when printing the help message only show the references (the See
             Also section), if any.
             
@@ -206,3 +251,7 @@ test-group1 [ 6 parameters, 1 hidden ]
           -xxx=false not -xxx false
           
           For parameters which must have a value it may be given in either way
+---------------
+Some parameters may also be set from alternative sources such as configuration
+files or environment variables. For more details use the help-show-sources
+parameter.

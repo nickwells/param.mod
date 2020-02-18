@@ -1,5 +1,5 @@
-PROGRAM NAME UNKNOWN: 1 error detected while setting the parameters
-      help-groups-in-list [1 error]
+PROGRAM NAME UNKNOWN: an error was detected while setting the parameters:
+      help-groups-in-list
             error with parameter: group: 'nonesuch1', is not the name of a
             parameter group. Please check the spelling.
             also: 'nonesuch2'

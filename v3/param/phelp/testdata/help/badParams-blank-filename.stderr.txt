@@ -1,5 +1,5 @@
-PROGRAM NAME UNKNOWN: 1 error detected while setting the parameters
-      params-file [1 error]
+PROGRAM NAME UNKNOWN: an error was detected while setting the parameters:
+      params-file
             error with parameter: no file name has been given
             parameter set at: supplied parameters:2: -params-file
 

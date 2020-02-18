@@ -12,12 +12,6 @@ common.params-help [ 12 parameters, 11 hidden ]
             print a help message explaining what the program does and the
             available parameters.
             
-            The parameters are arranged into named groups (this parameter is in
-            'common.params-help') which can be selected or suppressed through
-            other help parameters. Within each group the parameters are
-            displayed in alphabetical order. To see all the available parameter
-            groups use the help-show-groups parameter.
-            
             Optional parameters are shown surrounded by square brackets
             [like-this]. Parameters which take a value are shown with a
             following '=...', this is itself bracketed if the value may be
@@ -26,12 +20,21 @@ common.params-help [ 12 parameters, 11 hidden ]
             Parameters which are less commonly useful will not be shown. To see
             these hidden parameters use the help-full parameter.
             
+            The parameters are arranged into named groups (this parameter is in
+            'common.params-help') which can be selected or suppressed through
+            other help parameters. Within each group the parameters are
+            displayed in alphabetical order.
+            
+            Groups where all the parameters are hidden will not be shown. To see
+            all the available parameter groups use the help-show-groups
+            parameter.
+            
             For a shorter help message use the help-summary parameter
             
             The program will exit after the help message is shown.
             
-            This parameter value may only be given on the command line not in
-            configuration files or as an environment variable.
+            This parameter may only be given on the command line, not in the
+            configuration files or as an environment variable
 ---------------
 test-group1 [ 6 parameters, 1 hidden ]
     test parameters.
@@ -39,13 +42,12 @@ test-group1 [ 6 parameters, 1 hidden ]
     Parameters in this group may also be set in one of the configuration files:
     testdata/configFiles/cfg1 (must exist)
     testdata/configFiles/cfg2
-    
 
       [-param1=...] or [-param1-alt1=...]
             help text for param1
             
-            This parameter value may only be given on the command line not in
-            configuration files or as an environment variable.
+            This parameter may only be given on the command line, not in the
+            configuration files or as an environment variable
             Allowed values: any value that can be read as a whole number
             Initial value: 1
       -param2=... or -param2-alt2=...
@@ -84,53 +86,6 @@ test-group1 [ 6 parameters, 1 hidden ]
           
           For parameters which must have a value it may be given in either way
 ---------------
-
-Alternative Sources
-
-This program may also be configured through the following alternative sources.
-These are in addition to the parameters supplied on the command line.
-
-
-  Group Configuration Files
-
-    test-group1:  testdata/configFiles/cfg1 (must exist)
-    test-group1:  testdata/configFiles/cfg2
-
-    Note: the order in which groups are processed is indeterminate but within
-          each group the files are processed in the order listed above.
-
-    Note: parameters given in the group config files must be valid parameters of
-          the program and they must be members of the parameter group.
-
-  Common Configuration Files
-
-      testdata/configFiles/cfg3 (must exist)
-      testdata/configFiles/cfg4
-    * testdata/configFiles/cfg5 (must exist)
-    * testdata/configFiles/cfg6
-
-    Note: the files marked with a '*' should only contain parameters valid for
-          this program.
-
-  Environment Variables
-
-    The program can also be configured through environment variables prefixed
-    with:
-    A_,
-    B_ or
-    C_
-
-    Note: The prefix is stripped off and any underscores ('_') in the
-          environment variable name after the prefix will be replaced with
-          dashes ('-') when matching the parameter name.
-          
-          For instance, if the environment variables prefixes include 'XX_' an
-          environment variable called 'XX_a_b' will match a parameter called
-          'a-b'
-
-Note: these additional sources are processed in the order shown above and then
-      the command line parameters are processed. This means that a value given
-      on the command line will replace any other settings in configuration files
-      or environment variables (unless the parameter may only be set once).
-      Similarly, settings in sources higher up this page can be replaced by
-      settings in sources lower in the page
+Some parameters may also be set from alternative sources such as configuration
+files or environment variables. For more details use the help-show-sources
+parameter.

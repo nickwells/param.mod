@@ -11,11 +11,7 @@ import (
 // standard, full or short
 type helpStyle byte
 
-// helpStyle values can be one of:
-//    Std meaning that the standard help message is generated
-//    Full meaning that a more complete message is generated
-//    Short meaning that a concise message is generated
-//    GroupNamesOnly meaning that only group names should be shown
+// helpStyle values control what help message is generated
 const (
 	noHelp helpStyle = iota
 	stdHelp
@@ -51,6 +47,9 @@ type StdHelp struct {
 	styleNeedsSetting bool // if either of the previous is set then this is set
 
 	style helpStyle
+
+	zshCompletionsDir  string
+	zshMakeCompletions string
 }
 
 // setStyle returns an ActionFunc to set the style element of the StdHelp
@@ -67,9 +66,10 @@ func setStyle(h *StdHelp, setTo helpStyle) param.ActionFunc {
 // (the standard paramset.New() function will use this)
 func NewStdHelp() *StdHelp {
 	return &StdHelp{
-		groupsSelected:   make(map[string]bool),
-		avalShownAlready: make(map[[md5.Size]byte]string),
-		showFullHelp:     true,
-		exitAfterHelp:    true,
+		groupsSelected:     make(map[string]bool),
+		avalShownAlready:   make(map[[md5.Size]byte]string),
+		showFullHelp:       true,
+		exitAfterHelp:      true,
+		zshMakeCompletions: zshCompGenNone,
 	}
 }

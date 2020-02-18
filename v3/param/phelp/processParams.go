@@ -8,48 +8,64 @@ import (
 	"github.com/nickwells/twrap.mod/twrap"
 )
 
+// printSep prints the separator line if sep is true. It always returns true
+func printSep(twc *twrap.TWConf, sep bool) bool {
+	if sep {
+		printMajorSeparator(twc)
+	}
+	return true
+}
+
 // ProcessArgs will process the values set after parsing is complete. This is
 // where any StdHelp parameters (as added by the StdHelp AddParams method)
 // will be processed.
 func (h StdHelp) ProcessArgs(ps *param.PSet) {
+	var shouldExit = h.exitAfterParsing
+
+	defer func() {
+		if shouldExit {
+			os.Exit(0)
+		}
+	}()
+
 	twc, err := twrap.NewTWConf(twrap.SetWriter(ps.StdWriter()))
 	if err != nil {
-		fmt.Fprint(os.Stderr, "Couldn't build the text wrapper:", err)
+		fmt.Fprintln(os.Stderr,
+			"Couldn't build the text wrapper for handling parameters: ", err)
 		return
 	}
 
-	var shouldExit = h.exitAfterParsing
 	sep := false
 
-	if h.paramsShowWhereSet {
-		if sep {
-			printMajorSeparator(twc)
+	if h.zshMakeCompletions != zshCompGenNone {
+		sep = printSep(twc, sep)
+		shouldExit = true
+
+		err := h.zshMakeCompFile(twc, ps)
+		if err != nil {
+			fmt.Fprintln(ps.ErrWriter(),
+				"Couldn't create the zsh completion file: ", err)
+			return
 		}
-		sep = true
+	}
+
+	if h.paramsShowWhereSet {
+		sep = printSep(twc, sep)
 		shouldExit = h.exitAfterHelp
 
 		h.showWhereParamsAreSet(twc, ps)
 	}
 	if h.paramsShowUnused {
-		if sep {
-			printMajorSeparator(twc)
-		}
-		sep = true
+		sep = printSep(twc, sep)
 		shouldExit = h.exitAfterHelp
 
 		showUnusedParams(twc, ps)
 	}
 
 	if h.style != noHelp {
-		if sep {
-			printMajorSeparator(twc)
-		}
+		_ = printSep(twc, sep)
 		shouldExit = h.exitAfterHelp
 
 		h.Help(ps)
-	}
-
-	if shouldExit {
-		os.Exit(0)
 	}
 }

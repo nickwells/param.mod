@@ -1,5 +1,6 @@
-PROGRAM NAME UNKNOWN: 4 errors detected while setting the parameters
-      help-groups-in-list [2 errors]
+PROGRAM NAME UNKNOWN: 4 errors with 3 parameters were detected while setting the
+                      parameters:
+      help-groups-in-list - 2 errors:
             1 : error with parameter: group: 'notAGroup', is not the name of a
                 parameter group. Please check the spelling.
                 parameter set at: supplied parameters:2:
@@ -8,9 +9,9 @@ PROGRAM NAME UNKNOWN: 4 errors detected while setting the parameters
                 "-help-groups-in-list", either following an '=' or as a next
                 parameter
                 parameter set at: supplied parameters:3: -help-groups-in-list
-      param2 [1 error]
+      param2
             this parameter must be set somewhere
-      supplied config file: testdata/nonesuch [1 error]
+      supplied config file: testdata/nonesuch
             open testdata/nonesuch: no such file or directory
 
 For help with the correct use of the parameters and to see which parameters are

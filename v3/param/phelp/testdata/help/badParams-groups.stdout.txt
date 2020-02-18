@@ -1,0 +1,9 @@
+The following are not valid parameter group names:
+    nonesuch1
+    nonesuch2
+    nonesuch3
+possible group names are:
+    common.params-completion
+    common.params-help
+    common.params-params
+    test-group1

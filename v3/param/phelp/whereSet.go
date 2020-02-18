@@ -43,9 +43,22 @@ func printWhereSetIntro(twc *twrap.TWConf, ps *param.PSet, p *param.ByName) {
 }
 
 func (h StdHelp) showWhereParamsAreSet(twc *twrap.TWConf, ps *param.PSet) {
+	twc.Wrap("Parameter Summary\n\n"+
+		"This shows a summary of all the parameters."+
+		" If there are any errors with a parameter then that will be"+
+		" indicated along with a count of the number of errors. If a"+
+		" parameter has been set then that will be indicated along"+
+		" with details of where it has been set.\n", 0)
+
 	groups := ps.GetGroups()
 
+	printSep := false
 	for _, g := range groups {
+		if printSep {
+			twc.Println()
+			printMinorSeparator(twc)
+		}
+		printSep = true
 		h.printGroupDetails(twc, g)
 		for _, p := range g.Params {
 			printWhereSetIntro(twc, ps, p)

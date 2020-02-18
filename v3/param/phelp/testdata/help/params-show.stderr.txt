@@ -1,5 +1,5 @@
-PROGRAM NAME UNKNOWN: 1 error detected while setting the parameters
-      param2 [1 error]
+PROGRAM NAME UNKNOWN: an error was detected while setting the parameters:
+      param2
             this parameter must be set somewhere
 
 For help with the correct use of the parameters and to see which parameters are

@@ -1,2 +1,29 @@
-    There are no alternative sources, parameters can only be set through the
-    command line
+Alternative Sources
+
+Program parameters may be set through the command line but also through these
+additional sources.
+
+  Group Configuration Files
+
+    common.params-completion:  /home/ngw/.config/github.com/nickwells/param.mod/v3/param/phelp/group-common.params-completion.cfg
+
+    Note: parameters given in group config files must be valid parameters of the
+          program and members of the parameter group.
+
+Note: additional sources are processed in the order shown above and then the
+      command line parameters are processed. This means that a value given on
+      the command line will replace any settings in configuration files or
+      environment variables (unless the parameter may only be set once).
+      Similarly, settings in sources higher up this page can be replaced by
+      settings in sources lower down the page
+
+The following parameters may be useful when working with these alternative
+sources:
+    params-show-where-set : will show if values have been set from any of the
+                            alternative sources.
+    params-show-unused    : can be useful to check that parameters set in
+                            alternative sources are all correct. Since some
+                            shared config files can contain parameters intended
+                            for other programs misspelled parameters may be
+                            silently ignored. With this parameter you can see
+                            all the potential parameters and check them.

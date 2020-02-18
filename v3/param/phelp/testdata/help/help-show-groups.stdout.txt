@@ -1,5 +1,15 @@
 
 Parameter groups
+common.params-completion [ 2 parameters, all hidden ]
+    These are the parameters concerned with specifying and creating shell
+    completion functions. There are parameters for specifying which directory
+    the completion files should be written to, for triggering the generation of
+    the files and for specifying whether they should be overwritten.
+    
+    Parameters in this group may also be set in the configuration file:
+    /home/ngw/.config/github.com/nickwells/param.mod/v3/param/phelp/group-common.params-completion.cfg
+
+---------------
 common.params-help [ 12 parameters, 11 hidden ]
     These are parameters which control whether and how to print a message
     explaining how the program can be used.
