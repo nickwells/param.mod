@@ -182,6 +182,40 @@ func valueNeededStr(vr param.ValueReq) string {
 	return ""
 }
 
+// printParamAttributes prints additional text according to the settings of
+// the parameter's attributes
+func printParamAttributes(twc *twrap.TWConf, p *param.ByName) {
+	if p.AttrIsSet(param.SetOnlyOnce) {
+		twc.Wrap(
+			"\nThis parameter value may only be set once."+
+				" Any appearances after the first will not be used",
+			descriptionIndent)
+	}
+	if p.AttrIsSet(param.CommandLineOnly) && p.PSet().HasAltSources() {
+		var sources []string
+		if p.PSet().HasGlobalConfigFiles() {
+			sources = append(sources, "in the configuration files")
+		} else {
+			grpCF := p.PSet().ConfigFilesForGroup(p.GroupName())
+			if len(grpCF) > 0 {
+				sources = append(sources,
+					"in the configuration files for this group")
+			}
+		}
+
+		if p.PSet().HasEnvPrefixes() {
+			sources = append(sources, "as an environment variable")
+		}
+
+		if len(sources) > 0 {
+			twc.Wrap(
+				"\nThis parameter may only be given on the command line, not "+
+					strings.Join(sources, " or "), descriptionIndent)
+		}
+	}
+}
+
+// printParamUsage prints the per-parameter help text
 func (h StdHelp) printParamUsage(twc *twrap.TWConf, p *param.ByName) {
 	prefix := "-"
 	suffix := valueNeededStr(p.ValueReq())
@@ -204,31 +238,7 @@ func (h StdHelp) printParamUsage(twc *twrap.TWConf, p *param.ByName) {
 	}
 
 	twc.Wrap(p.Description(), descriptionIndent)
-	if p.AttrIsSet(param.SetOnlyOnce) {
-		twc.Wrap(
-			"\nThis parameter value may only be set once."+
-				" Any appearances after the first will not be used",
-			descriptionIndent)
-	}
-	if p.AttrIsSet(param.CommandLineOnly) && p.PSet().HasAltSources() {
-		text := "\nThis parameter may only be given on the command line, not "
-		var sources []string
-		if p.PSet().HasGlobalConfigFiles() {
-			sources = append(sources, "in the configuration files")
-		} else {
-			grpCF := p.PSet().ConfigFilesForGroup(p.GroupName())
-			if len(grpCF) > 0 {
-				sources = append(sources,
-					"in the configuration files for this group")
-			}
-		}
-		if p.PSet().HasEnvPrefixes() {
-			sources = append(sources, "as an environment variable")
-		}
-		if len(sources) > 0 {
-			twc.Wrap(text+strings.Join(sources, " or "), descriptionIndent)
-		}
-	}
+	printParamAttributes(twc, p)
 	h.showAllowedValsByName(twc, p)
 	if p.ValueReq() == param.None {
 		return
@@ -427,12 +437,13 @@ func (h StdHelp) hasBadGroupNames(twc *twrap.TWConf, ps *param.PSet) bool {
 			" : is not a valid parameter group name", 0)
 	} else {
 		sort.Strings(badGroupNames)
-		twc.Println("The following are not valid parameter group names:")
+		twc.Println( //nolint: errcheck
+			"The following are not valid parameter group names:")
 		for _, bgn := range badGroupNames {
 			twc.Wrap(bgn, textIndent)
 		}
 	}
-	twc.Println("possible group names are:")
+	twc.Println("possible group names are:") //nolint: errcheck
 	for _, pg := range ps.GetGroups() {
 		if !h.groupsSelected[pg.Name] {
 			twc.Wrap(pg.Name, textIndent)

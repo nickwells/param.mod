@@ -23,7 +23,7 @@ func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
 			" triggering the generation of the files and for"+
 			" specifying whether they should be overwritten.")
 
-	SetGroupConfigFile_common_params_completion(ps)
+	SetGroupConfigFile_common_params_completion(ps) //nolint: errcheck
 
 	zshDirParam := ps.Add("completions-zsh-dir",
 		psetter.Pathname{

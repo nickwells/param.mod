@@ -55,7 +55,7 @@ func (h StdHelp) showWhereParamsAreSet(twc *twrap.TWConf, ps *param.PSet) {
 	printSep := false
 	for _, g := range groups {
 		if printSep {
-			twc.Println()
+			twc.Println() //nolint: errcheck
 			printMinorSeparator(twc)
 		}
 		printSep = true
