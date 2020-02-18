@@ -104,8 +104,8 @@ func TestParamAdd(t *testing.T) { // nolint: gocyclo
 			},
 			ExpPanic: testhelper.MkExpPanic(
 				"parameter name",
-				"has already been used as an alternative to 'param-1'",
-				"a member of parameter group test"),
+				`has already been used as an alternative to "param-1"`,
+				`a member of parameter group "test"`),
 			paramShouldExist: true,
 		},
 	}

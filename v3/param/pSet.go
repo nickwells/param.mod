@@ -28,6 +28,10 @@ const DfltProgName = "PROGRAM NAME UNKNOWN"
 // key of an empty string.
 type ErrMap map[string][]error
 
+// FinalCheckFunc is the type of a function to be called after all the
+// parameters have been set
+type FinalCheckFunc func() error
+
 // PSet represents a collection of parameters to be parsed together. A
 // program will typically only have one PSet but having this makes it
 // easier to retain control. You would create the PSet in main using the
@@ -205,6 +209,7 @@ func NewSet(psof ...PSetOptFunc) (*PSet, error) {
 	ps := &PSet{
 		parseCalledFrom: "Parse() not yet called",
 		progName:        DfltProgName,
+		progBaseName:    DfltProgName,
 		nameToParam:     make(map[string]*ByName),
 		groups:          make(map[string]*Group),
 		unusedParams:    make(map[string][]string),
@@ -265,9 +270,16 @@ func (ps *PSet) Help(message ...string) {
 	ps.helper.Help(ps, message...)
 }
 
-// ProgName returns the name of the program - the value of the
-// zeroth argument
+// ProgName returns the name of the program - the value of the zeroth
+// argument. Note that this should be called only after the arguments are
+// already parsed - before that it will only give the default value
 func (ps *PSet) ProgName() string { return ps.progName }
+
+// ProgBaseName returns the base name of the program - the program name with
+// any leading directories stripped off. Note that this should be called only
+// after the arguments are already parsed - before that it will only give the
+// default value
+func (ps *PSet) ProgBaseName() string { return ps.progBaseName }
 
 // AreSet will return true if Parse has been called or false otherwise
 func (ps *PSet) AreSet() bool { return ps.parsed }
@@ -463,6 +475,12 @@ func (ps *PSet) GetGroups() []*Group {
 	return grpParams
 }
 
+// GetGroupByName returns a pointer to the details for the named Group. If
+// the name is not recognised then the pointer will be nil
+func (ps PSet) GetGroupByName(name string) *Group {
+	return ps.groups[name]
+}
+
 // HasAltSources returns true if there are any alternative sources
 // (configuration files, either general or group-specific, or environment
 // variable prefixes) false otherwise
@@ -479,4 +497,16 @@ func (ps PSet) HasAltSources() bool {
 		}
 	}
 	return false
+}
+
+// HasEnvPrefixes returns true if there are any environment variable prefixes
+// for this program, false otherwise
+func (ps PSet) HasEnvPrefixes() bool {
+	return len(ps.envPrefixes) > 0
+}
+
+// HasGlobalConfigFiles returns true if there are any non-group-specific
+// config files for this program, false otherwise
+func (ps PSet) HasGlobalConfigFiles() bool {
+	return len(ps.configFiles) > 0
 }

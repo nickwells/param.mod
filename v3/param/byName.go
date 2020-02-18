@@ -25,6 +25,7 @@ type ByName struct {
 	description     string
 	initialValue    string
 	whereIsParamSet []string
+	whereAdded      string
 	attributes      Attributes
 	postAction      []ActionFunc
 }
@@ -60,15 +61,15 @@ func (p ByName) InitialValue() string { return p.initialValue }
 func (p ByName) GroupName() string { return p.groupName }
 
 // ValueReq returns the value requirements for the ByName parameter.
-func (p ByName) ValueReq() ValueReq {
-	return p.setter.ValueReq()
-}
+func (p ByName) ValueReq() ValueReq { return p.setter.ValueReq() }
 
 // AllowedValues returns a description of the values that the ByName
 // parameter can accept
-func (p ByName) AllowedValues() string {
-	return p.setter.AllowedValues()
-}
+func (p ByName) AllowedValues() string { return p.setter.AllowedValues() }
+
+// SetterType returns the name of the Setter type that the ByName
+// parameter uses
+func (p ByName) SetterType() string { return fmt.Sprintf("%T", p.setter) }
 
 // AllowedValuesMap returns the map (which may be nil) of values to
 // descriptions for the values that the ByName parameter can accept
@@ -115,12 +116,6 @@ func (p ByName) AttrIsSet(attr Attributes) bool {
 
 // =============================================
 
-// FinalCheckFunc is the type of a function to be called after all the
-// parameters have been set
-type FinalCheckFunc func() error
-
-// =============================================
-
 // OptFunc is the type of a option func used to set various flags etc on a
 // parameter.
 type OptFunc func(p *ByName) error
@@ -158,7 +153,8 @@ func (ps *PSet) Add(name string,
 
 	name = strings.TrimSpace(name)
 
-	if err := ps.nameCheck(name); err != nil {
+	whereAdded := caller()
+	if err := ps.nameCheck(name, whereAdded); err != nil {
 		panic(err.Error())
 	}
 
@@ -169,6 +165,7 @@ func (ps *PSet) Add(name string,
 		setter:       setter,
 		description:  desc,
 		initialValue: setter.CurrentValue(),
+		whereAdded:   whereAdded,
 	}
 	ps.nameToParam[name] = p
 	ps.byName = append(ps.byName, p)
@@ -177,7 +174,7 @@ func (ps *PSet) Add(name string,
 	for _, optFunc := range opts {
 		if err := optFunc(p); err != nil {
 			panic(fmt.Sprintf(
-				"Error setting the options for param %s: %s.",
+				"Error setting the options for param %q:\n  %s.",
 				name, err))
 		}
 	}
@@ -216,7 +213,7 @@ func AltName(altName string) OptFunc {
 	return func(p *ByName) error {
 		altName = strings.TrimSpace(altName)
 
-		if err := p.ps.nameCheck(altName); err != nil {
+		if err := p.ps.nameCheck(altName, p.whereAdded); err != nil {
 			return err
 		}
 
