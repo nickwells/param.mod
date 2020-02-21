@@ -5,8 +5,8 @@ import (
 	"io"
 	"os"
 
-	"github.com/nickwells/param.mod/v3/param"
-	"github.com/nickwells/param.mod/v3/param/phelp"
+	"github.com/nickwells/param.mod/v4/param"
+	"github.com/nickwells/param.mod/v4/param/phelp"
 )
 
 // addHelperToOpts will take the slice of param set option functions and a

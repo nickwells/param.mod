@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/nickwells/check.mod/check"
-	"github.com/nickwells/param.mod/v3/param"
+	"github.com/nickwells/param.mod/v4/param"
 )
 
 // Time Formats given here can be used to set the Format member of the Time

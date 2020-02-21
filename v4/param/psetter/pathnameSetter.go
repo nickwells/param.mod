@@ -6,7 +6,7 @@ import (
 	"github.com/nickwells/check.mod/check"
 	"github.com/nickwells/filecheck.mod/filecheck"
 	"github.com/nickwells/fileparse.mod/fileparse"
-	"github.com/nickwells/param.mod/v3/param"
+	"github.com/nickwells/param.mod/v4/param"
 )
 
 // Pathname allows you to specify a parameter that can be used to set an

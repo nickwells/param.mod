@@ -2,7 +2,7 @@ package psetter
 
 import (
 	"github.com/nickwells/check.mod/check"
-	"github.com/nickwells/param.mod/v3/param"
+	"github.com/nickwells/param.mod/v4/param"
 )
 
 // StrListAppender allows you to specify a parameter that can be used to add

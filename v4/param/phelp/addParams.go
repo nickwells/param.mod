@@ -1,7 +1,7 @@
 package phelp
 
 import (
-	"github.com/nickwells/param.mod/v3/param"
+	"github.com/nickwells/param.mod/v4/param"
 )
 
 // groupNamePfx is the name of the group in which all the param package

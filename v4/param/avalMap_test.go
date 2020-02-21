@@ -3,7 +3,7 @@ package param_test
 import (
 	"testing"
 
-	"github.com/nickwells/param.mod/v3/param"
+	"github.com/nickwells/param.mod/v4/param"
 )
 
 func TestAllowedVals(t *testing.T) {

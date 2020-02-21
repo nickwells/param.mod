@@ -3,7 +3,7 @@ package psetter
 import (
 	"fmt"
 
-	"github.com/nickwells/param.mod/v3/param"
+	"github.com/nickwells/param.mod/v4/param"
 )
 
 // Enum allows you to specify a parameter that will only allow an

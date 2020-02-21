@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/nickwells/param.mod/v3/param"
-	"github.com/nickwells/param.mod/v3/param/psetter"
+	"github.com/nickwells/param.mod/v4/param"
+	"github.com/nickwells/param.mod/v4/param/psetter"
 	"github.com/nickwells/testhelper.mod/testhelper"
 )
 

@@ -7,9 +7,9 @@ import (
 	"testing"
 
 	"github.com/nickwells/filecheck.mod/filecheck"
-	"github.com/nickwells/param.mod/v3/param"
-	"github.com/nickwells/param.mod/v3/param/phelp"
-	"github.com/nickwells/param.mod/v3/param/psetter"
+	"github.com/nickwells/param.mod/v4/param"
+	"github.com/nickwells/param.mod/v4/param/phelp"
+	"github.com/nickwells/param.mod/v4/param/psetter"
 	"github.com/nickwells/testhelper.mod/testhelper"
 )
 

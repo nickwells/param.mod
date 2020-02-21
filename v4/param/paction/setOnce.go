@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/nickwells/location.mod/location"
-	"github.com/nickwells/param.mod/v3/param"
+	"github.com/nickwells/param.mod/v4/param"
 )
 
 // SetOnce is used to record if a parameter has been previously set and take

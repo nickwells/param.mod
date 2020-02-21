@@ -1,6 +1,6 @@
 package psetter_test
 
-import "github.com/nickwells/param.mod/v3/param"
+import "github.com/nickwells/param.mod/v4/param"
 
 // panicSafeCheck runs the CheckSetter and catches any panic, returning true
 // if a panic was caught

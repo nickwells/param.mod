@@ -7,7 +7,7 @@ import (
 	"sort"
 
 	"github.com/nickwells/location.mod/location"
-	"github.com/nickwells/param.mod/v3/param"
+	"github.com/nickwells/param.mod/v4/param"
 	"github.com/nickwells/twrap.mod/twrap"
 )
 

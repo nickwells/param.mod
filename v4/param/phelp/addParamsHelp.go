@@ -8,9 +8,9 @@ import (
 
 	"github.com/nickwells/check.mod/check"
 	"github.com/nickwells/location.mod/location"
-	"github.com/nickwells/param.mod/v3/param"
-	"github.com/nickwells/param.mod/v3/param/paction"
-	"github.com/nickwells/param.mod/v3/param/psetter"
+	"github.com/nickwells/param.mod/v4/param"
+	"github.com/nickwells/param.mod/v4/param/paction"
+	"github.com/nickwells/param.mod/v4/param/psetter"
 )
 
 const (
