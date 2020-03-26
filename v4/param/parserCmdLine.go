@@ -113,6 +113,7 @@ func (ps *PSet) handleParamsByName(loc *location.L, params []string) {
 					loc.SetContent(pStr + " " + params[i])
 				}
 			}
+			paramParts[0] = trimmedParam
 			p.processParam(loc, paramParts)
 		} else {
 			ps.recordUnexpectedParam(trimmedParam, loc)
