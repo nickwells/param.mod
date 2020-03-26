@@ -10,18 +10,24 @@ import (
 //
 // The user of the program which has a parameter of this type can pass
 // multiple parameters and each will add to the list of values rather than
-// replacing it each time. Note that each value must be passed separately -
+// replacing it each time. Note that each value must be passed separately;
 // there is no way to pass multiple values at the same time. Also note that
-// there is no way to reset the value, if y=this feature is required another
+// there is no way to reset the value, if this feature is required another
 // parameter could be set up that will do this.
-//
-// If you have a list of allowed values you should use EnumList
 type StrListAppender struct {
 	param.ValueReqMandatory
 
+	// You must set a Value, the program will panic if not. This is the slice
+	// of strings that the setter is appending to.
 	Value *[]string
-	StrListSeparator
+	// The Checks, if any, are applied to the supplied parameter value and
+	// the new parameter will be added to the list only if they all return a
+	// nil error
 	Checks []check.String
+	// The Editor, if present, is applied to the parameter value after any
+	// checks are applied and allows the programmer to modify the value
+	// supplied before using it to set the Value
+	Editor Editor
 }
 
 // CountChecks returns the number of check functions this setter has
@@ -29,16 +35,27 @@ func (s StrListAppender) CountChecks() int {
 	return len(s.Checks)
 }
 
-// SetWithVal (called when a value follows the parameter) splits the value
-// into a slice of strings and sets the Value accordingly. It will return
-// an error if a check is breached.
-func (s StrListAppender) SetWithVal(_ string, paramVal string) error {
+// SetWithVal (called when a value follows the parameter) takes the parameter
+// value and runs the checks against it. If any check returns a non-nil error
+// it will return the error. Otherwise it will apply the Editor (if there is
+// one) to the parameter value. If the Editor returns a non-nil error then
+// that is returned and the Value is left unchanged.  Finally, it will append
+// the checked and possibly edited value to the slice of strings.
+func (s StrListAppender) SetWithVal(paramName, paramVal string) error {
 	for _, check := range s.Checks {
 		if check == nil {
 			continue
 		}
 
 		err := check(paramVal)
+		if err != nil {
+			return err
+		}
+	}
+
+	if s.Editor != nil {
+		var err error
+		paramVal, err = s.Editor.Edit(paramName, paramVal)
 		if err != nil {
 			return err
 		}
@@ -52,7 +69,8 @@ func (s StrListAppender) SetWithVal(_ string, paramVal string) error {
 // AllowedValues returns a description of the allowed values. It includes the
 // separator to be used
 func (s StrListAppender) AllowedValues() string {
-	return "a string value that will be added to the existing list of values" + HasChecks(s)
+	return "a string value that will be added to the existing list of values" +
+		HasChecks(s)
 }
 
 // CurrentValue returns the current setting of the parameter value
@@ -62,7 +80,7 @@ func (s StrListAppender) CurrentValue() string {
 
 	for _, v := range *s.Value {
 		cv += sep + v
-		sep = s.GetSeparator()
+		sep = "\n"
 	}
 
 	return cv
