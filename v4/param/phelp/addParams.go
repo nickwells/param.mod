@@ -9,6 +9,12 @@ import (
 // the same name (it'll be confusing)
 const groupNamePfx = "common.params"
 
+// CommonParamsGroupNamePrefix returns the prefix used to start the names of
+// all the common parameter groups
+func CommonParamsGroupNamePrefix() string {
+	return groupNamePfx
+}
+
 // AddParams will add the help parameters into the parameter set
 func (h *StdHelp) AddParams(ps *param.PSet) {
 	h.addParamHandlingParams(ps)
