@@ -6,13 +6,16 @@ import (
 	"github.com/nickwells/param.mod/v4/param"
 )
 
-// Enum allows you to specify a parameter that will only allow an
-// enumerated range of values which are specified in the AllowedVals map
-// which maps each allowed value to a description
+// Enum allows you to give a parameter that will only allow one of an
+// enumerated range of values which are specified in the AllowedVals map.
 type Enum struct {
 	param.ValueReqMandatory
+	// The AllowedVals must be set, the program will panic if not. The Value
+	// is guaranteed to take one of these values.
 	param.AllowedVals
 
+	// Value must be set, the program will panic if not. This is the value
+	// being set
 	Value *string
 }
 

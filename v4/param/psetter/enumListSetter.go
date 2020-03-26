@@ -9,13 +9,23 @@ import (
 )
 
 // EnumList sets the values in a slice of strings. The values must be in
-// the allowed values map
+// the allowed values map.
+//
+// It is recommended that you should use string constants for setting and
+// accessing the map entries and for initialising the allowed values map to
+// avoid possible errors.
 type EnumList struct {
 	param.ValueReqMandatory
+	// The AllowedVals must be set, the program will panic if not. These are
+	// the only values that will be allowed in the slice of strings.
 	param.AllowedVals
 
+	// Value must be set, the program will panic if not. This is the slice of
+	// values that this setter is setting
 	Value *[]string
 	StrListSeparator
+	// The Checks, if any, are applied to the list of new values and the
+	// Value will only be updated if they all return a nil error
 	Checks []check.StringSlice
 }
 

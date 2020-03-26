@@ -9,17 +9,19 @@ import (
 	"github.com/nickwells/param.mod/v4/param"
 )
 
-// Pathname allows you to specify a parameter that can be used to set an
-// pathname value. You can specify some required attributes of the referenced
-// file-system object by setting the AttributesNeeded member. You can also
-// supply a check function that will validate the Value. For instance you
-// could check that the value was in a particular directory
+// Pathname allows you to give a parameter that can be used to set a pathname
+// value.
 type Pathname struct {
 	param.ValueReqMandatory
 
-	Value       *string
+	// You must set a Value, the program will panic if not. This is the
+	// pathname that the setter is setting.
+	Value *string
+	// Expectation allows you to set some file-specific checks.
 	Expectation filecheck.Provisos
-	Checks      []check.String
+	// The Checks, if any, are applied to the supplied parameter value and
+	// the new parameter will be applied only if they all return a nil error
+	Checks []check.String
 }
 
 // CountChecks returns the number of check functions this setter has
@@ -28,10 +30,13 @@ func (s Pathname) CountChecks() int {
 }
 
 // SetWithVal (called when a value follows the parameter) checks first that
-// the value can be converted into a pathname. Then it confirms that the file
-// conforms to the supplied provisos. If there are checks and any check is
-// violated it returns an error. Only if the value is converted successfully
-// and no checks are violated is the Value set and a nil error is returned.
+// the value can be converted into a pathname (a tilda at the start of the
+// path is converted to the appropriate home directory). Then it confirms
+// that the file conforms to the supplied provisos. The Checks, if any, are
+// run and if any check returns a non-nil error the Value is not updated and
+// the error is returned. Only if the value is converted successfully, the
+// Expectations are all met and no checks fail is the Value set and a nil
+// error is returned.
 func (s Pathname) SetWithVal(_ string, paramVal string) error {
 	pathname, err := fileparse.FixFileName(paramVal)
 	if err != nil {

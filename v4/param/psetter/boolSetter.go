@@ -26,8 +26,13 @@ import (
 type Bool struct {
 	param.ValueReqOptional
 
+	// Value must be set, the program will panic if not. This is the boolean
+	// that the setter is setting
 	Value *bool
 
+	// Invert reverses the normal meaning of the boolean parameter so that
+	// the Value will be set to false when no value is given or the negation
+	// of the given value when one is
 	Invert bool
 }
 

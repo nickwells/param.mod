@@ -8,16 +8,16 @@ import (
 	"github.com/nickwells/param.mod/v4/param"
 )
 
-// Int64 allows you to specify a parameter that can be used to set an
-// int64 value. You can also supply a check function that will validate the
-// Value. See the check package for some helper functions which will return
-// functions that can perform a few common checks. For instance you can
-// ensure that the value is positive by setting one of the Checks to the
-// value returned by check.Int64GT(0)
+// Int64 allows you to give a parameter that can be used to set an
+// int64 value.
 type Int64 struct {
 	param.ValueReqMandatory
 
-	Value  *int64
+	// You must set a Value, the program will panic if not. This is a pointer
+	// to the int64 value that the setter is settng.
+	Value *int64
+	// The Checks, if any, are applied to the supplied parameter value and
+	// the new parameter will be applied only if they all return a nil error
 	Checks []check.Int64
 }
 

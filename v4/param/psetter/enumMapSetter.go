@@ -20,9 +20,15 @@ import (
 // avoid possible errors.
 type EnumMap struct {
 	param.ValueReqMandatory
+	// The AllowedVals must be set, the program will panic if not. These are
+	// the allowed keys in the Values map
 	param.AllowedVals
 
-	Value                 *map[string]bool
+	// Value must be set, the program will panic if not. This is the map of
+	// values that this setter is setting
+	Value *map[string]bool
+	// AllowHiddenMapEntries can be set to relax the checks on the initial
+	// entries in the Values map
 	AllowHiddenMapEntries bool
 	StrListSeparator
 }

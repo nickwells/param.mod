@@ -9,13 +9,18 @@ import (
 	"github.com/nickwells/param.mod/v4/param"
 )
 
-// TimeLocation allows you to specify a parameter that can be used to
-// set a time.Location pointer. You can also supply check functions that will
+// TimeLocation allows you to give a parameter that can be used to set a
+// time.Location pointer. You can also supply check functions that will
 // validate the Value.
 type TimeLocation struct {
 	param.ValueReqMandatory
 
-	Value  **time.Location
+	// You must set a Value, the program will panic if not. Note that this is
+	// a pointer to the pointer to the Location, you should initialise it
+	// with the address of the Location pointer.
+	Value **time.Location
+	// The Checks, if any, are applied to the supplied parameter value and
+	// the new parameter will be applied only if they all return a nil error
 	Checks []check.TimeLocation
 }
 
@@ -25,13 +30,11 @@ func (s TimeLocation) CountChecks() int {
 }
 
 // SetWithVal (called when a value follows the parameter) checks that the
-// value can be parsed to a location, if it cannot be parsed successfully it
-// returns an error. If there is a check and the check is violated it returns
-// an error. Only if the value is parsed successfully and the check is not
-// violated is the Value set. If the supplied value cannot be successfully
-// translated into a time.Location then any embedded spaces will be converted
-// to underscores and the value will be retried. If this also fails then the
-// original error is returned.
+// value can be parsed to a Location (note that it will try to replace any
+// spaces with underscores if the first attempt fails). If it cannot be
+// parsed successfully it returns an error. The Checks, if any, will be
+// applied and if any of them return a non-nil error the Value will not be
+// updated and the error will be returned.
 func (s TimeLocation) SetWithVal(_ string, paramVal string) error {
 	v, err := time.LoadLocation(paramVal)
 	if err != nil {

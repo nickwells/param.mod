@@ -18,15 +18,20 @@ const (
 	TimeFmtISO8601   = "2006-01-02T15:04:05"
 )
 
-// Time allows you to specify a parameter that can be used to set a time.Time
-// value. You can also supply check functions that will validate the
-// Value. If no Format is given then the default format (see TimeFmtDefault)
-// will be used to parse the time value
+// Time allows you to give a parameter that can be used to set a time.Time
+// value.
 type Time struct {
 	param.ValueReqMandatory
 
-	Value  *time.Time
+	// You must set a Value, the program will panic if not. This is the
+	// Time that the setter is setting.
+	Value *time.Time
+	// The Format is used to convert the string parameter value into a Time
+	// suitable for setting the Value. If no Format is given the default
+	// value will be used, see TimeFmtDefault
 	Format string
+	// The Checks, if any, are applied to the time.Time value and the new
+	// parameter will be applied only if they all return a nil error
 	Checks []check.Time
 }
 

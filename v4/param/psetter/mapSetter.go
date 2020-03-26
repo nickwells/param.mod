@@ -14,7 +14,11 @@ import (
 type Map struct {
 	param.ValueReqMandatory
 
-	Value  *map[string]bool
+	// You must set a Value, the program will panic if not. This is the map
+	// of strings to bool that the setter is setting
+	Value *map[string]bool
+	// The Checks, if any, are applied to the supplied parameter value and
+	// the new parameter will be applied only if they all return a nil error
 	Checks []check.MapStringBool
 	StrListSeparator
 }

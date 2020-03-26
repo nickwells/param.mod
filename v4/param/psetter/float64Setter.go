@@ -8,17 +8,16 @@ import (
 	"github.com/nickwells/param.mod/v4/param"
 )
 
-// Float64 allows you to specify a parameter that can be used to set an
-// float64 value. You can also supply a check function that will validate
-// the Value. There are some helper functions given below (called
-// Float64Check...) which will return functions that can perform a few
-// common checks. For instance you can ensure that the value is positive by
-// setting one of the Checks to the value returned by
-// Float64CheckGT(0)
+// Float64 allows you to give a parameter that can be used to set a
+// float64 value.
 type Float64 struct {
 	param.ValueReqMandatory
 
-	Value  *float64
+	// Value must be set, the program will panic if not. This is the value
+	// being set
+	Value *float64
+	// The Checks, if any, are applied to the supplied parameter value and
+	// the new parameter will be applied only if they all return a nil error
 	Checks []check.Float64
 }
 
@@ -27,11 +26,12 @@ func (s Float64) CountChecks() int {
 	return len(s.Checks)
 }
 
-// SetWithVal (called when a value follows the parameter) checks that the value
-// can be parsed to a float, if it cannot be parsed successfully it returns an
-// error. If there is a check and the check is violated it returns an
-// error. Only if the value is parsed successfully and the check is not
-// violated is the Value set.
+// SetWithVal (called when a value follows the parameter) checks that the
+// value can be parsed to a float, if it cannot be parsed successfully it
+// returns an error. The Checks, if any, are called with the value to be
+// applied and if any of them return a non-nil error the Value is not updated
+// and the error is returned. Only if the parameter value is parsed
+// successfully and no checks fail is the Value set.
 func (s Float64) SetWithVal(_ string, paramVal string) error {
 	v, err := strconv.ParseFloat(paramVal, 64)
 	if err != nil {

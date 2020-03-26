@@ -9,16 +9,17 @@ import (
 	"github.com/nickwells/param.mod/v4/param"
 )
 
-// Int64List allows you to specify a parameter that can be used to set a
-// list (a slice) of int64's. You can override the list separator by setting
-// the Sep value.
-//
-// If you have a list of allowed values you should use EnumList
+// Int64List allows you to give a parameter that can be used to set a
+// list (a slice) of int64's.
 type Int64List struct {
 	param.ValueReqMandatory
 
+	// You must set a Value - this is the slice of int64's that the setter is
+	// setting.
 	Value *[]int64
 	StrListSeparator
+	// The Checks, if any, are applied to the supplied parameter value and
+	// the new parameter will be applied only if they all return a nil error
 	Checks []check.Int64Slice
 }
 
@@ -28,8 +29,9 @@ func (s Int64List) CountChecks() int {
 }
 
 // SetWithVal (called when a value follows the parameter) splits the value
-// into a slice of int64's and sets the Value accordingly. It will return
-// an error if a check is breached.
+// into a slice of int64's and sets the Value accordingly. The Checks, if
+// any, are run against the new list of int64's and if any Check returns a
+// non-nil error the Value is not updated and the error is returned.
 func (s Int64List) SetWithVal(_ string, paramVal string) error {
 	sep := s.GetSeparator()
 	sv := strings.Split(paramVal, sep)
