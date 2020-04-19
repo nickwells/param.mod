@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/nickwells/param.mod/v4/param"
+	"github.com/nickwells/param.mod/v4/param/paramset"
 )
 
 // =======================================================
@@ -48,6 +49,43 @@ type namedParamInitialiser struct {
 	opts   []param.OptFunc
 }
 
+// compare compares the parameter with the initialiser values and reports an
+// error if it differs
+func (npi namedParamInitialiser) compare(
+	t *testing.T, tID string, p *param.ByName, sbs ShouldBeSetType) {
+	t.Helper()
+
+	if p == nil {
+		if sbs == ShouldBeSet {
+			t.Log(tID)
+			t.Errorf("\t: the param should be set but it is nil\n")
+		}
+		return
+	}
+
+	if p.Name() != npi.name {
+		t.Log(tID)
+		t.Errorf("\t: the name did not match: '%s' != '%s'\n",
+			p.Name(), npi.name)
+		return
+	}
+	if p.Description() != npi.desc {
+		t.Log(tID)
+		t.Errorf("\t: the description did not match: '%s' != '%s'\n",
+			p.Description(), npi.desc)
+		return
+	}
+	if p.HasBeenSet() {
+		if sbs == ShouldNotBeSet {
+			t.Log(tID)
+			t.Errorf("\t: param has been set but should not be\n")
+		}
+	} else if sbs == ShouldBeSet {
+		t.Log(tID)
+		t.Errorf("\t: param has not been set but should be\n")
+	}
+}
+
 type posParamInitialiser struct {
 	setter param.Setter
 	name   string
@@ -58,11 +96,11 @@ type posParamInitialiser struct {
 // paramInitialisers holds a pointer to either a namedParamInitialiser or a
 // posParamInitialiser pointer (either, neither or both could be nil)
 type paramInitialisers struct {
-	npi            *namedParamInitialiser
-	npiShouldExist bool
+	npi    *namedParamInitialiser
+	npiSBS ShouldBeSetType
 
-	ppi            *posParamInitialiser
-	ppiShouldExist bool
+	ppi    *posParamInitialiser
+	ppiSBS ShouldBeSetType
 }
 
 // panicSafeTestAddByPos adds a ByPos parameter to a parameter set and
@@ -149,12 +187,17 @@ func logErrs(t *testing.T, msg string, errs []error) {
 }
 
 // logErrMap reports the contents of the error map returned by param.Parse(...)
-func logErrMap(t *testing.T, errMap param.ErrMap) {
+func logErrMap(t *testing.T, errMap param.ErrMap) bool {
+	if len(errMap) == 0 {
+		return false
+	}
+
 	t.Helper()
 
 	for k, errs := range errMap {
 		logErrs(t, "\t: Errors for: "+k+":\n", errs)
 	}
+	return true
 }
 
 // logName logs the name if it hasn't already been logged and returns true to
@@ -217,4 +260,15 @@ func errMapCheck(t *testing.T, testID string, errMap param.ErrMap, expected map[
 	if nameLogged {
 		logErrMap(t, errMap)
 	}
+}
+
+// makePSetOrFatal creates the PSet and if any error is detected it reports a
+// fatal error
+func makePSetOrFatal(t *testing.T, testID string) *param.PSet {
+	ps, err := paramset.NewNoHelpNoExitNoErrRpt()
+	if err != nil {
+		t.Fatal(testID, " : couldn't construct the PSet: ", err)
+	}
+
+	return ps
 }

@@ -6,12 +6,11 @@ import (
 	"testing"
 
 	"github.com/nickwells/param.mod/v4/param"
-	"github.com/nickwells/param.mod/v4/param/paramset"
 	"github.com/nickwells/param.mod/v4/param/psetter"
 	"github.com/nickwells/testhelper.mod/testhelper"
 )
 
-func TestParamAdd(t *testing.T) { // nolint: gocyclo
+func TestParamAdd(t *testing.T) {
 	var p1 int64
 	testCases := []struct {
 		testhelper.ID
@@ -22,7 +21,7 @@ func TestParamAdd(t *testing.T) { // nolint: gocyclo
 		{
 			ID: testhelper.MkID("bad name - empty"),
 			npi: &namedParamInitialiser{
-				setter: &psetter.Int64{Value: &p1},
+				setter: psetter.Int64{Value: &p1},
 			},
 			ExpPanic: testhelper.MkExpPanic(
 				"the parameter name",
@@ -32,7 +31,7 @@ func TestParamAdd(t *testing.T) { // nolint: gocyclo
 			ID: testhelper.MkID("bad name - bad char"),
 			npi: &namedParamInitialiser{
 				name:   "?",
-				setter: &psetter.Int64{Value: &p1},
+				setter: psetter.Int64{Value: &p1},
 			},
 			ExpPanic: testhelper.MkExpPanic(
 				"the parameter name",
@@ -42,7 +41,7 @@ func TestParamAdd(t *testing.T) { // nolint: gocyclo
 			ID: testhelper.MkID("bad name - bad first char"),
 			npi: &namedParamInitialiser{
 				name:   "-hello",
-				setter: &psetter.Int64{Value: &p1},
+				setter: psetter.Int64{Value: &p1},
 			},
 			ExpPanic: testhelper.MkExpPanic(
 				"the parameter name",
@@ -52,7 +51,7 @@ func TestParamAdd(t *testing.T) { // nolint: gocyclo
 			ID: testhelper.MkID("good name"),
 			npi: &namedParamInitialiser{
 				name:   "param-1",
-				setter: &psetter.Int64{Value: &p1},
+				setter: psetter.Int64{Value: &p1},
 				opts: []param.OptFunc{
 					param.AltName("param-1-alt"),
 					param.GroupName("test"),
@@ -64,7 +63,7 @@ func TestParamAdd(t *testing.T) { // nolint: gocyclo
 			ID: testhelper.MkID("bad name - duplicate"),
 			npi: &namedParamInitialiser{
 				name:   "param-1",
-				setter: &psetter.Int64{Value: &p1},
+				setter: psetter.Int64{Value: &p1},
 			},
 			ExpPanic: testhelper.MkExpPanic(
 				"parameter name",
@@ -75,7 +74,7 @@ func TestParamAdd(t *testing.T) { // nolint: gocyclo
 			ID: testhelper.MkID("bad alt name - already used"),
 			npi: &namedParamInitialiser{
 				name:   "param-2",
-				setter: &psetter.Int64{Value: &p1},
+				setter: psetter.Int64{Value: &p1},
 				opts:   []param.OptFunc{param.AltName("param-1")},
 			},
 			ExpPanic: testhelper.MkExpPanic(
@@ -87,7 +86,7 @@ func TestParamAdd(t *testing.T) { // nolint: gocyclo
 			ID: testhelper.MkID("bad alt name - invalid"),
 			npi: &namedParamInitialiser{
 				name:   "param-3",
-				setter: &psetter.Int64{Value: &p1},
+				setter: psetter.Int64{Value: &p1},
 				opts:   []param.OptFunc{param.AltName("?")},
 			},
 			ExpPanic: testhelper.MkExpPanic(
@@ -99,7 +98,7 @@ func TestParamAdd(t *testing.T) { // nolint: gocyclo
 			ID: testhelper.MkID("bad alt name - already used as alt"),
 			npi: &namedParamInitialiser{
 				name:   "param-4",
-				setter: &psetter.Int64{Value: &p1},
+				setter: psetter.Int64{Value: &p1},
 				opts:   []param.OptFunc{param.AltName("param-1-alt")},
 			},
 			ExpPanic: testhelper.MkExpPanic(
@@ -110,59 +109,85 @@ func TestParamAdd(t *testing.T) { // nolint: gocyclo
 		},
 	}
 
-	ps, err := paramset.NewNoHelpNoExitNoErrRpt()
-	if err != nil {
-		t.Fatal("couldn't construct the PSet: ", err)
-	}
+	ps := makePSetOrFatal(t, t.Name())
 	for _, tc := range testCases {
 		p, panicked, panicVal := panicSafeTestAddByName(ps, tc.npi)
 		testhelper.CheckExpPanic(t, panicked, panicVal, tc)
 
 		p2, err := ps.GetParamByName(tc.npi.name)
 		if tc.paramShouldExist {
-			if p2 == nil {
-				t.Log(tc.IDStr())
-				t.Errorf("\t: param: '%s' should exist\n",
-					tc.npi.name)
-			}
-			if err != nil {
-				t.Log(tc.IDStr())
-				t.Errorf("\t: GetParamByName(...) returned an error: %s\n",
-					err)
-			}
+			checkByNameVal(t, tc.IDStr(), tc.npi.name, p2, err, ShouldBeSet)
 		} else {
-			if p2 != nil {
-				t.Log(tc.IDStr())
-				t.Errorf(
-					"\t: param: '%s' should not exist if Add(...) panicked\n",
-					tc.npi.name)
-			}
-			if err == nil {
-				t.Log(tc.IDStr())
-				t.Errorf(
-					"\t: GetParamByName(...) should have returned an error\n")
-			}
+			checkByNameVal(t, tc.IDStr(), tc.npi.name, p2, err, ShouldNotBeSet)
 		}
 
+		tc.npi.compare(t, tc.IDStr(), p, ShouldNotBeSet)
+	}
+}
+
+// checkByNameVal checks the ByName value and the associated error
+func checkByNameVal(t *testing.T, tcID, paramName string,
+	p *param.ByName, err error,
+	sbs ShouldBeSetType) {
+	t.Helper()
+
+	if sbs == ShouldBeSet {
+		if p == nil {
+			t.Log(tcID)
+			t.Errorf("\t: the ByName param: %q should exist\n",
+				paramName)
+		}
+		if err != nil {
+			t.Log(tcID)
+			t.Errorf("\t: error seen when getting the ByName param: %q: %v\n",
+				paramName, err)
+		}
+	} else {
 		if p != nil {
-			if p.Name() != tc.npi.name {
-				t.Log(tc.IDStr())
-				t.Errorf("\t: the name did not match: '%s' != '%s'\n",
-					p.Name(), tc.npi.name)
-			} else if p.Description() != tc.npi.desc {
-				t.Log(tc.IDStr())
-				t.Errorf("\t: the description did not match: '%s' != '%s'\n",
-					p.Description(), tc.npi.desc)
-			} else if p.HasBeenSet() {
-				t.Log(tc.IDStr())
-				t.Errorf(
-					"\t: param has been set but params haven't been parsed\n")
-			}
+			t.Log(tcID)
+			t.Errorf("\t: the ByName param: %q should not exist\n",
+				paramName)
+		}
+		if err == nil {
+			t.Log(tcID)
+			t.Errorf("\t: no error seen when getting the ByName param: %q\n",
+				paramName)
 		}
 	}
 }
 
-func TestParamAddPos(t *testing.T) { // nolint: gocyclo
+// checkByPosVal checks the ByPos value and the associated error
+func checkByPosVal(t *testing.T, tcID string, paramIdx int,
+	p *param.ByPos, err error,
+	sbs ShouldBeSetType) {
+	t.Helper()
+
+	if sbs == ShouldBeSet {
+		if p == nil {
+			t.Log(tcID)
+			t.Errorf("\t: the ByPos param: %d should exist\n",
+				paramIdx)
+		}
+		if err != nil {
+			t.Log(tcID)
+			t.Errorf("\t: error seen when getting the ByPos param: %d: %v\n",
+				paramIdx, err)
+		}
+	} else {
+		if p != nil {
+			t.Log(tcID)
+			t.Errorf("\t: the ByPos param: %d should not exist\n",
+				paramIdx)
+		}
+		if err == nil {
+			t.Log(tcID)
+			t.Errorf("\t: missing error when getting the ByPos param: %d\n",
+				paramIdx)
+		}
+	}
+}
+
+func TestParamAddPos(t *testing.T) {
 	var p1 int64
 	testCases := []struct {
 		testhelper.ID
@@ -179,31 +204,31 @@ func TestParamAddPos(t *testing.T) { // nolint: gocyclo
 				{
 					npi: &namedParamInitialiser{
 						name:   "param-1",
-						setter: &psetter.Int64{Value: &p1},
+						setter: psetter.Int64{Value: &p1},
 						opts: []param.OptFunc{
 							param.AltName("param-1-alt"),
 							param.GroupName("test"),
 						},
 					},
-					npiShouldExist: true,
+					npiSBS: ShouldBeSet,
 				},
 				{
 					npi: &namedParamInitialiser{
 						name:   "param-2",
-						setter: &psetter.Int64{Value: &p1},
+						setter: psetter.Int64{Value: &p1},
 						opts: []param.OptFunc{
 							param.AltName("param-2-alt"),
 							param.GroupName("test"),
 						},
 					},
-					npiShouldExist: true,
+					npiSBS: ShouldBeSet,
 				},
 				{
 					ppi: &posParamInitialiser{
 						name:   "ppi1",
-						setter: &psetter.Int64{Value: &p1},
+						setter: psetter.Int64{Value: &p1},
 					},
-					ppiShouldExist: true,
+					ppiSBS: ShouldBeSet,
 				},
 			},
 			paramsToParse:     []string{"1", "--", "another param"},
@@ -215,7 +240,7 @@ func TestParamAddPos(t *testing.T) { // nolint: gocyclo
 				{
 					npi: &namedParamInitialiser{
 						name:   "",
-						setter: &psetter.Int64{Value: &p1},
+						setter: psetter.Int64{Value: &p1},
 						opts: []param.OptFunc{
 							param.GroupName("test"),
 						},
@@ -233,18 +258,18 @@ func TestParamAddPos(t *testing.T) { // nolint: gocyclo
 				{
 					npi: &namedParamInitialiser{
 						name:   "param-1",
-						setter: &psetter.Int64{Value: &p1},
+						setter: psetter.Int64{Value: &p1},
 						opts: []param.OptFunc{
 							param.AltName("param-1-alt"),
 							param.GroupName("test"),
 						},
 					},
-					npiShouldExist: true,
+					npiSBS: ShouldBeSet,
 				},
 				{
 					ppi: &posParamInitialiser{
 						name:   "ppi1",
-						setter: &psetter.Int64{Value: &p1},
+						setter: psetter.Int64{Value: &p1},
 						opts: []param.PosOptFunc{
 							param.SetAsTerminal,
 						},
@@ -264,17 +289,17 @@ func TestParamAddPos(t *testing.T) { // nolint: gocyclo
 				{
 					ppi: &posParamInitialiser{
 						name:   "ppi1",
-						setter: &psetter.Int64{Value: &p1},
+						setter: psetter.Int64{Value: &p1},
 						opts: []param.PosOptFunc{
 							param.SetAsTerminal,
 						},
 					},
-					ppiShouldExist: true,
+					ppiSBS: ShouldBeSet,
 				},
 				{
 					npi: &namedParamInitialiser{
 						name:   "param-1",
-						setter: &psetter.Int64{Value: &p1},
+						setter: psetter.Int64{Value: &p1},
 						opts: []param.OptFunc{
 							param.AltName("param-1-alt"),
 							param.GroupName("test"),
@@ -293,17 +318,17 @@ func TestParamAddPos(t *testing.T) { // nolint: gocyclo
 				{
 					ppi: &posParamInitialiser{
 						name:   "ppi1",
-						setter: &psetter.Int64{Value: &p1},
+						setter: psetter.Int64{Value: &p1},
 						opts: []param.PosOptFunc{
 							param.SetAsTerminal,
 						},
 					},
-					ppiShouldExist: true,
+					ppiSBS: ShouldBeSet,
 				},
 				{
 					ppi: &posParamInitialiser{
 						name:   "ppi2",
-						setter: &psetter.Int64{Value: &p1},
+						setter: psetter.Int64{Value: &p1},
 						opts:   []param.PosOptFunc{},
 					},
 				},
@@ -313,18 +338,18 @@ func TestParamAddPos(t *testing.T) { // nolint: gocyclo
 					" is not the last positional parameter"),
 		},
 		{
-			ID: testhelper.MkID("Parse(...) errors - ByPos: setter.Process(...) failure"),
+			ID: testhelper.MkID(
+				"Parse(...) errors - ByPos: setter.Process(...) failure"),
 			pi: []paramInitialisers{
 				{
 					ppi: &posParamInitialiser{
 						name:   "ppi1",
 						setter: &failingSetter{errMsg: "ByPos param"},
 					},
-					ppiShouldExist: true,
+					ppiSBS: ShouldBeSet,
 				},
 			},
-			paramsToParse:     []string{"1"},
-			remainderExpected: []string{},
+			paramsToParse: []string{"1"},
 			errsExpected: map[string][]string{
 				"Positional parameter: 1 (ppi1)": {
 					"failingSetter: ByPos param",
@@ -332,18 +357,18 @@ func TestParamAddPos(t *testing.T) { // nolint: gocyclo
 			},
 		},
 		{
-			ID: testhelper.MkID("Parse(...) errors - ByName: setter.Process(...) failure"),
+			ID: testhelper.MkID(
+				"Parse(...) errors - ByName: setter.Process(...) failure"),
 			pi: []paramInitialisers{
 				{
 					npi: &namedParamInitialiser{
 						name:   "test99",
 						setter: &failingSetter{errMsg: "ByName param"},
 					},
-					npiShouldExist: true,
+					npiSBS: ShouldBeSet,
 				},
 			},
-			paramsToParse:     []string{"-test99", "val"},
-			remainderExpected: []string{},
+			paramsToParse: []string{"-test99", "val"},
 			errsExpected: map[string][]string{
 				"test99": {
 					"error with parameter:",
@@ -354,10 +379,7 @@ func TestParamAddPos(t *testing.T) { // nolint: gocyclo
 	}
 
 	for _, tc := range testCases {
-		ps, err := paramset.NewNoHelpNoExitNoErrRpt()
-		if err != nil {
-			t.Fatal(tc.IDStr(), " : couldn't construct the PSet: ", err)
-		}
+		ps := makePSetOrFatal(t, tc.IDStr())
 		var panicked bool
 		var panicVal interface{}
 
@@ -367,23 +389,7 @@ func TestParamAddPos(t *testing.T) { // nolint: gocyclo
 				_, panicked, panicVal = panicSafeTestAddByName(ps, pi.npi)
 
 				np, err := ps.GetParamByName(pi.npi.name)
-				var exists bool
-				if np != nil {
-					exists = true
-				}
-				if pi.npiShouldExist != exists {
-					if exists {
-						t.Log(tc.IDStr())
-						t.Errorf("\t: named parameter: '%s'"+
-							" should not exist but does\n",
-							pi.npi.name)
-					} else {
-						t.Log(tc.IDStr())
-						t.Errorf("\t: named parameter: '%s'"+
-							" should exist but doesn't. Err: %s\n",
-							pi.npi.name, err)
-					}
-				}
+				checkByNameVal(t, tc.IDStr(), pi.npi.name, np, err, pi.npiSBS)
 
 				if panicked {
 					break
@@ -394,23 +400,7 @@ func TestParamAddPos(t *testing.T) { // nolint: gocyclo
 				_, panicked, panicVal = panicSafeTestAddByPos(ps, pi.ppi)
 
 				pp, err := ps.GetParamByPos(posIdx)
-				var exists bool
-				if pp != nil {
-					exists = true
-				}
-				if pi.ppiShouldExist != exists {
-					if exists {
-						t.Log(tc.IDStr())
-						t.Errorf("\t: positional parameter: %d"+
-							" should not exist but does\n",
-							posIdx)
-					} else {
-						t.Log(tc.IDStr())
-						t.Errorf("\t: positional parameter: %d"+
-							" should exist but doesn't. Err: %s\n",
-							posIdx, err)
-					}
-				}
+				checkByPosVal(t, tc.IDStr(), posIdx, pp, err, pi.ppiSBS)
 
 				if panicked {
 					break
@@ -428,11 +418,6 @@ func TestParamAddPos(t *testing.T) { // nolint: gocyclo
 				panicVal, []string{}, stackTrace) {
 				errMapCheck(t, tc.IDStr(), errMap, tc.errsExpected)
 
-				if tc.remainderExpected != nil &&
-					len(tc.remainderExpected) == 0 {
-					tc.remainderExpected = nil
-				}
-
 				if !reflect.DeepEqual(ps.Remainder(), tc.remainderExpected) {
 					t.Log(tc.IDStr())
 					t.Logf("\t: remainder received: %v\n", ps.Remainder())
@@ -444,62 +429,63 @@ func TestParamAddPos(t *testing.T) { // nolint: gocyclo
 	}
 }
 
-func TestParamParse1(t *testing.T) { // nolint: gocyclo
-	var p1 int64
-	var p2 int64
-
-	ps, err := paramset.NewNoHelpNoExitNoErrRpt()
-
-	if err != nil {
-		t.Fatal("couldn't construct the PSet: ", err)
-	}
-
-	testName := "param.Parse - first Parse"
-	ps.Add("param1", &psetter.Int64{Value: &p1}, "a param")
-	ps.Add("param2", &psetter.Int64{Value: &p2}, "a param")
+// parsePSet will check that parsing hasn't happened yet and then parse the
+// args with the pset and afterwards check that parsing has happened
+func parsePSet(t *testing.T, ps *param.PSet, args []string) param.ErrMap {
+	t.Helper()
 
 	if ps.AreSet() {
-		t.Errorf("%s: params haven't been set but AreSet() says they have",
-			testName)
+		t.Log(t.Name())
+		t.Errorf("\t: params haven't been set but AreSet() says they have")
 	}
-	errMap, panicked, panicVal, stackTrace :=
-		panicSafeTestParse(ps, []string{"-param1", "99"})
 
-	if testhelper.ReportUnexpectedPanic(t, testName,
+	errMap, panicked, panicVal, stackTrace := panicSafeTestParse(ps, args)
+
+	if testhelper.ReportUnexpectedPanic(t, t.Name(),
 		panicked, panicVal, stackTrace) {
-		return
+		return errMap
 	}
 
 	if !ps.AreSet() {
-		t.Log(testName)
+		t.Log(t.Name())
 		t.Errorf("\t: params have been set but AreSet() says they haven't")
 	}
 
-	if len(errMap) != 0 {
-		t.Log(testName)
-		for k, v := range errMap {
-			t.Log("\t:", k, ":")
-			for _, err := range v {
-				t.Log("\t\t", err)
-			}
-		}
+	return errMap
+}
+
+func TestParamParseTwice(t *testing.T) {
+	ps := makePSetOrFatal(t, t.Name())
+	errMap := parsePSet(t, ps, []string{})
+
+	if logErrMap(t, errMap) {
 		t.Errorf("\t: unexpected errors were detected while parsing")
-	} else if p1 != 99 {
-		t.Log(testName)
-		t.Errorf("\t: p1 (= %d) was expected to be == 99", p1)
-	} else if p2 != 0 {
-		t.Log(testName)
-		t.Errorf("\t: p2 (= %d) was expected to be == 0", p2)
-	} else if ps.ProgName() != param.DfltProgName {
-		t.Log(testName)
-		t.Errorf("\t: ps.ProgName() ('= %s') was expected to be == '%s'",
-			ps.ProgName(), param.DfltProgName)
 	}
 
-	_, panicked, panicVal = panicSafeTestAddByName(ps,
+	errMap, panicked, panicVal, stackTrace := panicSafeTestParse(ps, []string{})
+	if !testhelper.ReportUnexpectedPanic(t, t.Name(),
+		panicked, panicVal, stackTrace) {
+		errMapCheck(t, t.Name(), errMap, map[string][]string{
+			"": {
+				"param.Parse has already been called, previously from:",
+			},
+		})
+	}
+}
+
+func TestParamAddParamAfterParse(t *testing.T) {
+	var p1 int64
+
+	ps := makePSetOrFatal(t, t.Name())
+	errMap := parsePSet(t, ps, []string{})
+
+	if logErrMap(t, errMap) {
+		t.Errorf("\t: unexpected errors were detected while parsing")
+	}
+	_, panicked, panicVal := panicSafeTestAddByName(ps,
 		&namedParamInitialiser{
 			name:   "test99",
-			setter: &psetter.Int64{Value: &p1},
+			setter: psetter.Int64{Value: &p1},
 			desc:   "desc - this should not be added",
 		})
 
@@ -513,7 +499,7 @@ func TestParamParse1(t *testing.T) { // nolint: gocyclo
 	_, panicked, panicVal = panicSafeTestAddByPos(ps,
 		&posParamInitialiser{
 			name:   "ppi1",
-			setter: &psetter.Int64{Value: &p1},
+			setter: psetter.Int64{Value: &p1},
 		})
 	testhelper.PanicCheckString(t,
 		"Adding a positional param after parsing",
@@ -522,17 +508,57 @@ func TestParamParse1(t *testing.T) { // nolint: gocyclo
 			"Parameters have already been parsed." +
 				" A new positional parameter (ppi1) cannot be added.",
 		})
+}
 
-	testName = "param.Parse - bad -  second parse attempt"
-	errMap, panicked, panicVal, stackTrace = panicSafeTestParse(ps,
-		[]string{"-param1", "99"})
-	if !testhelper.ReportUnexpectedPanic(t, testName,
-		panicked, panicVal, stackTrace) {
-		errMapCheck(t, testName, errMap, map[string][]string{
-			"": {
-				"param.Parse has already been called, previously from:",
-			},
-		})
+func TestParamParse1(t *testing.T) {
+	var p1 int64
+	var p2 int64
+
+	ps := makePSetOrFatal(t, t.Name())
+
+	testCases := []struct {
+		testhelper.ID
+		name        string
+		setter      psetter.Int64
+		desc        string
+		expectedVal int64
+	}{
+		{
+			ID:          testhelper.MkID("param1"),
+			name:        "param1",
+			setter:      psetter.Int64{Value: &p1},
+			desc:        "param 1",
+			expectedVal: 99,
+		},
+		{
+			ID:          testhelper.MkID("param2"),
+			name:        "param2",
+			setter:      psetter.Int64{Value: &p2},
+			desc:        "param 2",
+			expectedVal: 0,
+		},
+	}
+
+	for _, tc := range testCases {
+		ps.Add(tc.name, tc.setter, tc.desc)
+	}
+
+	errMap := parsePSet(t, ps, []string{"-param1", "99"})
+
+	if logErrMap(t, errMap) {
+		t.Errorf("\t: unexpected errors were detected while parsing")
+	}
+	for _, tc := range testCases {
+		if *tc.setter.Value != tc.expectedVal {
+			t.Log(tc.IDStr())
+			t.Errorf("\t: the value (= %d) was expected to be %d",
+				*tc.setter.Value, tc.expectedVal)
+		}
+	}
+	if ps.ProgName() != param.DfltProgName {
+		t.Log(t.Name())
+		t.Errorf("\t: ps.ProgName() ('= %s') was expected to be == '%s'",
+			ps.ProgName(), param.DfltProgName)
 	}
 }
 
@@ -545,11 +571,12 @@ func TestParamParse(t *testing.T) {
 		params       []*namedParamInitialiser
 	}{
 		{
-			ID: testhelper.MkID("one param, no error - separate param and value"),
+			ID: testhelper.MkID(
+				"one param, no error - separate param and value"),
 			params: []*namedParamInitialiser{
 				{
 					name:   "test1",
-					setter: &psetter.Int64{Value: &p1},
+					setter: psetter.Int64{Value: &p1},
 				},
 			},
 			paramsPassed: []string{
@@ -561,7 +588,7 @@ func TestParamParse(t *testing.T) {
 			params: []*namedParamInitialiser{
 				{
 					name:   "test1",
-					setter: &psetter.Int64{Value: &p1},
+					setter: psetter.Int64{Value: &p1},
 				},
 			},
 			paramsPassed: []string{
@@ -573,7 +600,7 @@ func TestParamParse(t *testing.T) {
 			params: []*namedParamInitialiser{
 				{
 					name:   "test1",
-					setter: &psetter.Int64{Value: &p1},
+					setter: psetter.Int64{Value: &p1},
 				},
 			},
 			paramsPassed: []string{
@@ -588,7 +615,7 @@ func TestParamParse(t *testing.T) {
 			params: []*namedParamInitialiser{
 				{
 					name:   "test1",
-					setter: &psetter.Int64{Value: &p1},
+					setter: psetter.Int64{Value: &p1},
 				},
 			},
 			paramsPassed: []string{
@@ -603,7 +630,7 @@ func TestParamParse(t *testing.T) {
 			params: []*namedParamInitialiser{
 				{
 					name:   "test1",
-					setter: &psetter.Int64{Value: &p1},
+					setter: psetter.Int64{Value: &p1},
 				},
 			},
 			paramsPassed: []string{
@@ -616,15 +643,13 @@ func TestParamParse(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		ps, err := paramset.NewNoHelpNoExitNoErrRpt()
-		if err != nil {
-			t.Fatal("An error was detected while constructing the PSet:",
-				err)
-		}
+		ps := makePSetOrFatal(t, tc.IDStr())
+
 		for _, p := range tc.params {
 			panicSafeTestAddByName(ps, p)
 		}
-		errMap, panicked, panicVal, stackTrace := panicSafeTestParse(ps, tc.paramsPassed)
+		errMap, panicked, panicVal, stackTrace :=
+			panicSafeTestParse(ps, tc.paramsPassed)
 		if !testhelper.ReportUnexpectedPanic(t, tc.IDStr(),
 			panicked, panicVal, stackTrace) {
 			errMapCheck(t, tc.IDStr(), errMap, tc.expectedEMap)
@@ -636,10 +661,7 @@ func TestParamParse(t *testing.T) {
 func TestParamByName(t *testing.T) {
 	var val1 int64 = 123
 	val1InitialVal := fmt.Sprint(val1)
-	ps, err := paramset.NewNoHelpNoExitNoErrRpt()
-	if err != nil {
-		t.Fatal("Couldn't create the PSet: ", err)
-	}
+	ps := makePSetOrFatal(t, t.Name())
 
 	const (
 		param1Name    = "param1"
