@@ -62,7 +62,7 @@ func (h StdHelp) printHelpMessages(twc *twrap.TWConf, messages ...string) {
 // the param.PSet's error writer (by default stderr) rather than to its
 // standard writer (stdout) and os.Exit will be called with an exit status of
 // 1 to indicate an error.
-func (h StdHelp) Help(ps *param.PSet, messages ...string) { //nolint: gocyclo
+func (h StdHelp) Help(ps *param.PSet, messages ...string) {
 	var twc *twrap.TWConf
 	var err error
 	exitAfterHelp := false
@@ -82,53 +82,30 @@ func (h StdHelp) Help(ps *param.PSet, messages ...string) { //nolint: gocyclo
 
 	h.printHelpMessages(twc, messages...)
 
-	switch h.style {
-	case stdHelp:
-		h.printStdUsage(twc, ps)
-
-	case paramsByName:
-		h.printParamsByName(twc, ps)
-
-	case paramsInGroups:
-		h.printParamsInGroups(twc, ps)
-
-	case paramsNotInGroups:
-		h.printParamsNotInGroups(twc, ps)
-
-	case groupNamesOnly:
-		h.printGroups(twc, ps)
-
-	case progDescOnly:
-		twc.Wrap(ps.ProgDesc()+"\n", 0)
-
-	case altSourcesOnly:
-		if !h.showAltSources(twc, ps) {
-			twc.Wrap(
-				"There are no alternative sources, parameters can only"+
-					" be set through the command line",
-				textIndent)
-		}
-
-	case examplesOnly:
-		if !h.showExamples(twc, ps) {
-			twc.Wrap("There are no examples", textIndent)
-		}
-
-	case referencesOnly:
-		if !h.showReferences(twc, ps) {
-			twc.Wrap("There are no references", textIndent)
-		}
+	helper, ok := helpersByStyle[h.style]
+	if !ok {
+		panic(
+			fmt.Errorf(
+				"Help(...) has been called with an unhandled help style (%v)",
+				h.style))
 	}
+
+	helper(h, twc, ps)
 
 	if exitAfterHelp {
 		os.Exit(1)
 	}
 }
 
+// printProgDesc prints the program description
+func printProgDesc(h StdHelp, twc *twrap.TWConf, ps *param.PSet) {
+	twc.Wrap(ps.ProgDesc()+"\n", 0)
+}
+
 // printStdUsage will print the standard usage message
-func (h StdHelp) printStdUsage(twc *twrap.TWConf, ps *param.PSet) {
+func printStdUsage(h StdHelp, twc *twrap.TWConf, ps *param.PSet) {
 	if h.showFullHelp {
-		twc.Wrap(ps.ProgDesc()+"\n", 0)
+		printProgDesc(h, twc, ps)
 	}
 	twc.Print("Usage: ", ps.ProgName())
 	if !h.printPositionalParams(twc, ps) {
@@ -289,7 +266,7 @@ func (h StdHelp) showAllowedValues(twc *twrap.TWConf, pName, aval string, av par
 }
 
 // printParamsByName will print just the named parameters
-func (h StdHelp) printParamsByName(twc *twrap.TWConf, ps *param.PSet) {
+func printParamsByName(h StdHelp, twc *twrap.TWConf, ps *param.PSet) {
 	var shown = map[string]bool{}
 	var badParams = []string{}
 	for _, pName := range h.paramsToShow {
@@ -452,7 +429,9 @@ func (h StdHelp) hasBadGroupNames(twc *twrap.TWConf, ps *param.PSet) bool {
 	return true
 }
 
-func (h StdHelp) printParamsInGroups(twc *twrap.TWConf, ps *param.PSet) {
+// printParamsInGroups prints the help for a selected list of parameter
+// groups
+func printParamsInGroups(h StdHelp, twc *twrap.TWConf, ps *param.PSet) {
 	if h.hasBadGroupNames(twc, ps) {
 		return
 	}
@@ -474,7 +453,9 @@ func (h StdHelp) printParamsInGroups(twc *twrap.TWConf, ps *param.PSet) {
 	}
 }
 
-func (h StdHelp) printParamsNotInGroups(twc *twrap.TWConf, ps *param.PSet) {
+// printParamsNotInGroups will print the help for all parameter groups except
+// those listed
+func printParamsNotInGroups(h StdHelp, twc *twrap.TWConf, ps *param.PSet) {
 	if h.hasBadGroupNames(twc, ps) {
 		return
 	}
@@ -505,7 +486,9 @@ func printGroupConfigFile(twc *twrap.TWConf, pg *param.Group) {
 	}
 }
 
-func (h StdHelp) printGroups(twc *twrap.TWConf, ps *param.PSet) {
+// printGroups will print the group name and details for all the registered
+// parameter groups
+func printGroups(h StdHelp, twc *twrap.TWConf, ps *param.PSet) {
 	twc.Println("\nParameter groups") //nolint: errcheck
 	paramGroups := ps.GetGroups()
 

@@ -6,7 +6,9 @@ errors. If a parameter has been set then that will be indicated along with
 details of where it has been set.
 
 common.params-completion [ 2 parameters, all hidden ]
----    : completions-zsh-dir
+Set    : completions-zsh-dir
+             at : [ config file for common.params-completion ]:
+                  /home/ngw/.config/github.com/nickwells/param.mod/v3/param/phelp/group-common.params-completion.cfg:1
 ---    : completions-zsh-make
 
 ---------------

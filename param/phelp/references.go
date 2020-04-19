@@ -5,11 +5,12 @@ import (
 	"github.com/nickwells/twrap.mod/twrap"
 )
 
-// showReferences prints the See Also section of the help message
-func (h StdHelp) showReferences(twc *twrap.TWConf, ps *param.PSet) bool {
+// printReferences prints the See Also section of the help message
+func printReferences(h StdHelp, twc *twrap.TWConf, ps *param.PSet) {
 	refs := ps.References()
 	if len(refs) == 0 {
-		return false
+		twc.Wrap("There are no references", textIndent)
+		return
 	}
 
 	twc.Println("See Also") //nolint: errcheck
@@ -18,6 +19,4 @@ func (h StdHelp) showReferences(twc *twrap.TWConf, ps *param.PSet) bool {
 		twc.Wrap("\n"+r.Name+"\n", paramIndent)
 		twc.Wrap(r.Desc, descriptionIndent)
 	}
-
-	return true
 }

@@ -6,7 +6,7 @@ PROGRAM NAME UNKNOWN: 4 errors with 3 parameters were detected while setting the
                 parameter set at: supplied parameters:2:
                 -help-groups-in-list=notAGroup
             2 : error with parameter: a value must follow this parameter:
-                "-help-groups-in-list", either following an '=' or as a next
+                "help-groups-in-list", either following an '=' or as a next
                 parameter
                 parameter set at: supplied parameters:3: -help-groups-in-list
       param2
@@ -14,6 +14,5 @@ PROGRAM NAME UNKNOWN: 4 errors with 3 parameters were detected while setting the
       supplied config file: testdata/nonesuch
             open testdata/nonesuch: no such file or directory
 
-For help with the correct use of the parameters and to see which parameters are
-available please use the '-help' parameter which will print a usage message
+Try the '-help' parameter for more information.
 

@@ -72,4 +72,3 @@ func SetGroupGlobalConfigFile_common_params_completion(ps *param.PSet) error {
 		filecheck.Optional)
 	return nil
 }
-

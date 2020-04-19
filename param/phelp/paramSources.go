@@ -108,17 +108,20 @@ func getGroupConfigFiles(ps *param.PSet) []groupCF {
 	return gf
 }
 
-// showAltSources will print a usage message showing the alternative sources
+// printAltSources will print a usage message showing the alternative sources
 // that can be used to set parameters: environment variables or configuration
-// files. If there were no alternative sources it will not print anything and
-// will return false.
-func (h StdHelp) showAltSources(twc *twrap.TWConf, ps *param.PSet) bool {
+// files. If there were no alternative sources it will not print saying that
+// there are no alternative sources.
+func printAltSources(h StdHelp, twc *twrap.TWConf, ps *param.PSet) {
 	gf := getGroupConfigFiles(ps)
 	cf := ps.ConfigFiles()
 	ep := ps.EnvPrefixes()
 
 	if len(gf) == 0 && len(cf) == 0 && len(ep) == 0 {
-		return false
+		twc.Wrap("There are no alternative sources, parameters can only"+
+			" be set through the command line",
+			textIndent)
+		return
 	}
 
 	twc.Println("Alternative Sources") //nolint: errcheck
@@ -171,5 +174,4 @@ func (h StdHelp) showAltSources(twc *twrap.TWConf, ps *param.PSet) bool {
 				" all the potential parameters and check them.",
 			textIndent)
 	}
-	return true
 }

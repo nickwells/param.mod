@@ -5,6 +5,5 @@ PROGRAM NAME UNKNOWN: an error was detected while setting the parameters:
             parameter set at: supplied parameters:2: -help-params
             help-groups,help,no-such-param
 
-For help with the correct use of the parameters and to see which parameters are
-available please use the '-help' parameter which will print a usage message
+Try the '-help' parameter for more information.
 

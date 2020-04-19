@@ -31,10 +31,8 @@ func (h StdHelp) ErrorHandler(w io.Writer, name string, errMap param.ErrMap) {
 			return
 		}
 
-		twc.Wrap("\nFor help with the correct use of the parameters"+
-			" and to see which parameters are available please use the '-"+
-			helpArgName+
-			"' parameter which will print a usage message\n",
+		twc.Wrap("\nTry the '-"+helpArgName+
+			"' parameter for more information.\n",
 			0)
 	}
 

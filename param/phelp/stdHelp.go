@@ -5,10 +5,10 @@ import (
 
 	"github.com/nickwells/location.mod/location"
 	"github.com/nickwells/param.mod/v4/param"
+	"github.com/nickwells/twrap.mod/twrap"
 )
 
-// helpStyle records the style of help message to generate - it can be
-// standard, full or short
+// helpStyle records the style of help message to generate
 type helpStyle byte
 
 // helpStyle values control what help message is generated
@@ -24,6 +24,19 @@ const (
 	examplesOnly
 	referencesOnly
 )
+
+var helpersByStyle = map[helpStyle]func(StdHelp, *twrap.TWConf, *param.PSet){
+	noHelp:            func(_ StdHelp, _ *twrap.TWConf, _ *param.PSet) {},
+	stdHelp:           printStdUsage,
+	paramsByName:      printParamsByName,
+	paramsInGroups:    printParamsInGroups,
+	paramsNotInGroups: printParamsNotInGroups,
+	groupNamesOnly:    printGroups,
+	progDescOnly:      printProgDesc,
+	altSourcesOnly:    printAltSources,
+	examplesOnly:      printExamples,
+	referencesOnly:    printReferences,
+}
 
 // StdHelp implements the Helper interface. It adds the standard arguments
 // and processes them. This is the helper you are most likely to want and it
