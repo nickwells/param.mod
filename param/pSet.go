@@ -422,7 +422,7 @@ func (ps *PSet) TerminalParam() string { return ps.terminalParam }
 // set. Likewise the DontShowInStdUsage attribute can be set after the
 // parameter has been added. I take it to be unlikely that the package wil be
 // used in this way but better safe than sorry. This will also clear out any
-// groups with no parameters, seth the HiddenCount on each group and finally
+// groups with no parameters, set the HiddenCount on each group and finally
 // sort the parameters in each group in alphabetical order.
 func (ps *PSet) fixGroups() {
 	for name, g := range ps.groups {
