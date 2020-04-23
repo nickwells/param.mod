@@ -5,7 +5,7 @@ package psetter
 // Setter is for the Setter to pass the parameter name as the first value,
 // the parameter value as the second and for Edit to return the modified
 // value. It is expected that the Setter will check the error value and if it
-// is not nill it will return it and abort the setting of the value.
+// is not nil it will return it and abort the setting of the value.
 type Editor interface {
 	Edit(string, string) (string, error)
 }
