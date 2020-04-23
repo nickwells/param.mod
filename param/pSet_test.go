@@ -262,39 +262,6 @@ func TestPSet_SetTerminalParam(t *testing.T) {
 	}
 }
 
-// ExamplePSet_Add shows the usage of the Add method of the
-// PSet. This is used to add new parameters into the set.
-func ExamplePSet_Add() {
-	ps, _ := paramset.New()
-
-	// we declare f here for the purposes of the example but typically it
-	// would be declared in package scope somewhere or in the main() func
-	var f float64
-
-	p := ps.Add(
-		"param-name",
-		psetter.Float64{Value: &f},
-		"a parameter description",
-		param.GroupName("test.group"),
-		param.Attrs(param.DontShowInStdUsage))
-
-	fmt.Printf("%3.1f\n", f)
-	fmt.Printf("group name: %s\n", p.GroupName())
-	fmt.Printf("param name: %s\n", p.Name())
-	fmt.Printf("CommandLineOnly: %t\n", p.AttrIsSet(param.CommandLineOnly))
-	fmt.Printf("MustBeSet: %t\n", p.AttrIsSet(param.MustBeSet))
-	fmt.Printf("SetOnlyOnce: %t\n", p.AttrIsSet(param.SetOnlyOnce))
-	fmt.Printf("DontShowInStdUsage: %t\n", p.AttrIsSet(param.DontShowInStdUsage))
-
-	// Output: 0.0
-	// group name: test.group
-	// param name: param-name
-	// CommandLineOnly: false
-	// MustBeSet: false
-	// SetOnlyOnce: false
-	// DontShowInStdUsage: true
-}
-
 // GroupAndParams holds the expected group name and associated parameter names
 type GroupAndParams struct {
 	groupName   string
