@@ -104,10 +104,11 @@ func (s EnumMap) CheckSetter(name string) {
 	if s.Value == nil {
 		panic(NilValueMessage(name, "psetter.EnumMap"))
 	}
-	intro := name + ": psetter.EnumMap Check failed: "
 	if *s.Value == nil {
-		panic(intro + "the map has not been created")
+		*s.Value = make(map[string]bool)
 	}
+
+	intro := name + ": psetter.EnumMap Check failed: "
 	if err := s.ValueMapOK(); err != nil {
 		panic(intro + err.Error())
 	}

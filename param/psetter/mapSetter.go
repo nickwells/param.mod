@@ -95,6 +95,6 @@ func (s Map) CheckSetter(name string) {
 		panic(NilValueMessage(name, "psetter.Map"))
 	}
 	if *s.Value == nil {
-		panic(name + ": psetter.Map Check failed: the map has not been created")
+		*s.Value = make(map[string]bool)
 	}
 }

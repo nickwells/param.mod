@@ -21,7 +21,8 @@ func TestCheck(t *testing.T) {
 	var goodStrList = []string{goodStr}
 	var badStrList = []string{badStr}
 	var strToBoolMap = make(map[string]bool)
-	var strToBoolMapNil map[string]bool
+	var strToBoolMapNil1 map[string]bool
+	var strToBoolMapNil2 map[string]bool
 	var strToBoolMapWithEntriesGood = map[string]bool{goodStr: true}
 	var strToBoolMapWithEntriesBad = map[string]bool{
 		goodStr: true,
@@ -52,7 +53,6 @@ func TestCheck(t *testing.T) {
 		"Check failed: element",
 		"in the current list of entries is invalid",
 	}
-	mapNotCreatedMsg := "Check failed: the map has not been created"
 
 	testCases := []struct {
 		testhelper.ID
@@ -181,13 +181,11 @@ func TestCheck(t *testing.T) {
 				nilValueMsg),
 		},
 		{
-			ID: testhelper.MkID("EnumMap - bad - nil map"),
+			ID: testhelper.MkID("EnumMap - good - nil map (created)"),
 			s: &psetter.EnumMap{
-				Value:       &strToBoolMapNil,
+				Value:       &strToBoolMapNil1,
 				AllowedVals: avalMapGood,
 			},
-			ExpPanic: testhelper.MkExpPanic("test: psetter.EnumMap " +
-				mapNotCreatedMsg),
 		},
 		{
 			ID: testhelper.MkID("EnumMap - bad - no allowedValues"),
@@ -290,12 +288,10 @@ func TestCheck(t *testing.T) {
 				nilValueMsg),
 		},
 		{
-			ID: testhelper.MkID("Map - bad - nil map"),
+			ID: testhelper.MkID("Map - good - nil map"),
 			s: &psetter.Map{
-				Value: &strToBoolMapNil,
+				Value: &strToBoolMapNil2,
 			},
-			ExpPanic: testhelper.MkExpPanic("test: psetter.Map " +
-				mapNotCreatedMsg),
 		},
 		{
 			ID: testhelper.MkID("Nil - ok"),
