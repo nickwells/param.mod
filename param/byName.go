@@ -81,10 +81,9 @@ func (p ByName) AllowedValuesMap() AllowedVals {
 	return av.AllowedValuesMap()
 }
 
-// Attributes holds the attributes of the ByName parameter
+// Attributes records various flags that can be set on a ByName parameter
 type Attributes int32
 
-// Attributes values
 const (
 	// CommandLineOnly means that the parameter can only be set on the
 	// command line. Note that this also includes being set through values
@@ -198,7 +197,7 @@ func (ps *PSet) addByNameToGroup(p *ByName) {
 }
 
 // HasBeenSet will return true if the parameter has been set.
-func (p *ByName) HasBeenSet() bool {
+func (p ByName) HasBeenSet() bool {
 	return len(p.whereIsParamSet) > 0
 }
 

@@ -13,9 +13,13 @@ import (
 // an environment variable or in a config file. There must be enough command
 // line arguments for all the positional parameters to be set. Only the last
 // parameter can be a terminal parameter (a terminal parameter ends the
-// parsing and returns). Having a parameter as a terminal parameter will
-// allow different parameter sets to be used depending on the value of the
-// positional parameter.
+// parsing and returns).
+//
+// Having a parameter as a terminal parameter will allow any following
+// parameters to be parsed with different parameter sets. So, for instance,
+// the programmer can switch on the value of the positional parameters and
+// choose a different PSet for parsing the remaining parameters. This allows
+// support for tools with an interface like 'git' or the 'go' command itself.
 type ByPos struct {
 	ps           *PSet
 	setter       Setter
