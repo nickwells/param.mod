@@ -35,8 +35,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 	groupName := groupNamePfx + "-help"
 
 	ps.AddGroup(groupName,
-		"These are parameters which control whether and how to print"+
-			" a message explaining how the program can be used.")
+		"These are parameters for printing a usage message.")
 
 	ps.Add(helpArgName, psetter.Nil{},
 		"print a help message explaining what the program does and"+
@@ -204,6 +203,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.AltName("help-examples"),
+		param.AltName("help-eg"),
 		param.PostAction(setStyle(h, examplesOnly)),
 		param.PostAction(styleCounterAF),
 		param.GroupName(groupName))

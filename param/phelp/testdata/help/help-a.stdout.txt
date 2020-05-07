@@ -105,7 +105,7 @@ common.params-help [ 12 parameters, 11 hidden ]
             when printing the help message only show the program description
             
             The program will exit after the help message is shown.
-      [-help-show-examples] or [-help-examples]
+      [-help-show-examples] or [-help-examples] or [-help-eg]
             when printing the help message only show the examples, if any.
             
             The program will exit after the help message is shown.

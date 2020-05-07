@@ -16,12 +16,12 @@ func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
 	groupName := groupNamePfx + "-completion"
 
 	ps.AddGroup(groupName,
-		"These are the parameters concerned with specifying and"+
+		"These are the parameters for"+
 			" creating shell completion functions."+
-			" There are parameters for specifying which directory"+
-			" the completion files should be written to, for"+
-			" triggering the generation of the files and for"+
-			" specifying whether they should be overwritten.")
+			" You can specify where"+
+			" the completion files should be written,"+
+			" trigger the generation of the files and"+
+			" control whether they should be overwritten.")
 
 	setConfigFileForGroupCommonParamsCompletion(ps) //nolint: errcheck
 

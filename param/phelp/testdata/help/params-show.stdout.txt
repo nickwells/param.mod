@@ -19,7 +19,7 @@ common.params-help [ 12 parameters, 11 hidden ]
 ---    : help-groups-in-list or help-groups-in
 ---    : help-groups-not-in-list or help-groups-not-in
 ---    : help-show-desc or help-show-prog-desc or help-prog-desc or help-program-description
----    : help-show-examples or help-examples
+---    : help-show-examples or help-examples or help-eg
 ---    : help-show-groups or help-groups
 ---    : help-show-params or help-p or help-params
 ---    : help-show-references or help-show-refs or help-refs or help-see-also
