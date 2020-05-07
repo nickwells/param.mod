@@ -14,8 +14,7 @@ where
             Initial value: 102
 ---------------
 common.params-help [ 12 parameters, 11 hidden ]
-    These are parameters which control whether and how to print a message
-    explaining how the program can be used.
+    These are parameters for printing a usage message.
 
       [-help] or [-usage]
             print a help message explaining what the program does and the
