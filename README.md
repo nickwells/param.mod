@@ -1,13 +1,20 @@
-[![GoDoc](https://godoc.org/github.com/nickwells/param.mod?status.png)](https://godoc.org/github.com/nickwells/param.mod)
+[![Go Report Card](https://goreportcard.com/badge/github.com/nickwells/param.mod?style=flat-square)](https://goreportcard.com/report/github.com/nickwells/param.mod)
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/mod/github.com/nickwells/param.mod/v4)
 
 # param
 This provides parameter setting and value checking.
 
 It differs from other similar packages in that it offers lots of control over
-what is allowed. You can check the value of individual parameters and also
-check for invalid combinations of parameters. The intention is that once
+what values are allowed. You can check the value of individual parameters and
+also check for invalid combinations of parameters. The intention is that once
 parameter parsing is complete you can be sure that the parameters have
-legitimate values.
+legitimate values. The benefit of this approach is that you separate out the
+parameter validation from the body of the code and you don't need those
+checks to be scattered throughout the rest of your code. This means that the
+parameter validation is all in one place so it is easier to confirm that all
+the necessary checks are being done. Also, early detection of problems allows
+the problem to be reported with a lot more context showing where the user
+made the configuration error.
 
 Parameters can be set not only through the command line but also, optionally,
 through parameter files and environment variables.
@@ -87,7 +94,10 @@ values. There are numerous setters predefined and many of these allow you to
 specify additional checks on the parameter value. See the `psetter` package
 for a full list. Additionally you can write your own setter which you can use
 to populate some bespoke structure. The setters and associated checks provide
-much of the power and flexibility of the `param` package.
+much of the power and flexibility of the `param` package. Various types and
+functions are available to help you write your own setter but you should only
+need to do this if there is not already an existing setter so check the
+pre-existing setters first.
 
 ## Actions
 Each parameter can have a list of associated action functions which will be
