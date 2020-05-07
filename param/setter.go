@@ -3,19 +3,17 @@ package param
 // =============================================
 
 // Setter is the interface that wraps the necessary methods for a
-// paramSetter
+// parameter.
 //
-// Each paramSetter must implement these methods
+// Set takes just the name of the parameter. If the value requirements are
+// such that an argument is not needed then this can set the value or do
+// whatever the Setter is supposed to do.  Otherwise it should return an
+// error.
 //
-// Set takes the name of the parameter and no value. If the value
-// requirements are such that an argument is not needed  then this
-// can set the value or do whatever the paramSetter is supposed to do.
-// Otherwise it should return an error.
-//
-// SetWithVal takes the name of the parameter and the associated value.
-// If the value requirements are such that an argument is needed or is
-// optional then this can set the value or do whatever the paramSetter
-// is supposed to do. Otherwise it should return an error.
+// SetWithVal takes the name of the parameter and the associated value.  If
+// the value requirements are such that an argument is needed or is optional
+// then this can set the value or do whatever the Setter is supposed to
+// do. Otherwise it should return an error.
 //
 // ValueReq returns the ValueReq for the parameter: one of Mandatory,
 // Optional or None. It is used when generating a help message.
@@ -29,10 +27,10 @@ package param
 // messages.
 //
 // CheckSetter is called when the parameter is added, to ensure that the
-// setter has been correctly created, for instance that the pointer to the
+// Setter has been correctly created, for instance that the pointer to the
 // value is not nil or, if the pointer is to a map, that the map being
-// pointed at has been created. Correct behaviour of this func would be to
-// panic if the setter has not been properly set up.
+// pointed at has been created. Correct behaviour of this func is to panic if
+// the Setter has not been properly set up.
 //
 // When creating your own Setter implementation you may find it useful to use
 // one of the ValueReq types as an embedded type. So, for instance, if your
@@ -43,8 +41,7 @@ package param
 // must not have a following value embed the param.ValueReqNone struct and it
 // will provide an appropriate ValueReq method and a SetWithVal method that
 // will return an error; you only need to write the Set method. For examples
-// of how this is done see any of the Setter instances in the psetter
-// package.
+// of how this is done see the Setter instances in the psetter package.
 type Setter interface {
 	Set(string) error
 	SetWithVal(string, string) error
