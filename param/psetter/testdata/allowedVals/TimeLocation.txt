@@ -1,1 +1,1 @@
-any value that represents a location. Typically this will be a string of the form Continent/City_Name, for instance, Europe/London or America/New_York
+any value that represents a location. Typically this will be a string of the form Continent/City_Name, for instance, Europe/London or America/New_York. Additionally some of the three-letter timezone names are also allowed such as UTC or CET.

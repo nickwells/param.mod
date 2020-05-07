@@ -67,7 +67,10 @@ func (s TimeLocation) AllowedValues() string {
 	return "any value that represents a location" +
 		HasChecks(s) +
 		". Typically this will be a string of the form" +
-		" Continent/City_Name, for instance, Europe/London or America/New_York"
+		" Continent/City_Name, for instance, Europe/London" +
+		" or America/New_York." +
+		" Additionally some of the three-letter timezone" +
+		" names are also allowed such as UTC or CET."
 }
 
 // CurrentValue returns the current setting of the parameter value
