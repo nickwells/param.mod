@@ -56,6 +56,7 @@ type PSet struct {
 	configFiles  []ConfigFileDetails
 	examples     []Example
 	references   []Reference
+	notes        []Note
 
 	remainingParams        []string
 	terminalParam          string
