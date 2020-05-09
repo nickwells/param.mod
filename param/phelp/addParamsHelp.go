@@ -30,8 +30,10 @@ const (
 
 // addUsageParams will add the usage parameters into the parameter set
 func (h *StdHelp) addUsageParams(ps *param.PSet) {
+	// TODO: Do we need the styleCounter
 	var styleCounter paction.Counter
 	styleCounterAF := (&styleCounter).MakeActionFunc()
+
 	groupName := groupNamePfx + "-help"
 
 	ps.AddGroup(groupName,
@@ -41,26 +43,11 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		"print a help message explaining what the program does and"+
 			" the available parameters."+
 			"\n\n"+
-			"Optional parameters are shown surrounded by square"+
-			" brackets [like-this]. Parameters which take a value are"+
-			" shown with a following '=...', this is itself bracketed"+
-			" if the value may be omitted."+
-			"\n\n"+
 			"Parameters which are less commonly useful will not be shown."+
-			" To see these hidden parameters use the "+helpFullArgName+
+			" To see these hidden parameters use the -"+helpFullArgName+
 			" parameter."+
 			"\n\n"+
-			"The parameters are arranged into named groups"+
-			" (this parameter is in '"+groupName+"') which can"+
-			" be selected or suppressed through other help parameters."+
-			" Within each group the parameters are displayed in"+
-			" alphabetical order."+
-			"\n\n"+
-			" Groups where all the parameters are hidden will not be shown."+
-			" To see all the available parameter groups use the "+
-			helpGroupsArgName+" parameter."+
-			"\n\n"+
-			"For a shorter help message use the "+helpSummaryArgName+
+			"For a shorter help message use the -"+helpSummaryArgName+
 			" parameter"+
 			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly),
@@ -68,6 +55,31 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		param.PostAction(setStyle(h, stdHelp)),
 		param.PostAction(styleCounterAF),
 		param.GroupName(groupName))
+
+	ps.AddNote("Optional Parameters",
+		"Parameters which are not required are shown surrounded by square"+
+			" brackets [like-this].")
+	ps.AddNote("Parameter Values",
+		"A parameter which takes a value is shown with a"+
+			" following '=...'."+
+			" If the following value is optional this is itself"+
+			" bracketed [=...]. In this case the following value"+
+			" must come after an '=' rather than as the next argument."+
+			" As follows,"+
+			"\n\n"+
+			"-xxx=false not -xxx false"+
+			"\n\n"+
+			"For parameters which must have a value it may be given in"+
+			" either way")
+	ps.AddNote("Parameter Groups",
+		"The parameters are arranged into named groups which can"+
+			" be selected or suppressed through other help parameters."+
+			" Within each group the parameters are displayed in"+
+			" alphabetical order."+
+			"\n\n"+
+			" Groups where all the parameters are hidden will not be shown."+
+			" To see all the available parameter groups use the "+
+			helpGroupsArgName+" parameter.")
 
 	ps.Add(helpFullArgName, psetter.Nil{},
 		" show all the parameters when printing the help message."+

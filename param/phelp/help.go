@@ -120,7 +120,14 @@ func printStdUsage(h StdHelp, twc *twrap.TWConf, ps *param.PSet) {
 	printMinorSeparator(twc)
 	h.printByNameParams(twc, ps)
 	if h.showFullHelp {
-		h.printSetValNote(twc)
+		if ps.HasNotes() {
+			printMinorSeparator(twc)
+			notes := ps.Notes()
+			for _, n := range notes {
+				twc.Println(n.Headline) //nolint: errcheck
+				twc.Wrap(n.Text, textIndent)
+			}
+		}
 
 		if ps.HasAltSources() {
 			printMinorSeparator(twc)
