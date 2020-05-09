@@ -2,7 +2,6 @@ package phelp_test
 
 import (
 	"bytes"
-	"flag"
 	"path/filepath"
 	"testing"
 
@@ -21,8 +20,15 @@ const (
 	paramGroupName = "test-group1"
 )
 
-var updateChkResults = flag.Bool("upd-help-files", false,
-	"update the files holding the results of help output")
+var gfc = testhelper.GoldenFileCfg{
+	DirNames:    []string{testDataDir, helpSubDir},
+	Sfx:         "txt",
+	UpdFlagName: "upd-help-files",
+}
+
+func init() {
+	gfc.AddBoolFlag()
+}
 
 var int64ValPos1 int64 = 101
 var int64ValPos2 int64 = 102
@@ -162,39 +168,33 @@ func addConfigFiles(ps *param.PSet, configFiles []configFileDetails) {
 	}
 }
 
-func TestHelp(t *testing.T) { //nolint: gocyclo
-	gfc := testhelper.GoldenFileCfg{
-		DirNames: []string{testDataDir, helpSubDir},
-		Sfx:      "txt",
-	}
-
+func TestHelp(t *testing.T) {
 	testCases := []struct {
 		testhelper.ID
-		params          []string
-		progDesc        string
-		configFiles     []configFileDetails
-		envPrefixes     []string
-		errsExpected    bool
-		addByNameParams bool
-		addByPosParams  bool
+		params       []string
+		progDesc     string
+		configFiles  []configFileDetails
+		envPrefixes  []string
+		errsExpected bool
+		paramAdder   []param.PSetOptFunc
 	}{
 		{
-			ID:              testhelper.MkID("help"),
-			progDesc:        "a description of what the program does (help)",
-			params:          []string{"-help", "-param2=99"},
-			addByNameParams: true,
+			ID:         testhelper.MkID("help"),
+			progDesc:   "a description of what the program does (help)",
+			params:     []string{"-help", "-param2=99"},
+			paramAdder: []param.PSetOptFunc{addByNameParams},
 		},
 		{
-			ID:              testhelper.MkID("help-a"),
-			progDesc:        "a description of what the program does (help-a)",
-			params:          []string{"-help-a", "-param2=99"},
-			addByNameParams: true,
+			ID:         testhelper.MkID("help-a"),
+			progDesc:   "a description of what the program does (help-a)",
+			params:     []string{"-help-a", "-param2=99"},
+			paramAdder: []param.PSetOptFunc{addByNameParams},
 		},
 		{
-			ID:              testhelper.MkID("help-s"),
-			progDesc:        "a description of what the program does (help-s)",
-			params:          []string{"-help-s", "-param2=99"},
-			addByNameParams: true,
+			ID:         testhelper.MkID("help-s"),
+			progDesc:   "a description of what the program does (help-s)",
+			params:     []string{"-help-s", "-param2=99"},
+			paramAdder: []param.PSetOptFunc{addByNameParams},
 		},
 		{
 			ID:       testhelper.MkID("help-params"),
@@ -204,7 +204,7 @@ func TestHelp(t *testing.T) { //nolint: gocyclo
 				"help-groups,help,help",
 				"-param2=99",
 			},
-			addByNameParams: true,
+			paramAdder: []param.PSetOptFunc{addByNameParams},
 		},
 		{
 			ID:       testhelper.MkID("help-params-bad-param"),
@@ -214,8 +214,8 @@ func TestHelp(t *testing.T) { //nolint: gocyclo
 				"help-groups,help,no-such-param",
 				"-param2=99",
 			},
-			errsExpected:    true,
-			addByNameParams: true,
+			errsExpected: true,
+			paramAdder:   []param.PSetOptFunc{addByNameParams},
 		},
 		{
 			ID:       testhelper.MkID("help-params-multi-bad-param"),
@@ -225,14 +225,14 @@ func TestHelp(t *testing.T) { //nolint: gocyclo
 				"help-groups,help,no-such-param,not-a-param",
 				"-param2=99",
 			},
-			errsExpected:    true,
-			addByNameParams: true,
+			errsExpected: true,
+			paramAdder:   []param.PSetOptFunc{addByNameParams},
 		},
 		{
-			ID:              testhelper.MkID("help-show-groups"),
-			progDesc:        "a description of what the program does",
-			params:          []string{"-help-groups", "-param2=99"},
-			addByNameParams: true,
+			ID:         testhelper.MkID("help-show-groups"),
+			progDesc:   "a description of what the program does",
+			params:     []string{"-help-groups", "-param2=99"},
+			paramAdder: []param.PSetOptFunc{addByNameParams},
 		},
 		{
 			ID:       testhelper.MkID("help-groups-in-list"),
@@ -241,7 +241,7 @@ func TestHelp(t *testing.T) { //nolint: gocyclo
 				"-help-groups-in-list",
 				paramGroupName,
 				"-param2=99"},
-			addByNameParams: true,
+			paramAdder: []param.PSetOptFunc{addByNameParams},
 		},
 		{
 			ID:       testhelper.MkID("help-groups-not-in-list"),
@@ -250,7 +250,7 @@ func TestHelp(t *testing.T) { //nolint: gocyclo
 				"-help-groups-not-in-list",
 				paramGroupName,
 				"-param2=99"},
-			addByNameParams: true,
+			paramAdder: []param.PSetOptFunc{addByNameParams},
 		},
 		{
 			ID:       testhelper.MkID("help-groups-in-list-all"),
@@ -260,7 +260,7 @@ func TestHelp(t *testing.T) { //nolint: gocyclo
 				"-help-groups-in-list",
 				paramGroupName,
 				"-param2=99"},
-			addByNameParams: true,
+			paramAdder: []param.PSetOptFunc{addByNameParams},
 		},
 		{
 			ID:       testhelper.MkID("help-groups-not-in-list-all"),
@@ -270,7 +270,7 @@ func TestHelp(t *testing.T) { //nolint: gocyclo
 				"-help-groups-not-in-list",
 				paramGroupName,
 				"-param2=99"},
-			addByNameParams: true,
+			paramAdder: []param.PSetOptFunc{addByNameParams},
 		},
 		{
 			ID:       testhelper.MkID("help-prog-desc"),
@@ -279,7 +279,7 @@ func TestHelp(t *testing.T) { //nolint: gocyclo
 				"-help-prog-desc",
 				"-param2=99",
 			},
-			addByNameParams: true,
+			paramAdder: []param.PSetOptFunc{addByNameParams},
 		},
 		{
 			ID:       testhelper.MkID("params-show"),
@@ -295,8 +295,8 @@ func TestHelp(t *testing.T) { //nolint: gocyclo
 					mustExist: true,
 				},
 			},
-			errsExpected:    true,
-			addByNameParams: true,
+			errsExpected: true,
+			paramAdder:   []param.PSetOptFunc{addByNameParams},
 		},
 		{
 			ID:       testhelper.MkID("help-show-sources-no-sources"),
@@ -305,7 +305,7 @@ func TestHelp(t *testing.T) { //nolint: gocyclo
 				"-help-show-sources",
 				"-param2=99",
 			},
-			addByNameParams: true,
+			paramAdder: []param.PSetOptFunc{addByNameParams},
 		},
 		{
 			ID:       testhelper.MkID("params-file-cmdline-param"),
@@ -314,8 +314,8 @@ func TestHelp(t *testing.T) { //nolint: gocyclo
 				"-params-file",
 				"testdata/configFiles/param-cmdline.cfg",
 				"-param2=99"},
-			errsExpected:    false,
-			addByNameParams: true,
+			errsExpected: false,
+			paramAdder:   []param.PSetOptFunc{addByNameParams},
 		},
 		{
 			ID: testhelper.MkID("badParams-multi"),
@@ -326,8 +326,8 @@ func TestHelp(t *testing.T) { //nolint: gocyclo
 				"-help-groups-in-list=notAGroup",
 				"-help-groups-in-list",
 			},
-			errsExpected:    true,
-			addByNameParams: true,
+			errsExpected: true,
+			paramAdder:   []param.PSetOptFunc{addByNameParams},
 		},
 		{
 			ID:       testhelper.MkID("badParams-blank-filename"),
@@ -336,8 +336,8 @@ func TestHelp(t *testing.T) { //nolint: gocyclo
 				"-params-file",
 				"",
 				"-param2=99"},
-			errsExpected:    true,
-			addByNameParams: true,
+			errsExpected: true,
+			paramAdder:   []param.PSetOptFunc{addByNameParams},
 		},
 		{
 			ID:       testhelper.MkID("badParams-dup-filename"),
@@ -348,8 +348,8 @@ func TestHelp(t *testing.T) { //nolint: gocyclo
 				"-params-file",
 				"testdata/configFiles/param.cfg",
 				"-param2=99"},
-			errsExpected:    true,
-			addByNameParams: true,
+			errsExpected: true,
+			paramAdder:   []param.PSetOptFunc{addByNameParams},
 		},
 		{
 			ID:       testhelper.MkID("badParams-groups"),
@@ -358,8 +358,8 @@ func TestHelp(t *testing.T) { //nolint: gocyclo
 				"-help-groups-in-list",
 				"nonesuch1,nonesuch2,nonesuch3",
 				"-param2=99"},
-			errsExpected:    true,
-			addByNameParams: true,
+			errsExpected: true,
+			paramAdder:   []param.PSetOptFunc{addByNameParams},
 		},
 		{
 			ID:       testhelper.MkID("badParams-multi-style"),
@@ -369,8 +369,8 @@ func TestHelp(t *testing.T) { //nolint: gocyclo
 				"-help-groups-in-list",
 				paramGroupName,
 				"-param2=99"},
-			errsExpected:    true,
-			addByNameParams: true,
+			errsExpected: true,
+			paramAdder:   []param.PSetOptFunc{addByNameParams},
 		},
 		{
 			ID: testhelper.MkID("help-with-config"),
@@ -405,21 +405,21 @@ func TestHelp(t *testing.T) { //nolint: gocyclo
 					strictCF: true,
 				},
 			},
-			envPrefixes:     []string{"A_", "B_", "C_"},
-			addByNameParams: true,
+			envPrefixes: []string{"A_", "B_", "C_"},
+			paramAdder:  []param.PSetOptFunc{addByNameParams},
 		},
 		{
 			ID: testhelper.MkID("help-with-positional-params"),
 			progDesc: "a description of what the program" +
 				" does\n\nWith embedded new lines" +
 				" (help-with-positional-params)",
-			params:          []string{"123", "456", "-help", "-param2=99"},
-			addByNameParams: true,
-			addByPosParams:  true,
+			params:     []string{"123", "456", "-help", "-param2=99"},
+			paramAdder: []param.PSetOptFunc{addByNameParams, addByPosParams},
 		},
 	}
 
 	for _, tc := range testCases {
+		idStr := tc.IDStr()
 		setInitialValues()
 		helper := phelp.NewStdHelp()
 		helper.SetExitAfterHelp(false)
@@ -432,23 +432,16 @@ func TestHelp(t *testing.T) { //nolint: gocyclo
 			param.SetHelper(helper),
 			param.SetStdWriter(&stdoutBuf),
 			param.SetErrWriter(&stderrBuf),
-			param.SetProgramDescription(tc.progDesc))
+			param.SetProgramDescription(tc.progDesc),
+		)
 		if err != nil {
-			t.Log(tc.IDStr())
-			t.Fatal("\t: Unexpected failure to build the parameter set:", err)
+			t.Log(idStr)
 		}
-		if tc.addByNameParams {
-			err = addByNameParams(ps)
+		for _, psof := range tc.paramAdder {
+			err = psof(ps)
 			if err != nil {
-				t.Log(tc.IDStr())
-				t.Fatal("\t: Unexpected failure to set named parameters:", err)
-			}
-		}
-		if tc.addByPosParams {
-			err = addByPosParams(ps)
-			if err != nil {
-				t.Log(tc.IDStr())
-				t.Fatal("\t: Unexpected failure to set positional parameters:",
+				t.Log(idStr)
+				t.Fatal("\t: Unexpected failure to add parameters:",
 					err)
 			}
 		}
@@ -460,31 +453,20 @@ func TestHelp(t *testing.T) { //nolint: gocyclo
 		errMap := ps.Parse(tc.params)
 		if len(errMap) != 0 {
 			if !tc.errsExpected {
-				t.Log(tc.IDStr())
+				t.Log(idStr)
 				t.Errorf("\t: Unexpected errors: %s", stderrBuf.String())
 			}
 		} else if tc.errsExpected {
-			t.Log(tc.IDStr())
+			t.Log(idStr)
 			t.Errorf("\t: Errors expected but not seen")
 		}
 
-		testhelper.CheckAgainstGoldenFile(t,
-			tc.IDStr()+" [stdout]",
-			stdoutBuf.Bytes(),
-			gfc.PathName(tc.ID.Name+".stdout"), *updateChkResults)
-		testhelper.CheckAgainstGoldenFile(t,
-			tc.IDStr()+" [stderr]",
-			stderrBuf.Bytes(),
-			gfc.PathName(tc.ID.Name+".stderr"), *updateChkResults)
+		gfc.Check(t, idStr+" [stdout]", tc.ID.Name+".stdout", stdoutBuf.Bytes())
+		gfc.Check(t, idStr+" [stderr]", tc.ID.Name+".stderr", stderrBuf.Bytes())
 	}
 }
 
 func TestHelpWithMessage(t *testing.T) {
-	gfc := testhelper.GoldenFileCfg{
-		DirNames: []string{testDataDir, helpSubDir},
-		Sfx:      "txt",
-	}
-
 	helper := phelp.NewStdHelp()
 	helper.SetExitAfterHelp(false)
 	helper.SetDontExitOnErrors(true)
@@ -508,12 +490,6 @@ func TestHelpWithMessage(t *testing.T) {
 
 	ps.Help("message1", "message2")
 
-	testhelper.CheckAgainstGoldenFile(t,
-		t.Name()+" [stdout]",
-		stdoutBuf.Bytes(),
-		gfc.PathName(t.Name()+".stdout"), *updateChkResults)
-	testhelper.CheckAgainstGoldenFile(t,
-		t.Name()+" [stderr]",
-		stderrBuf.Bytes(),
-		gfc.PathName(t.Name()+".stderr"), *updateChkResults)
+	gfc.Check(t, t.Name()+" [stdout]", t.Name()+".stdout", stdoutBuf.Bytes())
+	gfc.Check(t, t.Name()+" [stderr]", t.Name()+".stderr", stderrBuf.Bytes())
 }
