@@ -56,10 +56,14 @@ func (av AllowedVals) ValueMapOK() error {
 	}
 }
 
-// AllowedValuesMap returns the map of allowed values. Use this if your
-// setter has a map of allowed values.
+// AllowedValuesMap returns a copy of the map of allowed values. This will be
+// used by the standard help package to generate a list of allowed values.
 func (av AllowedVals) AllowedValuesMap() AllowedVals {
-	return av
+	rval := make(map[string]string)
+	for k, v := range av {
+		rval[k] = v
+	}
+	return rval
 }
 
 // ValueAllowed returns true if the passed value is a key in the allowed
