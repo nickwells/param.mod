@@ -20,4 +20,5 @@ func (h *StdHelp) AddParams(ps *param.PSet) {
 	h.addParamHandlingParams(ps)
 	h.addParamCompletionParams(ps)
 	h.addUsageParams(ps)
+	addNotes(ps)
 }

@@ -37,7 +37,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 	groupName := groupNamePfx + "-help"
 
 	ps.AddGroup(groupName,
-		"These are parameters for printing a usage message.")
+		"These are parameters for printing a help message.")
 
 	ps.Add(helpArgName, psetter.Nil{},
 		"print a help message explaining what the program does and"+
@@ -55,31 +55,6 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		param.PostAction(setStyle(h, stdHelp)),
 		param.PostAction(styleCounterAF),
 		param.GroupName(groupName))
-
-	ps.AddNote("Optional Parameters",
-		"Parameters which are not required are shown surrounded by square"+
-			" brackets [like-this].")
-	ps.AddNote("Parameter Values",
-		"A parameter which takes a value is shown with a"+
-			" following '=...'."+
-			" If the following value is optional this is itself"+
-			" bracketed [=...]. In this case the following value"+
-			" must come after an '=' rather than as the next argument."+
-			" As follows,"+
-			"\n\n"+
-			"-xxx=false not -xxx false"+
-			"\n\n"+
-			"For parameters which must have a value it may be given in"+
-			" either way")
-	ps.AddNote("Parameter Groups",
-		"The parameters are arranged into named groups which can"+
-			" be selected or suppressed through other help parameters."+
-			" Within each group the parameters are displayed in"+
-			" alphabetical order."+
-			"\n\n"+
-			" Groups where all the parameters are hidden will not be shown."+
-			" To see all the available parameter groups use the "+
-			helpGroupsArgName+" parameter.")
 
 	ps.Add(helpFullArgName, psetter.Nil{},
 		" show all the parameters when printing the help message."+
