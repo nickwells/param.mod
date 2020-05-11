@@ -47,7 +47,7 @@ func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
 	const needZshDir = " The zsh completions directory name must be specified."
 	zshMakeCompletionsParam := ps.Add("completions-zsh-make",
 		psetter.Enum{
-			AllowedVals: param.AllowedVals{
+			AllowedVals: psetter.AllowedVals{
 				zshCompGenRepl: "any existing zsh completions" +
 					" file for the program will be overwritten or a" +
 					" new file will be generated." +

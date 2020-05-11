@@ -11,7 +11,7 @@ func TestEnum(t *testing.T) {
 	var value string
 	es := psetter.Enum{
 		Value: &value,
-		AllowedVals: param.AllowedVals{
+		AllowedVals: psetter.AllowedVals{
 			"e1": "E1 explained",
 			"e2": "E2 explained",
 			"e3": "E3 explained",
@@ -63,7 +63,7 @@ func TestEnumList(t *testing.T) {
 	var value []string
 	els := psetter.EnumList{
 		Value: &value,
-		AllowedVals: param.AllowedVals{
+		AllowedVals: psetter.AllowedVals{
 			"e1": "E1 explained",
 			"e2": "E2 explained",
 			"e3": "E3 explained",
@@ -131,7 +131,7 @@ func TestEnumMap(t *testing.T) { // nolint: gocyclo
 	var value map[string]bool
 	ems := psetter.EnumMap{
 		Value: &value,
-		AllowedVals: param.AllowedVals{
+		AllowedVals: psetter.AllowedVals{
 			"e1": "E1 explained",
 			"e2": "E2 explained",
 			"e3": "E3 explained",

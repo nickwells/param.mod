@@ -3,7 +3,6 @@ package psetter_test
 import (
 	"fmt"
 
-	"github.com/nickwells/param.mod/v4/param"
 	"github.com/nickwells/param.mod/v4/param/psetter"
 )
 
@@ -16,7 +15,7 @@ func ExampleEnum_standard() {
 	ps.Add("my-string",
 		psetter.Enum{
 			Value: &s,
-			AllowedVals: param.AllowedVals{
+			AllowedVals: psetter.AllowedVals{
 				"x": "X",
 				"y": "Y",
 			},
@@ -46,7 +45,7 @@ func ExampleEnum_withBadVal() {
 	ps.Add("my-string",
 		psetter.Enum{
 			Value: &s,
-			AllowedVals: param.AllowedVals{
+			AllowedVals: psetter.AllowedVals{
 				"x": "X",
 				"y": "Y",
 			},
@@ -88,7 +87,7 @@ func ExampleEnum_withNilValue() {
 	// we expect this to panic because the Value has not been initialised
 	ps.Add("my-string",
 		psetter.Enum{
-			AllowedVals: param.AllowedVals{
+			AllowedVals: psetter.AllowedVals{
 				"x": "X",
 				"y": "Y",
 			},
@@ -118,7 +117,7 @@ func ExampleEnum_withBadInitialValue() {
 	ps.Add("my-string",
 		psetter.Enum{
 			Value: &s,
-			AllowedVals: param.AllowedVals{
+			AllowedVals: psetter.AllowedVals{
 				"x": "X",
 				"y": "Y",
 			},

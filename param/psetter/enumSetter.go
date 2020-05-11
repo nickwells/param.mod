@@ -2,17 +2,15 @@ package psetter
 
 import (
 	"fmt"
-
-	"github.com/nickwells/param.mod/v4/param"
 )
 
 // Enum allows you to give a parameter that will only allow one of an
 // enumerated range of values which are specified in the AllowedVals map.
 type Enum struct {
-	param.ValueReqMandatory
+	ValueReqMandatory
 	// The AllowedVals must be set, the program will panic if not. The Value
 	// is guaranteed to take one of these values.
-	param.AllowedVals
+	AllowedVals
 
 	// Value must be set, the program will panic if not. This is the value
 	// being set

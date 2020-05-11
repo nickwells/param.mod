@@ -6,14 +6,13 @@ import (
 	"time"
 
 	"github.com/nickwells/check.mod/check"
-	"github.com/nickwells/param.mod/v4/param"
 )
 
 // TimeLocation allows you to give a parameter that can be used to set a
 // time.Location pointer. You can also supply check functions that will
 // validate the Value.
 type TimeLocation struct {
-	param.ValueReqMandatory
+	ValueReqMandatory
 
 	// You must set a Value, the program will panic if not. Note that this is
 	// a pointer to the pointer to the Location, you should initialise it

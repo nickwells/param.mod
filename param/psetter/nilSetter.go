@@ -1,13 +1,9 @@
 package psetter
 
-import (
-	"github.com/nickwells/param.mod/v4/param"
-)
-
 // Nil is used if no value is to be set. It can be useful if the only
 // effect is to be through the PostAction.
 type Nil struct {
-	param.ValueReqNone
+	ValueReqNone
 }
 
 // Set does nothing.

@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/nickwells/check.mod/check"
-	"github.com/nickwells/param.mod/v4/param"
 )
 
 // EnumList sets the values in a slice of strings. The values must be in
@@ -15,10 +14,10 @@ import (
 // accessing the map entries and for initialising the allowed values map to
 // avoid possible errors.
 type EnumList struct {
-	param.ValueReqMandatory
+	ValueReqMandatory
 	// The AllowedVals must be set, the program will panic if not. These are
 	// the only values that will be allowed in the slice of strings.
-	param.AllowedVals
+	AllowedVals
 
 	// Value must be set, the program will panic if not. This is the slice of
 	// values that this setter is setting

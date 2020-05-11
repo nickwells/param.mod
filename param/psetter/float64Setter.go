@@ -5,13 +5,12 @@ import (
 	"strconv"
 
 	"github.com/nickwells/check.mod/check"
-	"github.com/nickwells/param.mod/v4/param"
 )
 
 // Float64 allows you to give a parameter that can be used to set a
 // float64 value.
 type Float64 struct {
-	param.ValueReqMandatory
+	ValueReqMandatory
 
 	// Value must be set, the program will panic if not. This is the value
 	// being set

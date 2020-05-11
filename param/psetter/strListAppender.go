@@ -2,7 +2,6 @@ package psetter
 
 import (
 	"github.com/nickwells/check.mod/check"
-	"github.com/nickwells/param.mod/v4/param"
 )
 
 // StrListAppender allows you to specify a parameter that can be used to add
@@ -15,7 +14,7 @@ import (
 // there is no way to reset the value, if this feature is required another
 // parameter could be set up that will do this.
 type StrListAppender struct {
-	param.ValueReqMandatory
+	ValueReqMandatory
 
 	// You must set a Value, the program will panic if not. This is the slice
 	// of strings that the setter is appending to.

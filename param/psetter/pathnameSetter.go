@@ -6,13 +6,12 @@ import (
 	"github.com/nickwells/check.mod/check"
 	"github.com/nickwells/filecheck.mod/filecheck"
 	"github.com/nickwells/fileparse.mod/fileparse"
-	"github.com/nickwells/param.mod/v4/param"
 )
 
 // Pathname allows you to give a parameter that can be used to set a pathname
 // value.
 type Pathname struct {
-	param.ValueReqMandatory
+	ValueReqMandatory
 
 	// You must set a Value, the program will panic if not. This is the
 	// pathname that the setter is setting.

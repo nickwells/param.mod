@@ -20,7 +20,6 @@ func (nh noHelpNoExitNoErrRpt) ErrorHandler(w io.Writer, name string, errs ErrMa
 var nhnenr noHelpNoExitNoErrRpt
 
 type i64 struct {
-	ValueReqMandatory
 	Value *int64
 }
 
@@ -38,6 +37,22 @@ func (s i64) SetWithVal(_ string, paramVal string) error {
 
 	*s.Value = v
 	return nil
+}
+
+// Set (called when a value follows the parameter) checks that the
+// value can be parsed to an integer, if it cannot be parsed successfully it
+// returns an error. If there are checks and any check is violated it returns
+// an error. Only if the value is parsed successfully and no checks are
+// violated is the Value set.
+func (s i64) Set(name string) error {
+	return fmt.Errorf("a value must follow this parameter: %q,"+
+		" either following an '=' or as a next parameter", name)
+
+}
+
+// ValueReq returns Mandatory
+func (s i64) ValueReq() ValueReq {
+	return Mandatory
 }
 
 // AllowedValues returns a string describing the allowed values

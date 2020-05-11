@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-
-	"github.com/nickwells/param.mod/v4/param"
 )
 
 // EnumMap sets the entry in a map of strings. The values initially set in
@@ -19,10 +17,10 @@ import (
 // accessing the map entries and for initialising the allowed values map to
 // avoid possible errors.
 type EnumMap struct {
-	param.ValueReqMandatory
+	ValueReqMandatory
 	// The AllowedVals must be set, the program will panic if not. These are
 	// the allowed keys in the Values map
-	param.AllowedVals
+	AllowedVals
 
 	// Value must be set, the program will panic if not. This is the map of
 	// values that this setter is setting

@@ -4,8 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
-
-	"github.com/nickwells/param.mod/v4/param"
 )
 
 // Bool is used to set boolean flags
@@ -24,7 +22,7 @@ import (
 //
 // The benefit is that you can avoid the ugly double negative
 type Bool struct {
-	param.ValueReqOptional
+	ValueReqOptional
 
 	// Value must be set, the program will panic if not. This is the boolean
 	// that the setter is setting

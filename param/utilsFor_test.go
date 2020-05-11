@@ -2,6 +2,7 @@ package param_test
 
 import (
 	"errors"
+	"fmt"
 	"runtime/debug"
 	"strings"
 	"testing"
@@ -15,9 +16,18 @@ import (
 // failingSetter will return an error in all cases - it's intended for use in
 // test cases where we want a setter to fail
 type failingSetter struct {
-	param.ValueReqMandatory
-
 	errMsg string
+}
+
+// ValueReq returns the Mandatory value of the ValueReq type to indicate that
+// a value must follow the parameter for this setter
+func (failingSetter) ValueReq() param.ValueReq { return param.Mandatory }
+
+// Set returns an error because if the value is Mandatory then a value must
+// follow the parameter for this setter
+func (failingSetter) Set(name string) error {
+	return fmt.Errorf("a value must follow this parameter: %q,"+
+		" either following an '=' or as a next parameter", name)
 }
 
 // SetWithVal (called when a value follows the parameter) always returns an

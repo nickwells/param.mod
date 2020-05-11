@@ -50,11 +50,3 @@ type Setter interface {
 	CurrentValue() string
 	CheckSetter(name string)
 }
-
-// AllowedValuesMapper is the additional interface for a setter which has a
-// map of allowed values. This is checked by the default help package and if
-// the setter implements this interface then it will be called and the
-// resulting map is used to populate the help message.
-type AllowedValuesMapper interface {
-	AllowedValuesMap() AllowedVals
-}

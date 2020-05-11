@@ -2,13 +2,12 @@ package psetter
 
 import (
 	"github.com/nickwells/check.mod/check"
-	"github.com/nickwells/param.mod/v4/param"
 )
 
 // String is the type for setting string values from
 // parameters
 type String struct {
-	param.ValueReqMandatory
+	ValueReqMandatory
 
 	// You must set a Value, the program will panic if not. This is the
 	// string that the setter is setting.

@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/nickwells/check.mod/check"
-	"github.com/nickwells/param.mod/v4/param"
 	"github.com/nickwells/param.mod/v4/param/psetter"
 )
 
@@ -17,7 +16,7 @@ func ExampleEnumList_standard() {
 	ps.Add("my-list",
 		psetter.EnumList{
 			Value: &ss,
-			AllowedVals: param.AllowedVals{
+			AllowedVals: psetter.AllowedVals{
 				"x": "X",
 				"y": "Y",
 			},
@@ -51,7 +50,7 @@ func ExampleEnumList_withBadVals() {
 	ps.Add("my-list",
 		psetter.EnumList{
 			Value: &ss,
-			AllowedVals: param.AllowedVals{
+			AllowedVals: psetter.AllowedVals{
 				"x": "X",
 				"y": "Y",
 			},
@@ -89,7 +88,7 @@ func ExampleEnumList_withPassingChecks() {
 	ps.Add("my-list",
 		psetter.EnumList{
 			Value: &ss,
-			AllowedVals: param.AllowedVals{
+			AllowedVals: psetter.AllowedVals{
 				"x": "X",
 				"y": "Y",
 			},
@@ -128,7 +127,7 @@ func ExampleEnumList_withFailingChecks() {
 	ps.Add("my-list",
 		psetter.EnumList{
 			Value: &ss,
-			AllowedVals: param.AllowedVals{
+			AllowedVals: psetter.AllowedVals{
 				"x": "X",
 				"y": "Y",
 			},
@@ -175,7 +174,7 @@ func ExampleEnumList_withNilValue() {
 	// we expect this to panic because the list Value has not been initialised
 	ps.Add("my-list",
 		psetter.EnumList{
-			AllowedVals: param.AllowedVals{
+			AllowedVals: psetter.AllowedVals{
 				"x": "X",
 				"y": "Y",
 			},

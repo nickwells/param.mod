@@ -4,7 +4,6 @@ import (
 	"strings"
 
 	"github.com/nickwells/check.mod/check"
-	"github.com/nickwells/param.mod/v4/param"
 )
 
 // StrList allows you to specify a parameter that can be used to set a list
@@ -13,7 +12,7 @@ import (
 // If only certain, predefined, values are allowed you might prefer to use
 // EnumList
 type StrList struct {
-	param.ValueReqMandatory
+	ValueReqMandatory
 
 	// You must set a Value, the program will panic if not. This is the
 	// string that the setter is setting.

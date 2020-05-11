@@ -98,7 +98,7 @@ func addByNameParams(ps *param.PSet) error {
 	)
 
 	ps.Add("param5", psetter.Enum{
-		AllowedVals: param.AllowedVals{
+		AllowedVals: psetter.AllowedVals{
 			"v1": "a value",
 			"v2": "another value",
 		},
@@ -109,7 +109,7 @@ func addByNameParams(ps *param.PSet) error {
 	)
 
 	ps.Add("param6", psetter.Enum{
-		AllowedVals: param.AllowedVals{
+		AllowedVals: psetter.AllowedVals{
 			"v1": "a value",
 			"v2": "another value",
 		},

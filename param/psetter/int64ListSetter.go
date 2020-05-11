@@ -6,13 +6,12 @@ import (
 	"strings"
 
 	"github.com/nickwells/check.mod/check"
-	"github.com/nickwells/param.mod/v4/param"
 )
 
 // Int64List allows you to give a parameter that can be used to set a
 // list (a slice) of int64's.
 type Int64List struct {
-	param.ValueReqMandatory
+	ValueReqMandatory
 
 	// You must set a Value - this is the slice of int64's that the setter is
 	// setting.

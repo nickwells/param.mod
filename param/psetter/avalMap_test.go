@@ -1,15 +1,15 @@
-package param_test
+package psetter_test
 
 import (
 	"testing"
 
-	"github.com/nickwells/param.mod/v4/param"
+	"github.com/nickwells/param.mod/v4/param/psetter"
 )
 
 func TestAllowedVals(t *testing.T) {
 	testCases := []struct {
 		name        string
-		avMap       param.AllowedVals
+		avMap       psetter.AllowedVals
 		allowedVals string
 	}{
 		{

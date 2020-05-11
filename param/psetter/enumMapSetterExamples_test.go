@@ -3,7 +3,6 @@ package psetter_test
 import (
 	"fmt"
 
-	"github.com/nickwells/param.mod/v4/param"
 	"github.com/nickwells/param.mod/v4/param/psetter"
 )
 
@@ -17,7 +16,7 @@ func ExampleEnumMap_standard() {
 	ps.Add("my-map",
 		psetter.EnumMap{
 			Value: &m,
-			AllowedVals: param.AllowedVals{
+			AllowedVals: psetter.AllowedVals{
 				"x": "X",
 				"y": "Y",
 			},
@@ -54,7 +53,7 @@ func ExampleEnumMap_fixingInitialValue() {
 	ps.Add("my-map",
 		psetter.EnumMap{
 			Value: &m,
-			AllowedVals: param.AllowedVals{
+			AllowedVals: psetter.AllowedVals{
 				"x": "X",
 				"y": "Y",
 			},
@@ -95,7 +94,7 @@ func ExampleEnumMap_hiddenMapEntries() {
 	ps.Add("my-map",
 		psetter.EnumMap{
 			Value: &m,
-			AllowedVals: param.AllowedVals{
+			AllowedVals: psetter.AllowedVals{
 				"x": "X",
 				"y": "Y",
 			},
@@ -145,7 +144,7 @@ func ExampleEnumMap_withBadKey() {
 	ps.Add("my-map",
 		psetter.EnumMap{
 			Value: &m,
-			AllowedVals: param.AllowedVals{
+			AllowedVals: psetter.AllowedVals{
 				"x": "X",
 				"y": "Y",
 			},
@@ -172,7 +171,7 @@ func ExampleEnumMap_withNilValue() {
 	// we expect this to panic because the map Value has not been initialised
 	ps.Add("my-map",
 		psetter.EnumMap{
-			AllowedVals: param.AllowedVals{
+			AllowedVals: psetter.AllowedVals{
 				"x": "X",
 				"y": "Y",
 			},

@@ -4,13 +4,13 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/nickwells/param.mod/v4/param"
+	"github.com/nickwells/param.mod/v4/param/psetter"
 )
 
 // configFileSetter sets a config file from which to read configuration
 // parameters
 type configFileSetter struct {
-	param.ValueReqMandatory
+	psetter.ValueReqMandatory
 
 	seenBefore map[string]bool
 }

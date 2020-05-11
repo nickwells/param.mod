@@ -1,4 +1,4 @@
-package param
+package psetter
 
 import (
 	"errors"
@@ -7,28 +7,44 @@ import (
 )
 
 // AllowedVals - this maps allowed values for an enumerated parameter to
-// explanatory text. It forms part of the usage documentation of the program
-// and will appear when the -help parameter is given by the user. It is also
-// used to validate a supplied parameter.
+// explanatory text. It forms part of the usage documentation of the
+// program. It is also used to validate a supplied parameter.
+//
+// It can be used as a mixin type that can be embedded in a Setter to provide
+// a restricted set of allowed values
 type AllowedVals map[string]string
+
+// AllowedValuesMapper
+type AllowedValuesMapper interface {
+	AllowedValuesMap() AllowedVals
+}
+
+// Keys returns an unsorted list of keys to the AllowedVals map and the
+// length of the longest key.
+func (av AllowedVals) Keys() ([]string, int) {
+	var keys = make([]string, 0, len(av))
+	var maxKeyLen int
+
+	for k := range av {
+		keys = append(keys, k)
+		if len(k) > maxKeyLen {
+			maxKeyLen = len(k)
+		}
+	}
+
+	return keys, maxKeyLen
+}
 
 // String returns a string documenting the entries in the map - each entry is
 // on a separate line
 func (av AllowedVals) String() string {
 	var avals string
-	var valNames = make([]string, 0, len(av))
-	var maxNameLen int
+	keys, maxKeyLen := av.Keys()
+	sort.Strings(keys)
 
-	for k := range av {
-		valNames = append(valNames, k)
-		if len(k) > maxNameLen {
-			maxNameLen = len(k)
-		}
-	}
-	sort.Strings(valNames)
 	sep := ""
-	for _, v := range valNames {
-		avals += sep + fmt.Sprintf("%-*s: ", maxNameLen, v) + av[v]
+	for _, k := range keys {
+		avals += sep + fmt.Sprintf("%-*s: ", maxKeyLen, k) + av[k]
 		sep = "\n"
 	}
 	return avals

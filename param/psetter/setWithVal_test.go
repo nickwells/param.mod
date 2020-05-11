@@ -23,7 +23,7 @@ func TestSetWithVal(t *testing.T) {
 	var vEnumList []string = []string{"hello", "world"}
 	var setterEnumList = psetter.EnumList{
 		Value: &vEnumList,
-		AllowedVals: param.AllowedVals{
+		AllowedVals: psetter.AllowedVals{
 			"hello": "hello description",
 			"world": "world description",
 			"bye":   "bye description",
@@ -31,7 +31,7 @@ func TestSetWithVal(t *testing.T) {
 	}
 	var setterEnumListWithChecks = psetter.EnumList{
 		Value: &vEnumList,
-		AllowedVals: param.AllowedVals{
+		AllowedVals: psetter.AllowedVals{
 			"hello": "hello description",
 			"world": "world description",
 			"bye":   "bye description",
@@ -47,7 +47,7 @@ func TestSetWithVal(t *testing.T) {
 	}
 	var setterEnumMap = psetter.EnumMap{
 		Value: &vEnumMap,
-		AllowedVals: param.AllowedVals{
+		AllowedVals: psetter.AllowedVals{
 			"hello": "hello description",
 			"world": "world description",
 			"bye":   "bye description",
@@ -57,7 +57,7 @@ func TestSetWithVal(t *testing.T) {
 	var vEnum string = "hello"
 	var setterEnum = psetter.Enum{
 		Value: &vEnum,
-		AllowedVals: param.AllowedVals{
+		AllowedVals: psetter.AllowedVals{
 			"hello": "hello description",
 			"world": "world description",
 			"bye":   "bye description",

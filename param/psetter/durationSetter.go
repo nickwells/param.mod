@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/nickwells/check.mod/check"
-	"github.com/nickwells/param.mod/v4/param"
 )
 
 // Duration allows you to specify a parameter that can be used to set a
@@ -14,7 +13,7 @@ import (
 // validate the Value. See the check package for some common pre-defined
 // checks.
 type Duration struct {
-	param.ValueReqMandatory
+	ValueReqMandatory
 
 	Value  *time.Duration
 	Checks []check.Duration

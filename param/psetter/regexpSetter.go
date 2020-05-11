@@ -3,14 +3,12 @@ package psetter
 import (
 	"fmt"
 	"regexp"
-
-	"github.com/nickwells/param.mod/v4/param"
 )
 
 // Regexp allows you to give a parameter that can be used to set an
 // regexp value.
 type Regexp struct {
-	param.ValueReqMandatory
+	ValueReqMandatory
 
 	// You must set a Value, the program will panic if not. Note that this is
 	// a pointer to a pointer, you should initialise it with the address of

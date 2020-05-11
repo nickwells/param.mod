@@ -52,7 +52,7 @@ func TestAllowedValues(t *testing.T) {
 			ID: testhelper.MkID("EnumList"),
 			s: &psetter.EnumList{
 				Value: &emptyStrList,
-				AllowedVals: param.AllowedVals{
+				AllowedVals: psetter.AllowedVals{
 					"aval":     "desc",
 					"aval-alt": "desc",
 				},
@@ -62,7 +62,7 @@ func TestAllowedValues(t *testing.T) {
 			ID: testhelper.MkID("EnumMap"),
 			s: &psetter.EnumMap{
 				Value: &strToBoolMap,
-				AllowedVals: param.AllowedVals{
+				AllowedVals: psetter.AllowedVals{
 					"aval":     "desc",
 					"aval-alt": "desc",
 				},
@@ -72,7 +72,7 @@ func TestAllowedValues(t *testing.T) {
 			ID: testhelper.MkID("Enum"),
 			s: &psetter.Enum{
 				Value: &goodStr,
-				AllowedVals: param.AllowedVals{
+				AllowedVals: psetter.AllowedVals{
 					"aval":     "desc",
 					"aval-alt": "desc",
 				},

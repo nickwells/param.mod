@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/nickwells/check.mod/check"
-	"github.com/nickwells/param.mod/v4/param"
 )
 
 // Time Formats given here can be used to set the Format member of the Time
@@ -21,7 +20,7 @@ const (
 // Time allows you to give a parameter that can be used to set a time.Time
 // value.
 type Time struct {
-	param.ValueReqMandatory
+	ValueReqMandatory
 
 	// You must set a Value, the program will panic if not. This is the
 	// Time that the setter is setting.

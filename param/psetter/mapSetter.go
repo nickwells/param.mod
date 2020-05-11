@@ -6,13 +6,12 @@ import (
 	"strings"
 
 	"github.com/nickwells/check.mod/check"
-	"github.com/nickwells/param.mod/v4/param"
 )
 
 // Map sets the entry in a map of strings. Each value from the
 // parameter is used as a key in the map with the map entry set to true.
 type Map struct {
-	param.ValueReqMandatory
+	ValueReqMandatory
 
 	// You must set a Value, the program will panic if not. This is the map
 	// of strings to bool that the setter is setting
