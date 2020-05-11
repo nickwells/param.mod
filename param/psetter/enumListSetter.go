@@ -89,7 +89,7 @@ func (s EnumList) CheckSetter(name string) {
 		panic(NilValueMessage(name, "psetter.EnumList"))
 	}
 	intro := name + ": psetter.EnumList Check failed: "
-	if err := s.ValueMapOK(); err != nil {
+	if err := s.AllowedVals.Check(); err != nil {
 		panic(intro + err.Error())
 	}
 	for i, v := range *s.Value {

@@ -45,7 +45,7 @@ func (s Enum) CheckSetter(name string) {
 		panic(NilValueMessage(name, "psetter.Enum"))
 	}
 	intro := name + ": psetter.Enum Check failed: "
-	if err := s.ValueMapOK(); err != nil {
+	if err := s.AllowedVals.Check(); err != nil {
 		panic(intro + err.Error())
 	}
 	if !s.ValueAllowed(*s.Value) {

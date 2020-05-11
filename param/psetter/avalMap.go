@@ -50,7 +50,7 @@ func (av AllowedVals) String() string {
 	return avals
 }
 
-// ValueMapOK returns a nil error if the map is "good" or an error with an
+// Check returns a nil error if the map is "good" or an error with an
 // explanation of the problem otherwise.
 //
 // A map is "good" if it has more than one entry. A set of allowed values
@@ -58,7 +58,7 @@ func (av AllowedVals) String() string {
 // then the parameter can never be set correctly and if it only has a single
 // entry then the current (initial) value is the only allowed value and so
 // there is no need for a parameter as no alternative can ever be allowed.
-func (av AllowedVals) ValueMapOK() error {
+func (av AllowedVals) Check() error {
 	minEntries := "It should have at least 2"
 	switch len(av) {
 	case 0:
