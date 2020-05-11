@@ -703,12 +703,12 @@ func TestParamByName(t *testing.T) {
 			val1InitialVal, "  but was: ", p.InitialValue())
 	}
 
-	if pvr := p.ValueReq(); pvr != param.Mandatory {
+	if pvr := p.Setter().ValueReq(); pvr != param.Mandatory {
 		t.Error("a parameter value should be required for an Int64"+
 			" ValueReq() returned: ", pvr.String())
 	}
 
-	if p.AllowedValues() == "" {
+	if p.Setter().AllowedValues() == "" {
 		t.Error(
 			"a non-empty allowed values string is expected for an Int64")
 	}

@@ -10,6 +10,7 @@ import (
 
 	"github.com/nickwells/filecheck.mod/filecheck"
 	"github.com/nickwells/param.mod/v4/param"
+	"github.com/nickwells/param.mod/v4/param/psetter"
 	"github.com/nickwells/twrap.mod/twrap"
 )
 
@@ -59,7 +60,7 @@ func zshMakeAltNames(name string, names []string) string {
 // indicate whether it must or should be followed by an equals sign when
 // setting the parameter value
 func zshNameSuffix(p *param.ByName) string {
-	switch p.ValueReq() {
+	switch p.Setter().ValueReq() {
 	case param.Mandatory:
 		return "="
 	case param.Optional:
@@ -73,28 +74,43 @@ func zshNameSuffix(p *param.ByName) string {
 // argument. The action part is specialised according to the type of the
 // setter. The setter name is used as the message part.
 func zshMsgAction(p *param.ByName) string {
-	if p.ValueReq() == param.None {
+	valueReq := p.Setter().ValueReq()
+	if valueReq == param.None {
 		return ""
 	}
 
 	msgAction := ":"
-	if p.ValueReq() == param.Optional {
+	if valueReq == param.Optional {
 		msgAction += ":"
 	}
 
-	msgAction += p.SetterType() + ":"
-	switch p.SetterType() {
+	sType := fmt.Sprintf("%T", p.Setter())
+	msgAction += sType + ":"
+	switch sType {
 	case "psetter.Bool":
 		msgAction += "(true false)"
 	case "psetter.Pathname":
 		msgAction += "_files"
 	default:
-		avm := p.AllowedValuesMap()
-		if avm != nil {
-			avals := make([]string, 0, len(avm))
-			for k := range avm {
-				avals = append(avals, k)
+		var avals []string
+
+		if getter, ok := p.Setter().(psetter.AllowedValuesMapper); ok {
+			m := getter.AllowedValuesMap()
+			if m != nil {
+				keys, _ := m.Keys()
+				avals = append(avals, keys...)
 			}
+		}
+
+		if getter, ok := p.Setter().(psetter.AllowedValuesAliasMapper); ok {
+			m := getter.AllowedValuesAliasMap()
+			if m != nil {
+				keys, _ := m.Keys()
+				avals = append(avals, keys...)
+			}
+		}
+
+		if len(avals) > 0 {
 			sort.Strings(avals)
 			msgAction += "(" + strings.Join(avals, " ") + ")"
 		}
@@ -107,7 +123,7 @@ func zshMsgAction(p *param.ByName) string {
 func zshOptSpec(p *param.ByName) []string {
 	names := p.AltNames()
 	specCount := len(names)
-	if p.ValueReq() == param.Optional {
+	if p.Setter().ValueReq() == param.Optional {
 		specCount *= 2
 	}
 

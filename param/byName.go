@@ -60,26 +60,8 @@ func (p ByName) InitialValue() string { return p.initialValue }
 // GroupName returns the groupName of the ByName parameter
 func (p ByName) GroupName() string { return p.groupName }
 
-// ValueReq returns the value requirements for the ByName parameter.
-func (p ByName) ValueReq() ValueReq { return p.setter.ValueReq() }
-
-// AllowedValues returns a description of the values that the ByName
-// parameter can accept
-func (p ByName) AllowedValues() string { return p.setter.AllowedValues() }
-
-// SetterType returns the name of the Setter type that the ByName
-// parameter uses
-func (p ByName) SetterType() string { return fmt.Sprintf("%T", p.setter) }
-
-// AllowedValuesMap returns the map (which may be nil) of values to
-// descriptions for the values that the ByName parameter can accept
-func (p ByName) AllowedValuesMap() AllowedVals {
-	av, ok := p.setter.(AllowedValuesMapper)
-	if !ok {
-		return nil
-	}
-	return av.AllowedValuesMap()
-}
+// Setter returns the setter
+func (p ByName) Setter() Setter { return p.setter }
 
 // Attributes records various flags that can be set on a ByName parameter
 type Attributes int32

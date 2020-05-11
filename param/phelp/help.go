@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/nickwells/param.mod/v4/param"
+	"github.com/nickwells/param.mod/v4/param/psetter"
 	"github.com/nickwells/twrap.mod/twrap"
 )
 
@@ -201,8 +202,9 @@ func printParamAttributes(twc *twrap.TWConf, p *param.ByName) {
 
 // printParamUsage prints the per-parameter help text
 func (h StdHelp) printParamUsage(twc *twrap.TWConf, p *param.ByName) {
+	valueReq := p.Setter().ValueReq()
 	prefix := "-"
-	suffix := valueNeededStr(p.ValueReq())
+	suffix := valueNeededStr(valueReq)
 	if !p.AttrIsSet(param.MustBeSet) {
 		prefix = "[" + prefix
 		suffix += "]"
@@ -224,7 +226,7 @@ func (h StdHelp) printParamUsage(twc *twrap.TWConf, p *param.ByName) {
 	twc.Wrap(p.Description(), descriptionIndent)
 	printParamAttributes(twc, p)
 	h.showAllowedValsByName(twc, p)
-	if p.ValueReq() == param.None {
+	if valueReq == param.None {
 		return
 	}
 	twc.WrapPrefixed("Initial value: ", p.InitialValue(), descriptionIndent)
@@ -232,26 +234,40 @@ func (h StdHelp) printParamUsage(twc *twrap.TWConf, p *param.ByName) {
 
 // showAllowedValsByName shows the allowed values for the ByName parameter
 func (h StdHelp) showAllowedValsByName(twc *twrap.TWConf, p *param.ByName) {
-	if p.ValueReq() == param.None {
+	if p.Setter().ValueReq() == param.None {
 		return
 	}
-	h.showAllowedValues(twc, p.Name(), p.AllowedValues(), p.AllowedValuesMap())
+	h.showAllowedValues(twc, p.Name(), p.Setter())
 }
 
 // showAllowedValsByPos shows the allowed values for the ByPos parameter
 func (h StdHelp) showAllowedValsByPos(twc *twrap.TWConf, p *param.ByPos) {
-	h.showAllowedValues(twc, p.Name(), p.AllowedValues(), p.AllowedValuesMap())
+	h.showAllowedValues(twc, p.Name(), p.Setter())
 }
 
 // showAllowedValues prints the allowed values for a parameter. It will print
 // a reference to an earlier parameter if the allowed value text has been
 // seen already
-func (h StdHelp) showAllowedValues(twc *twrap.TWConf, pName, aval string, av param.AllowedVals) {
+func (h StdHelp) showAllowedValues(twc *twrap.TWConf, pName string, s param.Setter) {
 	const prefix = "Allowed values: "
 
+	aval := s.AllowedValues()
 	keyStr := aval
-	if av != nil {
-		keyStr += av.String()
+
+	var avm psetter.AllowedVals
+	if sAVM, ok := s.(psetter.AllowedValuesMapper); ok {
+		avm = sAVM.AllowedValuesMap()
+	}
+	if avm != nil {
+		keyStr += avm.String()
+	}
+
+	var avam psetter.Aliases
+	if sAVM, ok := s.(psetter.AllowedValuesAliasMapper); ok {
+		avam = sAVM.AllowedValuesAliasMap()
+	}
+	if avam != nil {
+		keyStr += avam.String()
 	}
 
 	key := md5.Sum([]byte(keyStr))
@@ -265,9 +281,14 @@ func (h StdHelp) showAllowedValues(twc *twrap.TWConf, pName, aval string, av par
 
 	h.avalShownAlready[key] = pName
 	twc.WrapPrefixed(prefix, aval, descriptionIndent)
-	if av != nil {
+	if avm != nil {
 		indent := descriptionIndent + len(prefix)
-		aval = "The value must be one of the following:\n" + av.String()
+		aval = "The value must be one of the following:\n" + avm.String()
+		twc.Wrap2Indent(aval, indent, indent+4)
+	}
+	if avam != nil {
+		indent := descriptionIndent + len(prefix)
+		aval = "The following aliases are available:\n" + avam.String()
 		twc.Wrap2Indent(aval, indent, indent+4)
 	}
 }

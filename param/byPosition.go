@@ -38,20 +38,9 @@ func (bp ByPos) Description() string { return bp.description }
 // InitialValue returns the initialValue of the ByPos parameter
 func (bp ByPos) InitialValue() string { return bp.initialValue }
 
-// AllowedValues returns a description of the values that the ByPos
-// parameter can accept
-func (bp ByPos) AllowedValues() string {
-	return bp.setter.AllowedValues()
-}
-
-// AllowedValuesMap returns the map (which may be nil) of values to
-// descriptions for the values that the ByPos parameter can accept
-func (bp ByPos) AllowedValuesMap() AllowedVals {
-	av, ok := bp.setter.(AllowedValuesMapper)
-	if !ok {
-		return nil
-	}
-	return av.AllowedValuesMap()
+// Setter returns the setter
+func (bp ByPos) Setter() Setter {
+	return bp.setter
 }
 
 // =============================================
