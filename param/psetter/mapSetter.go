@@ -19,6 +19,10 @@ type Map struct {
 	// The Checks, if any, are applied to the supplied parameter value and
 	// the new parameter will be applied only if they all return a nil error
 	Checks []check.MapStringBool
+	// The Editor, if present, is applied to the parameter value after any
+	// checks are applied and allows the programmer to modify the value
+	// supplied before using it to set the Value
+	Editor Editor
 	StrListSeparator
 }
 
@@ -28,28 +32,45 @@ func (s Map) CountChecks() int {
 }
 
 // SetWithVal (called when a value follows the parameter) splits the value
-// using the list separator.
-func (s Map) SetWithVal(_ string, paramVal string) error {
+// using the list separator. For each of these values it will try to split it
+// into two parts around an '='. The first part has the Editor (if any)
+// applied to it and the name is replaced with the edited value. If the
+// Editor returns a non-nil error then that is returned and the value is
+// unchanged. If there is only one part the named map entry is set to true,
+// otherwise it will try to parse the second part as a bool. If it can be so
+// parsed then the named map entry will be set to that value, otherwise it
+// will return the parsing error. It will run the checks (if any) against the
+// map and if any check returns a non-nil error that is returned. Finally it
+// will update the Value with the new entries.
+//
+// Note that the Value map is not replaced compmletely, just updated.
+func (s Map) SetWithVal(paramName string, paramVal string) error {
+	var err error
 	sep := s.GetSeparator()
 	values := strings.Split(paramVal, sep)
 	m := map[string]bool{}
 
 	for i, v := range values {
 		parts := strings.SplitN(v, "=", 2)
-		switch len(parts) {
-		case 1:
-			m[parts[0]] = true
-		case 2:
+		key := parts[0]
+		if s.Editor != nil {
+			key, err = s.Editor.Edit(paramName, key)
+			if err != nil {
+				return err
+			}
+		}
+		b := true
+		if len(parts) == 2 {
 			// check that the bool can be parsed
-			b, err := strconv.ParseBool(parts[1])
+			b, err = strconv.ParseBool(parts[1])
 			if err != nil {
 				return fmt.Errorf("bad value: %q: part: %d (%q) is invalid."+
 					" The value (%q) cannot be interpreted"+
 					" as true or false: %s",
 					paramVal, i+1, v, parts[1], err)
 			}
-			m[parts[0]] = b
 		}
+		m[key] = b
 	}
 
 	for _, check := range s.Checks {
@@ -57,7 +78,7 @@ func (s Map) SetWithVal(_ string, paramVal string) error {
 			continue
 		}
 
-		err := check(m)
+		err = check(m)
 		if err != nil {
 			return err
 		}
