@@ -2,7 +2,6 @@ package phelp
 
 import (
 	"fmt"
-	"io"
 	"os"
 	"sort"
 
@@ -18,39 +17,33 @@ import (
 // message for details. It is typically called from the Parse(...) method
 // being passed the PSet error writer, the program name and the PSet
 // error map
-func (h StdHelp) ErrorHandler(w io.Writer, name string, errMap param.ErrMap) {
+func (h StdHelp) ErrorHandler(ps *param.PSet, errMap param.ErrMap) {
 	if len(errMap) == 0 {
 		return
 	}
 
-	if !h.dontReportErrors {
-		ReportErrors(w, name, errMap)
-		twc, err := twrap.NewTWConf(twrap.SetWriter(w))
-		if err != nil {
-			fmt.Fprint(os.Stderr, "Couldn't build the text wrapper:", err)
-			return
-		}
-
-		twc.Wrap("\nTry the '-"+helpArgName+
-			"' parameter for more information.\n",
-			0)
-	}
-
-	if h.dontExitOnErrors {
+	if !h.reportErrors {
 		return
 	}
+	twc := twrap.NewTWConfOrPanic(twrap.SetWriter(ps.ErrWriter()))
+
+	ReportErrors(twc, ps.ProgName(), errMap)
+
+	twc.Wrap("\nTry the '-"+helpArgName+
+		"' parameter for more information.\n",
+		0)
+
+	if !h.exitOnErrors {
+		return
+	}
+
 	os.Exit(1)
 }
 
 // ReportErrors reports the errors (if any) to the writer. It can be
 // used by any Helper and is used by the StdHelp instance.
-func ReportErrors(w io.Writer, name string, errMap param.ErrMap) {
+func ReportErrors(twc *twrap.TWConf, name string, errMap param.ErrMap) {
 	if len(errMap) == 0 {
-		return
-	}
-	twc, err := twrap.NewTWConf(twrap.SetWriter(w))
-	if err != nil {
-		fmt.Fprint(os.Stderr, "Couldn't build the text wrapper:", err)
 		return
 	}
 
@@ -65,6 +58,7 @@ func ReportErrors(w io.Writer, name string, errMap param.ErrMap) {
 	for _, pName := range paramNames {
 		reportParamError(twc, pName, errMap[pName])
 	}
+	twc.Wrap("\nTry the '-"+helpArgName+"' parameter for more information.", 0)
 }
 
 // reportErrorCount calculates the number of errors in errMap and reports it
@@ -109,8 +103,7 @@ func reportParamError(twc *twrap.TWConf, pName string, errs []error) {
 		}
 		switch e := e.(type) {
 		case location.Err:
-			twc.WrapPrefixed(prefix, e.Msg+
-				"\nparameter set at: "+e.Loc.String(), descriptionIndent)
+			twc.WrapPrefixed(prefix, e.Msg+"\nAt: "+e.Loc.String(), descriptionIndent)
 		default:
 			twc.WrapPrefixed(prefix, e.Error(), descriptionIndent)
 		}

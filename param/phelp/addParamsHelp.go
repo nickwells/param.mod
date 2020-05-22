@@ -14,13 +14,14 @@ import (
 )
 
 const (
-	helpArgName             = "help"
-	helpFullArgName         = "help-full"
-	helpSummaryArgName      = "help-summary"
-	helpGroupsArgName       = "help-show-groups"
-	helpAltSourcesArgName   = "help-show-sources"
-	helpShowExamplesArgName = "help-show-examples"
-	helpShowRefsArgName     = "help-show-references"
+	helpArgName           = "help"
+	helpShowArgName       = "help-show"
+	helpFullArgName       = "help-full"
+	helpShowHiddenArgName = "help-all"
+	helpSummaryArgName    = "help-summary"
+	helpGroupsArgName     = "help-groups"
+	helpParamsArgName     = "help-params"
+	helpNotesArgName      = "help-notes"
 )
 
 const (
@@ -28,256 +29,310 @@ const (
 		" after the help message is shown."
 )
 
+type trimDashes struct{}
+
+// Edit will remove any leading dashes ("-") from a parameter name and return
+// it.
+func (trimDashes) Edit(_, val string) (string, error) {
+	return strings.TrimLeft(val, "-"), nil
+}
+
 // addUsageParams will add the usage parameters into the parameter set
 func (h *StdHelp) addUsageParams(ps *param.PSet) {
-	// TODO: Do we need the styleCounter
-	var styleCounter paction.Counter
-	styleCounterAF := (&styleCounter).MakeActionFunc()
-
 	groupName := groupNamePfx + "-help"
 
 	ps.AddGroup(groupName,
 		"These are parameters for printing a help message.")
 
 	ps.Add(helpArgName, psetter.Nil{},
-		"print a help message explaining what the program does and"+
-			" the available parameters."+
+		"print this help message and exit."+
 			"\n\n"+
-			"Parameters which are less commonly useful will not be shown."+
-			" To see these hidden parameters use the -"+helpFullArgName+
+			"To see hidden parameters use the -"+helpShowHiddenArgName+
 			" parameter."+
-			"\n\n"+
-			"For a shorter help message use the -"+helpSummaryArgName+
-			" parameter"+
-			exitAfterHelpMessage,
+			"\n"+
+			"For a brief help message use the -"+helpSummaryArgName+
+			" parameter",
 		param.Attrs(param.CommandLineOnly),
 		param.AltName("usage"),
-		param.PostAction(setStyle(h, stdHelp)),
-		param.PostAction(styleCounterAF),
+		param.PostAction(setHelpSections(h, standardSections)),
 		param.GroupName(groupName))
 
 	ps.Add(helpFullArgName, psetter.Nil{},
-		" show all the parameters when printing the help message."+
-			" Parameters, including this one, which would not normally be"+
-			" shown as part of the help message will be printed."+
+		" show all parts of the help message and all"+
+			" parameters, including hidden ones."+
+			exitAfterHelpMessage,
+		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
+		param.PostAction(setHelpSections(h, allSections)),
+		param.PostAction(paction.SetBool(&h.showHiddenItems, true)),
+		param.GroupName(groupName))
+
+	ps.Add(helpShowHiddenArgName, psetter.Nil{},
+		" show all the parameters."+
+			" Less commonly useful parameters are not shown in the"+
+			" standard help message. This will reveal them."+
 			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.AltName("help-a"),
-		param.AltName("help-all"),
-		param.AltName("help-show-all"),
-		param.AltName("help-show-hidden"),
-		param.PostAction(paction.SetBool(&h.styleNeedsSetting, true)),
-		param.PostAction(paction.SetBool(&h.paramsShowHidden, true)),
+		param.PostAction(paction.SetBool(&h.showHiddenItems, true)),
+		param.PostAction(paction.SetBool(&h.helpRequested, true)),
 		param.GroupName(groupName))
 
 	ps.Add(helpSummaryArgName, psetter.Nil{},
-		"print a summary of the help message."+
-			" Whether the hidden parameters are shown is"+
-			" determined by the "+helpFullArgName+" parameter."+
-			" To see all the parameters (including hidden ones) in"+
-			" a summarised form you will need to give both this parameter"+
-			" and the "+helpFullArgName+" parameter."+
+		"print a shorter help message. Only minimal details"+
+			" are show, descriptions are not shown."+
 			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.AltName("help-s"),
 		param.AltName("help-short"),
-		param.PostAction(paction.SetBool(&h.styleNeedsSetting, true)),
-		param.PostAction(paction.SetBool(&h.showFullHelp, false)),
+		param.PostAction(paction.SetBool(&h.hideDescriptions, true)),
+		param.PostAction(paction.SetBool(&h.helpRequested, true)),
 		param.GroupName(groupName))
 
 	ps.Add("help-all-short", psetter.Nil{},
-		"print a summarised help message giving all the valid parameters."+
-			" This is the equivalent of giving both the "+helpFullArgName+
+		"print a shorter help message but with all the"+
+			" parameters shown. This is the equivalent"+
+			" of giving both the "+helpShowHiddenArgName+
 			" and the "+helpSummaryArgName+" parameters."+
 			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.AltName("help-as"),
 		param.AltName("help-sa"),
-		param.PostAction(paction.SetBool(&h.styleNeedsSetting, true)),
-		param.PostAction(paction.SetBool(&h.paramsShowHidden, true)),
-		param.PostAction(paction.SetBool(&h.showFullHelp, false)),
+		param.PostAction(paction.SetBool(&h.showHiddenItems, true)),
+		param.PostAction(paction.SetBool(&h.hideDescriptions, true)),
+		param.PostAction(paction.SetBool(&h.helpRequested, true)),
 		param.GroupName(groupName))
 
-	ps.Add(helpGroupsArgName, psetter.Nil{},
-		"print the parameter groups that have been set up."+
-			" Do not show the individual parameters in those groups."+
-			"\n\n"+
-			"This lets you see just the available groups of"+
-			" parameters and choose"+
-			" which you want to select for closer examination."+
-			exitAfterHelpMessage,
-		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.AltName("help-groups"),
-		param.PostAction(setStyle(h, groupNamesOnly)),
-		param.PostAction(styleCounterAF),
-		param.GroupName(groupName))
-
-	ps.Add("help-groups-in-list",
+	ps.Add(helpGroupsArgName,
 		psetter.Map{
-			Value: &h.groupsSelected,
+			Value: &h.groupsChosen,
 			Checks: []check.MapStringBool{
 				check.MapStringBoolTrueCountGT(0),
 			},
 		},
-		"when printing the help message only show help for parameters"+
-			" in the listed groups."+
+		"when printing the help message only show the listed groups."+
 			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.AltName("help-groups-in"),
-		param.PostAction(setStyle(h, paramsInGroups)),
-		param.PostAction(styleCounterAF),
+		param.AltName("help-g"),
 		param.PostAction(checkGroups(h, ps)),
 		param.GroupName(groupName))
 
-	ps.Add("help-groups-not-in-list",
+	ps.Add(helpParamsArgName,
 		psetter.Map{
-			Value: &h.groupsSelected,
+			Value: &h.paramsChosen,
 			Checks: []check.MapStringBool{
 				check.MapStringBoolTrueCountGT(0),
 			},
+			Editor: trimDashes{},
 		},
-		"when printing the help message don't show help for parameters"+
-			" in the listed groups."+
-			exitAfterHelpMessage,
-		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.AltName("help-groups-not-in"),
-		param.PostAction(setStyle(h, paramsNotInGroups)),
-		param.PostAction(styleCounterAF),
-		param.PostAction(checkGroups(h, ps)),
-		param.GroupName(groupName))
-
-	ps.Add("help-show-params",
-		psetter.StrList{
-			Value: &h.paramsToShow,
-		},
-		"when printing the help message only show help for the"+
-			" listed parameters"+
+		"when printing the help message only show the listed parameters."+
 			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.AltName("help-p"),
-		param.AltName("help-params"),
-		param.PostAction(setStyle(h, paramsByName)),
-		param.PostAction(styleCounterAF),
 		param.PostAction(checkParams(h, ps)),
 		param.GroupName(groupName))
 
-	ps.Add("help-show-desc", psetter.Nil{},
-		"when printing the help message only show the program description"+
+	ps.Add(helpNotesArgName,
+		psetter.Map{
+			Value: &h.notesChosen,
+			Checks: []check.MapStringBool{
+				check.MapStringBoolTrueCountGT(0),
+			},
+		},
+		"when printing the help message only show the listed notes."+
 			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.AltName("help-show-prog-desc"),
-		param.AltName("help-prog-desc"),
-		param.AltName("help-program-description"),
-		param.PostAction(setStyle(h, progDescOnly)),
-		param.PostAction(styleCounterAF),
+		param.AltName("help-n"),
+		param.PostAction(checkNotes(h, ps)),
+		param.PostAction(setHelpSections(h, notesSection)),
 		param.GroupName(groupName))
 
-	ps.Add(helpAltSourcesArgName, psetter.Nil{},
-		"when printing the help message only show the"+
-			" places (other than the command line) where"+
-			" parameters may be set. This will list any"+
-			" configuration files and environment prefixes."+
-			exitAfterHelpMessage,
+	ps.Add(helpShowArgName,
+		psetter.EnumMap{
+			Value:       &h.sectionsChosen,
+			AllowedVals: makeSectionAllowedVals(),
+			Aliases:     sectionAliases,
+		},
+		"specify the parts of the help message you wish to see",
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.AltName("help-param-sources"),
-		param.PostAction(setStyle(h, altSourcesOnly)),
-		param.PostAction(styleCounterAF),
-		param.GroupName(groupName))
-
-	ps.Add(helpShowExamplesArgName, psetter.Nil{},
-		"when printing the help message only show the"+
-			" examples, if any."+
-			exitAfterHelpMessage,
-		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.AltName("help-examples"),
-		param.AltName("help-eg"),
-		param.PostAction(setStyle(h, examplesOnly)),
-		param.PostAction(styleCounterAF),
-		param.GroupName(groupName))
-
-	ps.Add(helpShowRefsArgName, psetter.Nil{},
-		"when printing the help message only show the"+
-			" references (the See Also section), if any."+
-			exitAfterHelpMessage,
-		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.AltName("help-show-refs"),
-		param.AltName("help-refs"),
-		param.AltName("help-see-also"),
-		param.PostAction(setStyle(h, referencesOnly)),
-		param.PostAction(styleCounterAF),
-		param.GroupName(groupName))
+		param.GroupName(groupName),
+	)
 
 	// Final checks
 
-	ps.AddFinalCheck(func() error {
-		if styleCounter.Count() > 1 {
-			return fmt.Errorf(
-				"you have chosen conflicting types of help: %s",
-				styleCounter.SetBy())
-		}
-		return nil
-	})
-
-	ps.AddFinalCheck(func() error {
-		if h.styleNeedsSetting && h.style == noHelp {
-			h.style = stdHelp
-		}
-		return nil
-	})
+	ps.AddFinalCheck(
+		makeForceChosenSection(h, h.groupsChosen, groupsSection,
+			groupsSection, groupedParamsSection))
+	ps.AddFinalCheck(
+		makeForceChosenSection(h, h.paramsChosen, namedParamsSection,
+			namedParamsSection, groupedParamsSection))
+	ps.AddFinalCheck(
+		makeForceChosenSection(h, h.notesChosen, notesSection,
+			notesSection))
+	ps.AddFinalCheck(makeForceDefaultSectionsFunc(h))
 }
 
-// checkGroups returns an ActionFunc which will check that the groupsSelected
+// makeForceChosenSection returns a FinalCheckFunction that checks to see if
+// any choices have been made and if so whether any of the altSections are in
+// the list of help sections. If not the forceSelection is applied.
+func makeForceChosenSection(h *StdHelp, choices map[string]bool, forceSection string, altSections ...string) param.FinalCheckFunc {
+	return func() error {
+		if len(choices) == 0 {
+			return nil
+		}
+		for _, s := range altSections {
+			if h.sectionsChosen[s] {
+				return nil
+			}
+		}
+		return h.setHelpSections(forceSection)
+	}
+}
+
+// makeForceDefaultSectionsFunc returns a FinalCheckFunction that will set
+// the help sections to a sensible default value if help has been implicitly
+// requested but no help sections have been set
+func makeForceDefaultSectionsFunc(h *StdHelp) param.FinalCheckFunc {
+	return func() error {
+		if !h.helpRequested {
+			return nil
+		}
+		if len(h.sectionsChosen) > 0 {
+			return nil
+		}
+		return h.setHelpSections(standardSections)
+	}
+}
+
+// checkGroups returns an ActionFunc which will check that the groupsChosen
 // element of the StdHelp structure only contains valid group names
 func checkGroups(h *StdHelp, ps *param.PSet) param.ActionFunc {
+	// TODO: make this a FinalCheckFunc (and combine with makeForceChosenSection)
+	// TODO: add a "did you mean..." suggestion - see strdist
 	return func(_ location.L, _ *param.ByName, _ []string) error {
-		errCount := 0
-		msg := ""
-		groupNames := make([]string, 0, len(h.groupsSelected))
-		for g := range h.groupsSelected {
-			groupNames = append(groupNames, g)
-		}
-		sort.Strings(groupNames)
-		for _, g := range groupNames {
-			if !ps.HasGroupName(g) {
-				if errCount == 0 {
-					msg = "group: '" + g + "'," +
-						" is not the name of a parameter group." +
-						" Please check the spelling."
-				} else {
-					msg += "\nalso: '" + g + "'"
-				}
-				errCount++
+		var badNames []string
+		var goodNames int
+		for gName := range h.groupsChosen {
+			if !ps.HasGroupName(gName) {
+				badNames = append(badNames, fmt.Sprintf("%q", gName))
+			} else {
+				goodNames++
 			}
 		}
-		if errCount > 0 {
-			return errors.New(msg)
+		if len(badNames) == 0 {
+			return nil
 		}
-		return nil
+		if goodNames == 0 {
+			h.unsetHelpSections(groupsSection, groupedParamsSection)
+		}
+
+		altNames := make([]string, 0)
+		for _, g := range ps.GetGroups() {
+			if !h.groupsChosen[g.Name] {
+				altNames = append(altNames, fmt.Sprintf("%q", g.Name))
+			}
+		}
+		return makeBadNameError(badNames, altNames, "group")
 	}
 }
 
-// checkParams returns an ActionFunc which will check that the paramsToShow
-// element of the StdHelp structure only contains valid parameter names
-func checkParams(h *StdHelp, ps *param.PSet) param.ActionFunc {
+// checkNotes returns an ActionFunc which will check that the notesChosen
+// element of the StdHelp structure only contains valid note names
+func checkNotes(h *StdHelp, ps *param.PSet) param.ActionFunc {
+	// TODO: make this a FinalCheckFunc (and combine with makeForceChosenSection)
+	// TODO: add a "did you mean..." suggestion - see strdist
 	return func(_ location.L, _ *param.ByName, _ []string) error {
-		var badParams []string
-		for _, pName := range h.paramsToShow {
-			trimmedName := strings.TrimLeft(pName, "-")
-			_, err := ps.GetParamByName(trimmedName)
-			if err != nil {
-				badParams = append(badParams, pName)
+		var badNames []string
+		var goodNames int
+		for n := range h.notesChosen {
+			if _, err := ps.GetNote(n); err != nil {
+				badNames = append(badNames, n)
+			} else {
+				goodNames++
 			}
 		}
-		switch len(badParams) {
-		case 0:
+		if len(badNames) == 0 {
 			return nil
-		case 1:
-			return fmt.Errorf("%q is not a parameter of this program",
-				badParams[0])
-		default:
-			return errors.New(
-				`The following are not parameters of this program: "` +
-					strings.Join(badParams, `", "`) + `"`)
 		}
+		if goodNames == 0 {
+			h.unsetHelpSections(notesSection)
+		}
+
+		altNames := make([]string, 0)
+		for _, n := range ps.Notes() {
+			if !h.notesChosen[n.Headline] {
+				altNames = append(altNames, n.Headline)
+			}
+		}
+		return makeBadNameError(badNames, altNames, "note")
 	}
+}
+
+// checkParams returns an ActionFunc which will check that the paramsChosen
+// element of the StdHelp structure only contains valid parameter names
+func checkParams(h *StdHelp, ps *param.PSet) param.ActionFunc {
+	// TODO: make this a FinalCheckFunc (and combine with makeForceChosenSection)
+	// TODO: add a "did you mean..." suggestion - see strdist
+	return func(_ location.L, _ *param.ByName, _ []string) error {
+		var badNames []string
+		var goodNames int
+		for pName := range h.paramsChosen {
+			trimmedName := strings.TrimLeft(pName, "-")
+			if _, err := ps.GetParamByName(trimmedName); err != nil {
+				badNames = append(badNames, fmt.Sprintf("%q", pName))
+			} else {
+				goodNames++
+			}
+		}
+		if len(badNames) == 0 {
+			return nil
+		}
+		if goodNames == 0 {
+			h.unsetHelpSections(namedParamsSection, groupedParamsSection)
+		}
+
+		altNames := make([]string, 0)
+		alreadyAdded := map[string]bool{}
+		for _, n := range badNames {
+			suggestions := ps.FindClosestMatches(n)
+			for _, s := range suggestions {
+				if !h.paramsChosen[s] && !alreadyAdded[s] {
+					alreadyAdded[s] = true
+					altNames = append(altNames, s)
+				}
+			}
+		}
+		return makeBadNameError(badNames, altNames, "parameter")
+	}
+}
+
+// makeBadNameError will create an error formatting the bad and alternate names
+func makeBadNameError(badNames, altNames []string, nameType string) error {
+	if len(badNames) == 0 {
+		return nil
+	}
+	badStr := ""
+	switch len(badNames) {
+	case 0:
+		return nil
+	case 1:
+		badStr = fmt.Sprintf("Bad %s name: %s.",
+			nameType, badNames[0])
+	default:
+		sort.Strings(badNames)
+		badStr = fmt.Sprintf("Bad %s names: %s.",
+			nameType, strings.Join(badNames, ", "))
+	}
+	altStr := ""
+	switch len(altNames) {
+	case 0:
+		altStr = ""
+	case 1:
+		altStr = fmt.Sprintf(" A possible %s name is %s.",
+			nameType, altNames[0])
+	default:
+		sort.Strings(altNames)
+		altStr = fmt.Sprintf(" Possible %s names are: %s.",
+			nameType, strings.Join(altNames, ", "))
+	}
+	return errors.New(badStr + altStr)
 }

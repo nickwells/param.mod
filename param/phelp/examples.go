@@ -5,18 +5,21 @@ import (
 	"github.com/nickwells/twrap.mod/twrap"
 )
 
-// printExamples prints the Examples section of the help message
-func printExamples(h StdHelp, twc *twrap.TWConf, ps *param.PSet) {
+// showExamples prints the Examples section of the help message
+func showExamples(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	ex := ps.Examples()
 	if len(ex) == 0 {
-		twc.Wrap("There are no examples", textIndent)
-		return
+		return false
 	}
 
-	twc.Println("Examples") //nolint: errcheck
+	twc.Print("Examples\n")
 
 	for _, e := range ex {
 		twc.Wrap("\n"+e.Ex+"\n", paramIndent)
+		if h.hideDescriptions {
+			continue
+		}
 		twc.Wrap(e.Desc, descriptionIndent)
 	}
+	return true
 }

@@ -9,18 +9,16 @@ import (
 	"github.com/nickwells/strdist.mod/strdist"
 )
 
-// findClosestMatch finds parameters with the name which is the shortest
-// distance from the passed value and returns a string describing them
-func (ps *PSet) findClosestMatch(badParam string) string {
+// FindClosestMatches finds parameters with the name which is the shortest
+// distance from the passed value and returns them
+func (ps *PSet) FindClosestMatches(badParam string) []string {
 	paramNames := make([]string, 0, len(ps.nameToParam))
 	for p := range ps.nameToParam {
 		paramNames = append(paramNames, p)
 	}
 
-	matches := strdist.CaseBlindCosineFinder.FindNStrLike(
+	return strdist.CaseBlindCosineFinder.FindNStrLike(
 		3, badParam, paramNames...)
-
-	return strings.Join(matches, " or ")
 }
 
 func (ps *PSet) reportMissingParams(missingCount int) {
@@ -122,8 +120,7 @@ func (ps *PSet) handleParamsByName(loc *location.L, params []string) {
 }
 
 func (ps *PSet) getParamsFromStringSlice(loc *location.L, params []string) {
-	status := ps.handleParamsByPos(loc, params)
-	if status == parsingFinished {
+	if ps.handleParamsByPos(loc, params) == parsingFinished {
 		return
 	}
 

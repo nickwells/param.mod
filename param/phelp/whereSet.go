@@ -52,14 +52,15 @@ func (h StdHelp) showWhereParamsAreSet(twc *twrap.TWConf, ps *param.PSet) {
 
 	groups := ps.GetGroups()
 
+	maxNameLen := getMaxGroupNameLen(groups)
 	printSep := false
 	for _, g := range groups {
 		if printSep {
-			twc.Println() //nolint: errcheck
-			printMinorSeparator(twc)
+			twc.Print("\n")
+			twc.Print(minorSectionSeparator)
 		}
 		printSep = true
-		h.printGroupDetails(twc, g)
+		h.printGroup(twc, g, maxNameLen)
 		for _, p := range g.Params {
 			printWhereSetIntro(twc, ps, p)
 
@@ -69,7 +70,7 @@ func (h StdHelp) showWhereParamsAreSet(twc *twrap.TWConf, ps *param.PSet) {
 					twc.Print(" or ", altName)
 				}
 			}
-			twc.Println() //nolint: errcheck
+			twc.Print("\n")
 
 			intro := "at : "
 			whereSet := p.WhereSet()

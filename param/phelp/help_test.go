@@ -21,13 +21,15 @@ const (
 )
 
 var gfc = testhelper.GoldenFileCfg{
-	DirNames:    []string{testDataDir, helpSubDir},
-	Sfx:         "txt",
-	UpdFlagName: "upd-help-files",
+	DirNames:               []string{testDataDir, helpSubDir},
+	Sfx:                    "txt",
+	UpdFlagName:            "upd-help-files",
+	KeepBadResultsFlagName: "keep-bad-results",
 }
 
 func init() {
-	gfc.AddBoolFlag()
+	gfc.AddUpdateFlag()
+	gfc.AddKeepBadResultsFlag()
 }
 
 var int64ValPos1 int64 = 101
@@ -231,52 +233,33 @@ func TestHelp(t *testing.T) {
 		{
 			ID:         testhelper.MkID("help-show-groups"),
 			progDesc:   "a description of what the program does",
-			params:     []string{"-help-groups", "-param2=99"},
+			params:     []string{"-help-show=groups", "-param2=99"},
 			paramAdder: []param.PSetOptFunc{addByNameParams},
 		},
 		{
-			ID:       testhelper.MkID("help-groups-in-list"),
+			ID:       testhelper.MkID("help-groups"),
 			progDesc: "a description of what the program does",
 			params: []string{
-				"-help-groups-in-list",
+				"-help-groups",
 				paramGroupName,
 				"-param2=99"},
 			paramAdder: []param.PSetOptFunc{addByNameParams},
 		},
 		{
-			ID:       testhelper.MkID("help-groups-not-in-list"),
-			progDesc: "a description of what the program does",
-			params: []string{
-				"-help-groups-not-in-list",
-				paramGroupName,
-				"-param2=99"},
-			paramAdder: []param.PSetOptFunc{addByNameParams},
-		},
-		{
-			ID:       testhelper.MkID("help-groups-in-list-all"),
+			ID:       testhelper.MkID("help-groups-all"),
 			progDesc: "a description of what the program does",
 			params: []string{
 				"-help-all",
-				"-help-groups-in-list",
+				"-help-groups",
 				paramGroupName,
 				"-param2=99"},
 			paramAdder: []param.PSetOptFunc{addByNameParams},
 		},
 		{
-			ID:       testhelper.MkID("help-groups-not-in-list-all"),
+			ID:       testhelper.MkID("help-show-intro"),
 			progDesc: "a description of what the program does",
 			params: []string{
-				"-help-all",
-				"-help-groups-not-in-list",
-				paramGroupName,
-				"-param2=99"},
-			paramAdder: []param.PSetOptFunc{addByNameParams},
-		},
-		{
-			ID:       testhelper.MkID("help-prog-desc"),
-			progDesc: "a description of what the program does",
-			params: []string{
-				"-help-prog-desc",
+				"-help-show=intro",
 				"-param2=99",
 			},
 			paramAdder: []param.PSetOptFunc{addByNameParams},
@@ -299,10 +282,10 @@ func TestHelp(t *testing.T) {
 			paramAdder:   []param.PSetOptFunc{addByNameParams},
 		},
 		{
-			ID:       testhelper.MkID("help-show-sources-no-sources"),
+			ID:       testhelper.MkID("help-show-sources"),
 			progDesc: "a description of what the program does",
 			params: []string{
-				"-help-show-sources",
+				"-help-show=sources",
 				"-param2=99",
 			},
 			paramAdder: []param.PSetOptFunc{addByNameParams},
@@ -323,8 +306,8 @@ func TestHelp(t *testing.T) {
 				" (badParams)",
 			params: []string{
 				"-params-file=testdata/nonesuch",
-				"-help-groups-in-list=notAGroup",
-				"-help-groups-in-list",
+				"-help-groups=notAGroup",
+				"-help-groups",
 			},
 			errsExpected: true,
 			paramAdder:   []param.PSetOptFunc{addByNameParams},
@@ -355,7 +338,7 @@ func TestHelp(t *testing.T) {
 			ID:       testhelper.MkID("badParams-groups"),
 			progDesc: "a description of what the program does",
 			params: []string{
-				"-help-groups-in-list",
+				"-help-groups",
 				"nonesuch1,nonesuch2,nonesuch3",
 				"-param2=99"},
 			errsExpected: true,
@@ -366,11 +349,10 @@ func TestHelp(t *testing.T) {
 			progDesc: "a description of what the program does",
 			params: []string{
 				"-help",
-				"-help-groups-in-list",
+				"-help-groups",
 				paramGroupName,
 				"-param2=99"},
-			errsExpected: true,
-			paramAdder:   []param.PSetOptFunc{addByNameParams},
+			paramAdder: []param.PSetOptFunc{addByNameParams},
 		},
 		{
 			ID: testhelper.MkID("help-with-config"),

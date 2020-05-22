@@ -78,7 +78,7 @@ func (rh dfltRemHandler) HandleRemainder(ps *PSet, loc *location.L) {
 		err = loc.Errorf("there were %d unexpected extra parameters: %s",
 			remCount, args)
 	}
-	ps.helper.ErrorHandler(ps.ErrWriter(), ps.ProgName(),
+	ps.helper.ErrorHandler(ps,
 		ErrMap{
 			"": []error{err},
 		})

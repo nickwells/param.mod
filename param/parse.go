@@ -25,14 +25,9 @@ import (
 // first which is used to set the program name). If any argument is passed
 // then all the slices are concatenated together and that is parsed.
 //
-// It will return a map of errors: parameter name to a non-empty slice of
-// error messages. In order to make sensible use of this the report-errors
-// and exit-on-errors flags should be turned off - there are functions
-// which allow the caller to do this (or they can be set through the
-// command-line flags) but they should be called before Parse is called. The
-// default behaviour is to report any errors and exit. This means that you
-// can sensibly ignore the return value unless you want to handle the errors
-// yourself.
+// Before any further processing the helper's ProcessArgs method is
+// called. This is expected to act on any helper parameters and to report any
+// errors.
 //
 // Finally it will process any remaining parameters - these are any
 // parameters following a positional parameter that has been marked as
@@ -40,18 +35,24 @@ import (
 // by default). If no trailing arguments are expected and no handler has been
 // set for handling them then the default handler is called which will record
 // an error and call the helper.ErrorHandler method.
+//
+// It will return a map of errors: mapping parameter name to a slice of all
+// the errors seen for that parameter. In order to make sensible use of this
+// the report-errors and exit-on-errors flags should be turned off - there
+// are functions which allow the caller to do this (or they can be set
+// through the StdHelp command-line flags) but they should be called before
+// Parse is called. The default behaviour is to report any errors and
+// exit. This means that you can sensibly ignore the return value unless you
+// want to handle the errors yourself.
+//
+// It will panic if it is called twice.
 func (ps *PSet) Parse(args ...[]string) ErrMap {
 	if ps.parsed {
-		errMap := ErrMap{
-			"": []error{
-				fmt.Errorf("param.Parse has already been called,"+
-					" previously from: %s now from: %s",
-					ps.parseCalledFrom,
-					caller()),
-			},
-		}
-		ps.helper.ErrorHandler(ps.ErrWriter(), ps.ProgName(), errMap)
-		return errMap
+		panic(
+			fmt.Sprintf("param.Parse has already been called,"+
+				" previously from: %s now from: %s",
+				ps.parseCalledFrom,
+				caller()))
 	}
 
 	ps.parsed = true
@@ -88,7 +89,6 @@ func (ps *PSet) Parse(args ...[]string) ErrMap {
 	}
 
 	ps.helper.ProcessArgs(ps)
-	ps.helper.ErrorHandler(ps.ErrWriter(), ps.ProgName(), ps.errors)
 
 	ps.remHandler.HandleRemainder(ps, loc)
 

@@ -2,7 +2,6 @@ package param
 
 import (
 	"fmt"
-	"io"
 	"strconv"
 	"testing"
 
@@ -12,10 +11,10 @@ import (
 
 type noHelpNoExitNoErrRpt struct{}
 
-func (nh noHelpNoExitNoErrRpt) ProcessArgs(ps *PSet)                               {}
-func (nh noHelpNoExitNoErrRpt) Help(ps *PSet, s ...string)                         {}
-func (nh noHelpNoExitNoErrRpt) AddParams(ps *PSet)                                 {}
-func (nh noHelpNoExitNoErrRpt) ErrorHandler(w io.Writer, name string, errs ErrMap) {}
+func (nh noHelpNoExitNoErrRpt) ProcessArgs(ps *PSet)               {}
+func (nh noHelpNoExitNoErrRpt) Help(ps *PSet, s ...string)         {}
+func (nh noHelpNoExitNoErrRpt) AddParams(ps *PSet)                 {}
+func (nh noHelpNoExitNoErrRpt) ErrorHandler(ps *PSet, errs ErrMap) {}
 
 var nhnenr noHelpNoExitNoErrRpt
 

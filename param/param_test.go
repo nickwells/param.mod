@@ -371,7 +371,6 @@ func TestParamAddPos(t *testing.T) {
 			paramsToParse: []string{"-test99", "val"},
 			errsExpected: map[string][]string{
 				"test99": {
-					"error with parameter:",
 					"failingSetter: ByName param",
 				},
 			},
@@ -462,15 +461,12 @@ func TestParamParseTwice(t *testing.T) {
 		t.Errorf("\t: unexpected errors were detected while parsing")
 	}
 
-	errMap, panicked, panicVal, stackTrace := panicSafeTestParse(ps, []string{})
-	if !testhelper.ReportUnexpectedPanic(t, t.Name(),
-		panicked, panicVal, stackTrace) {
-		errMapCheck(t, t.Name(), errMap, map[string][]string{
-			"": {
-				"param.Parse has already been called, previously from:",
-			},
+	errMap, panicked, panicVal, _ := panicSafeTestParse(ps, []string{})
+	testhelper.PanicCheckString(t, t.Name(),
+		panicked, true,
+		panicVal, []string{
+			"param.Parse has already been called, previously from:",
 		})
-	}
 }
 
 func TestParamAddParamAfterParse(t *testing.T) {
@@ -622,7 +618,10 @@ func TestParamParse(t *testing.T) {
 				"-test1",
 			},
 			expectedEMap: map[string][]string{
-				"test1": {"error with parameter"},
+				"test1": {
+					"a value must follow this parameter",
+					"either following an '=' or as a next parameter",
+				},
 			},
 		},
 		{
@@ -637,7 +636,8 @@ func TestParamParse(t *testing.T) {
 				"-test1", "this is not a number",
 			},
 			expectedEMap: map[string][]string{
-				"test1": {"error with parameter"},
+				"test1": {`could not interpret "this is not a number"` +
+					` as a whole number`},
 			},
 		},
 	}

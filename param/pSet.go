@@ -56,7 +56,7 @@ type PSet struct {
 	configFiles  []ConfigFileDetails
 	examples     []Example
 	references   []Reference
-	notes        []Note
+	notes        map[string]*Note
 
 	remainingParams        []string
 	terminalParam          string
@@ -213,6 +213,7 @@ func NewSet(psof ...PSetOptFunc) (*PSet, error) {
 		progBaseName:    DfltProgName,
 		nameToParam:     make(map[string]*ByName),
 		groups:          make(map[string]*Group),
+		notes:           make(map[string]*Note),
 		unusedParams:    make(map[string][]string),
 		errors:          make(ErrMap),
 		finalChecks:     make([]FinalCheckFunc, 0),
@@ -327,9 +328,9 @@ func cleanParamParts(p *ByName, paramParts []string) []string {
 func (ps *PSet) recordUnexpectedParam(paramName string, loc *location.L) {
 	msg := "this is not a parameter of this program."
 
-	bestSuggestion := ps.findClosestMatch(paramName)
-	if bestSuggestion != "" {
-		msg += "\n\nDid you mean: " + bestSuggestion + " ?"
+	altNames := ps.FindClosestMatches(paramName)
+	if len(altNames) != 0 {
+		msg += "\n\nDid you mean: " + strings.Join(altNames, " or ") + " ?"
 	}
 
 	ps.errors[paramName] = append(ps.errors[paramName], loc.Error(msg))

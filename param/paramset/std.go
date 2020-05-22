@@ -2,11 +2,11 @@ package paramset
 
 import (
 	"fmt"
-	"io"
 	"os"
 
 	"github.com/nickwells/param.mod/v4/param"
 	"github.com/nickwells/param.mod/v4/param/phelp"
+	"github.com/nickwells/twrap.mod/twrap"
 )
 
 // addHelperToOpts will take the slice of param set option functions and a
@@ -47,11 +47,16 @@ type noHelp struct{}
 func (nh noHelp) ProcessArgs(ps *param.PSet)       {}
 func (nh noHelp) Help(ps *param.PSet, s ...string) {}
 func (nh noHelp) AddParams(ps *param.PSet)         {}
-func (nh noHelp) ErrorHandler(w io.Writer, name string, errs param.ErrMap) {
+func (nh noHelp) ErrorHandler(ps *param.PSet, errs param.ErrMap) {
 	if len(errs) == 0 {
 		return
 	}
-	phelp.ReportErrors(w, name, errs)
+	twc, err := twrap.NewTWConf(twrap.SetWriter(ps.ErrWriter()))
+	if err != nil {
+		panic(fmt.Sprint("Couldn't build the text wrapper:", err))
+	}
+
+	phelp.ReportErrors(twc, ps.ProgName(), errs)
 
 	os.Exit(1)
 }

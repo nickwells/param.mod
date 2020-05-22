@@ -54,19 +54,25 @@ func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
 		param.GroupName(groupName))
 
 	ps.Add("params-dont-show-errors",
-		psetter.Bool{Value: &h.dontReportErrors},
+		psetter.Bool{
+			Value:  &h.reportErrors,
+			Invert: true,
+		},
 		"after all the parameters are set any errors detected will be"+
-			" reported unless this flag is set to true",
+			" reported unless this flag is set",
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.GroupName(groupName))
 
 	ps.Add("params-dont-exit-on-errors",
-		psetter.Bool{Value: &h.dontExitOnErrors},
+		psetter.Bool{
+			Value:  &h.exitOnErrors,
+			Invert: true,
+		},
 		"if errors are detected when processing the parameters the"+
 			" program will exit unless this flag is set to true. Note"+
 			" that the behaviour of the program cannot be guaranteed"+
 			" if this option is chosen and it should only be used in"+
-			" extreme circumstances",
+			" emergencies",
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.GroupName(groupName))
 
