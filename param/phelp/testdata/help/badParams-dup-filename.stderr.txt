@@ -1,9 +1,8 @@
 PROGRAM NAME UNKNOWN: an error was detected while setting the parameters:
       params-file
-            error with parameter: the file name
-            ("testdata/configFiles/param.cfg") has been seen before
-            parameter set at: supplied parameters:4: -params-file
+            the file name ("testdata/configFiles/param.cfg") has been seen
+            before
+            At: supplied parameters:4: -params-file
             testdata/configFiles/param.cfg
 
 Try the '-help' parameter for more information.
-

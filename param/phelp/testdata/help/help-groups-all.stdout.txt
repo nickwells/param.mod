@@ -1,0 +1,6 @@
+
+Parameter groups
+
+test-group1              [ 6 parameters, 1 hidden ]
+    test parameters.
+

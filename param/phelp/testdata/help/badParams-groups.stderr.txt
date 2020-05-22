@@ -1,11 +1,9 @@
 PROGRAM NAME UNKNOWN: an error was detected while setting the parameters:
-      help-groups-in-list
-            error with parameter: group: 'nonesuch1', is not the name of a
-            parameter group. Please check the spelling.
-            also: 'nonesuch2'
-            also: 'nonesuch3'
-            parameter set at: supplied parameters:2: -help-groups-in-list
+      help-groups
+            Bad group names: "nonesuch1", "nonesuch2", "nonesuch3". Possible
+            group names are: "common.params-completion", "common.params-help",
+            "common.params-params", "test-group1".
+            At: supplied parameters:2: -help-groups
             nonesuch1,nonesuch2,nonesuch3
 
 Try the '-help' parameter for more information.
-

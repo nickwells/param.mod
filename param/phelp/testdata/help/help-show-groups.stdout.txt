@@ -1,5 +1,6 @@
 
 Parameter groups
+
 common.params-completion [ 2 parameters, all hidden ]
     These are the parameters for creating shell completion functions. You can
     specify where the completion files should be written, trigger the generation
@@ -9,16 +10,16 @@ common.params-completion [ 2 parameters, all hidden ]
     /home/ngw/.config/github.com/nickwells/param.mod/v4/param/phelp/group-common.params-completion.cfg
 
 ---------------
-common.params-help [ 12 parameters, 11 hidden ]
-    These are parameters for printing a usage message.
+common.params-help       [ 9 parameters, 8 hidden ]
+    These are parameters for printing a help message.
 
 ---------------
-common.params-params [ 6 parameters, all hidden ]
+common.params-params     [ 6 parameters, all hidden ]
     These are the parameter-handling parameters. There are parameters for
     showing where parameters have been set and for the handling of parameter
     errors.
 
 ---------------
-test-group1 [ 6 parameters, 1 hidden ]
+test-group1              [ 6 parameters, 1 hidden ]
     test parameters.
 

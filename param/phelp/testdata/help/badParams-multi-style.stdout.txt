@@ -1,4 +1,14 @@
-test-group1 [ 6 parameters, 1 hidden ]
+PROGRAM NAME UNKNOWN
+a description of what the program does
+
+
+===============
+
+Usage: PROGRAM NAME UNKNOWN -param2=... ...
+
+===============
+
+test-group1              [ 6 parameters, 1 hidden ]
     test parameters.
 
       [-param1=...] or [-param1-alt1=...]

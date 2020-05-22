@@ -1,36 +1,23 @@
+PROGRAM NAME UNKNOWN
 a description of what the program does (help)
 
-Usage: PROGRAM NAME UNKNOWN ...
----------------
-common.params-help [ 12 parameters, 11 hidden ]
-    These are parameters for printing a usage message.
+
+===============
+
+Usage: PROGRAM NAME UNKNOWN -param2=... ...
+
+===============
+
+common.params-help       [ 9 parameters, 8 hidden ]
+    These are parameters for printing a help message.
 
       [-help] or [-usage]
-            print a help message explaining what the program does and the
-            available parameters.
+            print this help message and exit.
             
-            Optional parameters are shown surrounded by square brackets
-            [like-this]. Parameters which take a value are shown with a
-            following '=...', this is itself bracketed if the value may be
-            omitted.
-            
-            Parameters which are less commonly useful will not be shown. To see
-            these hidden parameters use the help-full parameter.
-            
-            The parameters are arranged into named groups (this parameter is in
-            'common.params-help') which can be selected or suppressed through
-            other help parameters. Within each group the parameters are
-            displayed in alphabetical order.
-            
-            Groups where all the parameters are hidden will not be shown. To see
-            all the available parameter groups use the help-show-groups
-            parameter.
-            
-            For a shorter help message use the help-summary parameter
-            
-            The program will exit after the help message is shown.
+            To see hidden parameters use the -help-all parameter.
+            For a brief help message use the -help-summary parameter
 ---------------
-test-group1 [ 6 parameters, 1 hidden ]
+test-group1              [ 6 parameters, 1 hidden ]
     test parameters.
 
       [-param1=...] or [-param1-alt1=...]
@@ -64,15 +51,3 @@ test-group1 [ 6 parameters, 1 hidden ]
             help...
             Allowed values: (see parameter: param5)
             Initial value: v2
----------------
-
-    Note: Optional parameter values (where the name is followed by [=...]) must
-          come after an '=' rather than as the next argument. As follows,
-          
-          -xxx=false not -xxx false
-          
-          For parameters which must have a value it may be given in either way
----------------
-Some parameters may also be set from alternative sources such as configuration
-files or environment variables. For more details use the help-show-sources
-parameter.

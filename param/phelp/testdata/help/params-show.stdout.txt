@@ -12,23 +12,20 @@ Set    : completions-zsh-dir
 ---    : completions-zsh-make
 
 ---------------
-common.params-help [ 12 parameters, 11 hidden ]
+common.params-help       [ 9 parameters, 8 hidden ]
 ---    : help or usage
+---    : help-all or help-a
 ---    : help-all-short or help-as or help-sa
----    : help-full or help-a or help-all or help-show-all or help-show-hidden
----    : help-groups-in-list or help-groups-in
----    : help-groups-not-in-list or help-groups-not-in
----    : help-show-desc or help-show-prog-desc or help-prog-desc or help-program-description
----    : help-show-examples or help-examples or help-eg
----    : help-show-groups or help-groups
----    : help-show-params or help-p or help-params
----    : help-show-references or help-show-refs or help-refs or help-see-also
----    : help-show-sources or help-param-sources
+---    : help-full
+---    : help-groups or help-g
+---    : help-notes or help-n
+---    : help-params or help-p
+---    : help-show
 Set    : help-summary or help-s or help-short
              at : supplied parameters:3: -help-s
 
 ---------------
-common.params-params [ 6 parameters, all hidden ]
+common.params-params     [ 6 parameters, all hidden ]
 ---    : params-dont-exit-on-errors
 ---    : params-dont-show-errors
 ---    : params-exit-after-parsing
@@ -39,7 +36,7 @@ Set    : params-show-where-set
              at : supplied parameters:1: -params-show-where-set
 
 ---------------
-test-group1 [ 6 parameters, 1 hidden ]
+test-group1              [ 6 parameters, 1 hidden ]
 ---    : param1 or param1-alt1
 Errs 1 : param2 or param2-alt2
 Set    : param3 or p3
@@ -56,12 +53,17 @@ Unused Parameters:  1
 
 ===============
 
-Usage: PROGRAM NAME UNKNOWN ...
----------------
-common.params-help [ 12 parameters, 11 hidden ]
+
+===============
+
+Usage: PROGRAM NAME UNKNOWN -param2=... ...
+
+===============
+
+common.params-help       [ 9 parameters, 8 hidden ]
       [-help] or [-usage]
 ---------------
-test-group1 [ 6 parameters, 1 hidden ]
+test-group1              [ 6 parameters, 1 hidden ]
       [-param1=...] or [-param1-alt1=...]
       -param2=... or -param2-alt2=...
       [-param4[=...]]

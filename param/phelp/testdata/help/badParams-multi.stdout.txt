@@ -1,6 +1,6 @@
-notAGroup : is not a valid parameter group name
-possible group names are:
-    common.params-completion
-    common.params-help
-    common.params-params
-    test-group1
+
+===============
+
+
+Parameter groups
+

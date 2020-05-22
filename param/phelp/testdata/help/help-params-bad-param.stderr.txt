@@ -1,9 +1,7 @@
 PROGRAM NAME UNKNOWN: an error was detected while setting the parameters:
-      help-show-params
-            error with parameter: "no-such-param" is not a parameter of this
-            program
-            parameter set at: supplied parameters:2: -help-params
+      help-params
+            Bad parameter name: "no-such-param".
+            At: supplied parameters:2: -help-params
             help-groups,help,no-such-param
 
 Try the '-help' parameter for more information.
-

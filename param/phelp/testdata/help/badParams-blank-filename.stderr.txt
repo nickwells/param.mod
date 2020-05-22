@@ -1,7 +1,6 @@
 PROGRAM NAME UNKNOWN: an error was detected while setting the parameters:
       params-file
-            error with parameter: no file name has been given
-            parameter set at: supplied parameters:2: -params-file
+            no file name has been given
+            At: supplied parameters:2: -params-file
 
 Try the '-help' parameter for more information.
-
