@@ -102,7 +102,7 @@ func ExampleStrList_withFailingChecks() {
 	// Output:
 	// Before parsing
 	// Errors for: my-list
-	//	: error with parameter: the length of the list (1) must equal 2 (at supplied parameters:2: -my-list x)
+	//	: the length of the list (1) must equal 2 (at supplied parameters:2: -my-list x)
 	// After  parsing
 }
 

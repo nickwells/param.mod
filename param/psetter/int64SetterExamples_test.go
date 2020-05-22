@@ -88,7 +88,7 @@ func ExampleInt64_withFailingChecks() {
 	// Before parsing
 	//	i = 0
 	// Errors for: my-int
-	//	: error with parameter: the value (1) must be greater than 5 (at supplied parameters:2: -my-int 1)
+	//	: the value (1) must be greater than 5 (at supplied parameters:2: -my-int 1)
 	// After  parsing
 	//	i = 0
 }

@@ -88,7 +88,7 @@ func ExampleFloat64_withFailingChecks() {
 	// Before parsing
 	//	f = 0.000
 	// Errors for: my-float
-	//	: error with parameter: the value (1.230000) must be greater than 5.000000 (at supplied parameters:2: -my-float 1.23)
+	//	: the value (1.230000) must be greater than 5.000000 (at supplied parameters:2: -my-float 1.23)
 	// After  parsing
 	//	f = 0.000
 }
