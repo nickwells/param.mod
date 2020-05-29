@@ -461,7 +461,7 @@ func TestParamParseTwice(t *testing.T) {
 		t.Errorf("\t: unexpected errors were detected while parsing")
 	}
 
-	errMap, panicked, panicVal, _ := panicSafeTestParse(ps, []string{})
+	_, panicked, panicVal, _ := panicSafeTestParse(ps, []string{})
 	testhelper.PanicCheckString(t, t.Name(),
 		panicked, true,
 		panicVal, []string{
