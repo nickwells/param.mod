@@ -54,7 +54,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			" parameter",
 		param.Attrs(param.CommandLineOnly),
 		param.AltName("usage"),
-		param.PostAction(setHelpSections(h, standardSections)),
+		param.PostAction(setHelpSections(h, standardHelpSectionNames)),
 		param.GroupName(groupName))
 
 	ps.Add(helpFullArgName, psetter.Nil{},
@@ -62,7 +62,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			" parameters, including hidden ones."+
 			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.PostAction(setHelpSections(h, allSections)),
+		param.PostAction(setHelpSections(h, allHelpSectionNames)),
 		param.PostAction(paction.SetBool(&h.showHiddenItems, true)),
 		param.GroupName(groupName))
 
@@ -104,7 +104,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 
 	ps.Add(helpGroupsArgName,
 		psetter.Map{
-			Value: &h.groupsChosen,
+			Value: (*map[string]bool)(&h.groupsChosen),
 			Checks: []check.MapStringBool{
 				check.MapStringBoolTrueCountGT(0),
 			},
@@ -118,7 +118,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 
 	ps.Add(helpParamsArgName,
 		psetter.Map{
-			Value: &h.paramsChosen,
+			Value: (*map[string]bool)(&h.paramsChosen),
 			Checks: []check.MapStringBool{
 				check.MapStringBoolTrueCountGT(0),
 			},
@@ -133,7 +133,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 
 	ps.Add(helpNotesArgName,
 		psetter.Map{
-			Value: &h.notesChosen,
+			Value: (*map[string]bool)(&h.notesChosen),
 			Checks: []check.MapStringBool{
 				check.MapStringBoolTrueCountGT(0),
 			},
@@ -143,12 +143,12 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.AltName("help-n"),
 		param.PostAction(checkNotes(h, ps)),
-		param.PostAction(setHelpSections(h, notesSection)),
+		param.PostAction(setHelpSections(h, notesHelpSectionName)),
 		param.GroupName(groupName))
 
 	ps.Add(helpShowArgName,
 		psetter.EnumMap{
-			Value:       &h.sectionsChosen,
+			Value:       (*map[string]bool)(&h.sectionsChosen),
 			AllowedVals: makeSectionAllowedVals(),
 			Aliases:     sectionAliases,
 		},
@@ -160,31 +160,31 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 	// Final checks
 
 	ps.AddFinalCheck(
-		makeForceChosenSection(h, h.groupsChosen, groupsSection,
-			groupsSection, groupedParamsSection))
+		makeForceChosenSection(h, h.groupsChosen, groupsHelpSectionName,
+			groupsHelpSectionName, groupedParamsHelpSectionName))
 	ps.AddFinalCheck(
-		makeForceChosenSection(h, h.paramsChosen, namedParamsSection,
-			namedParamsSection, groupedParamsSection))
+		makeForceChosenSection(h, h.paramsChosen, namedParamsHelpSectionName,
+			namedParamsHelpSectionName, groupedParamsHelpSectionName))
 	ps.AddFinalCheck(
-		makeForceChosenSection(h, h.notesChosen, notesSection,
-			notesSection))
+		makeForceChosenSection(h, h.notesChosen, notesHelpSectionName,
+			notesHelpSectionName))
 	ps.AddFinalCheck(makeForceDefaultSectionsFunc(h))
 }
 
 // makeForceChosenSection returns a FinalCheckFunction that checks to see if
 // any choices have been made and if so whether any of the altSections are in
 // the list of help sections. If not the forceSelection is applied.
-func makeForceChosenSection(h *StdHelp, choices map[string]bool, forceSection string, altSections ...string) param.FinalCheckFunc {
+func makeForceChosenSection(h *StdHelp, c choices, dflt string, alts ...string) param.FinalCheckFunc {
 	return func() error {
-		if len(choices) == 0 {
+		if c.hasNothingChosen() {
 			return nil
 		}
-		for _, s := range altSections {
+		for _, s := range alts {
 			if h.sectionsChosen[s] {
 				return nil
 			}
 		}
-		return h.setHelpSections(forceSection)
+		return h.setHelpSections(dflt)
 	}
 }
 
@@ -196,117 +196,126 @@ func makeForceDefaultSectionsFunc(h *StdHelp) param.FinalCheckFunc {
 		if !h.helpRequested {
 			return nil
 		}
-		if len(h.sectionsChosen) > 0 {
-			return nil
+		if h.sectionsChosen.hasNothingChosen() {
+			return h.setHelpSections(standardHelpSectionNames)
 		}
-		return h.setHelpSections(standardSections)
+		return nil
 	}
 }
 
 // checkGroups returns an ActionFunc which will check that the groupsChosen
 // element of the StdHelp structure only contains valid group names
 func checkGroups(h *StdHelp, ps *param.PSet) param.ActionFunc {
-	// TODO: make this a FinalCheckFunc (and combine with makeForceChosenSection)
-	// TODO: add a "did you mean..." suggestion - see strdist
 	return func(_ location.L, _ *param.ByName, _ []string) error {
 		var badNames []string
-		var goodNames int
 		for gName := range h.groupsChosen {
 			if !ps.HasGroupName(gName) {
 				badNames = append(badNames, fmt.Sprintf("%q", gName))
-			} else {
-				goodNames++
 			}
 		}
 		if len(badNames) == 0 {
 			return nil
 		}
-		if goodNames == 0 {
-			h.unsetHelpSections(groupsSection, groupedParamsSection)
-		}
-
-		altNames := make([]string, 0)
-		for _, g := range ps.GetGroups() {
-			if !h.groupsChosen[g.Name] {
-				altNames = append(altNames, fmt.Sprintf("%q", g.Name))
+		if len(badNames) == len(h.groupsChosen) {
+			for k := range h.groupsChosen {
+				delete(h.groupsChosen, k)
+			}
+			err := h.unsetHelpSections(
+				groupsHelpSectionName, groupedParamsHelpSectionName)
+			if err != nil {
+				return err
 			}
 		}
-		return makeBadNameError(badNames, altNames, "group")
+
+		altNames := altNames(h, ps, badNames, param.SuggestGroups)
+		return makeBadNameError(badNames, altNames, "group",
+			" For a list of available group names try '-"+
+				helpShowArgName+" "+groupsHelpSectionName+"'")
 	}
 }
 
 // checkNotes returns an ActionFunc which will check that the notesChosen
 // element of the StdHelp structure only contains valid note names
 func checkNotes(h *StdHelp, ps *param.PSet) param.ActionFunc {
-	// TODO: make this a FinalCheckFunc (and combine with makeForceChosenSection)
-	// TODO: add a "did you mean..." suggestion - see strdist
 	return func(_ location.L, _ *param.ByName, _ []string) error {
 		var badNames []string
-		var goodNames int
 		for n := range h.notesChosen {
 			if _, err := ps.GetNote(n); err != nil {
 				badNames = append(badNames, n)
-			} else {
-				goodNames++
 			}
 		}
 		if len(badNames) == 0 {
 			return nil
 		}
-		if goodNames == 0 {
-			h.unsetHelpSections(notesSection)
-		}
-
-		altNames := make([]string, 0)
-		for _, n := range ps.Notes() {
-			if !h.notesChosen[n.Headline] {
-				altNames = append(altNames, n.Headline)
+		if len(badNames) == len(h.notesChosen) {
+			for k := range h.notesChosen {
+				delete(h.notesChosen, k)
+			}
+			err := h.unsetHelpSections(notesHelpSectionName)
+			if err != nil {
+				return err
 			}
 		}
-		return makeBadNameError(badNames, altNames, "note")
+
+		altNames := altNames(h, ps, badNames, param.SuggestNotes)
+		return makeBadNameError(badNames, altNames, "note", "")
 	}
 }
 
 // checkParams returns an ActionFunc which will check that the paramsChosen
 // element of the StdHelp structure only contains valid parameter names
 func checkParams(h *StdHelp, ps *param.PSet) param.ActionFunc {
-	// TODO: make this a FinalCheckFunc (and combine with makeForceChosenSection)
-	// TODO: add a "did you mean..." suggestion - see strdist
 	return func(_ location.L, _ *param.ByName, _ []string) error {
 		var badNames []string
-		var goodNames int
 		for pName := range h.paramsChosen {
 			trimmedName := strings.TrimLeft(pName, "-")
 			if _, err := ps.GetParamByName(trimmedName); err != nil {
 				badNames = append(badNames, fmt.Sprintf("%q", pName))
-			} else {
-				goodNames++
 			}
 		}
 		if len(badNames) == 0 {
 			return nil
 		}
-		if goodNames == 0 {
-			h.unsetHelpSections(namedParamsSection, groupedParamsSection)
-		}
-
-		altNames := make([]string, 0)
-		alreadyAdded := map[string]bool{}
-		for _, n := range badNames {
-			suggestions := ps.FindClosestMatches(n)
-			for _, s := range suggestions {
-				if !h.paramsChosen[s] && !alreadyAdded[s] {
-					alreadyAdded[s] = true
-					altNames = append(altNames, s)
-				}
+		if len(badNames) == len(h.paramsChosen) {
+			for k := range h.paramsChosen {
+				delete(h.paramsChosen, k)
+			}
+			err := h.unsetHelpSections(
+				namedParamsHelpSectionName, groupedParamsHelpSectionName)
+			if err != nil {
+				return err
 			}
 		}
-		return makeBadNameError(badNames, altNames, "parameter")
+
+		altNames := altNames(h, ps, badNames, param.SuggestParams)
+		return makeBadNameError(badNames, altNames, "parameter",
+			" To see a list of parameter names try "+
+				"'-"+helpShowArgName+" "+namedParamsHelpSectionName+"'."+
+				" To see a full list, add '-"+helpShowHiddenArgName+"'."+
+				" To see just the names, add '-"+helpSummaryArgName+"'.")
 	}
 }
 
+// altNames returns a list of possible alternative names using the passed
+// suggestion function
+func altNames(h *StdHelp, ps *param.PSet, badNames []string, sf param.SuggestionFunc) []string {
+	altNames := make([]string, 0)
+	alreadyAdded := map[string]bool{}
+
+	for _, n := range badNames {
+		suggestions := sf(ps, n)
+		for _, s := range suggestions {
+			if !h.paramsChosen[s] && !alreadyAdded[s] {
+				alreadyAdded[s] = true
+				altNames = append(altNames, fmt.Sprintf("%q", s))
+			}
+		}
+	}
+	return altNames
+}
+
 // makeBadNameError will create an error formatting the bad and alternate names
-func makeBadNameError(badNames, altNames []string, nameType string) error {
+func makeBadNameError(badNames, altNames []string, tName, extra string) error {
 	if len(badNames) == 0 {
 		return nil
 	}
@@ -316,23 +325,21 @@ func makeBadNameError(badNames, altNames []string, nameType string) error {
 		return nil
 	case 1:
 		badStr = fmt.Sprintf("Bad %s name: %s.",
-			nameType, badNames[0])
+			tName, badNames[0])
 	default:
 		sort.Strings(badNames)
 		badStr = fmt.Sprintf("Bad %s names: %s.",
-			nameType, strings.Join(badNames, ", "))
+			tName, strings.Join(badNames, ", "))
 	}
-	altStr := ""
+	alts := ""
 	switch len(altNames) {
 	case 0:
-		altStr = ""
+		alts = ""
 	case 1:
-		altStr = fmt.Sprintf(" A possible %s name is %s.",
-			nameType, altNames[0])
+		alts = " Did you mean " + altNames[0]
 	default:
 		sort.Strings(altNames)
-		altStr = fmt.Sprintf(" Possible %s names are: %s.",
-			nameType, strings.Join(altNames, ", "))
+		alts = " Did you mean " + strings.Join(altNames, " or ")
 	}
-	return errors.New(badStr + altStr)
+	return errors.New(badStr + alts + extra)
 }

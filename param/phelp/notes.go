@@ -9,7 +9,7 @@ import (
 
 // noteCanBeShown will return true if the note can be shown
 func noteCanBeShown(h StdHelp, n *param.Note) bool {
-	if len(h.notesChosen) == 0 {
+	if h.notesChosen.hasNothingChosen() {
 		if h.showHiddenItems {
 			return true
 		}

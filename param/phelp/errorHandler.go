@@ -29,15 +29,20 @@ func (h StdHelp) ErrorHandler(ps *param.PSet, errMap param.ErrMap) {
 
 	ReportErrors(twc, ps.ProgName(), errMap)
 
-	twc.Wrap("\nTry the '-"+helpArgName+
-		"' parameter for more information.\n",
-		0)
-
 	if !h.exitOnErrors {
 		return
 	}
 
 	os.Exit(1)
+}
+
+// reportErrors will report that errors have been detected and then call
+// ReportErrors but writing to the error writer
+func reportErrors(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) int {
+	twc.Print("Parameter errors detected\n")
+	twcErr := twrap.NewTWConfOrPanic(twrap.SetWriter(ps.ErrWriter()))
+	ReportErrors(twcErr, ps.ProgName(), ps.Errors())
+	return 1
 }
 
 // ReportErrors reports the errors (if any) to the writer. It can be

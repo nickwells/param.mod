@@ -92,30 +92,38 @@ func zshMsgAction(p *param.ByName) string {
 	case "psetter.Pathname":
 		msgAction += "_files"
 	default:
-		var avals []string
-
-		if getter, ok := p.Setter().(psetter.AllowedValuesMapper); ok {
-			m := getter.AllowedValuesMap()
-			if m != nil {
-				keys, _ := m.Keys()
-				avals = append(avals, keys...)
-			}
-		}
-
-		if getter, ok := p.Setter().(psetter.AllowedValuesAliasMapper); ok {
-			m := getter.AllowedValuesAliasMap()
-			if m != nil {
-				keys, _ := m.Keys()
-				avals = append(avals, keys...)
-			}
-		}
-
-		if len(avals) > 0 {
-			sort.Strings(avals)
-			msgAction += "(" + strings.Join(avals, " ") + ")"
-		}
+		msgAction += zshMsgActionGetAllowedVals(p)
 	}
 	return msgAction
+}
+
+// zshMsgActionGetAllowedVals constructs a msgAction string from any allowed
+// values
+func zshMsgActionGetAllowedVals(p *param.ByName) string {
+	var avals []string
+
+	if getter, ok := p.Setter().(psetter.AllowedValuesMapper); ok {
+		m := getter.AllowedValuesMap()
+		if m != nil {
+			keys, _ := m.Keys()
+			avals = append(avals, keys...)
+		}
+	}
+
+	if getter, ok := p.Setter().(psetter.AllowedValuesAliasMapper); ok {
+		m := getter.AllowedValuesAliasMap()
+		if m != nil {
+			keys, _ := m.Keys()
+			avals = append(avals, keys...)
+		}
+	}
+
+	if len(avals) > 0 {
+		sort.Strings(avals)
+		return "(" + strings.Join(avals, " ") + ")"
+	}
+
+	return ""
 }
 
 // zshOptSpec returns a string suitable to appear as an option spec for a zsh
@@ -181,23 +189,25 @@ func checkZshComplFile(h StdHelp, fileName string) error {
 }
 
 // zshMakeCompFile will construct the appropriately named file containing the
-// completion function(s)
-func (h StdHelp) zshMakeCompFile(twc *twrap.TWConf, ps *param.PSet) error {
+// completion function(s). It will return the exit status to use
+func zshMakeCompFile(h StdHelp, twc *twrap.TWConf, ps *param.PSet) int {
 	if h.zshMakeCompletions == zshCompGenShow {
 		zshCompletions(ps, os.Stdout)
-		return nil
+		return 0
 	}
 
 	fileName := h.zshCompletionsDir + "/_" + ps.ProgBaseName()
 
 	err := checkZshComplFile(h, fileName)
 	if err != nil {
-		return err
+		ps.AddErr("zsh completions file", err)
+		return 1
 	}
 
 	w, err := os.OpenFile(fileName, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0555)
 	if err != nil {
-		return err
+		ps.AddErr("zsh completions file", err)
+		return 1
 	}
 
 	defer w.Close()
@@ -210,5 +220,5 @@ func (h StdHelp) zshMakeCompFile(twc *twrap.TWConf, ps *param.PSet) error {
 			" Please see the zsh manual for more details.",
 		0)
 
-	return nil
+	return 0
 }

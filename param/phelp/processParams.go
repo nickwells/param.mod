@@ -3,7 +3,6 @@ package phelp
 // TODO: Rename this file to processArgs.go
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/nickwells/param.mod/v4/param"
@@ -25,56 +24,49 @@ func (h StdHelp) ProcessArgs(ps *param.PSet) {
 	var shouldExit = h.exitAfterParsing
 	var exitStatus = 0
 
-	defer func() {
-		if shouldExit {
-			os.Exit(exitStatus)
-		}
-	}()
+	actions := []struct {
+		shouldRun  bool
+		shouldExit bool
+		action     func(StdHelp, *twrap.TWConf, *param.PSet) int
+		exitStatus int // only used if action is nil
+	}{
+		{h.zshMakeCompletions != zshCompGenNone, true, zshMakeCompFile, 0},
+		{h.paramsShowWhereSet, h.exitAfterHelp, showWhereParamsAreSet, 0},
+		{h.paramsShowUnused, h.exitAfterHelp, showUnusedParams, 0},
+		{len(ps.Errors()) > 0 && h.reportErrors, h.exitOnErrors, reportErrors, 0},
+		{len(ps.Errors()) > 0, h.exitOnErrors, nil, 1},
+		{!h.sectionsChosen.hasNothingChosen(), h.exitAfterHelp, help, 0},
+	}
 
 	twc := twrap.NewTWConfOrPanic(twrap.SetWriter(ps.StdWriter()))
 
 	printSep := false
 
-	if h.zshMakeCompletions != zshCompGenNone {
-		printSep = printSepIf(twc, printSep, majorSectionSeparator)
-		shouldExit = true
-
-		err := h.zshMakeCompFile(twc, ps)
-		if err != nil {
-			fmt.Fprintln(ps.ErrWriter(),
-				"Couldn't create the zsh completion file: ", err)
-			exitStatus = 1
-			return
+	for _, a := range actions {
+		if !a.shouldRun {
+			continue
 		}
+
+		var es int
+		if a.action != nil {
+			printSep = printSepIf(twc, printSep, majorSectionSeparator)
+			es = a.action(h, twc, ps)
+		} else {
+			es = a.exitStatus
+		}
+		if es > exitStatus {
+			exitStatus = es
+		}
+
+		shouldExit = shouldExit || a.shouldExit
 	}
 
-	if h.paramsShowWhereSet {
-		printSep = printSepIf(twc, printSep, majorSectionSeparator)
-		shouldExit = shouldExit || h.exitAfterHelp
-
-		h.showWhereParamsAreSet(twc, ps)
+	if shouldExit {
+		os.Exit(exitStatus)
 	}
+}
 
-	if h.paramsShowUnused {
-		printSep = printSepIf(twc, printSep, majorSectionSeparator)
-		shouldExit = shouldExit || h.exitAfterHelp
-
-		showUnusedParams(twc, ps)
-	}
-
-	if len(ps.Errors()) > 0 && h.reportErrors {
-		printSep = printSepIf(twc, printSep, majorSectionSeparator)
-		twcErr := twrap.NewTWConfOrPanic(twrap.SetWriter(ps.ErrWriter()))
-		ReportErrors(twcErr, ps.ProgName(), ps.Errors())
-		shouldExit = shouldExit || h.exitOnErrors
-		exitStatus = 1
-	}
-
-	if len(h.sectionsChosen) > 0 {
-		printSep = printSepIf(twc, printSep, majorSectionSeparator)
-		shouldExit = shouldExit || h.exitAfterHelp
-
-		h.Help(ps)
-	}
-
+func help(h StdHelp, _ *twrap.TWConf, ps *param.PSet) int {
+	h.Help(ps)
+	return 0
 }

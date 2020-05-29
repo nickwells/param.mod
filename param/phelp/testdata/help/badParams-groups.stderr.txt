@@ -1,8 +1,7 @@
 PROGRAM NAME UNKNOWN: an error was detected while setting the parameters:
       help-groups
-            Bad group names: "nonesuch1", "nonesuch2", "nonesuch3". Possible
-            group names are: "common.params-completion", "common.params-help",
-            "common.params-params", "test-group1".
+            Bad group names: "nonesuch1", "nonesuch2", "nonesuch3". For a list
+            of available group names try '-help-show groups'
             At: supplied parameters:2: -help-groups
             nonesuch1,nonesuch2,nonesuch3
 

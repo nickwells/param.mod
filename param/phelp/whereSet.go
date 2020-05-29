@@ -42,7 +42,7 @@ func printWhereSetIntro(twc *twrap.TWConf, ps *param.PSet, p *param.ByName) {
 
 }
 
-func (h StdHelp) showWhereParamsAreSet(twc *twrap.TWConf, ps *param.PSet) {
+func showWhereParamsAreSet(h StdHelp, twc *twrap.TWConf, ps *param.PSet) int {
 	twc.Wrap("Parameter Summary\n\n"+
 		"This shows a summary of all the parameters."+
 		" If there are any errors with a parameter then that will be"+
@@ -82,4 +82,5 @@ func (h StdHelp) showWhereParamsAreSet(twc *twrap.TWConf, ps *param.PSet) {
 			}
 		}
 	}
+	return 0
 }

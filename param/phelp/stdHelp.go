@@ -20,73 +20,73 @@ type helpSection struct {
 }
 
 const (
-	introSection         = "intro"
-	usageSection         = "usage"
-	posParamsSection     = "pos-params"
-	groupsSection        = "groups"
-	namedParamsSection   = "named-params"
-	groupedParamsSection = "grouped-params"
-	notesSection         = "notes"
-	sourcesSection       = "sources"
-	examplesSection      = "examples"
-	refsSection          = "refs"
+	introHelpSectionName         = "intro"
+	usageHelpSectionName         = "usage"
+	posParamsHelpSectionName     = "pos-params"
+	groupsHelpSectionName        = "groups"
+	namedParamsHelpSectionName   = "named-params"
+	groupedParamsHelpSectionName = "grouped-params"
+	notesHelpSectionName         = "notes"
+	sourcesHelpSectionName       = "sources"
+	examplesHelpSectionName      = "examples"
+	refsHelpSectionName          = "refs"
 )
 
 var helpSectionsInOrder = []helpSection{
 	{
-		name: introSection,
+		name: introHelpSectionName,
 		desc: "the program name and" +
 			" optionally the program description",
 		displayFunc: showIntro,
 	},
 	{
-		name: usageSection,
+		name: usageHelpSectionName,
 		desc: "the program name, a parameter summary," +
 			" and any trailing parameters",
 		displayFunc: showUsageSummary,
 	},
 	{
-		name: posParamsSection,
+		name: posParamsHelpSectionName,
 		desc: "the positional parameters coming just after the" +
 			" program name",
 		displayFunc: showByPosParams,
 	},
 	{
-		name:        groupsSection,
+		name:        groupsHelpSectionName,
 		desc:        "the parameter groups",
 		displayFunc: showGroups,
 	},
 	{
-		name:        namedParamsSection,
+		name:        namedParamsHelpSectionName,
 		desc:        "the named parameters (flags)",
 		displayFunc: showParamsByName,
 	},
 	{
-		name:        groupedParamsSection,
+		name:        groupedParamsHelpSectionName,
 		desc:        "the named parameters by group name",
 		displayFunc: showParamsByGroupName,
 	},
 	{
-		name:        notesSection,
+		name:        notesHelpSectionName,
 		desc:        "additional notes on the program behaviour",
 		displayFunc: showNotes,
 	},
 	{
-		name: sourcesSection,
+		name: sourcesHelpSectionName,
 		desc: "any additional sources of parameter" +
 			" values such as environment variables" +
 			" or configuration files",
 		displayFunc: showAltSources,
 	},
 	{
-		name: examplesSection,
+		name: examplesHelpSectionName,
 		desc: "examples of correct program use" +
 			" and suggestions of ways to use the" +
 			" program",
 		displayFunc: showExamples,
 	},
 	{
-		name: refsSection,
+		name: refsHelpSectionName,
 		desc: "references to other programs or" +
 			" further sources of information",
 		displayFunc: showReferences,
@@ -109,19 +109,35 @@ func makeSectionAllowedVals() psetter.AllowedVals {
 
 // Alias names
 const (
-	standardSections = "std"
-	paramSections    = "params"
-	allSections      = "all"
+	standardHelpSectionNames = "std"
+	paramHelpSectionNames    = "params"
+	allHelpSectionNames      = "all"
 )
 
 var sectionAliases = psetter.Aliases{
-	paramSections: []string{
-		posParamsSection, groupedParamsSection},
-	standardSections: []string{introSection, usageSection,
-		posParamsSection, groupedParamsSection},
-	allSections: []string{introSection, usageSection,
-		posParamsSection, groupedParamsSection,
-		notesSection, sourcesSection, examplesSection, refsSection},
+	paramHelpSectionNames: []string{
+		posParamsHelpSectionName, groupedParamsHelpSectionName},
+	standardHelpSectionNames: []string{
+		introHelpSectionName, usageHelpSectionName,
+		posParamsHelpSectionName, groupedParamsHelpSectionName},
+	allHelpSectionNames: []string{
+		introHelpSectionName, usageHelpSectionName,
+		posParamsHelpSectionName, groupedParamsHelpSectionName,
+		notesHelpSectionName, sourcesHelpSectionName,
+		examplesHelpSectionName, refsHelpSectionName},
+}
+
+type choices map[string]bool
+
+// hasNothingChosen returns true if there is no entry in the choices set to
+// true
+func (c choices) hasNothingChosen() bool {
+	for _, v := range c {
+		if v {
+			return false
+		}
+	}
+	return true
 }
 
 // StdHelp implements the Helper interface. It records the parameter values
@@ -134,10 +150,10 @@ var sectionAliases = psetter.Aliases{
 // paramset.New function (recommended).
 type StdHelp struct {
 	// help-... values
-	sectionsChosen map[string]bool
-	groupsChosen   map[string]bool
-	paramsChosen   map[string]bool
-	notesChosen    map[string]bool
+	sectionsChosen choices
+	groupsChosen   choices
+	paramsChosen   choices
+	notesChosen    choices
 
 	showHiddenItems  bool
 	hideDescriptions bool
@@ -164,9 +180,10 @@ type StdHelp struct {
 // (the standard paramset.New() function will use this)
 func NewStdHelp() *StdHelp {
 	return &StdHelp{
-		groupsChosen:   make(map[string]bool),
-		paramsChosen:   make(map[string]bool),
-		sectionsChosen: make(map[string]bool),
+		sectionsChosen: make(choices),
+		groupsChosen:   make(choices),
+		paramsChosen:   make(choices),
+		notesChosen:    make(choices),
 
 		avalShownAlready: make(map[[md5.Size]byte]string),
 

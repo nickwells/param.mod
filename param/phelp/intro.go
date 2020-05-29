@@ -7,7 +7,7 @@ import (
 
 // showIntro prints the program name and, optionally, the description
 func showIntro(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
-	if h.sectionsChosen[usageSection] && h.hideDescriptions {
+	if h.sectionsChosen[usageHelpSectionName] && h.hideDescriptions {
 		return false
 	}
 

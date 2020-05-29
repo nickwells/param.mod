@@ -12,7 +12,7 @@ import (
 // recognised and were ignored. Since these sources may contain parameters
 // intended for other programs it is not reported as an error but you may
 // want to see what has been ignored in order to detect mistakes.
-func showUnusedParams(twc *twrap.TWConf, ps *param.PSet) {
+func showUnusedParams(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) int {
 	up := ps.UnusedParams()
 	twc.Println("Unused Parameters: ", len(up)) //nolint: errcheck
 
@@ -21,10 +21,12 @@ func showUnusedParams(twc *twrap.TWConf, ps *param.PSet) {
 		paramsByName = append(paramsByName, name)
 	}
 	sort.Strings(paramsByName)
+
 	for _, pn := range paramsByName {
 		twc.Wrap(pn, paramIndent)
 		for _, loc := range up[pn] {
 			twc.WrapPrefixed("at: ", loc, descriptionIndent)
 		}
 	}
+	return 0
 }

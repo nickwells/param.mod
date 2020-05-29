@@ -226,7 +226,7 @@ func (h StdHelp) showAllowedValues(twc *twrap.TWConf, pName string, s param.Sett
 // whether hidden items can be shown and if the param is in the list of
 // explicitly chosen params
 func paramCanBeShown(h StdHelp, p *param.ByName) bool {
-	if len(h.paramsChosen) == 0 {
+	if h.paramsChosen.hasNothingChosen() {
 		if h.showHiddenItems {
 			return true
 		}
@@ -244,11 +244,11 @@ func paramCanBeShown(h StdHelp, p *param.ByName) bool {
 	return h.paramsChosen[p.Name()]
 }
 
-// groupCanBeShown will return true if the group can be shown. It checks
-// whether hidden items can be shown and if the group is in the list of
-// explicitly chosen groups
+// groupCanBeShown will return true if the group can be shown. If no groups
+// are explicitly chosen then any group can be shown. Otherwise the group
+// must be in the list of explicitly chosen groups
 func groupCanBeShown(h StdHelp, g *param.Group) bool {
-	if len(h.groupsChosen) == 0 {
+	if h.groupsChosen.hasNothingChosen() {
 		return true
 	}
 

@@ -35,8 +35,8 @@ func (h StdHelp) printHelpMessages(twc *twrap.TWConf, messages ...string) {
 func (h StdHelp) Help(ps *param.PSet, messages ...string) {
 	w := ps.StdWriter()
 
-	if len(h.sectionsChosen) == 0 {
-		if err := h.setHelpSections(standardSections); err != nil {
+	if h.sectionsChosen.hasNothingChosen() {
+		if err := h.setHelpSections(standardHelpSectionNames); err != nil {
 			panic(fmt.Sprint("Couldn't set the default help sections:", err))
 		}
 		w = ps.ErrWriter()
