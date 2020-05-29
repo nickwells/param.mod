@@ -1,7 +1,5 @@
 package phelp
 
-// TODO: Rename this file to processArgs.go
-
 import (
 	"os"
 
