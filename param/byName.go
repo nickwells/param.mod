@@ -240,7 +240,7 @@ func (p *ByName) processParam(loc *location.L, paramParts []string) {
 	}
 
 	if err != nil {
-		p.ps.errors[p.name] = append(p.ps.errors[p.name],
+		p.ps.AddErr(p.name,
 			loc.Error(err.Error()))
 		return
 	}
@@ -251,7 +251,7 @@ func (p *ByName) processParam(loc *location.L, paramParts []string) {
 		err = action(*loc, p, paramParts)
 
 		if err != nil {
-			p.ps.errors[p.name] = append(p.ps.errors[p.name], loc.Error(err.Error()))
+			p.ps.AddErr(p.name, loc.Error(err.Error()))
 		}
 	}
 }

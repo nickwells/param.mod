@@ -267,6 +267,11 @@ func (ps *PSet) Remainder() []string { return ps.remainingParams }
 // Errors returns the map of errors for the param set
 func (ps PSet) Errors() ErrMap { return ps.errors }
 
+// AddErr adds the error to the named entry in the Error Map
+func (ps *PSet) AddErr(name string, err ...error) {
+	ps.errors[name] = append(ps.errors[name], err...)
+}
+
 // Help will call the helper's Help function
 func (ps *PSet) Help(message ...string) {
 	ps.helper.Help(ps, message...)
@@ -308,7 +313,7 @@ func (ps *PSet) markAsUnused(name string, loc *location.L) {
 // recordCmdLineOnlyErr records as an error the attempt to set a command-line
 // only parameter from a non-command line source
 func (ps *PSet) recordCmdLineOnlyErr(paramName string, loc *location.L) {
-	ps.errors[paramName] = append(ps.errors[paramName],
+	ps.AddErr(paramName,
 		loc.Error("The parameter can only be set on the command line"))
 }
 
@@ -328,12 +333,12 @@ func cleanParamParts(p *ByName, paramParts []string) []string {
 func (ps *PSet) recordUnexpectedParam(paramName string, loc *location.L) {
 	msg := "this is not a parameter of this program."
 
-	altNames := ps.FindClosestMatches(paramName)
+	altNames := SuggestParams(ps, paramName)
 	if len(altNames) != 0 {
 		msg += "\n\nDid you mean: " + strings.Join(altNames, " or ") + " ?"
 	}
 
-	ps.errors[paramName] = append(ps.errors[paramName], loc.Error(msg))
+	ps.AddErr(paramName, loc.Error(msg))
 }
 
 type existenceRule int

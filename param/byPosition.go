@@ -145,7 +145,7 @@ func (bp *ByPos) processParam(loc *location.L, val string) {
 	if err != nil {
 		name := fmt.Sprintf("Positional parameter: %d (%s)",
 			loc.Idx(), bp.name)
-		bp.ps.errors[name] = append(bp.ps.errors[name],
+		bp.ps.AddErr(name,
 			loc.Errorf("%s", err.Error()))
 	}
 }

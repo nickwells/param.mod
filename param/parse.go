@@ -84,7 +84,7 @@ func (ps *PSet) Parse(args ...[]string) ErrMap {
 	for _, fcf := range ps.finalChecks {
 		err := fcf()
 		if err != nil {
-			ps.errors["Final Checks"] = append(ps.errors["Final Checks"], err)
+			ps.AddErr("Final Checks", err)
 		}
 	}
 
@@ -117,7 +117,7 @@ func (ps *PSet) detectMandatoryParamsNotSet() {
 	for _, p := range ps.byName {
 		if p.AttrIsSet(MustBeSet) &&
 			len(p.whereIsParamSet) == 0 {
-			ps.errors[p.name] = append(ps.errors[p.name],
+			ps.AddErr(p.name,
 				errors.New("this parameter must be set somewhere"))
 		}
 	}

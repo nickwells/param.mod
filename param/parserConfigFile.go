@@ -375,8 +375,7 @@ func checkCFErrs(ps *PSet, errs []error, cf ConfigFileDetails, desc string) {
 			return
 		}
 	}
-	errorName := desc + ": " + cf.Name
-	ps.errors[errorName] = append(ps.errors[errorName], errs...)
+	ps.AddErr(desc+": "+cf.Name, errs...)
 }
 
 // getParamsFromConfigFiles will construct a line parser and then parse the

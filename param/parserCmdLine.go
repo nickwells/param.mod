@@ -6,30 +6,21 @@ import (
 	"strings"
 
 	"github.com/nickwells/location.mod/location"
-	"github.com/nickwells/strdist.mod/strdist"
 )
 
-// FindClosestMatches finds parameters with the name which is the shortest
-// distance from the passed value and returns them
-func (ps *PSet) FindClosestMatches(badParam string) []string {
-	paramNames := make([]string, 0, len(ps.nameToParam))
-	for p := range ps.nameToParam {
-		paramNames = append(paramNames, p)
-	}
-
-	return strdist.CaseBlindCosineFinder.FindNStrLike(
-		3, badParam, paramNames...)
-}
-
+// reportMissingParams adds an error to the param set error map reporting any
+// missing positional parameters.
 func (ps *PSet) reportMissingParams(missingCount int) {
-	var err error
+	if missingCount == 0 {
+		return
+	}
 
 	byPosMiniHelp := "The first"
 	if len(ps.byPos) == 1 {
 		byPosMiniHelp += " parameter should be: <" + ps.byPos[0].name + ">"
 	} else {
 		byPosMiniHelp +=
-			fmt.Sprintf(" %d parameters should be: ", len(ps.byPos))
+			fmt.Sprintf(" %d parameters should be: <", len(ps.byPos))
 		sep := "<"
 		for _, bp := range ps.byPos {
 			byPosMiniHelp += sep + bp.name
@@ -39,16 +30,15 @@ func (ps *PSet) reportMissingParams(missingCount int) {
 	}
 
 	if missingCount == 1 {
-		err = errors.New("A parameter is missing," +
-			" one more positional parameter is needed. " +
-			byPosMiniHelp)
+		ps.AddErr("", errors.New("A parameter is missing,"+
+			" one more positional parameter is needed. "+
+			byPosMiniHelp))
 	} else {
-		err = fmt.Errorf(
+		ps.AddErr("", fmt.Errorf(
 			"Some parameters are missing,"+
 				" %d more positional parameters are needed. %s",
-			missingCount, byPosMiniHelp)
+			missingCount, byPosMiniHelp))
 	}
-	ps.errors[""] = append(ps.errors[""], err)
 }
 
 type parsingStatus int
@@ -96,8 +86,7 @@ func (ps *PSet) handleParamsByName(loc *location.L, params []string) {
 		paramParts := strings.SplitN(pStr, "=", 2)
 		trimmedParam, err := trimParam(paramParts[0])
 		if err != nil {
-			ps.errors[trimmedParam] = append(ps.errors[trimmedParam],
-				loc.Error(err.Error()))
+			ps.AddErr(trimmedParam, loc.Error(err.Error()))
 			continue
 		}
 
