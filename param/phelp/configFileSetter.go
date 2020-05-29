@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/filecheck.mod/filecheck"
 	"github.com/nickwells/param.mod/v4/param/psetter"
 )
 
@@ -15,6 +17,14 @@ type configFileSetter struct {
 	seenBefore map[string]bool
 }
 
+var configFileProvisos = filecheck.Provisos{
+	Existence: filecheck.MustExist,
+	Checks: []check.FileInfo{
+		check.FileInfoIsRegular,
+		check.FileInfoSize(check.Int64GT(0)),
+	},
+}
+
 // SetWithVal (called when a value follows the parameter) does some minimal
 // checking of the parameter - the processing of the file is all done in the
 // post action function. It records whether the file has been seen before and
@@ -22,6 +32,10 @@ type configFileSetter struct {
 func (s configFileSetter) SetWithVal(_ string, paramVal string) error {
 	if paramVal == "" {
 		return errors.New("no file name has been given")
+	}
+
+	if err := configFileProvisos.StatusCheck(paramVal); err != nil {
+		return err
 	}
 
 	if s.seenBefore[paramVal] {
@@ -44,9 +58,8 @@ func (s configFileSetter) CurrentValue() string {
 }
 
 // CheckSetter checks that the seenBefore map has been initialised.
-func (s configFileSetter) CheckSetter(name string) {
+func (s *configFileSetter) CheckSetter(name string) {
 	if s.seenBefore == nil {
-		panic(name + ": phelp.configFileSetter Check failed:" +
-			" the map of previously seen filenames has not been set")
+		s.seenBefore = make(map[string]bool)
 	}
 }

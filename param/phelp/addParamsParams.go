@@ -89,12 +89,12 @@ func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
 		param.GroupName(groupName))
 
 	ps.Add("params-file",
-		configFileSetter{seenBefore: make(map[string]bool)},
+		&configFileSetter{},
 		"read in parameters from the given file. Note that the"+
 			" parameter file will be read as a configuration file"+
 			" with each parameter on a separate line. Comments,"+
-			" white space etc. will be treated as in any other"+
-			" configuration file",
+			" white space etc. will be"+
+			" treated as in any other configuration file",
 		param.AltName("params-from"),
 		param.PostAction(param.ConfigFileActionFunc),
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
