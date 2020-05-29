@@ -10,6 +10,11 @@ import (
 	"github.com/nickwells/param.mod/v4/param/psetter"
 )
 
+const (
+	completionsZshDirArgName  = "completions-zsh-dir"
+	completionsZshMakeArgName = "completions-zsh-make"
+)
+
 // addParamCompletionParams will add the standard parameters for specifying
 // and creating shell completion functions into the parameter set
 func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
@@ -25,7 +30,7 @@ func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
 
 	setConfigFileForGroupCommonParamsCompletion(ps) //nolint: errcheck
 
-	zshDirParam := ps.Add("completions-zsh-dir",
+	zshDirParam := ps.Add(completionsZshDirArgName,
 		psetter.Pathname{
 			Value: &h.zshCompletionsDir,
 			Expectation: filecheck.Provisos{
@@ -45,7 +50,7 @@ func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
 	)
 
 	const needZshDir = " The zsh completions directory name must be specified."
-	zshMakeCompletionsParam := ps.Add("completions-zsh-make",
+	zshMakeCompletionsParam := ps.Add(completionsZshMakeArgName,
 		psetter.Enum{
 			AllowedVals: psetter.AllowedVals{
 				zshCompGenRepl: "any existing zsh completions" +
@@ -90,9 +95,7 @@ func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
 				"the %q parameter has been set (at: %s)"+
 					" but the %q parameter has not",
 				zshMakeCompletionsParam.Name(),
-				strings.Join(
-					zshMakeCompletionsParam.WhereSet(),
-					" and at "),
+				strings.Join(zshMakeCompletionsParam.WhereSet(), " and at "),
 				zshDirParam.Name())
 		}
 		return nil
