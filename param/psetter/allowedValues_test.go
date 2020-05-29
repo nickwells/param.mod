@@ -1,7 +1,6 @@
 package psetter_test
 
 import (
-	"flag"
 	"regexp"
 	"testing"
 	"time"
@@ -16,14 +15,18 @@ const (
 	allowedValsSubDir = "allowedVals"
 )
 
-var updateAVals = flag.Bool("upd-avals", false,
-	"update the files holding the allowed values messages")
+var gfc = testhelper.GoldenFileCfg{
+	DirNames:               []string{testDataDir, allowedValsSubDir},
+	Sfx:                    "txt",
+	UpdFlagName:            "upd-help-files",
+	KeepBadResultsFlagName: "keep-bad-results",
+}
 
+func init() {
+	gfc.AddUpdateFlag()
+	gfc.AddKeepBadResultsFlag()
+}
 func TestAllowedValues(t *testing.T) {
-	gfc := testhelper.GoldenFileCfg{
-		DirNames: []string{testDataDir, allowedValsSubDir},
-		Sfx:      "txt",
-	}
 	var b bool
 	var dur time.Duration
 	var emptyStrList []string
@@ -128,7 +131,6 @@ func TestAllowedValues(t *testing.T) {
 
 	for _, tc := range testCases {
 		val := []byte(tc.s.AllowedValues())
-		testhelper.CheckAgainstGoldenFile(t, tc.IDStr(), val,
-			gfc.PathName(tc.ID.Name), *updateAVals)
+		gfc.Check(t, tc.IDStr(), tc.ID.Name, val)
 	}
 }
