@@ -14,7 +14,7 @@ common.params-completion [ 2 parameters, all hidden ]
     of the files and control whether they should be overwritten.
     
     Parameters in this group may also be set in the configuration file:
-    /home/ngw/.config/github.com/nickwells/param.mod/v4/param/phelp/group-common.params-completion.cfg
+    /home/ngw/.config/github.com/nickwells/param.mod/v5/param/phelp/group-common.params-completion.cfg
 
       [-completions-zsh-dir=...]
             which directory should a zsh completions function for this program

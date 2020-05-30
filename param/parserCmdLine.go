@@ -20,7 +20,7 @@ func (ps *PSet) reportMissingParams(missingCount int) {
 		byPosMiniHelp += " parameter should be: <" + ps.byPos[0].name + ">"
 	} else {
 		byPosMiniHelp +=
-			fmt.Sprintf(" %d parameters should be: <", len(ps.byPos))
+			fmt.Sprintf(" %d parameters should be: ", len(ps.byPos))
 		sep := "<"
 		for _, bp := range ps.byPos {
 			byPosMiniHelp += sep + bp.name
