@@ -1,6 +1,6 @@
 package phelp
 
-import "github.com/nickwells/param.mod/v4/param"
+import "github.com/nickwells/param.mod/v5/param"
 
 // addNotes adds all the notes for the help message
 func addNotes(ps *param.PSet) {

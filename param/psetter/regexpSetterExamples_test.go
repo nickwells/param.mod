@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/nickwells/param.mod/v4/param/psetter"
+	"github.com/nickwells/param.mod/v5/param/psetter"
 )
 
 // ExampleRegexp_standard demonstrates the use of a Regexp setter.

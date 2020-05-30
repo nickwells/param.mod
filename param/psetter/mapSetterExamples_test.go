@@ -3,7 +3,7 @@ package psetter_test
 import (
 	"fmt"
 
-	"github.com/nickwells/param.mod/v4/param/psetter"
+	"github.com/nickwells/param.mod/v5/param/psetter"
 )
 
 // ExampleMap_standard demonstrates the use of an Map setter.

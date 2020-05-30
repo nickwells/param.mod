@@ -1,4 +1,4 @@
-module github.com/nickwells/param.mod/v4
+module github.com/nickwells/param.mod/v5
 
 require (
 	github.com/nickwells/check.mod v1.6.3

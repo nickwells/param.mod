@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/nickwells/param.mod/v4/param/psetter"
+	"github.com/nickwells/param.mod/v5/param/psetter"
 )
 
 // ExampleTimeLocation_standard demonstrates the use of a TimeLocation setter

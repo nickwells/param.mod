@@ -3,8 +3,8 @@ package paramset
 import (
 	"fmt"
 
-	"github.com/nickwells/param.mod/v4/param"
-	"github.com/nickwells/param.mod/v4/param/phelp"
+	"github.com/nickwells/param.mod/v5/param"
+	"github.com/nickwells/param.mod/v5/param/phelp"
 	"github.com/nickwells/twrap.mod/twrap"
 )
 
