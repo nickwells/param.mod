@@ -102,10 +102,13 @@ func SetHelper(h Helper) PSetOptFunc {
 // nil. The default behaviour is for an error to be reported if there are any
 // unprocessed parameters. If you expect additional arguments after either a
 // terminal positional parameter or after an explicit end-of-parameters
-// parameter (by default '--') then you have two choices. You can set the
-// remainder handler to the NullRemHandler and process the remainder yourself
-// in the body of the program. Alternatively you can pass a RemHandler that
-// will handle the remainder in the Parse method.
+// parameter (see the TerminalParam method) then you have two choices. You
+// can set the remainder handler to the NullRemHandler and process the
+// remainder yourself in the body of the program. Alternatively you can pass
+// a RemHandler that will handle the remainder in the Parse method.
+//
+// If this is not set the default behaviour is to report any extra parameters
+// after the TerminalParam as errors
 func (ps *PSet) SetRemHandler(rh RemHandler) error {
 	if rh == nil {
 		return errors.New("The remainder handler must not be nil")
@@ -420,7 +423,11 @@ func (ps *PSet) AddFinalCheck(fcf FinalCheckFunc) {
 // value which is set to DfltTerminalParam
 func (ps *PSet) SetTerminalParam(s string) { ps.terminalParam = s }
 
-// TerminalParam will return the current value of the terminal parameter.
+// TerminalParam will return the current value of the terminal
+// parameter. This is the parameter which can be given to indicate that any
+// following parameters should be handled by the RemHandler (see
+// SetRemHandler and SetNamedRemHandler). Unless SetTerminalParam has been
+// called this will return the default value: DfltTerminalParam
 func (ps *PSet) TerminalParam() string { return ps.terminalParam }
 
 // fixGroups checks that the parameter groups correctly reflect the
