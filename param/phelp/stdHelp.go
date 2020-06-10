@@ -159,6 +159,8 @@ type StdHelp struct {
 	hideDescriptions bool
 	helpRequested    bool
 
+	helpFormat string
+
 	avalShownAlready map[[md5.Size]byte]string
 
 	// params-... values
@@ -192,6 +194,8 @@ func NewStdHelp() *StdHelp {
 		exitAfterHelp: true,
 
 		zshMakeCompletions: zshCompGenNone,
+
+		helpFormat: helpFmtTypeStd,
 	}
 }
 

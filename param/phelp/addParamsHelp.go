@@ -22,6 +22,12 @@ const (
 	helpGroupsArgName     = "help-groups"
 	helpParamsArgName     = "help-params"
 	helpNotesArgName      = "help-notes"
+	helpFormatArgName     = "help-format"
+)
+
+const (
+	helpFmtTypeStd = "standard"
+	helpFmtTypeMD  = "markdown"
 )
 
 const (
@@ -112,6 +118,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		"when printing the help message only show the listed groups."+
 			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
+		param.AltName("help-group"),
 		param.AltName("help-g"),
 		param.PostAction(checkGroups(h, ps)),
 		param.GroupName(groupName))
@@ -127,6 +134,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		"when printing the help message only show the listed parameters."+
 			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
+		param.AltName("help-param"),
 		param.AltName("help-p"),
 		param.PostAction(checkParams(h, ps)),
 		param.GroupName(groupName))
@@ -141,6 +149,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		"when printing the help message only show the listed notes."+
 			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
+		param.AltName("help-note"),
 		param.AltName("help-n"),
 		param.PostAction(checkNotes(h, ps)),
 		param.PostAction(setHelpSections(h, notesHelpSectionName)),
@@ -157,10 +166,28 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		param.GroupName(groupName),
 	)
 
+	ps.Add(helpFormatArgName,
+		psetter.Enum{
+			Value: &h.helpFormat,
+			AllowedVals: psetter.AllowedVals{
+				helpFmtTypeStd: "the standard format." +
+					" This is almost certainly what you want",
+				helpFmtTypeMD: "markdown format. This will have markdown" +
+					" annotations applied. This can be useful to produce" +
+					" online documentation",
+			},
+		},
+		"specify how the help message should be produced. Only some parts"+
+			" of the help message support this feature. They will mostly"+
+			" produce Standard format regardless of this setting.",
+		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
+		param.GroupName(groupName),
+	)
+
 	// Final checks
 
 	ps.AddFinalCheck(
-		makeForceChosenSection(h, h.groupsChosen, groupsHelpSectionName,
+		makeForceChosenSection(h, h.groupsChosen, groupedParamsHelpSectionName,
 			groupsHelpSectionName, groupedParamsHelpSectionName))
 	ps.AddFinalCheck(
 		makeForceChosenSection(h, h.paramsChosen, namedParamsHelpSectionName,
