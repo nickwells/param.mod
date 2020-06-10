@@ -11,7 +11,17 @@ func showExamples(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	if len(ex) == 0 {
 		return false
 	}
+	switch h.helpFormat {
+	case helpFmtTypeMD:
+		return showExamplesFmtMD(h, twc, ps)
+	default:
+		return showExamplesFmtStd(h, twc, ps)
+	}
+}
 
+// showExamplesFmtStd prints examples in the standard help format
+func showExamplesFmtStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
+	ex := ps.Examples()
 	twc.Print("Examples\n")
 
 	for _, e := range ex {
@@ -20,6 +30,24 @@ func showExamples(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 			continue
 		}
 		twc.Wrap(e.Desc, descriptionIndent)
+	}
+	return true
+}
+
+// showExamplesFmtMD prints examples in markdown format
+func showExamplesFmtMD(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
+	ex := ps.Examples()
+	twc.Print("# Examples\n\n")
+
+	for _, e := range ex {
+		twc.Print("```sh\n")
+		twc.Print(e.Ex + "\n")
+		twc.Print("```\n")
+		if h.hideDescriptions {
+			continue
+		}
+		twc.Wrap(e.Desc, 0)
+		twc.Print("\n")
 	}
 	return true
 }
