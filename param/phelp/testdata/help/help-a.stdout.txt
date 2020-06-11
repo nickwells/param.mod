@@ -49,7 +49,7 @@ common.params-completion [ 2 parameters, all hidden ]
                                 instead printed to standard output.
             Initial value: none
 ---------------
-common.params-help       [ 9 parameters, 8 hidden ]
+common.params-help       [ 10 parameters, 9 hidden ]
     These are parameters for printing a help message.
 
       [-help] or [-usage]
@@ -57,6 +57,7 @@ common.params-help       [ 9 parameters, 8 hidden ]
             
             To see hidden parameters use the -help-all parameter.
             For a brief help message use the -help-summary parameter
+            For the full help message use the -help-full parameter
       [-help-all] or [-help-a]
             show all the parameters. Less commonly useful parameters are not
             shown in the standard help message. This will reveal them.
@@ -68,25 +69,37 @@ common.params-help       [ 9 parameters, 8 hidden ]
             parameters.
             
             The program will exit after the help message is shown.
+      [-help-format=...]
+            specify how the help message should be produced. Only some parts of
+            the help message support this feature. They will mostly produce
+            Standard format regardless of this setting.
+            Allowed values: a string
+                            The value must be one of the following:
+                            markdown: markdown format. This will have markdown
+                                annotations applied. This can be useful to
+                                produce online documentation
+                            standard: the standard format. This is almost
+                                certainly what you want
+            Initial value: standard
       [-help-full]
             show all parts of the help message and all parameters, including
             hidden ones.
             
             The program will exit after the help message is shown.
-      [-help-groups=...] or [-help-g=...]
+      [-help-groups=...] or [-help-group=...] or [-help-g=...]
             when printing the help message only show the listed groups.
             
             The program will exit after the help message is shown.
             Allowed values: a list of string values separated by ',' subject to
                             checks
             Initial value:
-      [-help-notes=...] or [-help-n=...]
+      [-help-notes=...] or [-help-note=...] or [-help-n=...]
             when printing the help message only show the listed notes.
             
             The program will exit after the help message is shown.
             Allowed values: (see parameter: help-groups)
             Initial value:
-      [-help-params=...] or [-help-p=...]
+      [-help-params=...] or [-help-param=...] or [-help-p=...]
             when printing the help message only show the listed parameters.
             
             The program will exit after the help message is shown.

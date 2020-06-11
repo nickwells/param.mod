@@ -13,7 +13,7 @@ Usage: PROGRAM NAME UNKNOWN ...
 
 ===============
 
-common.params-help       [ 9 parameters, 8 hidden ]
+common.params-help       [ 10 parameters, 9 hidden ]
     These are parameters for printing a help message.
 
       [-help] or [-usage]
@@ -21,3 +21,4 @@ common.params-help       [ 9 parameters, 8 hidden ]
             
             To see hidden parameters use the -help-all parameter.
             For a brief help message use the -help-summary parameter
+            For the full help message use the -help-full parameter

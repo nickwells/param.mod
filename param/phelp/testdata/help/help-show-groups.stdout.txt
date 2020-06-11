@@ -10,7 +10,7 @@ common.params-completion [ 2 parameters, all hidden ]
     /home/ngw/.config/github.com/nickwells/param.mod/v5/param/phelp/group-common.params-completion.cfg
 
 ---------------
-common.params-help       [ 9 parameters, 8 hidden ]
+common.params-help       [ 10 parameters, 9 hidden ]
     These are parameters for printing a help message.
 
 ---------------

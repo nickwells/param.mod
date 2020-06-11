@@ -2,7 +2,7 @@ Usage: PROGRAM NAME UNKNOWN -param2=... ...
 
 ===============
 
-common.params-help       [ 9 parameters, 8 hidden ]
+common.params-help       [ 10 parameters, 9 hidden ]
       [-help] or [-usage]
 ---------------
 test-group1              [ 6 parameters, 1 hidden ]

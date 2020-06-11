@@ -1,6 +1,34 @@
-
-Parameter groups
-
 test-group1              [ 6 parameters, 1 hidden ]
     test parameters.
 
+      [-param1=...] or [-param1-alt1=...]
+            help text for param1
+            Allowed values: any value that can be read as a whole number
+            Initial value: 1
+      -param2=... or -param2-alt2=...
+            help text for param2.
+            With an embedded new line and a lot of text to demonstrate the
+            behaviour when text is wrapped across multiple lines
+            Allowed values: (see parameter: param1)
+            Initial value: 2
+      [-param4[=...]]
+            help...
+            
+            This parameter value may only be set once. Any appearances after the
+            first will not be used
+            Allowed values: none (which will be taken as 'true') or some value
+                            that can be interpreted as true or false. The value
+                            must be given after an '=', not as a following
+                            value, as this is optional
+            Initial value: false
+      [-param5=...]
+            help...
+            Allowed values: a string
+                            The value must be one of the following:
+                            v1: a value
+                            v2: another value
+            Initial value: v1
+      [-param6=...]
+            help...
+            Allowed values: (see parameter: param5)
+            Initial value: v2

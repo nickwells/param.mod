@@ -57,6 +57,9 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			" parameter."+
 			"\n"+
 			"For a brief help message use the -"+helpSummaryArgName+
+			" parameter"+
+			"\n"+
+			"For the full help message use the -"+helpFullArgName+
 			" parameter",
 		param.Attrs(param.CommandLineOnly),
 		param.AltName("usage"),
