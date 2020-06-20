@@ -52,7 +52,7 @@ func (h StdHelp) ProcessArgs(ps *param.PSet) {
 		} else {
 			es = a.exitStatus
 		}
-		if es > exitStatus {
+		if es > exitStatus && a.shouldExit {
 			exitStatus = es
 		}
 
