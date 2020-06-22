@@ -215,7 +215,7 @@ func (h StdHelp) showAllowedValues(twc *twrap.TWConf, pName string, s param.Sett
 		aval = "The value must be one of the following:\n" + avm.String()
 		twc.Wrap2Indent(aval, indent, indent+4)
 	}
-	if avam != nil {
+	if len(avam) > 0 {
 		indent := descriptionIndent + len(prefix)
 		aval = "The following aliases are available:\n" + avam.String()
 		twc.Wrap2Indent(aval, indent, indent+4)
