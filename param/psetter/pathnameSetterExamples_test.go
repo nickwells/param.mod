@@ -33,10 +33,8 @@ func ExamplePathname_withPassingExpectation() {
 
 	ps.Add("my-pathname",
 		psetter.Pathname{
-			Value: &pathname,
-			Expectation: filecheck.Provisos{
-				Existence: filecheck.MustNotExist,
-			},
+			Value:       &pathname,
+			Expectation: filecheck.IsNew(),
 		},
 		"help text")
 
@@ -59,10 +57,8 @@ func ExamplePathname_withFailingExpectation() {
 
 	ps.Add("my-pathname",
 		psetter.Pathname{
-			Value: &pathname,
-			Expectation: filecheck.Provisos{
-				Existence: filecheck.MustExist,
-			},
+			Value:       &pathname,
+			Expectation: filecheck.FileExists(),
 		},
 		"help text")
 
@@ -88,10 +84,8 @@ func ExamplePathname_withPassingChecks() {
 
 	ps.Add("my-pathname",
 		psetter.Pathname{
-			Value: &pathname,
-			Expectation: filecheck.Provisos{
-				Existence: filecheck.MustNotExist,
-			},
+			Value:       &pathname,
+			Expectation: filecheck.IsNew(),
 			Checks: []check.String{
 				check.StringHasSuffix(".go"),
 			},

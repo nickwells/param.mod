@@ -107,7 +107,7 @@ func TestSetWithVal(t *testing.T) {
 	var vPathname2 string
 	var setterPathnameWithExpectation = psetter.Pathname{
 		Value:       &vPathname2,
-		Expectation: filecheck.Provisos{Existence: filecheck.MustExist},
+		Expectation: filecheck.DirExists(),
 	}
 	var vPathname3 string
 	var setterPathnameWithChecks = psetter.Pathname{

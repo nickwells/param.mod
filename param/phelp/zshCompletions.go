@@ -178,9 +178,7 @@ func zshCompletions(ps *param.PSet, w io.Writer) {
 // appropriate to the way it is being generated. If it is being replaced it
 // may or may not exist, if it should be new then the file must not exist.
 func checkZshComplFile(h StdHelp, fileName string) error {
-	fileChecks := filecheck.Provisos{
-		Existence: filecheck.MustNotExist,
-	}
+	fileChecks := filecheck.IsNew()
 	if h.zshMakeCompletions == zshCompGenRepl {
 		fileChecks.Existence = filecheck.Optional
 	}

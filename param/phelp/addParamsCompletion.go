@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/nickwells/check.mod/check"
 	"github.com/nickwells/filecheck.mod/filecheck"
 	"github.com/nickwells/param.mod/v5/param"
 	"github.com/nickwells/param.mod/v5/param/psetter"
@@ -32,13 +31,8 @@ func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
 
 	zshDirParam := ps.Add(completionsZshDirArgName,
 		psetter.Pathname{
-			Value: &h.zshCompletionsDir,
-			Expectation: filecheck.Provisos{
-				Existence: filecheck.MustExist,
-				Checks: []check.FileInfo{
-					check.FileInfoIsDir,
-				},
-			},
+			Value:       &h.zshCompletionsDir,
+			Expectation: filecheck.DirExists(),
 		},
 		"which directory should a zsh completions function for this"+
 			" program be written to."+

@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/nickwells/check.mod/check"
 	"github.com/nickwells/filecheck.mod/filecheck"
 	"github.com/nickwells/param.mod/v5/param/psetter"
 )
@@ -17,13 +16,7 @@ type configFileSetter struct {
 	seenBefore map[string]bool
 }
 
-var configFileProvisos = filecheck.Provisos{
-	Existence: filecheck.MustExist,
-	Checks: []check.FileInfo{
-		check.FileInfoIsRegular,
-		check.FileInfoSize(check.Int64GT(0)),
-	},
-}
+var configFileProvisos = filecheck.FileNonEmpty()
 
 // SetWithVal (called when a value follows the parameter) does some minimal
 // checking of the parameter - the processing of the file is all done in the
