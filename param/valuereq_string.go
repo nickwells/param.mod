@@ -4,6 +4,15 @@ package param
 
 import "strconv"
 
+func _() {
+	// An "invalid array index" compiler error signifies that the constant values have changed.
+	// Re-run the stringer command to generate them again.
+	var x [1]struct{}
+	_ = x[Mandatory-0]
+	_ = x[Optional-1]
+	_ = x[None-2]
+}
+
 const _ValueReq_name = "MandatoryOptionalNone"
 
 var _ValueReq_index = [...]uint8{0, 9, 17, 21}
