@@ -8,19 +8,20 @@ You can add parameters to the set of params to be checked with the Add
 function and you can add alternative names with AltName which returns an
 option function that will add the alternative name to the set of ways that a
 parameter can be referenced. Similarly the GroupName function allows you to
-group related parameters together so that they will be reported together in
-the usage message.
+group related parameters together so that they will be shown together in the
+usage message.
 
 The way to use this package is to create a PSet and then to add parameters to
 it and when you've set all the parameters you want, you call Parse on the
 PSet. You can create a PSet with the NewSet function but it is more
 convenient to use the convenience function from the paramset package:
     paramset.NewOrDie(...)
-as this will automatically set the mandatory helper to the
-Standard helper. This will provide a common set of parameters that give a
-consistent interface to your command line tools. The standard parameters also
-give access to many useful features that will make your command line tools
-easy to use.
+this will automatically set the mandatory helper to the Standard helper.
+
+The standard helper adds some parameters to the PSet. These allow the user to
+request a usage message and to specify in detail exactly how much help to
+show. This gives a consistent interface to your command line tools and access
+to many useful features that will make your tools easier to use.
 
 When adding a new parameter you need to choose the Setter that you want it to
 use. The psetter package provides a lot of standard ones but you can write
