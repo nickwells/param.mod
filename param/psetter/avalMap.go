@@ -38,6 +38,9 @@ func (av AllowedVals) Keys() ([]string, int) {
 // String returns a string documenting the entries in the map - each entry is
 // on a separate line
 func (av AllowedVals) String() string {
+	if av == nil {
+		return ""
+	}
 	var avals string
 	keys, maxKeyLen := av.Keys()
 	sort.Strings(keys)

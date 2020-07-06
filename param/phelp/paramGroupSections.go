@@ -180,45 +180,37 @@ func (h StdHelp) showAllowedValsByPos(twc *twrap.TWConf, p *param.ByPos) {
 func (h StdHelp) showAllowedValues(twc *twrap.TWConf, pName string, s param.Setter) {
 	const prefix = "Allowed values: "
 
-	aval := s.AllowedValues()
-	keyStr := aval
-
-	var avm psetter.AllowedVals
+	var valueList string
 	if sAVM, ok := s.(psetter.AllowedValuesMapper); ok {
-		avm = sAVM.AllowedValuesMap()
-	}
-	if avm != nil {
-		keyStr += avm.String()
+		avm := sAVM.AllowedValuesMap()
+		valueList = "The value must be one of the following:\n" + avm.String()
 	}
 
-	var avam psetter.Aliases
+	var aliases string
 	if sAVM, ok := s.(psetter.AllowedValuesAliasMapper); ok {
-		avam = sAVM.AllowedValuesAliasMap()
-	}
-	if avam != nil {
-		keyStr += avam.String()
+		avam := sAVM.AllowedValuesAliasMap()
+		if len(avam) == 1 {
+			aliases = "The following alias is available:\n" + avam.String()
+		} else if len(avam) > 1 {
+			aliases = "The following aliases are available:\n" + avam.String()
+		}
 	}
 
-	key := md5.Sum([]byte(keyStr))
-
+	key := md5.Sum([]byte(s.AllowedValues() + valueList + aliases))
 	if name, alreadyShown := h.avalShownAlready[key]; alreadyShown {
-		twc.WrapPrefixed(prefix,
-			"(see parameter: "+name+")",
-			descriptionIndent)
+		twc.WrapPrefixed(prefix, "(see parameter: "+name+")", descriptionIndent)
 		return
 	}
-
 	h.avalShownAlready[key] = pName
-	twc.WrapPrefixed(prefix, aval, descriptionIndent)
-	if avm != nil {
-		indent := descriptionIndent + len(prefix)
-		aval = "The value must be one of the following:\n" + avm.String()
-		twc.Wrap2Indent(aval, indent, indent+4)
+
+	twc.WrapPrefixed(prefix, s.AllowedValues(), descriptionIndent)
+
+	indent := descriptionIndent + len(prefix)
+	if valueList != "" {
+		twc.Wrap2Indent(valueList, indent, indent+4)
 	}
-	if len(avam) > 0 {
-		indent := descriptionIndent + len(prefix)
-		aval = "The following aliases are available:\n" + avam.String()
-		twc.Wrap2Indent(aval, indent, indent+4)
+	if aliases != "" {
+		twc.Wrap2Indent(aliases, indent, indent+4)
 	}
 }
 

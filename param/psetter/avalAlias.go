@@ -38,6 +38,9 @@ func (a Aliases) Keys() ([]string, int) {
 // String returns a string documenting the entries in the map - each entry is
 // on a separate line
 func (a Aliases) String() string {
+	if a == nil {
+		return ""
+	}
 	var avals string
 	keys, maxKeyLen := a.Keys()
 	sort.Strings(keys)
