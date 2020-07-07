@@ -9,7 +9,7 @@ test-group1              [ 6 parameters, 1 hidden ]
             help text for param2.
             With an embedded new line and a lot of text to demonstrate the
             behaviour when text is wrapped across multiple lines
-            Allowed values: (see parameter: param1)
+            Allowed values: any value that can be read as a whole number
             Initial value: 2
       [-param3=...] or [-p3=...]
             help...

@@ -1,7 +1,6 @@
 package phelp
 
 import (
-	"crypto/md5"
 	"fmt"
 	"sort"
 	"strings"
@@ -176,9 +175,10 @@ func (h StdHelp) showAllowedValsByPos(twc *twrap.TWConf, p *param.ByPos) {
 
 // showAllowedValues prints the allowed values for a parameter. It will print
 // a reference to an earlier parameter if the allowed value text has been
-// seen already
+// seen already and the text is longer than 50 characters
 func (h StdHelp) showAllowedValues(twc *twrap.TWConf, pName string, s param.Setter) {
 	const prefix = "Allowed values: "
+	const longString = 50
 
 	var valueList string
 	if sAVM, ok := s.(psetter.AllowedValuesMapper); ok {
@@ -196,22 +196,21 @@ func (h StdHelp) showAllowedValues(twc *twrap.TWConf, pName string, s param.Sett
 		}
 	}
 
-	key := md5.Sum([]byte(s.AllowedValues() + valueList + aliases))
-	if name, alreadyShown := h.avalShownAlready[key]; alreadyShown {
-		twc.WrapPrefixed(prefix, "(see parameter: "+name+")", descriptionIndent)
-		return
+	keyStr := s.AllowedValues() + valueList + aliases
+	if len(keyStr) > longString {
+		if name, alreadyShown := h.avalShownAlready[keyStr]; alreadyShown {
+			twc.WrapPrefixed(prefix,
+				"(see parameter: "+name+")",
+				descriptionIndent)
+			return
+		}
+		h.avalShownAlready[keyStr] = pName
 	}
-	h.avalShownAlready[key] = pName
-
-	twc.WrapPrefixed(prefix, s.AllowedValues(), descriptionIndent)
 
 	indent := descriptionIndent + len(prefix)
-	if valueList != "" {
-		twc.Wrap2Indent(valueList, indent, indent+4)
-	}
-	if aliases != "" {
-		twc.Wrap2Indent(aliases, indent, indent+4)
-	}
+	twc.WrapPrefixed(prefix, s.AllowedValues(), descriptionIndent)
+	twc.Wrap2Indent(valueList, indent, indent+4)
+	twc.Wrap2Indent(aliases, indent, indent+4)
 }
 
 // paramCanBeShown will return true if the param can be shown. It checks

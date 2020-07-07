@@ -7,7 +7,7 @@ require (
 	github.com/nickwells/location.mod v1.2.7
 	github.com/nickwells/strdist.mod v1.0.12
 	github.com/nickwells/testhelper.mod v1.4.1
-	github.com/nickwells/twrap.mod v1.4.0
+	github.com/nickwells/twrap.mod v1.4.1
 	github.com/nickwells/xdg.mod v1.0.2
 )
 

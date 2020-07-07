@@ -12,7 +12,7 @@ github.com/nickwells/strdist.mod v1.0.12 h1:32bb55A7vQBUk9Qy4q7aNtEIcPCqBdLOcxms
 github.com/nickwells/strdist.mod v1.0.12/go.mod h1:FlwqM8fl7+hA5UFq+8YiPfWCbAILOjN6aLMjwF2Fs70=
 github.com/nickwells/testhelper.mod v1.4.1 h1:bpd/G2oBzfDOY22eineHAhOMrAmZo3Q80P3gA+Wkz+c=
 github.com/nickwells/testhelper.mod v1.4.1/go.mod h1:Ct/U2PjL0n9hGc+US6uR/s4NxSRI33NM+0ZkrDkG0XI=
-github.com/nickwells/twrap.mod v1.4.0 h1:tA78lgB4VJXO1qmoeii1Q/CCKfg+4Lq/fyuxk5Rupjc=
-github.com/nickwells/twrap.mod v1.4.0/go.mod h1:HhwQ4N5XcXNyNUo//o5DZZAqs1UzSmU/JEQJu9rNt6s=
+github.com/nickwells/twrap.mod v1.4.1 h1:VdhrkEYoJZPW/t7gAIfmz6kgSegUqci3LmSvwKDkLLc=
+github.com/nickwells/twrap.mod v1.4.1/go.mod h1:HhwQ4N5XcXNyNUo//o5DZZAqs1UzSmU/JEQJu9rNt6s=
 github.com/nickwells/xdg.mod v1.0.2 h1:rmQPX4dTfxTtUeoRQfkMbPCzUDwN2zP6eNwTYyBcn8w=
 github.com/nickwells/xdg.mod v1.0.2/go.mod h1:h8lRJMpY6oXdD6E3jJuolpO9QJE5FcTvUe8eyRzgyQo=

@@ -1,7 +1,6 @@
 package phelp
 
 import (
-	"crypto/md5"
 	"fmt"
 
 	"github.com/nickwells/location.mod/location"
@@ -161,7 +160,7 @@ type StdHelp struct {
 
 	helpFormat string
 
-	avalShownAlready map[[md5.Size]byte]string
+	avalShownAlready map[string]string
 
 	// params-... values
 	paramsShowWhereSet bool
@@ -187,7 +186,7 @@ func NewStdHelp() *StdHelp {
 		paramsChosen:   make(choices),
 		notesChosen:    make(choices),
 
-		avalShownAlready: make(map[[md5.Size]byte]string),
+		avalShownAlready: make(map[string]string),
 
 		reportErrors:  true,
 		exitOnErrors:  true,

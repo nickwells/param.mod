@@ -18,7 +18,7 @@ Positional Parameters
             Initial value: 101
       2) pos2
             help text for second positional parameter
-            Allowed values: (see parameter: pos1)
+            Allowed values: any value that can be read as a whole number
             Initial value: 102
 
 ===============
@@ -38,13 +38,13 @@ test-group1              [ 6 parameters, 1 hidden ]
 
       [-param1=...] or [-param1-alt1=...]
             help text for param1
-            Allowed values: (see parameter: pos1)
+            Allowed values: any value that can be read as a whole number
             Initial value: 1
       -param2=... or -param2-alt2=...
             help text for param2.
             With an embedded new line and a lot of text to demonstrate the
             behaviour when text is wrapped across multiple lines
-            Allowed values: (see parameter: pos1)
+            Allowed values: any value that can be read as a whole number
             Initial value: 2
       [-param4[=...]]
             help...
