@@ -5,7 +5,7 @@ common.params-completion [ 2 parameters, all hidden ]
     These are the parameters for creating shell completion functions. You can
     specify where the completion files should be written, trigger the generation
     of the files and control whether they should be overwritten.
-    
+
     Parameters in this group may also be set in the configuration file:
     /home/ngw/.config/github.com/nickwells/param.mod/v5/param/phelp/group-common.params-completion.cfg
 

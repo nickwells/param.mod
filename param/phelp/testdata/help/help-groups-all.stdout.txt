@@ -11,6 +11,7 @@ test-group1              [ 6 parameters, 1 hidden ]
             behaviour when text is wrapped across multiple lines
             Allowed values: any value that can be read as a whole number
             Initial value: 2
+            Current value: 99
       [-param3=...] or [-p3=...]
             help...
             Allowed values: any value that can be read as a number with a
@@ -18,7 +19,7 @@ test-group1              [ 6 parameters, 1 hidden ]
             Initial value: 3.333
       [-param4[=...]]
             help...
-            
+
             This parameter value may only be set once. Any appearances after the
             first will not be used
             Allowed values: none (which will be taken as 'true') or some value

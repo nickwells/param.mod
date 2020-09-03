@@ -26,7 +26,7 @@ func showIntroFmtStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	if h.hideDescriptions {
 		return true
 	}
-	twc.Wrap(ps.ProgDesc()+"\n", 0)
+	twc.Wrap(ps.ProgDesc(), 0)
 	return true
 }
 

@@ -6,7 +6,6 @@ message2
 PROGRAM NAME UNKNOWN
 program description
 
-
 ===============
 
 Usage: PROGRAM NAME UNKNOWN ...
@@ -18,7 +17,7 @@ common.params-help       [ 10 parameters, 9 hidden ]
 
       [-help] or [-usage]
             print this help message and exit.
-            
+
             To see hidden parameters use the -help-all parameter.
             For a brief help message use the -help-summary parameter
             For the full help message use the -help-full parameter

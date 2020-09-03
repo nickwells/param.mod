@@ -35,7 +35,7 @@ func printByPosParam(h StdHelp, twc *twrap.TWConf, ps *param.PSet, i int) {
 		return
 	}
 	twc.Wrap(bp.Description(), descriptionIndent)
-	h.showAllowedValsByPos(twc, bp)
+	h.showAllowedVals(twc, bp.Name(), bp.Setter())
 	twc.Wrap("Initial value: "+bp.InitialValue(), descriptionIndent)
 }
 
@@ -113,12 +113,14 @@ func showParamsByGroupName(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 
 		printGroup := true
 		for _, p := range g.Params {
-			if paramCanBeShown(h, p) {
+			if paramCanBeShown(h, p) || h.groupsChosen[g.Name] {
 				if printGroup {
 					printSep = printSepIf(twc, printSep, minorSectionSeparator)
 					h.printGroup(twc, g, maxNameLen)
 					printGroup = false
 				}
+			}
+			if paramCanBeShown(h, p) {
 				h.printParamUsage(twc, p)
 				count++
 			}
@@ -153,30 +155,40 @@ func (h StdHelp) printParamUsage(twc *twrap.TWConf, p *param.ByName) {
 
 	twc.Wrap(p.Description(), descriptionIndent)
 	printParamAttributes(twc, p)
-	h.showAllowedValsByName(twc, p)
+	showSeeAlso(twc, p)
+
 	if valueReq == param.None {
 		return
 	}
-	twc.WrapPrefixed("Initial value: ", p.InitialValue(), descriptionIndent)
+	h.showAllowedVals(twc, p.Name(), p.Setter())
+	showInitialValue(twc, p)
 }
 
-// showAllowedValsByName shows the allowed values for the ByName parameter
-func (h StdHelp) showAllowedValsByName(twc *twrap.TWConf, p *param.ByName) {
-	if p.Setter().ValueReq() == param.None {
+// showInitialValue shows the initial value of the ByName parameter
+func showInitialValue(twc *twrap.TWConf, p *param.ByName) {
+	twc.WrapPrefixed("Initial value: ", p.InitialValue(), descriptionIndent)
+
+	currentValue := p.Setter().CurrentValue()
+	if currentValue != p.InitialValue() {
+		twc.WrapPrefixed("Current value: ", currentValue, descriptionIndent)
+	}
+}
+
+// showSeeAlso shows the references for the ByName parameter (if any)
+func showSeeAlso(twc *twrap.TWConf, p *param.ByName) {
+	refs := p.SeeAlso()
+	if len(refs) == 0 {
 		return
 	}
-	h.showAllowedValues(twc, p.Name(), p.Setter())
+
+	prompt := "See also: "
+	twc.WrapPrefixed(prompt, strings.Join(refs, ", "), descriptionIndent)
 }
 
-// showAllowedValsByPos shows the allowed values for the ByPos parameter
-func (h StdHelp) showAllowedValsByPos(twc *twrap.TWConf, p *param.ByPos) {
-	h.showAllowedValues(twc, p.Name(), p.Setter())
-}
-
-// showAllowedValues prints the allowed values for a parameter. It will print
+// showAllowedVals prints the allowed values for a parameter. It will print
 // a reference to an earlier parameter if the allowed value text has been
 // seen already and the text is longer than 50 characters
-func (h StdHelp) showAllowedValues(twc *twrap.TWConf, pName string, s param.Setter) {
+func (h StdHelp) showAllowedVals(twc *twrap.TWConf, pName string, s param.Setter) {
 	const prefix = "Allowed values: "
 	const longString = 50
 
