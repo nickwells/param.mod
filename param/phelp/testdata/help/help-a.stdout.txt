@@ -137,10 +137,10 @@ common.params-help       [ 10 parameters, 9 hidden ]
                             params: pos-params, grouped-params
                             std   : intro, usage, pos-params, grouped-params
             Initial value:
-            Current value: intro=true
-                           usage=true
+            Current value: grouped-params=true
+                           intro=true
                            pos-params=true
-                           grouped-params=true
+                           usage=true
       [-help-summary] or [-help-s] or [-help-short]
             print a shorter help message. Only minimal details are show,
             descriptions are not shown.

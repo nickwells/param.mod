@@ -2,6 +2,7 @@ package psetter
 
 import (
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -99,10 +100,17 @@ func (s Map) AllowedValues() string {
 // CurrentValue returns the current setting of the parameter value
 func (s Map) CurrentValue() string {
 	cv := ""
+
+	keys := make([]string, 0, len(*s.Value))
+	for k := range *s.Value {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
 	sep := ""
-	for k, v := range *s.Value {
-		cv += sep + fmt.Sprintf("%s=%v", k, v)
-		sep = s.GetSeparator()
+	for _, k := range keys {
+		cv += sep + fmt.Sprintf("%s=%v", k, (*s.Value)[k])
+		sep = "\n"
 	}
 
 	return cv
