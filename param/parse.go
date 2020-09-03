@@ -58,6 +58,8 @@ func (ps *PSet) Parse(args ...[]string) ErrMap {
 	ps.parsed = true
 	ps.parseCalledFrom = caller()
 
+	ps.checkSeeAlsoRefs()
+
 	if len(args) == 0 {
 		ps.progName = os.Args[0]
 		ps.progBaseName = filepath.Base(ps.progName)
@@ -119,6 +121,24 @@ func (ps *PSet) detectMandatoryParamsNotSet() {
 			len(p.whereIsParamSet) == 0 {
 			ps.AddErr(p.name,
 				errors.New("this parameter must be set somewhere"))
+		}
+	}
+}
+
+// checkSeeAlsoRefs will make sure that every SeeAlso reference is to a valid
+// parameter name and will panic if not
+func (ps *PSet) checkSeeAlsoRefs() {
+	for _, p := range ps.byName {
+		refs := p.SeeAlso()
+		for _, ref := range refs {
+			if _, exists := ps.nameToParam[ref]; !exists {
+				panic(
+					fmt.Errorf(
+						"Parameter %q has a SeeAlso reference to %q"+
+							" but no such parameter exists. The bad"+
+							" reference was added at: %s",
+						p.Name(), ref, p.seeAlsoSource(ref)))
+			}
 		}
 	}
 }

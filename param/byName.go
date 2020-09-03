@@ -3,6 +3,7 @@ package param
 import (
 	"fmt"
 	"io"
+	"sort"
 	"strings"
 
 	"github.com/nickwells/location.mod/location"
@@ -23,6 +24,7 @@ type ByName struct {
 	groupName       string
 	setter          Setter
 	description     string
+	seeAlso         map[string]string
 	initialValue    string
 	whereIsParamSet []string
 	whereAdded      string
@@ -62,6 +64,23 @@ func (p ByName) GroupName() string { return p.groupName }
 
 // Setter returns the setter
 func (p ByName) Setter() Setter { return p.setter }
+
+// SeeAlso returns a sorted list of references to other parameters
+func (p ByName) SeeAlso() []string {
+	refs := make([]string, 0, len(p.seeAlso))
+	for ref := range p.seeAlso {
+		refs = append(refs, ref)
+	}
+	sort.Strings(refs)
+	return refs
+}
+
+// seeAlsoSource returns the string describing where the SeeAlso reference
+// was added. This is suitable for reporting the location in code the mistake
+// was made. If the reference is not found it will return an empty string
+func (p ByName) seeAlsoSource(ref string) string {
+	return p.seeAlso[ref]
+}
 
 // Attributes records various flags that can be set on a ByName parameter
 type Attributes int32
@@ -151,6 +170,7 @@ func (ps *PSet) Add(name string,
 		description:  desc,
 		initialValue: setter.CurrentValue(),
 		whereAdded:   whereAdded,
+		seeAlso:      make(map[string]string),
 	}
 	ps.nameToParam[name] = p
 	ps.byName = append(ps.byName, p)
@@ -204,6 +224,31 @@ func AltName(altName string) OptFunc {
 
 		p.ps.nameToParam[altName] = p
 		p.altNames = append(p.altNames, altName)
+		return nil
+	}
+}
+
+// SeeAlso will add the names of parameters to the list of parameters
+// to be referenced when showing the help message. They will be checked
+// before the parameters are parsed to ensure that they are all valid
+// names. Note that it is not possible to check the names as they are added
+// since the referenced name might not have been added yet. It will return an
+// error if the referenced name has already been used.
+func SeeAlso(refs ...string) OptFunc {
+	source := caller()
+	return func(p *ByName) error {
+		for _, ref := range refs {
+			ref = strings.TrimSpace(ref)
+
+			if whereAdded, exists := p.seeAlso[ref]; exists {
+				return fmt.Errorf(
+					"The SeeAlso reference %q has already been added, at %s",
+					ref, whereAdded)
+			}
+
+			p.seeAlso[ref] = source
+		}
+
 		return nil
 	}
 }
