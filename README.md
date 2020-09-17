@@ -1,5 +1,5 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/nickwells/param.mod?style=flat-square)](https://goreportcard.com/report/github.com/nickwells/param.mod)
-[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/mod/github.com/nickwells/param.mod/v4)
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/mod/github.com/nickwells/param.mod/v5)
 
 # param
 This provides parameter setting and value checking.
