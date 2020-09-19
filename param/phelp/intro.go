@@ -19,7 +19,7 @@ func showIntro(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	}
 }
 
-// showIntroFmtStd prints intro in the standard help format
+// showIntroFmtStd prints the intro section in the standard help format
 func showIntroFmtStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	twc.Print(ps.ProgName() + "\n")
 
@@ -30,13 +30,15 @@ func showIntroFmtStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	return true
 }
 
-// showIntroFmtMD prints intro in markdown format
+// showIntroFmtMD prints the intro section in markdown format
 func showIntroFmtMD(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	twc.Print("# " + ps.ProgBaseName() + "\n\n")
 
 	if h.hideDescriptions {
 		return true
 	}
-	twc.Wrap(ps.ProgDesc()+"\n", 0)
+	desc := makeTextMarkdownSafe(ps.ProgDesc())
+	twc.Wrap(desc, 0)
+	twc.Print("\n")
 	return true
 }

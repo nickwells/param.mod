@@ -47,7 +47,8 @@ func showReferencesFmtMD(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 		if h.hideDescriptions {
 			continue
 		}
-		twc.Wrap(r.Desc, 0)
+		desc := makeTextMarkdownSafe(r.Desc)
+		twc.Wrap(desc, 0)
 	}
 	return true
 }

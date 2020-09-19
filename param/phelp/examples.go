@@ -46,7 +46,8 @@ func showExamplesFmtMD(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 		if h.hideDescriptions {
 			continue
 		}
-		twc.Wrap(e.Desc, 0)
+		desc := makeTextMarkdownSafe(e.Desc)
+		twc.Wrap(desc, 0)
 		twc.Print("\n")
 	}
 	return true
