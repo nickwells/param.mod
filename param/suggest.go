@@ -2,7 +2,8 @@ package param
 
 import "github.com/nickwells/strdist.mod/strdist"
 
-// SuggestionFunc
+// SuggestionFunc is the type of a function that returns a slice of suggested
+// alternative names for the given string.
 type SuggestionFunc func(ps *PSet, s string) []string
 
 // SuggestParams finds those parameter names the shortest distance from the

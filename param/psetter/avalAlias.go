@@ -14,7 +14,8 @@ import (
 // alternative names for allowed values or to provide several names in one
 type Aliases map[string][]string
 
-// AllowedValuesAliasMapper
+// AllowedValuesAliasMapper is the interface to be satisfied by a type having
+// aliases
 type AllowedValuesAliasMapper interface {
 	AllowedValuesAliasMap() Aliases
 }

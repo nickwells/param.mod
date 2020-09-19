@@ -14,7 +14,8 @@ import (
 // a restricted set of allowed values
 type AllowedVals map[string]string
 
-// AllowedValuesMapper
+// AllowedValuesMapper is the interface to be satisfied by a type having a
+// map of allowed values.
 type AllowedValuesMapper interface {
 	AllowedValuesMap() AllowedVals
 }
