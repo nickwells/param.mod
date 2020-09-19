@@ -73,23 +73,17 @@ func reportErrorCount(twc *twrap.TWConf, name string, errMap param.ErrMap) {
 	for _, errs := range errMap {
 		totErrs += len(errs)
 	}
+	const detected = "detected while setting the parameters:"
+	var msg string
 	if totErrs == 1 {
-		twc.WrapPrefixed(name+": ",
-			"an error was detected while setting the parameters:",
-			0)
+		msg = "an error was " + detected
 	} else if paramsWithErrs == 1 {
-		twc.WrapPrefixed(name+": ",
-			fmt.Sprintf("%d errors were detected while setting the parameters:",
-				totErrs),
-			0)
+		msg = fmt.Sprintf("%d errors were "+detected, totErrs)
 	} else {
-		twc.WrapPrefixed(name+": ",
-			fmt.Sprintf(
-				"%d errors with %d parameters were detected"+
-					" while setting the parameters:",
-				totErrs, paramsWithErrs),
-			0)
+		msg = fmt.Sprintf("%d errors with %d parameters were "+detected,
+			totErrs, paramsWithErrs)
 	}
+	twc.WrapPrefixed(name+": ", msg, 0)
 }
 
 // reportParamError reports all the errors for an individual parameter

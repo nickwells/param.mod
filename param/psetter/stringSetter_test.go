@@ -1,9 +1,10 @@
 package psetter_test
 
 import (
+	"testing"
+
 	"github.com/nickwells/param.mod/v5/param"
 	"github.com/nickwells/param.mod/v5/param/psetter"
-	"testing"
 )
 
 func TestString(t *testing.T) {
@@ -79,14 +80,12 @@ func TestStringList(t *testing.T) {
 				t.Errorf("case %d: StrList should not return an error"+
 					" when SetWithVal(..., '%s') was called but did. Err: %s",
 					i, tc.val, err)
-			} else {
-				if len(value) != len(tc.expectedVal) {
-					t.Errorf("case %d: StrList should have set"+
-						" %d entries in the value list"+
-						" when SetWithVal(..., '%s') was called"+
-						" but %d values were set",
-						i, len(tc.expectedVal), tc.val, len(value))
-				}
+			} else if len(value) != len(tc.expectedVal) {
+				t.Errorf("case %d: StrList should have set"+
+					" %d entries in the value list"+
+					" when SetWithVal(..., '%s') was called"+
+					" but %d values were set",
+					i, len(tc.expectedVal), tc.val, len(value))
 			}
 		}
 	}

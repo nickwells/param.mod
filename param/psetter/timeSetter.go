@@ -82,7 +82,7 @@ func (s Time) AllowedValues() string {
 
 // CurrentValue returns the current setting of the parameter value
 func (s Time) CurrentValue() string {
-	return (*s.Value).String()
+	return s.Value.String()
 }
 
 // CheckSetter panics if the setter has not been properly created - if the
