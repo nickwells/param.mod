@@ -78,7 +78,7 @@ func ExampleDuration_withFailingChecks() {
 	// Output:
 	// Before parsing    v: 0s
 	// Errors for: how-long
-	//	: the value (1h0m0s) must be greater than 2h0m0s (at supplied parameters:2: -how-long 1h)
+	//	: the value (1h0m0s) must be greater than 2h0m0s (at [ command line ]: Supplied Parameter:2: -how-long 1h)
 	// After  parsing    v: 0s
 }
 

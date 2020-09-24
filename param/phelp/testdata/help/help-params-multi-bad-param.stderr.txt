@@ -3,7 +3,7 @@ PROGRAM NAME UNKNOWN: an error was detected while setting the parameters:
             Bad parameter names: "no-such-param", "not-a-param". To see a list
             of parameter names try '-help-show named-params'. To see a full
             list, add '-help-all'. To see just the names, add '-help-summary'.
-            At: supplied parameters:2: -help-params
+            At: [ command line ]: Supplied Parameter:2: -help-params
             help-groups,help,no-such-param,not-a-param
 
 Try the '-help' parameter for more information.

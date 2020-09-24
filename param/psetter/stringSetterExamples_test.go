@@ -74,7 +74,7 @@ func ExampleString_withFailingChecks() {
 	// Output:
 	// Before parsing: s = ""
 	// Errors for: my-string
-	//	: the length of the value (3) must be greater than 5 (at supplied parameters:2: -my-string Hi!)
+	//	: the length of the value (3) must be greater than 5 (at [ command line ]: Supplied Parameter:2: -my-string Hi!)
 	// After  parsing: s = ""
 }
 

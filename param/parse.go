@@ -70,10 +70,12 @@ func (ps *PSet) Parse(args ...[]string) ErrMap {
 
 	var loc *location.L
 	if len(args) == 0 {
-		loc = location.New("command line")
+		loc = location.New("Argument")
+		loc.SetNote(SrcCommandLine)
 		ps.getParamsFromStringSlice(loc, os.Args[1:])
 	} else {
-		loc = location.New("supplied parameters")
+		loc = location.New("Supplied Parameter")
+		loc.SetNote(SrcCommandLine)
 		var suppliedParams []string
 		for _, sp := range args {
 			suppliedParams = append(suppliedParams, sp...)

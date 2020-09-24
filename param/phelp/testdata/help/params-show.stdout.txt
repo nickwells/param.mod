@@ -23,7 +23,7 @@ common.params-help       [ 10 parameters, 9 hidden ]
 ---    : help-params or help-param or help-p
 ---    : help-show
 Set    : help-summary or help-s or help-short
-             at : supplied parameters:3: -help-s
+             at : [ command line ]: Supplied Parameter:3: -help-s
 
 ---------------
 common.params-params     [ 6 parameters, all hidden ]
@@ -32,9 +32,9 @@ common.params-params     [ 6 parameters, all hidden ]
 ---    : params-exit-after-parsing
 ---    : params-file or params-from
 Set    : params-show-unused
-             at : supplied parameters:2: -params-show-unused
+             at : [ command line ]: Supplied Parameter:2: -params-show-unused
 Set    : params-show-where-set
-             at : supplied parameters:1: -params-show-where-set
+             at : [ command line ]: Supplied Parameter:1: -params-show-where-set
 
 ---------------
 test-group1              [ 6 parameters, 1 hidden ]

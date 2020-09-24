@@ -102,7 +102,7 @@ func ExampleInt64List_withFailingChecks() {
 	// Before parsing
 	//	il[0] = 42
 	// Errors for: my-ints
-	//	: list entry: 0 (1) does not pass the test: the value (1) must be greater than 5 (at supplied parameters:2: -my-ints 1,23)
+	//	: list entry: 0 (1) does not pass the test: the value (1) must be greater than 5 (at [ command line ]: Supplied Parameter:2: -my-ints 1,23)
 	// After  parsing
 	//	il[0] = 42
 }

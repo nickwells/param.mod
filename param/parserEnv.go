@@ -75,7 +75,8 @@ func (ps *PSet) getParamsFromEnvironment() {
 		return
 	}
 
-	loc := location.New("environment")
+	loc := location.New("")
+	loc.SetNote(SrcEnvironment)
 
 	for _, param := range os.Environ() {
 		paramParts := strings.SplitN(param, "=", 2)

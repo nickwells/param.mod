@@ -61,6 +61,6 @@ func Example_count() {
 	}
 
 	// Output: Both of p1 and p2 have been set. At:
-	// Param: p1 (at supplied parameters:1: -p1)
-	// Param: p2 (at supplied parameters:2: -p2)
+	// Param: p1 (at [ command line ]: Supplied Parameter:1: -p1)
+	// Param: p2 (at [ command line ]: Supplied Parameter:2: -p2)
 }

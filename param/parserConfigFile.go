@@ -387,7 +387,7 @@ func (ps *PSet) getParamsFromConfigFiles() {
 			ps:    ps,
 			gName: gName,
 		}
-		desc := "config file for " + gName
+		desc := SrcConfigFilePfx + " for " + gName
 		fp := fileparse.New(desc, lp)
 		for _, cf := range g.ConfigFiles {
 			errs := fp.Parse(cf.Name)
@@ -401,7 +401,7 @@ func (ps *PSet) getParamsFromConfigFiles() {
 			ps:    ps,
 			eRule: cf.eRule,
 		}
-		desc := "config file"
+		desc := SrcConfigFilePfx
 		fp := fileparse.New(desc, lp)
 		errs := fp.Parse(cf.Name)
 		checkCFErrs(ps, errs, cf, desc)
