@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/nickwells/filecheck.mod/filecheck"
@@ -361,8 +362,10 @@ func (ps *PSet) ConfigFilesForGroup(gName string) []ConfigFileDetails {
 	return cf
 }
 
-// checkCFErrs will add the errors to the PSet if the error is not a
-// missing optional file
+// checkCFErrs will add the errors to the PSet if the error is not a missing
+// optional file. Note that we only ignore the error if the file that cannot
+// be opened is the config file itself, failure to open included files is
+// reported.
 func checkCFErrs(ps *PSet, errs []error, cf ConfigFileDetails, desc string) {
 	if len(errs) == 0 {
 		return
@@ -370,9 +373,13 @@ func checkCFErrs(ps *PSet, errs []error, cf ConfigFileDetails, desc string) {
 
 	if len(errs) == 1 {
 		err := errs[0]
-		if errors.Is(err, os.ErrNotExist) &&
-			cf.CfConstraint == filecheck.Optional {
-			return
+		var perr *os.PathError
+		if errors.As(err, &perr) {
+			if errors.Is(err, os.ErrNotExist) &&
+				cf.CfConstraint == filecheck.Optional &&
+				perr.Path == filepath.Clean(cf.Name) {
+				return
+			}
 		}
 	}
 	ps.AddErr(desc+": "+cf.Name, errs...)
