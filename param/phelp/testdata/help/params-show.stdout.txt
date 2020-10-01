@@ -17,7 +17,7 @@ common.params-help       [ 10 parameters, 9 hidden ]
 ---    : help-all or help-a
 ---    : help-all-short or help-as or help-sa
 ---    : help-format
----    : help-full
+---    : help-full or help-f
 ---    : help-groups or help-group or help-g
 ---    : help-notes or help-note or help-n
 ---    : help-params or help-param or help-p

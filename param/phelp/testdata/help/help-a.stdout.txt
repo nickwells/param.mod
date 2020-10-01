@@ -81,7 +81,7 @@ common.params-help       [ 10 parameters, 9 hidden ]
                             standard: the standard format. This is almost
                                 certainly what you want
             Initial value: standard
-      [-help-full]
+      [-help-full] or [-help-f]
             show all parts of the help message and all parameters, including
             hidden ones.
 

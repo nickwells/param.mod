@@ -70,6 +70,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		" show all parts of the help message and all"+
 			" parameters, including hidden ones."+
 			exitAfterHelpMessage,
+		param.AltName("help-f"),
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.PostAction(setHelpSections(h, allHelpSectionNames)),
 		param.PostAction(paction.SetBool(&h.showHiddenItems, true)),
