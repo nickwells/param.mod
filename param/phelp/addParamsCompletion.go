@@ -31,7 +31,7 @@ func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
 
 	zshDirParam := ps.Add(completionsZshDirArgName,
 		psetter.Pathname{
-			Value:       &h.zshCompletionsDir,
+			Value:       &h.zshCompDir,
 			Expectation: filecheck.DirExists(),
 		},
 		"which directory should a zsh completions function for this"+
@@ -47,24 +47,24 @@ func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
 	zshMakeCompletionsParam := ps.Add(completionsZshMakeArgName,
 		psetter.Enum{
 			AllowedVals: psetter.AllowedVals{
-				zshCompGenRepl: "any existing zsh completions" +
+				zshCompActionRepl: "any existing zsh completions" +
 					" file for the program will be overwritten or a" +
 					" new file will be generated." +
 					needZshDir,
-				zshCompGenNew: "only generate the zsh completions file" +
+				zshCompActionNew: "only generate the zsh completions file" +
 					" if it doesn't already exist. Any pre-existing" +
 					" file is protected and an error will be reported." +
 					needZshDir,
-				zshCompGenShow: "don't generate the zsh completions file." +
+				zshCompActionShow: "don't generate the zsh completions file." +
 					" The file that would have been generated is" +
 					" instead printed to standard output.",
-				zshCompGenNone: "do nothing.",
+				zshCompActionNone: "do nothing.",
 			},
-			Value: &h.zshCompletionAction,
+			Value: &h.zshCompAction,
 		},
 		"how to create the zsh completions file."+
 			" This specifies whether or if the file should be created."+
-			" If it is set to any value other than '"+zshCompGenNone+
+			" If it is set to any value other than '"+zshCompActionNone+
 			"' then the program will exit after the parameters are processed.",
 		param.GroupName(groupName),
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
@@ -73,17 +73,17 @@ func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
 	// Final checks
 
 	ps.AddFinalCheck(func() error {
-		if h.zshCompletionAction == zshCompGenShow {
+		if h.zshCompAction == zshCompActionShow {
 			return nil
 		}
-		if h.zshCompletionAction == zshCompGenNone {
+		if h.zshCompAction == zshCompActionNone {
 			return nil
 		}
 
 		if !zshDirParam.HasBeenSet() {
 			// These parameters are processed before errors are reported so
 			// we should abort the creation of the completion file
-			h.zshCompletionAction = zshCompGenNone
+			h.zshCompAction = zshCompActionNone
 
 			return fmt.Errorf(
 				"the %q parameter has been set (at: %s)"+

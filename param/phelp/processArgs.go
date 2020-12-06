@@ -29,8 +29,8 @@ func (h StdHelp) ProcessArgs(ps *param.PSet) {
 		exitStatus int // only used if action is nil
 	}{
 		{
-			func() bool { return true },
-			true, zshCompletionHandler, 0,
+			func() bool { return zshCompHasAction(h) },
+			zshCompHasAction(h), zshCompletionHandler, 0,
 		},
 		{
 			func() bool { return h.paramsShowWhereSet },

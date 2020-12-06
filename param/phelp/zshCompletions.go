@@ -16,11 +16,17 @@ import (
 )
 
 const (
-	zshCompGenNone = "none"
-	zshCompGenRepl = "replace"
-	zshCompGenNew  = "new"
-	zshCompGenShow = "show"
+	zshCompActionNone = "none"
+	zshCompActionRepl = "replace"
+	zshCompActionNew  = "new"
+	zshCompActionShow = "show"
 )
+
+// zshCompHasAction returns true if the StdHelp zsh Completion Action is not
+// None, falsoe otherwise.
+func zshCompHasAction(h StdHelp) bool {
+	return h.zshCompAction != zshCompActionNone
+}
 
 // zshSafeStr returns an edited version of the string with any characters which
 // might cause problems in a zsh option spec replaced with a safe alternative
@@ -179,20 +185,20 @@ func zshWriteCompFunc(ps *param.PSet, w io.Writer) {
 // setting of the StdHelp zshCompletionAction member. It returns a suggested
 // exit status.
 func zshCompletionHandler(h StdHelp, twc *twrap.TWConf, ps *param.PSet) int {
-	switch h.zshCompletionAction {
-	case zshCompGenNone:
+	switch h.zshCompAction {
+	case zshCompActionNone:
 		return 0
-	case zshCompGenShow:
+	case zshCompActionShow:
 		zshWriteCompFunc(ps, os.Stdout)
 		return 0
-	case zshCompGenNew:
+	case zshCompActionNew:
 		filename := zshCompFileName(h, ps)
 		err := zshMakeNewCompFile(filename, ps)
 		if err == nil {
 			zshCompFileNotify(twc, filename)
 		}
 		return zshHandleErr(err, ps)
-	case zshCompGenRepl:
+	case zshCompActionRepl:
 		filename := zshCompFileName(h, ps)
 		err := zshReplaceCompFile(filename, ps)
 		if err == nil {
@@ -202,7 +208,7 @@ func zshCompletionHandler(h StdHelp, twc *twrap.TWConf, ps *param.PSet) int {
 	}
 
 	return zshHandleErr(
-		fmt.Errorf("unknown zsh completion action: %q", h.zshCompletionAction),
+		fmt.Errorf("unknown zsh completion action: %q", h.zshCompAction),
 		ps)
 }
 
@@ -219,7 +225,7 @@ func zshHandleErr(err error, ps *param.PSet) int {
 
 // zshCompFileName returns the name of the completions file
 func zshCompFileName(h StdHelp, ps *param.PSet) string {
-	return filepath.Join(h.zshCompletionsDir, "_"+ps.ProgBaseName())
+	return filepath.Join(h.zshCompDir, "_"+ps.ProgBaseName())
 }
 
 // zshMakeNewCompFile will construct the named file (which must not already
