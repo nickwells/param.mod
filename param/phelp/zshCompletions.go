@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"sort"
 	"strings"
 	"unicode"
@@ -153,8 +154,8 @@ func zshOptSpec(p *param.ByName) []string {
 	return specs
 }
 
-// zshCompletions writes a zsh completion function for the current executable
-func zshCompletions(ps *param.PSet, w io.Writer) {
+// zshWriteCompFunc writes a zsh completion function for the current executable
+func zshWriteCompFunc(ps *param.PSet, w io.Writer) {
 	fmt.Fprintf(w, "#compdef %s\n\n", ps.ProgBaseName())
 
 	fmt.Fprintf(w, "function _%s {\n", ps.ProgBaseName())
@@ -174,49 +175,95 @@ func zshCompletions(ps *param.PSet, w io.Writer) {
 	fmt.Fprintln(w, "}")
 }
 
-// checkZshComplFile checks that the named file satisfies the constraints
-// appropriate to the way it is being generated. If it is being replaced it
-// may or may not exist, if it should be new then the file must not exist.
-func checkZshComplFile(h StdHelp, fileName string) error {
-	fileChecks := filecheck.IsNew()
-	if h.zshMakeCompletions == zshCompGenRepl {
-		fileChecks.Existence = filecheck.Optional
+// zshCompletionHandler performs the appropriate action according to the
+// setting of the StdHelp zshCompletionAction member. It returns a suggested
+// exit status.
+func zshCompletionHandler(h StdHelp, twc *twrap.TWConf, ps *param.PSet) int {
+	switch h.zshCompletionAction {
+	case zshCompGenNone:
+		return 0
+	case zshCompGenShow:
+		zshWriteCompFunc(ps, os.Stdout)
+		return 0
+	case zshCompGenNew:
+		filename := zshCompFileName(h, ps)
+		err := zshMakeNewCompFile(filename, ps)
+		if err == nil {
+			zshCompFileNotify(twc, filename)
+		}
+		return zshHandleErr(err, ps)
+	case zshCompGenRepl:
+		filename := zshCompFileName(h, ps)
+		err := zshReplaceCompFile(filename, ps)
+		if err == nil {
+			zshCompFileNotify(twc, filename)
+		}
+		return zshHandleErr(err, ps)
 	}
 
-	return fileChecks.StatusCheck(fileName)
+	return zshHandleErr(
+		fmt.Errorf("unknown zsh completion action: %q", h.zshCompletionAction),
+		ps)
 }
 
-// zshMakeCompFile will construct the appropriately named file containing the
-// completion function(s). It will return the exit status to use
-func zshMakeCompFile(h StdHelp, twc *twrap.TWConf, ps *param.PSet) int {
-	if h.zshMakeCompletions == zshCompGenShow {
-		zshCompletions(ps, os.Stdout)
+// zshHandleErr will test the error, if it is non-nil it will add the error
+// to the param.PSet and return a suggested exit status of 1. Otherwise it
+// returns 0
+func zshHandleErr(err error, ps *param.PSet) int {
+	if err == nil {
 		return 0
 	}
+	ps.AddErr("zsh completions", err)
+	return 1
+}
 
-	fileName := h.zshCompletionsDir + "/_" + ps.ProgBaseName()
+// zshCompFileName returns the name of the completions file
+func zshCompFileName(h StdHelp, ps *param.PSet) string {
+	return filepath.Join(h.zshCompletionsDir, "_"+ps.ProgBaseName())
+}
 
-	err := checkZshComplFile(h, fileName)
+// zshMakeNewCompFile will construct the named file (which must not already
+// exist). It will return any errors found.
+func zshMakeNewCompFile(filename string, ps *param.PSet) error {
+	err := filecheck.IsNew().StatusCheck(filename)
 	if err != nil {
-		ps.AddErr("zsh completions file", err)
-		return 1
+		return err
 	}
 
-	w, err := os.OpenFile(fileName, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0555)
+	w, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE, 0555)
 	if err != nil {
-		ps.AddErr("zsh completions file", err)
-		return 1
+		return err
 	}
 
 	defer w.Close()
-	zshCompletions(ps, w)
+	zshWriteCompFunc(ps, w)
+
+	return nil
+}
+
+// zshReplaceCompFile will construct the named file (which may already
+// exist). It will return any errors found.
+func zshReplaceCompFile(filename string, ps *param.PSet) error {
+	_ = os.Chmod(filename, 0755)
+	w, err := os.OpenFile(filename, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0555)
+	if err != nil {
+		return err
+	}
+	_ = os.Chmod(filename, 0555)
+
+	defer w.Close()
+	zshWriteCompFunc(ps, w)
+
+	return nil
+}
+
+// zshCompFileNotify writes a notification message informing the user that
+// the completion file has been successfully created.
+func zshCompFileNotify(twc *twrap.TWConf, filename string) {
 	twc.Wrap(
-		"the zsh completion function for "+ps.ProgBaseName()+
-			" has been written to "+fileName+"."+
+		"the zsh completion function has been written to "+filename+"."+
 			" You will need to run compinit and possibly restart your"+
 			" zsh shell for this to take effect."+
 			" Please see the zsh manual for more details.",
 		0)
-
-	return 0
 }

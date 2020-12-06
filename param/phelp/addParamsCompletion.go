@@ -60,7 +60,7 @@ func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
 					" instead printed to standard output.",
 				zshCompGenNone: "do nothing.",
 			},
-			Value: &h.zshMakeCompletions,
+			Value: &h.zshCompletionAction,
 		},
 		"how to create the zsh completions file."+
 			" This specifies whether or if the file should be created."+
@@ -73,17 +73,17 @@ func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
 	// Final checks
 
 	ps.AddFinalCheck(func() error {
-		if h.zshMakeCompletions == zshCompGenShow {
+		if h.zshCompletionAction == zshCompGenShow {
 			return nil
 		}
-		if h.zshMakeCompletions == zshCompGenNone {
+		if h.zshCompletionAction == zshCompGenNone {
 			return nil
 		}
 
 		if !zshDirParam.HasBeenSet() {
 			// These parameters are processed before errors are reported so
 			// we should abort the creation of the completion file
-			h.zshMakeCompletions = zshCompGenNone
+			h.zshCompletionAction = zshCompGenNone
 
 			return fmt.Errorf(
 				"the %q parameter has been set (at: %s)"+

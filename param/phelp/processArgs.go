@@ -23,17 +23,35 @@ func (h StdHelp) ProcessArgs(ps *param.PSet) {
 	var exitStatus = 0
 
 	actions := []struct {
-		shouldRun  bool
+		shouldRun  func() bool
 		shouldExit bool
 		action     func(StdHelp, *twrap.TWConf, *param.PSet) int
 		exitStatus int // only used if action is nil
 	}{
-		{h.zshMakeCompletions != zshCompGenNone, true, zshMakeCompFile, 0},
-		{h.paramsShowWhereSet, h.exitAfterHelp, showWhereParamsAreSet, 0},
-		{h.paramsShowUnused, h.exitAfterHelp, showUnusedParams, 0},
-		{len(ps.Errors()) > 0 && h.reportErrors, h.exitOnErrors, reportErrors, 0},
-		{len(ps.Errors()) > 0, h.exitOnErrors, nil, 1},
-		{!h.sectionsChosen.hasNothingChosen(), h.exitAfterHelp, help, 0},
+		{
+			func() bool { return true },
+			true, zshCompletionHandler, 0,
+		},
+		{
+			func() bool { return h.paramsShowWhereSet },
+			h.exitAfterHelp, showWhereParamsAreSet, 0,
+		},
+		{
+			func() bool { return h.paramsShowUnused },
+			h.exitAfterHelp, showUnusedParams, 0,
+		},
+		{
+			func() bool { return len(ps.Errors()) > 0 && h.reportErrors },
+			h.exitOnErrors, reportErrors, 0,
+		},
+		{
+			func() bool { return len(ps.Errors()) > 0 },
+			h.exitOnErrors, nil, 1,
+		},
+		{
+			func() bool { return !h.sectionsChosen.hasNothingChosen() },
+			h.exitAfterHelp, help, 0,
+		},
 	}
 
 	twc := twrap.NewTWConfOrPanic(twrap.SetWriter(ps.StdWriter()))
@@ -41,7 +59,7 @@ func (h StdHelp) ProcessArgs(ps *param.PSet) {
 	printSep := false
 
 	for _, a := range actions {
-		if !a.shouldRun {
+		if !a.shouldRun() {
 			continue
 		}
 

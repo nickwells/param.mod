@@ -172,8 +172,8 @@ type StdHelp struct {
 	exitAfterHelp bool // this can only be set in test code
 
 	// completions-... values
-	zshCompletionsDir  string
-	zshMakeCompletions string
+	zshCompletionsDir   string
+	zshCompletionAction string
 }
 
 // NewStdHelp returns a pointer to a well-constructed instance of the
@@ -192,7 +192,7 @@ func NewStdHelp() *StdHelp {
 		exitOnErrors:  true,
 		exitAfterHelp: true,
 
-		zshMakeCompletions: zshCompGenNone,
+		zshCompletionAction: zshCompGenNone,
 
 		helpFormat: helpFmtTypeStd,
 	}
