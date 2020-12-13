@@ -16,7 +16,7 @@ type Int64 struct {
 	// to the int64 value that the setter is settng.
 	Value *int64
 	// The Checks, if any, are applied to the supplied parameter value and
-	// the new parameter will be applied only if they all return a nil error
+	// the Value will only be update if they all return a nil error.
 	Checks []check.Int64
 }
 

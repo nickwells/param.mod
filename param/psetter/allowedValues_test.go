@@ -108,6 +108,15 @@ func TestAllowedValues(t *testing.T) {
 			s:  &psetter.Pathname{Value: &anyStr},
 		},
 		{
+			ID: testhelper.MkID("PathnameListAppender"),
+			s:  &psetter.PathnameListAppender{Value: &emptyStrList},
+		},
+		{
+			ID: testhelper.MkID("PathnameListAppender-Prepend"),
+			s: &psetter.PathnameListAppender{
+				Value: &emptyStrList, Prepend: true},
+		},
+		{
 			ID: testhelper.MkID("Regexp"),
 			s:  &psetter.Regexp{Value: &re},
 		},
@@ -118,6 +127,10 @@ func TestAllowedValues(t *testing.T) {
 		{
 			ID: testhelper.MkID("StrListAppender"),
 			s:  &psetter.StrListAppender{Value: &emptyStrList},
+		},
+		{
+			ID: testhelper.MkID("StrListAppender-Prepend"),
+			s:  &psetter.StrListAppender{Value: &emptyStrList, Prepend: true},
 		},
 		{
 			ID: testhelper.MkID("String"),

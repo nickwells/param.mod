@@ -20,17 +20,18 @@ import (
 //
 //      if !dontXXX { doXXX() }
 //
-// The benefit is that you can avoid the ugly double negative
+// The benefit is that you can avoid the ugly (and error prone) double
+// negative.
 type Bool struct {
 	ValueReqOptional
 
 	// Value must be set, the program will panic if not. This is the boolean
-	// that the setter is setting
+	// that the setter is setting.
 	Value *bool
 
 	// Invert reverses the normal meaning of the boolean parameter so that
 	// the Value will be set to false when no value is given or the negation
-	// of the given value when one is
+	// of the given value when one is given.
 	Invert bool
 }
 

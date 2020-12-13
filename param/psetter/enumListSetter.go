@@ -20,11 +20,13 @@ type EnumList struct {
 	AllowedVals
 
 	// Value must be set, the program will panic if not. This is the slice of
-	// values that this setter is setting
+	// values that this setter is setting.
 	Value *[]string
+	// The StrListSeparator allows you to override the default separator
+	// between list elements.
 	StrListSeparator
 	// The Checks, if any, are applied to the list of new values and the
-	// Value will only be updated if they all return a nil error
+	// Value will only be updated if they all return a nil error.
 	Checks []check.StringSlice
 }
 

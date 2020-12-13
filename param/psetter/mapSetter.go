@@ -22,8 +22,10 @@ type Map struct {
 	Checks []check.MapStringBool
 	// The Editor, if present, is applied to the parameter value after any
 	// checks are applied and allows the programmer to modify the value
-	// supplied before using it to set the Value
+	// supplied before using it to set the Value.
 	Editor Editor
+	// The StrListSeparator allows you to override the default separator
+	// between list elements.
 	StrListSeparator
 }
 

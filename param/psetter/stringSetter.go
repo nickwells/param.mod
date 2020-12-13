@@ -13,11 +13,11 @@ type String struct {
 	// string that the setter is setting.
 	Value *string
 	// The Checks, if any, are applied to the supplied parameter value and
-	// the new parameter will be applied only if they all return a nil error
+	// the new parameter will be applied only if they all return a nil error.
 	Checks []check.String
 	// The Editor, if present, is applied to the parameter value after any
 	// checks are applied and allows the programmer to modify the value
-	// supplied before using it to set the Value
+	// supplied before using it to set the Value.
 	Editor Editor
 }
 

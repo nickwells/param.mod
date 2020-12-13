@@ -25,10 +25,10 @@ type PathnameListAppender struct {
 	Expectation filecheck.Provisos
 	// The Checks, if any, are applied to the supplied parameter value and
 	// the new parameter will be added to the list only if they all return a
-	// nil error
+	// nil error.
 	Checks []check.String
 	// Prepend will change the behaviour so that any new values are added at
-	// the start of the list of pathnames rather than the end
+	// the start of the list of pathnames rather than the end.
 	Prepend bool
 }
 
@@ -70,7 +70,6 @@ func (s PathnameListAppender) SetWithVal(paramName, paramVal string) error {
 		return nil
 	}
 	*s.Value = append(*s.Value, pathname)
-
 	return nil
 }
 

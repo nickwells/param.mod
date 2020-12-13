@@ -34,6 +34,8 @@ type EnumMap struct {
 	// AllowHiddenMapEntries can be set to relax the checks on the initial
 	// entries in the Values map
 	AllowHiddenMapEntries bool
+	// The StrListSeparator allows you to override the default separator
+	// between list elements.
 	StrListSeparator
 }
 

@@ -19,7 +19,7 @@ type TimeLocation struct {
 	// with the address of the Location pointer.
 	Value **time.Location
 	// The Checks, if any, are applied to the supplied parameter value and
-	// the new parameter will be applied only if they all return a nil error
+	// the new parameter will be applied only if they all return a nil error.
 	Checks []check.TimeLocation
 }
 

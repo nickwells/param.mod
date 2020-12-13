@@ -13,9 +13,11 @@ import (
 type Int64List struct {
 	ValueReqMandatory
 
-	// You must set a Value - this is the slice of int64's that the setter is
-	// setting.
+	// Value must be set, the program will panic if not. This is the slice of
+	// int64's that the setter is setting.
 	Value *[]int64
+	// The StrListSeparator allows you to override the default separator
+	// between list elements.
 	StrListSeparator
 	// The Checks, if any, are applied to the supplied parameter value and
 	// the new parameter will be applied only if they all return a nil error

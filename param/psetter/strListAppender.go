@@ -21,12 +21,15 @@ type StrListAppender struct {
 	Value *[]string
 	// The Checks, if any, are applied to the supplied parameter value and
 	// the new parameter will be added to the list only if they all return a
-	// nil error
+	// nil error.
 	Checks []check.String
 	// The Editor, if present, is applied to the parameter value after any
 	// checks are applied and allows the programmer to modify the value
-	// supplied before using it to set the Value
+	// supplied before using it to set the Value.
 	Editor Editor
+	// Prepend will change the behaviour so that any new values are added at
+	// the start of the list of strings rather than the end.
+	Prepend bool
 }
 
 // CountChecks returns the number of check functions this setter has
@@ -60,16 +63,26 @@ func (s StrListAppender) SetWithVal(paramName, paramVal string) error {
 		}
 	}
 
+	if s.Prepend {
+		*s.Value = append([]string{paramVal}, *s.Value...)
+		return nil
+	}
 	*s.Value = append(*s.Value, paramVal)
-
 	return nil
 }
 
 // AllowedValues returns a description of the allowed values. It includes the
 // separator to be used
 func (s StrListAppender) AllowedValues() string {
-	return "a string value that will be added to the existing list of values" +
-		HasChecks(s)
+	const (
+		intro = "a string that will be added to the"
+		outro = " existing list of values"
+	)
+	prepend := ""
+	if s.Prepend {
+		prepend = " start of the"
+	}
+	return intro + prepend + outro + HasChecks(s)
 }
 
 // CurrentValue returns the current setting of the parameter value

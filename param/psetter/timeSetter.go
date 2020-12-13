@@ -27,10 +27,10 @@ type Time struct {
 	Value *time.Time
 	// The Format is used to convert the string parameter value into a Time
 	// suitable for setting the Value. If no Format is given the default
-	// value will be used, see TimeFmtDefault
+	// value will be used, see TimeFmtDefault.
 	Format string
 	// The Checks, if any, are applied to the time.Time value and the new
-	// parameter will be applied only if they all return a nil error
+	// parameter will be applied only if they all return a nil error.
 	Checks []check.Time
 }
 
