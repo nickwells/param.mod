@@ -49,7 +49,7 @@ func Example_count() {
 	// Now we can check the counter to see how many different parameters have
 	// been set
 	if paramCounter.Count() > 1 {
-		fmt.Printf("Both of %s and %s have been set. At:\n",
+		fmt.Printf("Both of %s and %s have been set:\n",
 			p1.Name(), p2.Name())
 
 		// range over the parameters set and report them. Alternatively we
@@ -60,7 +60,7 @@ func Example_count() {
 		}
 	}
 
-	// Output: Both of p1 and p2 have been set. At:
-	// Param: p1 (at [ command line ]: Supplied Parameter:1: -p1)
-	// Param: p2 (at [ command line ]: Supplied Parameter:2: -p2)
+	// Output: Both of p1 and p2 have been set:
+	// Param: p1 (at [command line]: Supplied Parameter:1: -p1)
+	// Param: p2 (at [command line]: Supplied Parameter:2: -p2)
 }

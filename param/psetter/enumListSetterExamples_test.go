@@ -73,7 +73,8 @@ func ExampleEnumList_withBadVals() {
 	// Output:
 	// Before parsing
 	// Errors for: my-list
-	//	: value is not allowed: "z" (at [ command line ]: Supplied Parameter:2: -my-list x,z)
+	//	: value is not allowed: "z"
+	// At: [command line]: Supplied Parameter:2: -my-list x,z
 	// After  parsing
 }
 
@@ -153,7 +154,8 @@ func ExampleEnumList_withFailingChecks() {
 	// Output:
 	// Before parsing
 	// Errors for: my-list
-	//	: the length of the list (1) must equal 2 (at [ command line ]: Supplied Parameter:2: -my-list x)
+	//	: the length of the list (1) must equal 2
+	// At: [command line]: Supplied Parameter:2: -my-list x
 	// After  parsing
 }
 

@@ -1,6 +1,6 @@
-PROGRAM NAME UNKNOWN: an error was detected while setting the parameters:
-      params-file
+PROGRAM NAME UNKNOWN: an error was found
+      params-file - 1 error
             no file name has been given
-            At: [ command line ]: Supplied Parameter:2: -params-file
+            At: [command line]: Supplied Parameter:2: -params-file
 
 Try the '-help' parameter for more information.

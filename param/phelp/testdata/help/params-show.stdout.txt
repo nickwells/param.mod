@@ -7,7 +7,7 @@ details of where it has been set.
 
 common.params-completion [ 2 parameters, all hidden ]
 Set    : completions-zsh-dir
-             at : [ config file for common.params-completion ]:
+             at : [config file for common.params-completion]:
                   /home/ngw/.config/github.com/nickwells/param.mod/v5/param/phelp/group-common.params-completion.cfg:1
 ---    : completions-zsh-make
 
@@ -23,7 +23,7 @@ common.params-help       [ 10 parameters, 9 hidden ]
 ---    : help-params or help-param or help-p
 ---    : help-show
 Set    : help-summary or help-s or help-short
-             at : [ command line ]: Supplied Parameter:3: -help-s
+             at : [command line]: Supplied Parameter:3: -help-s
 
 ---------------
 common.params-params     [ 6 parameters, all hidden ]
@@ -32,16 +32,16 @@ common.params-params     [ 6 parameters, all hidden ]
 ---    : params-exit-after-parsing
 ---    : params-file or params-from
 Set    : params-show-unused
-             at : [ command line ]: Supplied Parameter:2: -params-show-unused
+             at : [command line]: Supplied Parameter:2: -params-show-unused
 Set    : params-show-where-set
-             at : [ command line ]: Supplied Parameter:1: -params-show-where-set
+             at : [command line]: Supplied Parameter:1: -params-show-where-set
 
 ---------------
 test-group1              [ 6 parameters, 1 hidden ]
 ---    : param1 or param1-alt1
 Errs 1 : param2 or param2-alt2
 Set    : param3 or p3
-             at : [ config file ]: testdata/configFiles/cfg-with-param:2
+             at : [config file]: testdata/configFiles/cfg-with-param:2
 ---    : param4
 ---    : param5
 ---    : param6
@@ -50,11 +50,10 @@ Set    : param3 or p3
 
 Unused Parameters:  1
       not-a-param
-            at: [ config file ]: testdata/configFiles/cfg-with-param:1
+            at: [config file]: testdata/configFiles/cfg-with-param:1
 
 ===============
 
-Parameter errors detected
 
 ===============
 

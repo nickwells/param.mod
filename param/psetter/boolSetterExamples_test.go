@@ -84,7 +84,8 @@ func ExampleBool_withBadValue() {
 	// Output:
 	// Before parsing    p1: true
 	// Errors for: do-this
-	//	: cannot interpret 'blah' as either true or false (at [ command line ]: Supplied Parameter:1: -do-this=blah)
+	//	: cannot interpret 'blah' as either true or false
+	// At: [command line]: Supplied Parameter:1: -do-this=blah
 	// After  parsing    p1: true
 }
 

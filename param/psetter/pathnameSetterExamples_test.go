@@ -71,7 +71,8 @@ func ExamplePathname_withFailingExpectation() {
 	// Output:
 	// Before parsing    pathname: ""
 	// Errors for: my-pathname
-	//	: path: "testdata/noSuchFile.go" should exist but doesn't (at [ command line ]: Supplied Parameter:2: -my-pathname testdata/noSuchFile.go)
+	//	: path: "testdata/noSuchFile.go" should exist but doesn't
+	// At: [command line]: Supplied Parameter:2: -my-pathname testdata/noSuchFile.go
 	// After  parsing    pathname: ""
 }
 

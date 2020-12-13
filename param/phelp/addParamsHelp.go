@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/english.mod/english"
 	"github.com/nickwells/location.mod/location"
 	"github.com/nickwells/param.mod/v5/param"
 	"github.com/nickwells/param.mod/v5/param/paction"
@@ -67,7 +68,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		param.GroupName(groupName))
 
 	ps.Add(helpFullArgName, psetter.Nil{},
-		" show all parts of the help message and all"+
+		"show all parts of the help message and all"+
 			" parameters, including hidden ones."+
 			exitAfterHelpMessage,
 		param.AltName("help-f"),
@@ -77,7 +78,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		param.GroupName(groupName))
 
 	ps.Add(helpShowHiddenArgName, psetter.Nil{},
-		" show all the parameters."+
+		"show all the parameters."+
 			" Less commonly useful parameters are not shown in the"+
 			" standard help message. This will reveal them."+
 			exitAfterHelpMessage,
@@ -260,7 +261,7 @@ func checkGroups(h *StdHelp, ps *param.PSet) param.ActionFunc {
 
 		altNames := altNames(h, ps, badNames, param.SuggestGroups)
 		return makeBadNameError(badNames, altNames, "group",
-			" For a list of available group names try '-"+
+			"\nFor a list of available group names try '-"+
 				helpShowArgName+" "+groupsHelpSectionName+"'")
 	}
 }
@@ -320,10 +321,10 @@ func checkParams(h *StdHelp, ps *param.PSet) param.ActionFunc {
 
 		altNames := altNames(h, ps, badNames, param.SuggestParams)
 		return makeBadNameError(badNames, altNames, "parameter",
-			" To see a list of parameter names try "+
+			"\nTo see a list of parameter names try "+
 				"'-"+helpShowArgName+" "+namedParamsHelpSectionName+"'."+
-				" To see a full list, add '-"+helpShowHiddenArgName+"'."+
-				" To see just the names, add '-"+helpSummaryArgName+"'.")
+				"\nTo see a full list, add '-"+helpShowHiddenArgName+"'."+
+				"\nTo see just the names, add '-"+helpSummaryArgName+"'.")
 	}
 }
 
@@ -350,27 +351,16 @@ func makeBadNameError(badNames, altNames []string, tName, extra string) error {
 	if len(badNames) == 0 {
 		return nil
 	}
-	badStr := ""
-	switch len(badNames) {
-	case 0:
-		return nil
-	case 1:
-		badStr = fmt.Sprintf("Bad %s name: %s.",
-			tName, badNames[0])
-	default:
-		sort.Strings(badNames)
-		badStr = fmt.Sprintf("Bad %s names: %s.",
-			tName, strings.Join(badNames, ", "))
-	}
+	badStrPrefix := fmt.Sprintf("Bad %s %s: ",
+		tName, english.Plural("name", len(badNames)))
+	badStrJoin := "\n" + strings.Repeat(" ", len(badStrPrefix))
+	sort.Strings(badNames)
+	badStr := badStrPrefix + strings.Join(badNames, badStrJoin)
+
 	alts := ""
-	switch len(altNames) {
-	case 0:
-		alts = ""
-	case 1:
-		alts = " Did you mean " + altNames[0]
-	default:
+	if len(altNames) > 0 {
 		sort.Strings(altNames)
-		alts = " Did you mean " + strings.Join(altNames, " or ")
+		alts = "\nDid you mean " + strings.Join(altNames, " or ")
 	}
 	return errors.New(badStr + alts + extra)
 }

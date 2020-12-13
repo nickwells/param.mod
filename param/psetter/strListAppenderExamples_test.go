@@ -101,7 +101,8 @@ func ExampleStrListAppender_withFailingChecks() {
 	// Before parsing
 	//	ss[0] = "Hello"
 	// Errors for: next
-	//	: the length of the value (13) must be less than 10 (at [ command line ]: Supplied Parameter:4: -next my old friend)
+	//	: the length of the value (13) must be less than 10
+	// At: [command line]: Supplied Parameter:4: -next my old friend
 	// After  parsing
 	//	ss[0] = "Hello"
 	//	ss[1] = "darkness"

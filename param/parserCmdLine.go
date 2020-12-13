@@ -97,7 +97,7 @@ func (ps *PSet) handleParamsByName(loc *location.L, params []string) {
 					i++
 					loc.Incr()
 					paramParts = append(paramParts, params[i])
-					loc.SetContent(pStr + " " + params[i])
+					loc.SetContent(strings.Join(paramParts, " "))
 				}
 			}
 			paramParts[0] = trimmedParam

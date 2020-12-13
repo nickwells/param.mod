@@ -1,9 +1,10 @@
-PROGRAM NAME UNKNOWN: an error was detected while setting the parameters:
-      help-params
-            Bad parameter name: "no-such-param". To see a list of parameter
-            names try '-help-show named-params'. To see a full list, add
-            '-help-all'. To see just the names, add '-help-summary'.
-            At: [ command line ]: Supplied Parameter:2: -help-params
+PROGRAM NAME UNKNOWN: an error was found
+      help-params - 1 error
+            Bad parameter name: "no-such-param"
+            To see a list of parameter names try '-help-show named-params'.
+            To see a full list, add '-help-all'.
+            To see just the names, add '-help-summary'.
+            At: [command line]: Supplied Parameter:2: -help-params
             help-groups,help,no-such-param
 
 Try the '-help' parameter for more information.

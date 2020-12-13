@@ -8,6 +8,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/nickwells/errutil.mod/errutil"
 	"github.com/nickwells/location.mod/location"
 )
 
@@ -26,7 +27,7 @@ const DfltProgName = "PROGRAM NAME UNKNOWN"
 // detected; all the errors for that parameter are stored in a slice. Errors
 // not related to any individual parameter are stored in the map entry with a
 // key of an empty string.
-type ErrMap map[string][]error
+type ErrMap errutil.ErrMap
 
 // FinalCheckFunc is the type of a function to be called after all the
 // parameters have been set
@@ -218,7 +219,7 @@ func NewSet(psof ...PSetOptFunc) (*PSet, error) {
 		groups:          make(map[string]*Group),
 		notes:           make(map[string]*Note),
 		unusedParams:    make(map[string][]string),
-		errors:          make(ErrMap),
+		errors:          ErrMap(*(errutil.NewErrMap())),
 		finalChecks:     make([]FinalCheckFunc, 0),
 
 		envPrefixes: make([]string, 0, 1),

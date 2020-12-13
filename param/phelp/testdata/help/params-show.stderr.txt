@@ -1,5 +1,5 @@
-PROGRAM NAME UNKNOWN: an error was detected while setting the parameters:
-      param2
+PROGRAM NAME UNKNOWN: an error was found
+      param2 - 1 error
             this parameter must be set somewhere
 
 Try the '-help' parameter for more information.

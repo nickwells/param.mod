@@ -88,7 +88,8 @@ func ExampleFloat64_withFailingChecks() {
 	// Before parsing
 	//	f = 0.000
 	// Errors for: my-float
-	//	: the value (1.23) must be greater than 5 (at [ command line ]: Supplied Parameter:2: -my-float 1.23)
+	//	: the value (1.23) must be greater than 5
+	// At: [command line]: Supplied Parameter:2: -my-float 1.23
 	// After  parsing
 	//	f = 0.000
 }

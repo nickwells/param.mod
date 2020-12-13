@@ -65,7 +65,8 @@ func ExampleEnum_withBadVal() {
 	// Before parsing
 	//	s = x
 	// Errors for: my-string
-	//	: value not allowed: "z" (at [ command line ]: Supplied Parameter:2: -my-string z)
+	//	: value not allowed: "z"
+	// At: [command line]: Supplied Parameter:2: -my-string z
 	// After  parsing
 	//	s = x
 }

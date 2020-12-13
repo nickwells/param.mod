@@ -78,7 +78,7 @@ func addByNameParams(ps *param.PSet) error {
 	)
 
 	ps.Add("param2", psetter.Int64{Value: &int64Val2},
-		"help text for param2.\n With an embedded new line and a lot of"+
+		"help text for param2.\nWith an embedded new line and a lot of"+
 			" text to demonstrate the behaviour when text is wrapped"+
 			" across multiple lines",
 		param.GroupName(paramGroupName),
