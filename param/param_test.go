@@ -620,7 +620,7 @@ func TestParamParse(t *testing.T) {
 			expectedEMap: map[string][]string{
 				"test1": {
 					"a value must follow this parameter",
-					"either following an '=' or as a next parameter",
+					"either following an '=' or as the next parameter",
 				},
 			},
 		},

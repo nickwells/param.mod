@@ -4,7 +4,7 @@ PROGRAM NAME UNKNOWN: 4 errors were found in 3 categories
                 For a list of available group names try '-help-show groups'
                 At: [command line]: Supplied Parameter:2: -help-groups=notAGroup
             2 : a value must follow this parameter: "help-groups", either
-                following an '=' or as a next parameter
+                following an '=' or as the next parameter
                 At: [command line]: Supplied Parameter:3: -help-groups
       param2 - 1 error
             this parameter must be set somewhere
