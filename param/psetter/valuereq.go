@@ -19,7 +19,7 @@ func (v ValueReqMandatory) ValueReq() param.ValueReq { return param.Mandatory }
 // follow the parameter for this setter.
 func (v ValueReqMandatory) Set(name string) error {
 	return fmt.Errorf("a value must follow this parameter: %q,"+
-		" either following an '=' or as a next parameter", name)
+		" either following an '=' or as the next parameter", name)
 }
 
 // ValueReqOptional is a mixin type that can be embedded in a Setter to
