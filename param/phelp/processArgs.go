@@ -58,11 +58,15 @@ func (h StdHelp) ProcessArgs(ps *param.PSet) {
 
 	printSep := false
 
+	var pgr *pager
 	for _, a := range actions {
 		if !a.shouldRun() {
 			continue
 		}
 
+		if pgr == nil {
+			pgr = pagerStart(ps)
+		}
 		var es int
 		if a.action != nil {
 			printSep = printSepIf(twc, printSep, majorSectionSeparator)
@@ -76,6 +80,8 @@ func (h StdHelp) ProcessArgs(ps *param.PSet) {
 
 		shouldExit = shouldExit || a.shouldExit
 	}
+
+	pgr.done()
 
 	if shouldExit {
 		os.Exit(exitStatus)

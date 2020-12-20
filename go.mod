@@ -11,6 +11,7 @@ require (
 	github.com/nickwells/testhelper.mod v1.14.0
 	github.com/nickwells/twrap.mod v1.4.10
 	github.com/nickwells/xdg.mod v1.0.5
+	golang.org/x/term v0.0.0-20201210144234-2321bbc49cbf
 )
 
 go 1.13
