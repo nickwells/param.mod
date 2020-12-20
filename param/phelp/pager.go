@@ -44,10 +44,10 @@ func pagerStart(ps *param.PSet) *pager {
 	}
 
 	if outIsTty {
-		param.SetStdWriter(pagerIn)(ps)
+		_ = param.SetStdWriter(pagerIn)(ps)
 	}
 	if errIsTty {
-		param.SetErrWriter(pagerIn)(ps)
+		_ = param.SetErrWriter(pagerIn)(ps)
 	}
 
 	return &pager{
@@ -74,5 +74,5 @@ func (p *pager) done() {
 	}
 
 	p.pagerIn.Close()
-	p.cmd.Wait()
+	_ = p.cmd.Wait()
 }
