@@ -7,38 +7,38 @@ import (
 
 // showIntro prints the program name and, optionally, the description
 func showIntro(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
-	if h.sectionsChosen[usageHelpSectionName] && h.hideDescriptions {
+	if h.sectionsChosen[usageHelpSectionName] &&
+		(h.hideDescriptions || ps.ProgDesc() == "") {
 		return false
 	}
 
 	switch h.helpFormat {
 	case helpFmtTypeMD:
-		return showIntroFmtMD(h, twc, ps)
+		showIntroFmtMD(h, twc, ps)
 	default:
-		return showIntroFmtStd(h, twc, ps)
+		showIntroFmtStd(h, twc, ps)
 	}
-}
-
-// showIntroFmtStd prints the intro section in the standard help format
-func showIntroFmtStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
-	twc.Print(ps.ProgName() + "\n")
-
-	if h.hideDescriptions {
-		return true
-	}
-	twc.Wrap(ps.ProgDesc(), 0)
 	return true
 }
 
+// showIntroFmtStd prints the intro section in the standard help format
+func showIntroFmtStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) {
+	twc.Print(ps.ProgName() + "\n")
+
+	if h.hideDescriptions {
+		return
+	}
+	twc.Wrap(ps.ProgDesc(), 0)
+}
+
 // showIntroFmtMD prints the intro section in markdown format
-func showIntroFmtMD(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
+func showIntroFmtMD(h StdHelp, twc *twrap.TWConf, ps *param.PSet) {
 	twc.Print("# " + ps.ProgBaseName() + "\n\n")
 
 	if h.hideDescriptions {
-		return true
+		return
 	}
 	desc := makeTextMarkdownSafe(ps.ProgDesc())
 	twc.Wrap(desc, 0)
 	twc.Print("\n")
-	return true
 }
