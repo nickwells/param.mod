@@ -36,7 +36,7 @@ func printByPosParam(h StdHelp, twc *twrap.TWConf, ps *param.PSet, i int) {
 	}
 	twc.Wrap(bp.Description(), descriptionIndent)
 	h.showAllowedVals(twc, bp.Name(), bp.Setter())
-	twc.Wrap("Initial value: "+bp.InitialValue(), descriptionIndent)
+	showInitialValue(twc, bp.InitialValue(), bp.Setter().CurrentValue())
 }
 
 // getMaxGroupNameLen returns the length of the longest group name
@@ -132,21 +132,21 @@ func showParamsByGroupName(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 
 // printParamUsage prints the named parameter help text
 func (h StdHelp) printParamUsage(twc *twrap.TWConf, p *param.ByName) {
-	valueReq := p.Setter().ValueReq()
-	prefix := "-"
-	suffix := valueNeededStr(valueReq)
+	valNeededSuffix := valueNeededStr(p.Setter())
+	paramNames := ""
+	optSuffix := ""
 	if !p.AttrIsSet(param.MustBeSet) {
-		prefix = "[" + prefix
-		suffix += "]"
+		paramNames = "["
+		optSuffix += "]"
 	}
 
-	paramNames := ""
 	sep := ""
 
 	for _, altParamName := range p.AltNames() {
-		paramNames += sep + prefix + altParamName + suffix
-		sep = " or "
+		paramNames += sep + "-" + altParamName + valNeededSuffix
+		sep = ", "
 	}
+	paramNames += optSuffix
 	twc.Wrap2Indent(paramNames, paramIndent, paramLine2Indent)
 
 	if h.hideDescriptions {
@@ -157,19 +157,29 @@ func (h StdHelp) printParamUsage(twc *twrap.TWConf, p *param.ByName) {
 	printParamAttributes(twc, p)
 	showSeeAlso(twc, p)
 
-	if valueReq == param.None {
+	if p.Setter().ValueReq() == param.None {
 		return
 	}
 	h.showAllowedVals(twc, p.Name(), p.Setter())
-	showInitialValue(twc, p)
+	showInitialValue(twc, p.InitialValue(), p.Setter().CurrentValue())
 }
 
-// showInitialValue shows the initial value of the ByName parameter
-func showInitialValue(twc *twrap.TWConf, p *param.ByName) {
-	twc.WrapPrefixed("Initial value: ", p.InitialValue(), descriptionIndent)
+// showInitialValue shows the initial value of the ByName parameter. If the
+// value has changed then the initial value is always shown, otherwise if the
+// initial value is empty or zero or "false" then it is not shown. Lastly if
+// the value has changed then the current value is also shown.
+func showInitialValue(twc *twrap.TWConf, initialValue, currentValue string) {
+	if currentValue == initialValue &&
+		(initialValue == "" ||
+			initialValue == "0" ||
+			initialValue == "0.0" ||
+			initialValue == "false") {
+		return
+	}
 
-	currentValue := p.Setter().CurrentValue()
-	if currentValue != p.InitialValue() {
+	twc.WrapPrefixed("Initial value: ", initialValue, descriptionIndent)
+
+	if currentValue != initialValue {
 		twc.WrapPrefixed("Current value: ", currentValue, descriptionIndent)
 	}
 }
@@ -266,7 +276,7 @@ func (h StdHelp) printGroup(twc *twrap.TWConf, g *param.Group, maxLen int) {
 	} else {
 		twc.Printf("%d parameters", len(g.Params))
 	}
-	if g.HiddenCount > 0 {
+	if g.HiddenCount > 0 && !h.showHiddenItems {
 		if g.AllParamsHidden() {
 			twc.Print(", all hidden")
 		} else {
@@ -284,12 +294,30 @@ func (h StdHelp) printGroup(twc *twrap.TWConf, g *param.Group, maxLen int) {
 	twc.Print("\n")
 }
 
-func valueNeededStr(vr param.ValueReq) string {
-	if vr == param.Mandatory {
-		return "=..."
+// valTypeName returns a descriptive string for the type of the Setter
+func valTypeName(s param.Setter) string {
+	if sVD, ok := s.(psetter.ValDescriber); ok {
+		return sVD.ValDescribe()
 	}
-	if vr == param.Optional {
-		return "[=...]"
+
+	valType := fmt.Sprintf("%T", s)
+
+	parts := strings.Split(valType, ".")
+	valType = parts[len(parts)-1]
+	valType = strings.TrimRight(valType, "0123456789")
+
+	return valType
+}
+
+// valueNeededStr returns a descriptive string indicating whether a trailing
+// argument is needed and if so of what type it should be.
+func valueNeededStr(s param.Setter) string {
+	valReq := s.ValueReq()
+	if valReq == param.Mandatory {
+		return "=" + valTypeName(s)
+	}
+	if valReq == param.Optional {
+		return "[=" + valTypeName(s) + "] "
 	}
 	return ""
 }
