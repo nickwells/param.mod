@@ -11,10 +11,13 @@ type Enum struct {
 	// The AllowedVals must be set, the program will panic if not. The Value
 	// is guaranteed to take one of these values.
 	AllowedVals
-
 	// Value must be set, the program will panic if not. This is the value
 	// being set
 	Value *string
+	// AllowInvalidInitialValue can be set to relax the checks on the initial
+	// Value. It can be set to allow, for instance, an empty initial value to
+	// signify that no choice has yet been made.
+	AllowInvalidInitialValue bool
 }
 
 // SetWithVal (called when a value follows the parameter) checks the value
@@ -47,6 +50,9 @@ func (s Enum) CheckSetter(name string) {
 	intro := name + ": psetter.Enum Check failed: "
 	if err := s.AllowedVals.Check(); err != nil {
 		panic(intro + err.Error())
+	}
+	if s.AllowInvalidInitialValue {
+		return
 	}
 	if !s.ValueAllowed(*s.Value) {
 		panic(fmt.Sprintf("%sthe initial value (%s) is not valid",
