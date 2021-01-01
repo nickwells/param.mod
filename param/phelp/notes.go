@@ -38,7 +38,9 @@ func showNotes(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 		}
 	}
 	sort.Strings(keys)
-	if hiddenCount == len(notes) {
+	if h.showHiddenItems {
+		twc.Printf("Notes [ %d notes ]\n", len(notes))
+	} else if hiddenCount == len(notes) {
 		twc.Printf("Notes [ %d notes, all hidden ]\n", len(notes))
 	} else {
 		twc.Printf("Notes [ %d notes, %d hidden ]\n", len(notes), hiddenCount)
