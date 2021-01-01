@@ -90,7 +90,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 
 	ps.Add(helpSummaryArgName, psetter.Nil{},
 		"print a shorter help message. Only minimal details"+
-			" are show, descriptions are not shown."+
+			" are shown, descriptions are not shown."+
 			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.AltName("help-s"),
