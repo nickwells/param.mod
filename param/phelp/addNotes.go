@@ -15,7 +15,7 @@ func addNotes(ps *param.PSet) {
 			" be supplied immediately after the parameter (with"+
 			" an '=' in between) or else as the next argument to"+
 			" the program. As follows:\n\n"+
-			"-xxx=false or -xxx false"+
+			"-xxx=42 or -xxx 42"+
 			"\n\n"+
 			"If the following value is optional it is shown with"+
 			" a following '[=...]' (note the brackets). In this"+
@@ -30,7 +30,7 @@ func addNotes(ps *param.PSet) {
 			" Within each group the parameters are displayed in"+
 			" alphabetical order."+
 			"\n\n"+
-			" Groups where all the parameters are hidden will not be shown."+
+			"Groups where all the parameters are hidden will not be shown."+
 			" To see all the available parameter groups use the "+
 			helpGroupsArgName+" parameter.",
 		param.NoteAttrs(param.DontShowNoteInStdUsage))
@@ -58,7 +58,7 @@ func addNotes(ps *param.PSet) {
 			" sources are processed is as given on the Alternative"+
 			" Sources help page."+
 			"\n\n"+
-			" Processing command line parameters last means that a"+
+			"Processing command line parameters last means that a"+
 			" value given on the command line will replace any settings"+
 			" in configuration files or environment variables (unless"+
 			" the parameter may only be set once).",
