@@ -1,16 +1,15 @@
 
 ===============
 
-      [-help] or [-usage]
+      [-help, -usage]
             print this help message and exit.
 
             To see hidden parameters use the -help-all parameter.
             For a brief help message use the -help-summary parameter
             For the full help message use the -help-full parameter
-      [-help-groups=...] or [-help-group=...] or [-help-g=...]
+      [-help-groups=Map, -help-group=Map, -help-g=Map]
             when printing the help message only show the listed groups.
 
             The program will exit after the help message is shown.
             Allowed values: a list of string values separated by ',' subject to
                             checks
-            Initial value:

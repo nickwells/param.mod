@@ -3,11 +3,11 @@ a description of what the program does (help-a)
 
 ===============
 
-Usage: PROGRAM NAME UNKNOWN -param2=... ...
+Usage: PROGRAM NAME UNKNOWN -param2=Int ...
 
 ===============
 
-common.params-completion [ 2 parameters, all hidden ]
+common.params-completion [ 2 parameters ]
     These are the parameters for creating shell completion functions. You can
     specify where the completion files should be written, trigger the generation
     of the files and control whether they should be overwritten.
@@ -15,7 +15,7 @@ common.params-completion [ 2 parameters, all hidden ]
     Parameters in this group may also be set in the configuration file:
     /home/ngw/.config/github.com/nickwells/param.mod/v5/param/phelp/group-common.params-completion.cfg
 
-      [-completions-zsh-dir=...]
+      [-completions-zsh-dir=Pathname]
             which directory should a zsh completions function for this program
             be written to. The directory should be in the list of directories
             given in the fpath shell variable. See the zsh manual for more
@@ -24,7 +24,7 @@ common.params-completion [ 2 parameters, all hidden ]
                             must satisfy further checks
             Initial value:
             Current value: /home/ngw/.oh-my-zsh/custom/plugins
-      [-completions-zsh-make=...]
+      [-completions-zsh-make=Enum]
             how to create the zsh completions file. This specifies whether or if
             the file should be created. If it is set to any value other than
             'none' then the program will exit after the parameters are
@@ -49,27 +49,27 @@ common.params-completion [ 2 parameters, all hidden ]
                                 instead printed to standard output.
             Initial value: none
 ---------------
-common.params-help       [ 10 parameters, 9 hidden ]
+common.params-help       [ 10 parameters ]
     These are parameters for printing a help message.
 
-      [-help] or [-usage]
+      [-help, -usage]
             print this help message and exit.
 
             To see hidden parameters use the -help-all parameter.
             For a brief help message use the -help-summary parameter
             For the full help message use the -help-full parameter
-      [-help-all] or [-help-a]
+      [-help-all, -help-a]
             show all the parameters. Less commonly useful parameters are not
             shown in the standard help message. This will reveal them.
 
             The program will exit after the help message is shown.
-      [-help-all-short] or [-help-as] or [-help-sa]
+      [-help-all-short, -help-as, -help-sa]
             print a shorter help message but with all the parameters shown. This
             is the equivalent of giving both the help-all and the help-summary
             parameters.
 
             The program will exit after the help message is shown.
-      [-help-format=...]
+      [-help-format=Enum]
             specify how the help message should be produced. Only some parts of
             the help message support this feature. They will mostly produce
             Standard format regardless of this setting.
@@ -81,31 +81,28 @@ common.params-help       [ 10 parameters, 9 hidden ]
                             standard: the standard format. This is almost
                                 certainly what you want
             Initial value: standard
-      [-help-full] or [-help-f]
+      [-help-full, -help-f]
             show all parts of the help message and all parameters, including
             hidden ones.
 
             The program will exit after the help message is shown.
-      [-help-groups=...] or [-help-group=...] or [-help-g=...]
+      [-help-groups=Map, -help-group=Map, -help-g=Map]
             when printing the help message only show the listed groups.
 
             The program will exit after the help message is shown.
             Allowed values: a list of string values separated by ',' subject to
                             checks
-            Initial value:
-      [-help-notes=...] or [-help-note=...] or [-help-n=...]
+      [-help-notes=Map, -help-note=Map, -help-n=Map]
             when printing the help message only show the listed notes.
 
             The program will exit after the help message is shown.
             Allowed values: (see parameter: help-groups)
-            Initial value:
-      [-help-params=...] or [-help-param=...] or [-help-p=...]
+      [-help-params=Map, -help-param=Map, -help-p=Map]
             when printing the help message only show the listed parameters.
 
             The program will exit after the help message is shown.
             Allowed values: (see parameter: help-groups)
-            Initial value:
-      [-help-show=...]
+      [-help-show=EnumMap]
             specify the parts of the help message you wish to see
             Allowed values: a list of string values separated by ','.
 
@@ -141,18 +138,18 @@ common.params-help       [ 10 parameters, 9 hidden ]
                            intro=true
                            pos-params=true
                            usage=true
-      [-help-summary] or [-help-s] or [-help-short]
-            print a shorter help message. Only minimal details are show,
+      [-help-summary, -help-s, -help-short]
+            print a shorter help message. Only minimal details are shown,
             descriptions are not shown.
 
             The program will exit after the help message is shown.
 ---------------
-common.params-params     [ 6 parameters, all hidden ]
+common.params-params     [ 6 parameters ]
     These are the parameter-handling parameters. There are parameters for
     showing where parameters have been set and for the handling of parameter
     errors.
 
-      [-params-dont-exit-on-errors[=...]]
+      [-params-dont-exit-on-errors[=Bool] ]
             if errors are detected when processing the parameters the program
             will exit unless this flag is set to true. Note that the behaviour
             of the program cannot be guaranteed if this option is chosen and it
@@ -162,12 +159,11 @@ common.params-params     [ 6 parameters, all hidden ]
                             must be given after an '=', not as a following
                             value, as this is optional
             Initial value: true
-      [-params-dont-show-errors[=...]]
+      [-params-dont-show-errors[=Bool] ]
             after all the parameters are set any errors detected will be
             reported unless this flag is set
             Allowed values: (see parameter: params-dont-exit-on-errors)
-            Initial value: false
-      [-params-exit-after-parsing[=...]]
+      [-params-exit-after-parsing[=Bool] ]
             exit after the parameters have been read and processed. This lets
             you check the parameters are valid and see what values get set
             without actually running the program.
@@ -176,8 +172,7 @@ common.params-params     [ 6 parameters, all hidden ]
             are processed and these will still take place even if this parameter
             is set.
             Allowed values: (see parameter: params-dont-exit-on-errors)
-            Initial value: false
-      [-params-file=...] or [-params-from=...]
+      [-params-file=configFileSetter, -params-from=configFileSetter]
             read in parameters from the given file. Note that the parameter file
             will be read as a configuration file with each parameter on a
             separate line. Comments, white space etc. will be treated as in any
@@ -185,7 +180,7 @@ common.params-params     [ 6 parameters, all hidden ]
             Allowed values: a pathname to a file which must exist, containing
                             configuration parameters
             Initial value: none
-      [-params-show-unused[=...]]
+      [-params-show-unused[=Bool] ]
             after all the parameters are set a message will be printed showing
             any parameters (including those from configuration files or the
             environment) which were not recognised.
@@ -200,50 +195,47 @@ common.params-params     [ 6 parameters, all hidden ]
 
             The program will exit after the parameters are processed.
             Allowed values: (see parameter: params-dont-exit-on-errors)
-            Initial value: false
-      [-params-show-where-set[=...]]
+      [-params-show-where-set[=Bool] ]
             after all the parameters are set a message will be printed showing
             where they were set. This can be useful for debugging (especially if
             there are several config files in use).
 
             The program will exit after the parameters are processed.
             Allowed values: (see parameter: params-dont-exit-on-errors)
-            Initial value: false
 ---------------
-test-group1              [ 6 parameters, 1 hidden ]
+test-group1              [ 6 parameters ]
     test parameters.
 
-      [-param1=...] or [-param1-alt1=...]
+      [-param1=Int, -param1-alt1=Int]
             help text for param1
             Allowed values: any value that can be read as a whole number
             Initial value: 1
-      -param2=... or -param2-alt2=...
+      -param2=Int, -param2-alt2=Int
             help text for param2.
             With an embedded new line and a lot of text to demonstrate the
             behaviour when text is wrapped across multiple lines
             Allowed values: any value that can be read as a whole number
             Initial value: 2
             Current value: 99
-      [-param3=...] or [-p3=...]
+      [-param3=Float, -p3=Float]
             help...
             Allowed values: any value that can be read as a number with a
                             decimal place
             Initial value: 3.333
-      [-param4[=...]]
+      [-param4[=Bool] ]
             help...
 
             This parameter value may only be set once. Any appearances after the
             first will not be used
             Allowed values: (see parameter: params-dont-exit-on-errors)
-            Initial value: false
-      [-param5=...]
+      [-param5=Enum]
             help...
             Allowed values: a string
                             The value must be one of the following:
                             v1: a value
                             v2: another value
             Initial value: v1
-      [-param6=...]
+      [-param6=Enum]
             help...
             Allowed values: (see parameter: param5)
             Initial value: v2

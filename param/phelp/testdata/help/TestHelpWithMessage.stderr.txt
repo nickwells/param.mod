@@ -15,7 +15,7 @@ Usage: PROGRAM NAME UNKNOWN ...
 common.params-help       [ 10 parameters, 9 hidden ]
     These are parameters for printing a help message.
 
-      [-help] or [-usage]
+      [-help, -usage]
             print this help message and exit.
 
             To see hidden parameters use the -help-all parameter.

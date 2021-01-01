@@ -1,23 +1,23 @@
-test-group1              [ 6 parameters, 1 hidden ]
+test-group1              [ 6 parameters ]
     test parameters.
 
-      [-param1=...] or [-param1-alt1=...]
+      [-param1=Int, -param1-alt1=Int]
             help text for param1
             Allowed values: any value that can be read as a whole number
             Initial value: 1
-      -param2=... or -param2-alt2=...
+      -param2=Int, -param2-alt2=Int
             help text for param2.
             With an embedded new line and a lot of text to demonstrate the
             behaviour when text is wrapped across multiple lines
             Allowed values: any value that can be read as a whole number
             Initial value: 2
             Current value: 99
-      [-param3=...] or [-p3=...]
+      [-param3=Float, -p3=Float]
             help...
             Allowed values: any value that can be read as a number with a
                             decimal place
             Initial value: 3.333
-      [-param4[=...]]
+      [-param4[=Bool] ]
             help...
 
             This parameter value may only be set once. Any appearances after the
@@ -26,15 +26,14 @@ test-group1              [ 6 parameters, 1 hidden ]
                             that can be interpreted as true or false. The value
                             must be given after an '=', not as a following
                             value, as this is optional
-            Initial value: false
-      [-param5=...]
+      [-param5=Enum]
             help...
             Allowed values: a string
                             The value must be one of the following:
                             v1: a value
                             v2: another value
             Initial value: v1
-      [-param6=...]
+      [-param6=Enum]
             help...
             Allowed values: (see parameter: param5)
             Initial value: v2

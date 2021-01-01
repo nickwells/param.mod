@@ -1,13 +1,13 @@
-Usage: PROGRAM NAME UNKNOWN -param2=... ...
+Usage: PROGRAM NAME UNKNOWN -param2=Int ...
 
 ===============
 
 common.params-help       [ 10 parameters, 9 hidden ]
-      [-help] or [-usage]
+      [-help, -usage]
 ---------------
 test-group1              [ 6 parameters, 1 hidden ]
-      [-param1=...] or [-param1-alt1=...]
-      -param2=... or -param2-alt2=...
-      [-param4[=...]]
-      [-param5=...]
-      [-param6=...]
+      [-param1=Int, -param1-alt1=Int]
+      -param2=Int, -param2-alt2=Int
+      [-param4[=Bool] ]
+      [-param5=Enum]
+      [-param6=Enum]

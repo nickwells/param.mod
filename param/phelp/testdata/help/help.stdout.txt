@@ -3,14 +3,14 @@ a description of what the program does (help)
 
 ===============
 
-Usage: PROGRAM NAME UNKNOWN -param2=... ...
+Usage: PROGRAM NAME UNKNOWN -param2=Int ...
 
 ===============
 
 common.params-help       [ 10 parameters, 9 hidden ]
     These are parameters for printing a help message.
 
-      [-help] or [-usage]
+      [-help, -usage]
             print this help message and exit.
 
             To see hidden parameters use the -help-all parameter.
@@ -20,18 +20,18 @@ common.params-help       [ 10 parameters, 9 hidden ]
 test-group1              [ 6 parameters, 1 hidden ]
     test parameters.
 
-      [-param1=...] or [-param1-alt1=...]
+      [-param1=Int, -param1-alt1=Int]
             help text for param1
             Allowed values: any value that can be read as a whole number
             Initial value: 1
-      -param2=... or -param2-alt2=...
+      -param2=Int, -param2-alt2=Int
             help text for param2.
             With an embedded new line and a lot of text to demonstrate the
             behaviour when text is wrapped across multiple lines
             Allowed values: any value that can be read as a whole number
             Initial value: 2
             Current value: 99
-      [-param4[=...]]
+      [-param4[=Bool] ]
             help...
 
             This parameter value may only be set once. Any appearances after the
@@ -40,15 +40,14 @@ test-group1              [ 6 parameters, 1 hidden ]
                             that can be interpreted as true or false. The value
                             must be given after an '=', not as a following
                             value, as this is optional
-            Initial value: false
-      [-param5=...]
+      [-param5=Enum]
             help...
             Allowed values: a string
                             The value must be one of the following:
                             v1: a value
                             v2: another value
             Initial value: v1
-      [-param6=...]
+      [-param6=Enum]
             help...
             Allowed values: (see parameter: param5)
             Initial value: v2
