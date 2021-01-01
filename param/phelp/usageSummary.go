@@ -27,7 +27,7 @@ func showUsageSummary(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 			for _, bn := range g.Params {
 				if bn.AttrIsSet(param.MustBeSet) {
 					twc.Print(" -" + bn.Name() +
-						valueNeededStr(bn.Setter().ValueReq()))
+						valueNeededStr(bn.Setter()))
 				} else {
 					hasOptionalParams = true
 				}
