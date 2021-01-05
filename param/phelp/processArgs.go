@@ -54,7 +54,7 @@ func (h StdHelp) ProcessArgs(ps *param.PSet) {
 		},
 	}
 
-	twc := twrap.NewTWConfOrPanic(twrap.SetWriter(ps.StdWriter()))
+	var twc *twrap.TWConf
 
 	printSep := false
 
@@ -64,9 +64,11 @@ func (h StdHelp) ProcessArgs(ps *param.PSet) {
 			continue
 		}
 
-		if pgr == nil {
+		if twc == nil {
 			pgr = pagerStart(ps)
+			twc = twrap.NewTWConfOrPanic(twrap.SetWriter(ps.StdWriter()))
 		}
+
 		var es int
 		if a.action != nil {
 			printSep = printSepIf(twc, printSep, majorSectionSeparator)
