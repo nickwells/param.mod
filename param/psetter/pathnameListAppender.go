@@ -107,3 +107,8 @@ func (s PathnameListAppender) CheckSetter(name string) {
 		panic(NilValueMessage(name, "psetter.PathnameListAppender"))
 	}
 }
+
+// ValDescribe returns a brief description of the expected value
+func (s PathnameListAppender) ValDescribe() string {
+	return "pathname"
+}
