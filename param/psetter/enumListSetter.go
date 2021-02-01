@@ -19,6 +19,11 @@ type EnumList struct {
 	// the only values that will be allowed in the slice of strings.
 	AllowedVals
 
+	// The Aliases need not be given but if they are then each alias must not
+	// be in AllowedVals and all of the resulting values must be in
+	// AllowedVals.
+	Aliases
+
 	// Value must be set, the program will panic if not. This is the slice of
 	// values that this setter is setting.
 	Value *[]string
@@ -42,11 +47,17 @@ func (s EnumList) CountChecks() int {
 // the first invalid value or if a check is breached.
 func (s EnumList) SetWithVal(_ string, paramVal string) error {
 	sep := s.GetSeparator()
-	values := strings.Split(paramVal, sep)
-	for _, v := range values {
+	vals := strings.Split(paramVal, sep)
+	aliasedVals := []string{}
+	for _, v := range vals {
 		if !s.ValueAllowed(v) {
-			return fmt.Errorf("value is not allowed: %q", v)
+			if !s.Aliases.IsAnAlias(v) {
+				return fmt.Errorf("value is not allowed: %q", v)
+			}
+			aliasedVals = append(aliasedVals, s.Aliases.AliasVal(v)...)
+			continue
 		}
+		aliasedVals = append(aliasedVals, v)
 	}
 
 	for _, check := range s.Checks {
@@ -54,12 +65,12 @@ func (s EnumList) SetWithVal(_ string, paramVal string) error {
 			continue
 		}
 
-		err := check(values)
+		err := check(aliasedVals)
 		if err != nil {
 			return err
 		}
 	}
-	*s.Value = values
+	*s.Value = aliasedVals
 
 	return nil
 }
