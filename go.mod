@@ -11,7 +11,7 @@ require (
 	github.com/nickwells/testhelper.mod v1.14.0
 	github.com/nickwells/twrap.mod v1.4.10
 	github.com/nickwells/xdg.mod v1.0.5
-	golang.org/x/sys v0.0.0-20210113181707-4bcb84eeeb78 // indirect
+	golang.org/x/sys v0.0.0-20210124154548-22da62e12c0c // indirect
 	golang.org/x/term v0.0.0-20201210144234-2321bbc49cbf
 )
 
