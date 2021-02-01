@@ -138,7 +138,7 @@ func (s EnumMap) CheckSetter(name string) {
 	}
 	for k := range *s.Value {
 		if _, ok := s.AllowedVals[k]; !ok {
-			panic(fmt.Sprintf("%sthe map entry with key '%s' is invalid"+
+			panic(fmt.Sprintf("%sthe map entry with key %q is invalid"+
 				" - it is not in the allowed values map",
 				intro, k))
 		}

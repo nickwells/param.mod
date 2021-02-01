@@ -151,7 +151,7 @@ func ExampleEnumMap_withBadKey() {
 		}, "help text")
 	// Output:
 	// panic
-	// my-map: psetter.EnumMap Check failed: the map entry with key 'z' is invalid - it is not in the allowed values map
+	// my-map: psetter.EnumMap Check failed: the map entry with key "z" is invalid - it is not in the allowed values map
 }
 
 // ExampleEnumMap_withNilValue demonstrates the behaviour of the package when
