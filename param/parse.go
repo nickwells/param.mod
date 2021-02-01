@@ -137,8 +137,9 @@ func (ps *PSet) checkSeeAlsoRefs() {
 				panic(
 					fmt.Errorf(
 						"Parameter %q has a SeeAlso reference to %q"+
-							" but no such parameter exists. The bad"+
-							" reference was added at: %s",
+							" but no such parameter exists."+
+							"\n"+
+							" The bad reference was added at: %s",
 						p.Name(), ref, p.seeAlsoSource(ref)))
 			}
 		}
