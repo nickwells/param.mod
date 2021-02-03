@@ -172,7 +172,8 @@ common.params-params     [ 6 parameters ]
             are processed and these will still take place even if this parameter
             is set.
             Allowed values: (see parameter: params-dont-exit-on-errors)
-      [-params-file=configFileSetter, -params-from=configFileSetter]
+      [-params-file=configFileSetter, -params-from=configFileSetter,
+         -params-f=configFileSetter]
             read in parameters from the given file. Note that the parameter file
             will be read as a configuration file with each parameter on a
             separate line. Comments, white space etc. will be treated as in any

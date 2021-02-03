@@ -30,7 +30,7 @@ common.params-params     [ 6 parameters, all hidden ]
 ---    : params-dont-exit-on-errors
 ---    : params-dont-show-errors
 ---    : params-exit-after-parsing
----    : params-file or params-from
+---    : params-file or params-from or params-f
 Set    : params-show-unused
              at : [command line]: Supplied Parameter:2: -params-show-unused
 Set    : params-show-where-set
