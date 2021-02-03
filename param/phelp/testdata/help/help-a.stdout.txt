@@ -87,7 +87,8 @@ common.params-help       [ 10 parameters ]
 
             The program will exit after the help message is shown.
       [-help-groups=Map, -help-group=Map, -help-g=Map]
-            when printing the help message only show the listed groups.
+            when printing the help message only show the listed groups. This
+            will also force hidden parameters to be shown.
 
             The program will exit after the help message is shown.
             Allowed values: a list of string values separated by ',' subject to
