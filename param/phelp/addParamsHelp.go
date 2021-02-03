@@ -121,11 +121,13 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			},
 		},
 		"when printing the help message only show the listed groups."+
+			" This will also force hidden parameters to be shown."+
 			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.AltName("help-group"),
 		param.AltName("help-g"),
 		param.PostAction(checkGroups(h, ps)),
+		param.PostAction(paction.SetBool(&h.showHiddenItems, true)),
 		param.GroupName(groupName))
 
 	ps.Add(helpParamsArgName,
