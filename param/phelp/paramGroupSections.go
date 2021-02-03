@@ -132,7 +132,7 @@ func showParamsByGroupName(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 
 // printParamUsage prints the named parameter help text
 func (h StdHelp) printParamUsage(twc *twrap.TWConf, p *param.ByName) {
-	valNeededSuffix := valueNeededStr(p.Setter())
+	valNeededSuffix := valueNeededStr(p)
 	paramNames := ""
 	optSuffix := ""
 	if !p.AttrIsSet(param.MustBeSet) {
@@ -295,7 +295,12 @@ func (h StdHelp) printGroup(twc *twrap.TWConf, g *param.Group, maxLen int) {
 }
 
 // valTypeName returns a descriptive string for the type of the Setter
-func valTypeName(s param.Setter) string {
+func valTypeName(p *param.ByName) string {
+	if name := p.ValueName(); name != "" {
+		return name
+	}
+
+	s := p.Setter()
 	if sVD, ok := s.(psetter.ValDescriber); ok {
 		return sVD.ValDescribe()
 	}
@@ -311,13 +316,13 @@ func valTypeName(s param.Setter) string {
 
 // valueNeededStr returns a descriptive string indicating whether a trailing
 // argument is needed and if so of what type it should be.
-func valueNeededStr(s param.Setter) string {
-	valReq := s.ValueReq()
+func valueNeededStr(p *param.ByName) string {
+	valReq := p.Setter().ValueReq()
 	if valReq == param.Mandatory {
-		return "=" + valTypeName(s)
+		return "=" + valTypeName(p)
 	}
 	if valReq == param.Optional {
-		return "[=" + valTypeName(s) + "] "
+		return "[=" + valTypeName(p) + "] "
 	}
 	return ""
 }

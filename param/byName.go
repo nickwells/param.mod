@@ -1,6 +1,7 @@
 package param
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"sort"
@@ -20,6 +21,7 @@ import (
 type ByName struct {
 	ps              *PSet
 	name            string
+	valueName       string
 	altNames        []string
 	groupName       string
 	setter          Setter
@@ -74,6 +76,9 @@ func (p ByName) SeeAlso() []string {
 	sort.Strings(refs)
 	return refs
 }
+
+// ValueName returns the parameter's bespoke value name
+func (p ByName) ValueName() string { return p.valueName }
 
 // seeAlsoSource returns the string describing where the SeeAlso reference
 // was added. This is suitable for reporting the location in code the mistake
@@ -224,6 +229,23 @@ func AltName(altName string) OptFunc {
 
 		p.ps.nameToParam[altName] = p
 		p.altNames = append(p.altNames, altName)
+		return nil
+	}
+}
+
+// ValueName returns an OptFunc that will set the short value name used in
+// the parameter summary (it follows the "=" after the parameter name). If
+// this is not empty this will be used in preference to either the param
+// setter's value description or the setter's type name. This allows a
+// per-parameter value name to be given. It will return an error if the vName
+// is the empty string.
+func ValueName(vName string) OptFunc {
+	return func(p *ByName) error {
+		if vName == "" {
+			return errors.New("some non-empty value name must be given")
+		}
+		p.valueName = vName
+
 		return nil
 	}
 }

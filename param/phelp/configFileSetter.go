@@ -56,3 +56,8 @@ func (s *configFileSetter) CheckSetter(name string) {
 		s.seenBefore = make(map[string]bool)
 	}
 }
+
+// ValDescribe returns the short name of the value expected
+func (s configFileSetter) ValDescribe() string {
+	return "filename"
+}

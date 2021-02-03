@@ -126,6 +126,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.AltName("help-group"),
 		param.AltName("help-g"),
+		param.ValueName("group-name,..."),
 		param.PostAction(checkGroups(h, ps)),
 		param.PostAction(paction.SetBool(&h.showHiddenItems, true)),
 		param.GroupName(groupName))
@@ -143,6 +144,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.AltName("help-param"),
 		param.AltName("help-p"),
+		param.ValueName("param-name,..."),
 		param.PostAction(checkParams(h, ps)),
 		param.GroupName(groupName))
 
@@ -158,6 +160,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.AltName("help-note"),
 		param.AltName("help-n"),
+		param.ValueName("note-name,..."),
 		param.PostAction(checkNotes(h, ps)),
 		param.PostAction(setHelpSections(h, notesHelpSectionName)),
 		param.GroupName(groupName))
@@ -169,6 +172,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			Aliases:     sectionAliases,
 		},
 		"specify the parts of the help message you wish to see",
+		param.ValueName("part,..."),
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.GroupName(groupName),
 	)

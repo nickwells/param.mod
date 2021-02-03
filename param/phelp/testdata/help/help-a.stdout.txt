@@ -86,24 +86,27 @@ common.params-help       [ 10 parameters ]
             hidden ones.
 
             The program will exit after the help message is shown.
-      [-help-groups=Map, -help-group=Map, -help-g=Map]
+      [-help-groups=group-name,..., -help-group=group-name,...,
+         -help-g=group-name,...]
             when printing the help message only show the listed groups. This
             will also force hidden parameters to be shown.
 
             The program will exit after the help message is shown.
             Allowed values: a list of string values separated by ',' subject to
                             checks
-      [-help-notes=Map, -help-note=Map, -help-n=Map]
+      [-help-notes=note-name,..., -help-note=note-name,...,
+         -help-n=note-name,...]
             when printing the help message only show the listed notes.
 
             The program will exit after the help message is shown.
             Allowed values: (see parameter: help-groups)
-      [-help-params=Map, -help-param=Map, -help-p=Map]
+      [-help-params=param-name,..., -help-param=param-name,...,
+         -help-p=param-name,...]
             when printing the help message only show the listed parameters.
 
             The program will exit after the help message is shown.
             Allowed values: (see parameter: help-groups)
-      [-help-show=EnumMap]
+      [-help-show=part,...]
             specify the parts of the help message you wish to see
             Allowed values: a list of string values separated by ','.
 
@@ -173,8 +176,7 @@ common.params-params     [ 6 parameters ]
             are processed and these will still take place even if this parameter
             is set.
             Allowed values: (see parameter: params-dont-exit-on-errors)
-      [-params-file=configFileSetter, -params-from=configFileSetter,
-         -params-f=configFileSetter]
+      [-params-file=filename, -params-from=filename, -params-f=filename]
             read in parameters from the given file. Note that the parameter file
             will be read as a configuration file with each parameter on a
             separate line. Comments, white space etc. will be treated as in any

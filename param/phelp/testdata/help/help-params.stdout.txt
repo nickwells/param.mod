@@ -4,7 +4,8 @@
             To see hidden parameters use the -help-all parameter.
             For a brief help message use the -help-summary parameter
             For the full help message use the -help-full parameter
-      [-help-groups=Map, -help-group=Map, -help-g=Map]
+      [-help-groups=group-name,..., -help-group=group-name,...,
+         -help-g=group-name,...]
             when printing the help message only show the listed groups. This
             will also force hidden parameters to be shown.
 
