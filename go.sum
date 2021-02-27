@@ -21,7 +21,7 @@ github.com/nickwells/twrap.mod v1.4.11/go.mod h1:m8+01YkzEB/FKcyiT451ITJPqwH6rH2
 github.com/nickwells/xdg.mod v1.0.5 h1:BkCim2ft//W1dlmh96z39YpIL4dJE7UQ1dDcMHtnfdU=
 github.com/nickwells/xdg.mod v1.0.5/go.mod h1:h8lRJMpY6oXdD6E3jJuolpO9QJE5FcTvUe8eyRzgyQo=
 golang.org/x/sys v0.0.0-20201119102817-f84b799fce68/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
-golang.org/x/sys v0.0.0-20210223212115-eede4237b368 h1:fDE3p0qf2V1co1vfj3/o87Ps8Hq6QTGNxJ5Xe7xSp80=
-golang.org/x/sys v0.0.0-20210223212115-eede4237b368/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.org/x/sys v0.0.0-20210227040730-b0d1d43c014d h1:9fH9JvLNoSpsDWcXJ4dSE3lZW99Z3OCUZLr07g60U6o=
+golang.org/x/sys v0.0.0-20210227040730-b0d1d43c014d/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/term v0.0.0-20210220032956-6a3ed077a48d h1:SZxvLBoTP5yHO3Frd4z4vrF+DBX9vMVanchswa69toE=
 golang.org/x/term v0.0.0-20210220032956-6a3ed077a48d/go.mod h1:bj7SfCRtBDWHUb9snDiAeCFNEtKQo2Wmx5Cou7ajbmo=
