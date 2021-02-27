@@ -31,8 +31,8 @@ func addNotes(ps *param.PSet) {
 			" alphabetical order."+
 			"\n\n"+
 			"Groups where all the parameters are hidden will not be shown."+
-			" To see all the available parameter groups use the "+
-			helpGroupsArgName+" parameter.",
+			" To see all the available parameter groups use the '"+
+			helpShowArgName+" "+groupsHelpSectionName+"' parameter.",
 		param.NoteAttrs(param.DontShowNoteInStdUsage))
 
 	ps.AddNote("Alternative Sources - Environment Variables",
