@@ -48,7 +48,7 @@ func (av AllowedVals) String() string {
 
 	sep := ""
 	for _, k := range keys {
-		avals += sep + fmt.Sprintf("%-*s: ", maxKeyLen, k) + av[k]
+		avals += sep + fmt.Sprintf("   %-*s: ", maxKeyLen, k) + av[k]
 		sep = "\n"
 	}
 	return avals

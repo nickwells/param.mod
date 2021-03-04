@@ -108,22 +108,40 @@ func makeSectionAllowedVals() psetter.AllowedVals {
 
 // Alias names
 const (
-	standardHelpSectionNames = "std"
-	paramHelpSectionNames    = "params"
-	allHelpSectionNames      = "all"
+	standardHelpSectionAlias = "std"
+	paramHelpSectionAlias    = "params"
+	allHelpSectionAlias      = "all"
+
+	groupHelpSectionAlias = "group"
+	grpHelpSectionAlias   = "grp"
+
+	exampleHelpSectionAlias = "example"
+	egHelpSectionAlias      = "eg"
+
+	refHelpSectionAlias     = "ref"
+	seeAlsoHelpSectionAlias = "see-also"
 )
 
 var sectionAliases = psetter.Aliases{
-	paramHelpSectionNames: []string{
+	paramHelpSectionAlias: []string{
 		posParamsHelpSectionName, groupedParamsHelpSectionName},
-	standardHelpSectionNames: []string{
+	standardHelpSectionAlias: []string{
 		introHelpSectionName, usageHelpSectionName,
 		posParamsHelpSectionName, groupedParamsHelpSectionName},
-	allHelpSectionNames: []string{
+	allHelpSectionAlias: []string{
 		introHelpSectionName, usageHelpSectionName,
 		posParamsHelpSectionName, groupedParamsHelpSectionName,
 		notesHelpSectionName, sourcesHelpSectionName,
 		examplesHelpSectionName, refsHelpSectionName},
+
+	groupHelpSectionAlias: []string{groupsHelpSectionName},
+	grpHelpSectionAlias:   []string{groupsHelpSectionName},
+
+	exampleHelpSectionAlias: []string{examplesHelpSectionName},
+	egHelpSectionAlias:      []string{examplesHelpSectionName},
+
+	refHelpSectionAlias:     []string{refsHelpSectionName},
+	seeAlsoHelpSectionAlias: []string{refsHelpSectionName},
 }
 
 type choices map[string]bool

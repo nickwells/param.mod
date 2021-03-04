@@ -34,19 +34,19 @@ common.params-completion [ 2 parameters ]
             configuration files for this group
             Allowed values: a string
                             The value must be one of the following:
-                            new    : only generate the zsh completions file if
-                                it doesn't already exist. Any pre-existing file
-                                is protected and an error will be reported. The
-                                zsh completions directory name must be
-                                specified.
-                            none   : do nothing.
-                            replace: any existing zsh completions file for the
-                                program will be overwritten or a new file will
-                                be generated. The zsh completions directory name
-                                must be specified.
-                            show   : don't generate the zsh completions file.
-                                The file that would have been generated is
-                                instead printed to standard output.
+                               new    : only generate the zsh completions file
+                                  if it doesn't already exist. Any pre-existing
+                                  file is protected and an error will be
+                                  reported. The zsh completions directory name
+                                  must be specified.
+                               none   : do nothing.
+                               replace: any existing zsh completions file for
+                                  the program will be overwritten or a new file
+                                  will be generated. The zsh completions
+                                  directory name must be specified.
+                               show   : don't generate the zsh completions file.
+                                  The file that would have been generated is
+                                  instead printed to standard output.
             Initial value: none
 ---------------
 common.params-help       [ 10 parameters ]
@@ -75,11 +75,11 @@ common.params-help       [ 10 parameters ]
             Standard format regardless of this setting.
             Allowed values: a string
                             The value must be one of the following:
-                            markdown: markdown format. This will have markdown
-                                annotations applied. This can be useful to
-                                produce online documentation
-                            standard: the standard format. This is almost
-                                certainly what you want
+                               markdown: markdown format. This will have
+                                  markdown annotations applied. This can be
+                                  useful to produce online documentation
+                               standard: the standard format. This is almost
+                                  certainly what you want
             Initial value: standard
       [-help-full, -help-f]
             show all parts of the help message and all parameters, including
@@ -114,29 +114,37 @@ common.params-help       [ 10 parameters ]
                             value with '=false'; by default the value will be
                             set to true.
                             The value must be one of the following:
-                            examples      : examples of correct program use and
-                                suggestions of ways to use the program
-                            grouped-params: the named parameters by group name
-                            groups        : the parameter groups
-                            intro         : the program name and optionally the
-                                program description
-                            named-params  : the named parameters (flags)
-                            notes         : additional notes on the program
-                                behaviour
-                            pos-params    : the positional parameters coming
-                                just after the program name
-                            refs          : references to other programs or
-                                further sources of information
-                            sources       : any additional sources of parameter
-                                values such as environment variables or
-                                configuration files
-                            usage         : the program name, a parameter
-                                summary, and any trailing parameters
+                               examples      : examples of correct program use
+                                  and suggestions of ways to use the program
+                               grouped-params: the named parameters by group
+                                  name
+                               groups        : the parameter groups
+                               intro         : the program name and optionally
+                                  the program description
+                               named-params  : the named parameters (flags)
+                               notes         : additional notes on the program
+                                  behaviour
+                               pos-params    : the positional parameters coming
+                                  just after the program name
+                               refs          : references to other programs or
+                                  further sources of information
+                               sources       : any additional sources of
+                                  parameter values such as environment variables
+                                  or configuration files
+                               usage         : the program name, a parameter
+                                  summary, and any trailing parameters
                             The following aliases are available:
-                            all   : intro, usage, pos-params, grouped-params,
-                                notes, sources, examples, refs
-                            params: pos-params, grouped-params
-                            std   : intro, usage, pos-params, grouped-params
+                               all     : intro, usage, pos-params,
+                                  grouped-params, notes, sources, examples, refs
+                               eg      : examples
+                               example : examples
+                               group   : groups
+                               grp     : groups
+                               params  : pos-params, grouped-params
+                               ref     : refs
+                               see-also: refs
+                               std     : intro, usage, pos-params,
+                                  grouped-params
             Initial value:
             Current value: grouped-params=true
                            intro=true
@@ -236,8 +244,8 @@ test-group1              [ 6 parameters ]
             help...
             Allowed values: a string
                             The value must be one of the following:
-                            v1: a value
-                            v2: another value
+                               v1: a value
+                               v2: another value
             Initial value: v1
       [-param6=Enum]
             help...

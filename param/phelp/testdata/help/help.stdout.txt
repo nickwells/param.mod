@@ -44,8 +44,8 @@ test-group1              [ 6 parameters, 1 hidden ]
             help...
             Allowed values: a string
                             The value must be one of the following:
-                            v1: a value
-                            v2: another value
+                               v1: a value
+                               v2: another value
             Initial value: v1
       [-param6=Enum]
             help...

@@ -64,7 +64,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			" parameter",
 		param.Attrs(param.CommandLineOnly),
 		param.AltName("usage"),
-		param.PostAction(setHelpSections(h, standardHelpSectionNames)),
+		param.PostAction(setHelpSections(h, standardHelpSectionAlias)),
 		param.GroupName(groupName))
 
 	ps.Add(helpFullArgName, psetter.Nil{},
@@ -73,7 +73,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			exitAfterHelpMessage,
 		param.AltName("help-f"),
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.PostAction(setHelpSections(h, allHelpSectionNames)),
+		param.PostAction(setHelpSections(h, allHelpSectionAlias)),
 		param.PostAction(paction.SetBool(&h.showHiddenItems, true)),
 		param.GroupName(groupName))
 
@@ -235,7 +235,7 @@ func makeForceDefaultSectionsFunc(h *StdHelp) param.FinalCheckFunc {
 			return nil
 		}
 		if h.sectionsChosen.hasNothingChosen() {
-			return h.setHelpSections(standardHelpSectionNames)
+			return h.setHelpSections(standardHelpSectionAlias)
 		}
 		return nil
 	}

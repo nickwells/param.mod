@@ -230,9 +230,10 @@ func (h StdHelp) showAllowedVals(twc *twrap.TWConf, pName string, s param.Setter
 	}
 
 	indent := descriptionIndent + len(prefix)
+	valDescIndent := indent + 6
 	twc.WrapPrefixed(prefix, s.AllowedValues(), descriptionIndent)
-	twc.Wrap2Indent(valueList, indent, indent+4)
-	twc.Wrap2Indent(aliases, indent, indent+4)
+	twc.Wrap2Indent(valueList, indent, valDescIndent)
+	twc.Wrap2Indent(aliases, indent, valDescIndent)
 }
 
 // paramCanBeShown will return true if the param can be shown. It checks

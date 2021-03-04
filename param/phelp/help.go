@@ -36,7 +36,7 @@ func (h StdHelp) Help(ps *param.PSet, messages ...string) {
 	w := ps.StdWriter()
 
 	if h.sectionsChosen.hasNothingChosen() {
-		if err := h.setHelpSections(standardHelpSectionNames); err != nil {
+		if err := h.setHelpSections(standardHelpSectionAlias); err != nil {
 			panic(fmt.Sprint("Couldn't set the default help sections:", err))
 		}
 		w = ps.ErrWriter()

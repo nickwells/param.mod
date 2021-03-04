@@ -48,7 +48,7 @@ func (a Aliases) String() string {
 
 	sep := ""
 	for _, k := range keys {
-		avals += sep + fmt.Sprintf("%-*s: ", maxKeyLen, k) +
+		avals += sep + fmt.Sprintf("   %-*s: ", maxKeyLen, k) +
 			strings.Join(a[k], ", ")
 		sep = "\n"
 	}
