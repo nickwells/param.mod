@@ -175,6 +175,7 @@ type StdHelp struct {
 	showHiddenItems  bool
 	hideDescriptions bool
 	helpRequested    bool
+	pageOutput       bool
 
 	helpFormat string
 
@@ -206,6 +207,7 @@ func NewStdHelp() *StdHelp {
 
 		avalShownAlready: make(map[string]string),
 
+		pageOutput:    true,
 		reportErrors:  true,
 		exitOnErrors:  true,
 		exitAfterHelp: true,

@@ -65,7 +65,9 @@ func (h StdHelp) ProcessArgs(ps *param.PSet) {
 		}
 
 		if twc == nil {
-			pgr = pagerStart(ps)
+			if h.pageOutput {
+				pgr = pagerStart(ps)
+			}
 			twc = twrap.NewTWConfOrPanic(twrap.SetWriter(ps.StdWriter()))
 		}
 

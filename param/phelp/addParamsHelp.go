@@ -24,6 +24,7 @@ const (
 	helpParamsArgName     = "help-params"
 	helpNotesArgName      = "help-notes"
 	helpFormatArgName     = "help-format"
+	helpNoPageArgName     = "help-no-page"
 )
 
 const (
@@ -193,6 +194,22 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			" produce Standard format regardless of this setting.",
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.GroupName(groupName),
+	)
+
+	ps.Add(helpNoPageArgName,
+		psetter.Bool{
+			Value:  &h.pageOutput,
+			Invert: true,
+		},
+		"don't page the help output. Without this parameter the"+
+			" help message will be paged using the standard pager"+
+			" (as given by the value of the 'PAGER' environment"+
+			" variable or 'less' if 'PAGER' is not set or the command"+
+			" it refers to cannot be found)",
+		param.AltName("help-dont-page"),
+		param.AltName("help-no-pager"),
+		param.GroupName(groupName),
+		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 	)
 
 	// Final checks

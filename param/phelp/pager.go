@@ -9,7 +9,7 @@ import (
 	"golang.org/x/term"
 )
 
-const pagerCmd = "less"
+const pagerCmdDflt = "less"
 
 type pager struct {
 	pagerIn io.WriteCloser
@@ -19,15 +19,25 @@ type pager struct {
 // pagerStart returns a pager which should have done() called on it after any
 // output is complete.
 func pagerStart(ps *param.PSet) *pager {
-	pagerPath, err := exec.LookPath(pagerCmd)
-	if err != nil {
-		return nil
-	}
 	outIsTty := isWriterATerminal(ps.StdWriter())
 	errIsTty := isWriterATerminal(ps.ErrWriter())
 
 	if !outIsTty && !errIsTty {
 		return nil
+	}
+	pagerCmd := os.Getenv("PAGER")
+	if pagerCmd == "" {
+		pagerCmd = pagerCmdDflt
+	}
+	pagerPath, err := exec.LookPath(pagerCmd)
+	if err != nil {
+		if pagerCmd != pagerCmdDflt {
+			pagerCmd = pagerCmdDflt
+			pagerPath, err = exec.LookPath(pagerCmd)
+		}
+		if err != nil {
+			return nil
+		}
 	}
 	cmd := exec.Command(pagerPath)
 
