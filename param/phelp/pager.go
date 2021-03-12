@@ -16,15 +16,9 @@ type pager struct {
 	cmd     *exec.Cmd
 }
 
-// pagerStart returns a pager which should have done() called on it after any
-// output is complete.
-func pagerStart(ps *param.PSet) *pager {
-	outIsTty := isWriterATerminal(ps.StdWriter())
-	errIsTty := isWriterATerminal(ps.ErrWriter())
-
-	if !outIsTty && !errIsTty {
-		return nil
-	}
+// getPagerCmd returns the pager command (nil if there is a problem). It
+// returns a non-nil error if the pager command cannot be found.
+func getPagerCmd() (*exec.Cmd, error) {
 	pagerCmd := os.Getenv("PAGER")
 	if pagerCmd == "" {
 		pagerCmd = pagerCmdDflt
@@ -36,10 +30,25 @@ func pagerStart(ps *param.PSet) *pager {
 			pagerPath, err = exec.LookPath(pagerCmd)
 		}
 		if err != nil {
-			return nil
+			return nil, err
 		}
 	}
-	cmd := exec.Command(pagerPath)
+	return exec.Command(pagerPath), nil
+}
+
+// pagerStart returns a pager which should have done() called on it after any
+// output is complete.
+func pagerStart(ps *param.PSet) *pager {
+	outIsTty := isWriterATerminal(ps.StdWriter())
+	errIsTty := isWriterATerminal(ps.ErrWriter())
+
+	if !outIsTty && !errIsTty {
+		return nil
+	}
+	cmd, err := getPagerCmd()
+	if err != nil {
+		return nil
+	}
 
 	pagerIn, err := cmd.StdinPipe()
 	if err != nil {
