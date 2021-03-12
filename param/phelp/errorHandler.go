@@ -36,10 +36,17 @@ func (h StdHelp) ErrorHandler(ps *param.PSet, errMap param.ErrMap) {
 
 // reportErrors will report that errors have been detected and then call
 // ReportErrors but writing to the error writer
-func reportErrors(_ StdHelp, _ *twrap.TWConf, ps *param.PSet) int {
-	twc := twrap.NewTWConfOrPanic(twrap.SetWriter(ps.ErrWriter()))
-	ReportErrors(twc, ps.ProgName(), ps.Errors())
-	return 1
+func reportErrors(h StdHelp, _ *twrap.TWConf, ps *param.PSet) int {
+	if h.reportErrors {
+		twc := twrap.NewTWConfOrPanic(twrap.SetWriter(ps.ErrWriter()))
+		ReportErrors(twc, ps.ProgName(), ps.Errors())
+	}
+
+	var exitStatus int
+	if len(ps.Errors()) > 0 {
+		exitStatus = 1
+	}
+	return exitStatus
 }
 
 // ReportErrors reports the errors (if any) to the writer. It can be
