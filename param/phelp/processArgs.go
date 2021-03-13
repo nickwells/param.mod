@@ -15,50 +15,55 @@ func printSepIf(twc *twrap.TWConf, printSep bool, sep string) bool {
 	return true
 }
 
+// helpAction records an action to be performed while processing the help
+// arguments. Note that the shouldRun member is a func as otherwise errors
+// raised by earlier actions (zshCompletionHandler) cannot be detected when
+// we come to report errors.
+type helpAction struct {
+	shouldRun  func() bool
+	shouldExit bool
+	action     func(StdHelp, *twrap.TWConf, *param.PSet) int
+}
+
 // ProcessArgs will process the values set after parsing is complete. This is
 // where any StdHelp parameters (as added by the StdHelp AddParams method)
 // will be processed.
 func (h StdHelp) ProcessArgs(ps *param.PSet) {
-	var shouldExit = h.exitAfterParsing
-	var exitStatus = 0
-
-	actions := []struct {
-		shouldRun  func() bool
-		shouldExit bool
-		action     func(StdHelp, *twrap.TWConf, *param.PSet) int
-		exitStatus int // only used if action is nil
-	}{
+	actions := []helpAction{
 		{
-			func() bool { return zshCompHasAction(h) },
-			zshCompHasAction(h), zshCompletionHandler, 0,
+			shouldRun:  func() bool { return zshCompHasAction(h) },
+			shouldExit: zshCompHasAction(h),
+			action:     zshCompletionHandler,
 		},
 		{
-			func() bool { return h.paramsShowWhereSet },
-			h.exitAfterHelp, showWhereParamsAreSet, 0,
+			shouldRun:  func() bool { return h.paramsShowWhereSet },
+			shouldExit: h.exitAfterHelp,
+			action:     showWhereParamsAreSet,
 		},
 		{
-			func() bool { return h.paramsShowUnused },
-			h.exitAfterHelp, showUnusedParams, 0,
+			shouldRun:  func() bool { return h.paramsShowUnused },
+			shouldExit: h.exitAfterHelp,
+			action:     showUnusedParams,
 		},
 		{
-			func() bool { return len(ps.Errors()) > 0 && h.reportErrors },
-			h.exitOnErrors, reportErrors, 0,
+			shouldRun:  func() bool { return len(ps.Errors()) > 0 },
+			shouldExit: h.exitOnErrors,
+			action:     reportErrors,
 		},
 		{
-			func() bool { return len(ps.Errors()) > 0 },
-			h.exitOnErrors, nil, 1,
-		},
-		{
-			func() bool { return !h.sectionsChosen.hasNothingChosen() },
-			h.exitAfterHelp, help, 0,
+			shouldRun:  func() bool { return !h.sectionsChosen.hasNothingChosen() },
+			shouldExit: h.exitAfterHelp,
+			action:     help,
 		},
 	}
 
 	var twc *twrap.TWConf
-
 	printSep := false
-
 	var pgr *pager
+
+	var shouldExit = h.exitAfterParsing
+	var exitStatus = 0
+
 	for _, a := range actions {
 		if !a.shouldRun() {
 			continue
@@ -71,13 +76,9 @@ func (h StdHelp) ProcessArgs(ps *param.PSet) {
 			twc = twrap.NewTWConfOrPanic(twrap.SetWriter(ps.StdWriter()))
 		}
 
-		var es int
-		if a.action != nil {
-			printSep = printSepIf(twc, printSep, majorSectionSeparator)
-			es = a.action(h, twc, ps)
-		} else {
-			es = a.exitStatus
-		}
+		printSep = printSepIf(twc, printSep, majorSectionSeparator)
+		es := a.action(h, twc, ps)
+
 		if es > exitStatus && a.shouldExit {
 			exitStatus = es
 		}
