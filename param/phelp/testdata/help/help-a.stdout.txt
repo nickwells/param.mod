@@ -49,7 +49,7 @@ common.params-completion [ 2 parameters ]
                                   instead printed to standard output.
             Initial value: none
 ---------------
-common.params-help       [ 10 parameters ]
+common.params-help       [ 11 parameters ]
     These are parameters for printing a help message.
 
       [-help, -usage]
@@ -94,6 +94,15 @@ common.params-help       [ 10 parameters ]
             The program will exit after the help message is shown.
             Allowed values: a list of string values separated by ',' subject to
                             checks
+      [-help-no-page[=Bool] , -help-dont-page[=Bool] , -help-no-pager[=Bool] ]
+            don't page the help output. Without this parameter the help message
+            will be paged using the standard pager (as given by the value of the
+            'PAGER' environment variable or 'less' if 'PAGER' is not set or the
+            command it refers to cannot be found)
+            Allowed values: none (which will be taken as 'true') or some value
+                            that can be interpreted as true or false. The value
+                            must be given after an '=', not as a following
+                            value, as this is optional
       [-help-notes=note-name,..., -help-note=note-name,...,
          -help-n=note-name,...]
             when printing the help message only show the listed notes.
@@ -166,15 +175,12 @@ common.params-params     [ 6 parameters ]
             will exit unless this flag is set to true. Note that the behaviour
             of the program cannot be guaranteed if this option is chosen and it
             should only be used in emergencies
-            Allowed values: none (which will be taken as 'true') or some value
-                            that can be interpreted as true or false. The value
-                            must be given after an '=', not as a following
-                            value, as this is optional
+            Allowed values: (see parameter: help-no-page)
             Initial value: true
       [-params-dont-show-errors[=Bool] ]
             after all the parameters are set any errors detected will be
             reported unless this flag is set
-            Allowed values: (see parameter: params-dont-exit-on-errors)
+            Allowed values: (see parameter: help-no-page)
       [-params-exit-after-parsing[=Bool] ]
             exit after the parameters have been read and processed. This lets
             you check the parameters are valid and see what values get set
@@ -183,7 +189,7 @@ common.params-params     [ 6 parameters ]
             Note that the program may perform some operations as the parameters
             are processed and these will still take place even if this parameter
             is set.
-            Allowed values: (see parameter: params-dont-exit-on-errors)
+            Allowed values: (see parameter: help-no-page)
       [-params-file=filename, -params-from=filename, -params-f=filename]
             read in parameters from the given file. Note that the parameter file
             will be read as a configuration file with each parameter on a
@@ -206,14 +212,14 @@ common.params-params     [ 6 parameters ]
             your alternative sources.
 
             The program will exit after the parameters are processed.
-            Allowed values: (see parameter: params-dont-exit-on-errors)
+            Allowed values: (see parameter: help-no-page)
       [-params-show-where-set[=Bool] ]
             after all the parameters are set a message will be printed showing
             where they were set. This can be useful for debugging (especially if
             there are several config files in use).
 
             The program will exit after the parameters are processed.
-            Allowed values: (see parameter: params-dont-exit-on-errors)
+            Allowed values: (see parameter: help-no-page)
 ---------------
 test-group1              [ 6 parameters ]
     test parameters.
@@ -239,7 +245,7 @@ test-group1              [ 6 parameters ]
 
             This parameter value may only be set once. Any appearances after the
             first will not be used
-            Allowed values: (see parameter: params-dont-exit-on-errors)
+            Allowed values: (see parameter: help-no-page)
       [-param5=Enum]
             help...
             Allowed values: a string

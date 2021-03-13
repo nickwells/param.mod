@@ -12,13 +12,14 @@ Set    : completions-zsh-dir
 ---    : completions-zsh-make
 
 ---------------
-common.params-help       [ 10 parameters, 9 hidden ]
+common.params-help       [ 11 parameters, 10 hidden ]
 ---    : help or usage
 ---    : help-all or help-a
 ---    : help-all-short or help-as or help-sa
 ---    : help-format
 ---    : help-full or help-f
 ---    : help-groups or help-group or help-g
+---    : help-no-page or help-dont-page or help-no-pager
 ---    : help-notes or help-note or help-n
 ---    : help-params or help-param or help-p
 ---    : help-show
@@ -61,7 +62,7 @@ Usage: PROGRAM NAME UNKNOWN -param2=Int ...
 
 ===============
 
-common.params-help       [ 10 parameters, 9 hidden ]
+common.params-help       [ 11 parameters, 10 hidden ]
       [-help, -usage]
 ---------------
 test-group1              [ 6 parameters, 1 hidden ]

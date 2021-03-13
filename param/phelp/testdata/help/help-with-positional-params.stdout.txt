@@ -24,7 +24,7 @@ Positional Parameters
 
 ===============
 
-common.params-help       [ 10 parameters, 9 hidden ]
+common.params-help       [ 11 parameters, 10 hidden ]
     These are parameters for printing a help message.
 
       [-help, -usage]
