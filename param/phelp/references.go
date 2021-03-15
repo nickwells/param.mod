@@ -13,7 +13,7 @@ func showReferences(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	}
 
 	switch h.helpFormat {
-	case helpFmtTypeMD:
+	case helpFmtTypeMarkdown:
 		return showReferencesFmtMD(h, twc, ps)
 	default:
 		return showReferencesFmtStd(h, twc, ps)

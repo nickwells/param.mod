@@ -13,7 +13,7 @@ func showIntro(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	}
 
 	switch h.helpFormat {
-	case helpFmtTypeMD:
+	case helpFmtTypeMarkdown:
 		showIntroFmtMD(h, twc, ps)
 	default:
 		showIntroFmtStd(h, twc, ps)

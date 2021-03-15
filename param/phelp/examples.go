@@ -12,7 +12,7 @@ func showExamples(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 		return false
 	}
 	switch h.helpFormat {
-	case helpFmtTypeMD:
+	case helpFmtTypeMarkdown:
 		return showExamplesFmtMD(h, twc, ps)
 	default:
 		return showExamplesFmtStd(h, twc, ps)

@@ -28,8 +28,8 @@ const (
 )
 
 const (
-	helpFmtTypeStd = "standard"
-	helpFmtTypeMD  = "markdown"
+	helpFmtTypeStd      = "standard"
+	helpFmtTypeMarkdown = "markdown"
 )
 
 const (
@@ -184,9 +184,9 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			AllowedVals: psetter.AllowedVals{
 				helpFmtTypeStd: "the standard format." +
 					" This is almost certainly what you want",
-				helpFmtTypeMD: "markdown format. This will have markdown" +
-					" annotations applied. This can be useful to produce" +
-					" online documentation",
+				helpFmtTypeMarkdown: "markdown format. This will have" +
+					" markdown annotations applied. This can be useful" +
+					" to produce online documentation",
 			},
 		},
 		"specify how the help message should be produced. Only some parts"+

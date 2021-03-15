@@ -76,7 +76,9 @@ func (h StdHelp) ProcessArgs(ps *param.PSet) {
 			twc = twrap.NewTWConfOrPanic(twrap.SetWriter(ps.StdWriter()))
 		}
 
-		printSep = printSepIf(twc, printSep, majorSectionSeparator)
+		if h.helpFormat != helpFmtTypeMarkdown {
+			printSep = printSepIf(twc, printSep, majorSectionSeparator)
+		}
 		es := a.action(h, twc, ps)
 
 		if es > exitStatus && a.shouldExit {
