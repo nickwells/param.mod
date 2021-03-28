@@ -21,10 +21,10 @@ type helpSection struct {
 const (
 	introHelpSectionName         = "intro"
 	usageHelpSectionName         = "usage"
-	posParamsHelpSectionName     = "pos-params"
 	groupsHelpSectionName        = "groups"
-	namedParamsHelpSectionName   = "named-params"
-	groupedParamsHelpSectionName = "grouped-params"
+	posParamsHelpSectionName     = "params-pos"
+	namedParamsHelpSectionName   = "params-named"
+	groupedParamsHelpSectionName = "params-grouped"
 	notesHelpSectionName         = "notes"
 	sourcesHelpSectionName       = "sources"
 	examplesHelpSectionName      = "examples"
@@ -120,6 +120,10 @@ const (
 
 	refHelpSectionAlias     = "ref"
 	seeAlsoHelpSectionAlias = "see-also"
+
+	posParamsHelpSectionAlias     = "pos-params"
+	namedParamsHelpSectionAlias   = "named-params"
+	groupedParamsHelpSectionAlias = "grouped-params"
 )
 
 var sectionAliases = psetter.Aliases{
@@ -142,6 +146,10 @@ var sectionAliases = psetter.Aliases{
 
 	refHelpSectionAlias:     []string{refsHelpSectionName},
 	seeAlsoHelpSectionAlias: []string{refsHelpSectionName},
+
+	posParamsHelpSectionAlias:     []string{posParamsHelpSectionName},
+	namedParamsHelpSectionAlias:   []string{namedParamsHelpSectionName},
+	groupedParamsHelpSectionAlias: []string{groupedParamsHelpSectionName},
 }
 
 type choices map[string]bool

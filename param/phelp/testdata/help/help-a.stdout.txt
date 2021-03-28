@@ -125,15 +125,15 @@ common.params-help       [ 11 parameters ]
                             The value must be one of the following:
                                examples      : examples of correct program use
                                   and suggestions of ways to use the program
-                               grouped-params: the named parameters by group
-                                  name
                                groups        : the parameter groups
                                intro         : the program name and optionally
                                   the program description
-                               named-params  : the named parameters (flags)
                                notes         : additional notes on the program
                                   behaviour
-                               pos-params    : the positional parameters coming
+                               params-grouped: the named parameters by group
+                                  name
+                               params-named  : the named parameters (flags)
+                               params-pos    : the positional parameters coming
                                   just after the program name
                                refs          : references to other programs or
                                   further sources of information
@@ -143,21 +143,24 @@ common.params-help       [ 11 parameters ]
                                usage         : the program name, a parameter
                                   summary, and any trailing parameters
                             The following aliases are available:
-                               all     : intro, usage, pos-params,
-                                  grouped-params, notes, sources, examples, refs
-                               eg      : examples
-                               example : examples
-                               group   : groups
-                               grp     : groups
-                               params  : pos-params, grouped-params
-                               ref     : refs
-                               see-also: refs
-                               std     : intro, usage, pos-params,
-                                  grouped-params
+                               all           : intro, usage, params-pos,
+                                  params-grouped, notes, sources, examples, refs
+                               eg            : examples
+                               example       : examples
+                               group         : groups
+                               grouped-params: params-grouped
+                               grp           : groups
+                               named-params  : params-named
+                               params        : params-pos, params-grouped
+                               pos-params    : params-pos
+                               ref           : refs
+                               see-also      : refs
+                               std           : intro, usage, params-pos,
+                                  params-grouped
             Initial value:
-            Current value: grouped-params=true
-                           intro=true
-                           pos-params=true
+            Current value: intro=true
+                           params-grouped=true
+                           params-pos=true
                            usage=true
       [-help-summary, -help-s, -help-short]
             print a shorter help message. Only minimal details are shown,

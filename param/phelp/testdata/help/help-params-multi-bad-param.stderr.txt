@@ -2,7 +2,7 @@ PROGRAM NAME UNKNOWN: an error was found
       help-params - 1 error
             Bad parameter names: "no-such-param"
                                  "not-a-param"
-            To see a list of parameter names try '-help-show named-params'.
+            To see a list of parameter names try '-help-show params-named'.
             To see a full list, add '-help-all'.
             To see just the names, add '-help-summary'.
             At: [command line]: Supplied Parameter:2: -help-params
