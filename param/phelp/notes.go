@@ -4,6 +4,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/nickwells/english.mod/english"
 	"github.com/nickwells/param.mod/v5/param"
 	"github.com/nickwells/twrap.mod/twrap"
 )
@@ -66,13 +67,27 @@ func showNotesFmtStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 		if h.hideDescriptions {
 			continue
 		}
+
 		twc.Wrap(n.Text, descriptionIndent)
+
+		showNotesRefsFmtStd(twc, n.SeeParams(), "Parameter")
+		showNotesRefsFmtStd(twc, n.SeeNotes(), "Note")
 	}
 
 	return true
 }
 
-// showNotesFmtMD produces the Notes section of the help message
+// showNotesRefsFmtStd adds a section to the Notes section of the help
+// message showing the named references (if any)
+func showNotesRefsFmtStd(twc *twrap.TWConf, refs []string, name string) {
+	if len(refs) > 0 {
+		twc.WrapPrefixed("See "+english.Plural(name, len(refs))+": ",
+			strings.Join(refs, ", "), descriptionIndent)
+	}
+}
+
+// showNotesFmtMD produces the Notes section of the help message in Markdown
+// format
 func showNotesFmtMD(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	notes := ps.Notes()
 
@@ -97,12 +112,29 @@ func showNotesFmtMD(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 			continue
 		}
 
-		text := makeTextMarkdownSafe(notes[headline].Text)
+		n := notes[headline]
+		text := makeTextMarkdownSafe(n.Text)
 		r := strings.NewReplacer("\n", "\n\n")
 		text = r.Replace(text)
 		twc.Wrap(text, 0)
+
+		showNotesRefsFmtMD(twc, n.SeeParams(), "Parameter")
+		showNotesRefsFmtMD(twc, n.SeeNotes(), "Note")
+
 		twc.Print("\n\n")
 	}
 
 	return true
+}
+
+// showNotesRefsFmtMD adds a section to the Markdown file showing the named
+// references (if any)
+func showNotesRefsFmtMD(twc *twrap.TWConf, refs []string, name string) {
+	if len(refs) > 0 {
+		twc.Print("### See " + english.Plural(name, len(refs)) + "\n")
+		for _, ref := range refs {
+			twc.Print("* " + makeTextMarkdownSafe(ref) + "\n")
+		}
+		twc.Print("\n")
+	}
 }

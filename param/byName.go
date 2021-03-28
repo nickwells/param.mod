@@ -27,6 +27,7 @@ type ByName struct {
 	setter          Setter
 	description     string
 	seeAlso         map[string]string
+	seeNote         map[string]string
 	initialValue    string
 	whereIsParamSet []string
 	whereAdded      string
@@ -77,6 +78,16 @@ func (p ByName) SeeAlso() []string {
 	return refs
 }
 
+// SeeNotes returns a sorted list of references to notes
+func (p ByName) SeeNotes() []string {
+	notes := make([]string, 0, len(p.seeNote))
+	for note := range p.seeNote {
+		notes = append(notes, note)
+	}
+	sort.Strings(notes)
+	return notes
+}
+
 // ValueName returns the parameter's bespoke value name
 func (p ByName) ValueName() string { return p.valueName }
 
@@ -85,6 +96,13 @@ func (p ByName) ValueName() string { return p.valueName }
 // was made. If the reference is not found it will return an empty string
 func (p ByName) seeAlsoSource(ref string) string {
 	return p.seeAlso[ref]
+}
+
+// seeNoteSource returns the string describing where the SeeNote note was
+// added. This is suitable for reporting the location in code the mistake was
+// made. If the note is not found it will return an empty string
+func (p ByName) seeNoteSource(note string) string {
+	return p.seeNote[note]
 }
 
 // Attributes records various flags that can be set on a ByName parameter
@@ -176,6 +194,7 @@ func (ps *PSet) Add(name string,
 		initialValue: setter.CurrentValue(),
 		whereAdded:   whereAdded,
 		seeAlso:      make(map[string]string),
+		seeNote:      make(map[string]string),
 	}
 	ps.nameToParam[name] = p
 	ps.byName = append(ps.byName, p)
@@ -269,6 +288,31 @@ func SeeAlso(refs ...string) OptFunc {
 			}
 
 			p.seeAlso[ref] = source
+		}
+
+		return nil
+	}
+}
+
+// SeeNote will add the names of parameters to the list of parameters
+// to be referenced when showing the help message. They will be checked
+// before the parameters are parsed to ensure that they are all valid
+// names. Note that it is not possible to check the names as they are added
+// since the referenced name might not have been added yet. It will return an
+// error if the referenced name has already been used.
+func SeeNote(notes ...string) OptFunc {
+	source := caller()
+	return func(p *ByName) error {
+		for _, note := range notes {
+			note = strings.TrimSpace(note)
+
+			if whereAdded, exists := p.seeNote[note]; exists {
+				return fmt.Errorf(
+					"The SeeNote reference %q has already been added, at %s",
+					note, whereAdded)
+			}
+
+			p.seeNote[note] = source
 		}
 
 		return nil

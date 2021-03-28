@@ -5,6 +5,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/nickwells/english.mod/english"
 	"github.com/nickwells/param.mod/v5/param"
 	"github.com/nickwells/param.mod/v5/param/psetter"
 	"github.com/nickwells/twrap.mod/twrap"
@@ -156,6 +157,7 @@ func (h StdHelp) printParamUsage(twc *twrap.TWConf, p *param.ByName) {
 	twc.Wrap(p.Description(), descriptionIndent)
 	printParamAttributes(twc, p)
 	showSeeAlso(twc, p)
+	showSeeNotes(twc, p)
 
 	if p.Setter().ValueReq() == param.None {
 		return
@@ -193,6 +195,17 @@ func showSeeAlso(twc *twrap.TWConf, p *param.ByName) {
 
 	prompt := "See also: "
 	twc.WrapPrefixed(prompt, strings.Join(refs, ", "), descriptionIndent)
+}
+
+// showSeeNotes shows the references to notes for the ByName parameter (if any)
+func showSeeNotes(twc *twrap.TWConf, p *param.ByName) {
+	notes := p.SeeNotes()
+	if len(notes) == 0 {
+		return
+	}
+
+	prompt := "See " + english.Plural("note", len(notes)) + ": "
+	twc.WrapPrefixed(prompt, strings.Join(notes, ", "), descriptionIndent)
 }
 
 // showAllowedVals prints the allowed values for a parameter. It will print

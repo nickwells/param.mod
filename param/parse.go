@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"sort"
 
 	"github.com/nickwells/location.mod/location"
 )
@@ -58,7 +59,7 @@ func (ps *PSet) Parse(args ...[]string) ErrMap {
 	ps.parsed = true
 	ps.parseCalledFrom = caller()
 
-	ps.checkSeeAlsoRefs()
+	ps.checkSeeRefs()
 
 	if len(args) == 0 {
 		ps.progName = os.Args[0]
@@ -127,21 +128,53 @@ func (ps *PSet) detectMandatoryParamsNotSet() {
 	}
 }
 
-// checkSeeAlsoRefs will make sure that every SeeAlso reference is to a valid
-// parameter name and will panic if not
-func (ps *PSet) checkSeeAlsoRefs() {
+// checkRefParamExists will panic if the named parameter is not found in the
+// PSet named params.
+func (ps *PSet) checkRefParamExists(from, ref, refSrc string) {
+	if _, exists := ps.nameToParam[ref]; !exists {
+		panic(
+			fmt.Errorf("%q has a reference to %q but no such parameter exists."+
+				"\nThe bad reference was added at: %s",
+				from, ref, refSrc))
+	}
+}
+
+// checkRefNoteExists will panic if the named note is not found in the
+// PSet notes.
+func (ps *PSet) checkRefNoteExists(from, ref, refSrc string) {
+	if _, exists := ps.notes[ref]; !exists {
+		panic(
+			fmt.Errorf("%q has a reference to %q but no such note exists."+
+				"\nThe bad reference was added at: %s",
+				from, ref, refSrc))
+	}
+}
+
+// checkSeeRefs will make sure that every SeeAlso and SeeNotes reference is
+// to a valid parameter name or note name respectively and will panic if not.
+func (ps *PSet) checkSeeRefs() {
 	for _, p := range ps.byName {
 		refs := p.SeeAlso()
 		for _, ref := range refs {
-			if _, exists := ps.nameToParam[ref]; !exists {
-				panic(
-					fmt.Errorf(
-						"Parameter %q has a SeeAlso reference to %q"+
-							" but no such parameter exists."+
-							"\n"+
-							" The bad reference was added at: %s",
-						p.Name(), ref, p.seeAlsoSource(ref)))
-			}
+			ps.checkRefParamExists(p.Name(), ref, p.seeAlsoSource(ref))
+		}
+		for _, ref := range p.SeeNotes() {
+			ps.checkRefNoteExists(p.Name(), ref, p.seeNoteSource(ref))
+		}
+	}
+
+	var notes []string
+	for n := range ps.notes {
+		notes = append(notes, n)
+	}
+	sort.Strings(notes) // so we get repeatable ordering for tests
+	for _, n := range notes {
+		note := ps.notes[n]
+		for _, ref := range note.SeeParams() {
+			ps.checkRefParamExists(n, ref, note.seeAlsoParam[ref])
+		}
+		for _, ref := range note.SeeNotes() {
+			ps.checkRefNoteExists(n, ref, note.seeAlsoNote[ref])
 		}
 	}
 }

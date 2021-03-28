@@ -3,6 +3,8 @@ package param
 import (
 	"fmt"
 	"runtime"
+	"sort"
+	"strings"
 )
 
 // NoteAttributes records various flags that can be set on a Note
@@ -18,10 +20,12 @@ const (
 // Note records additional text to be attached to the help message which does
 // not sit under any of the other parts
 type Note struct {
-	Headline   string
-	Text       string
-	Attributes NoteAttributes
-	addedAt    string
+	Headline     string
+	Text         string
+	Attributes   NoteAttributes
+	addedAt      string
+	seeAlsoNote  map[string]string
+	seeAlsoParam map[string]string
 }
 
 // AddNote adds an note to the set of notes on the PSet. The headline of the
@@ -37,9 +41,11 @@ func (ps *PSet) AddNote(headline, text string, opts ...NoteOptFunc) *Note {
 	stkSize := runtime.Stack(stk, false)
 
 	n := &Note{
-		Headline: headline,
-		Text:     text,
-		addedAt:  string(stk[:stkSize]),
+		Headline:     headline,
+		Text:         text,
+		addedAt:      string(stk[:stkSize]),
+		seeAlsoNote:  make(map[string]string),
+		seeAlsoParam: make(map[string]string),
 	}
 	for _, o := range opts {
 		err := o(n)
@@ -91,8 +97,79 @@ func NoteAttrs(attrs NoteAttributes) NoteOptFunc {
 	}
 }
 
+// NoteSeeNote will add the names of notes to the list of notes to be
+// referenced when showing the help message. They will be checked before the
+// parameters are parsed to ensure that they are all valid names. Note that
+// it is not possible to check the names as they are added since the
+// referenced name might not have been added yet. It will return an error if
+// the referenced name has already been used.
+func NoteSeeNote(notes ...string) NoteOptFunc {
+	source := caller()
+	return func(n *Note) error {
+		for _, note := range notes {
+			note = strings.TrimSpace(note)
+
+			if whereAdded, exists := n.seeAlsoNote[note]; exists {
+				return fmt.Errorf(
+					"The NoteSeeAlso note %q has already been added, at %s",
+					note, whereAdded)
+			}
+
+			n.seeAlsoNote[note] = source
+		}
+
+		return nil
+	}
+}
+
+// NoteSeeParam will add the names of parameters to the list of parameters to be
+// referenced when showing the help message. They will be checked before the
+// parameters are parsed to ensure that they are all valid names. Note that
+// it is not possible to check the names as they are added since the
+// referenced name might not have been added yet. It will return an error if
+// the referenced name has already been used.
+func NoteSeeParam(params ...string) NoteOptFunc {
+	source := caller()
+	return func(n *Note) error {
+		for _, param := range params {
+			param = strings.TrimSpace(param)
+
+			if whereAdded, exists := n.seeAlsoParam[param]; exists {
+				return fmt.Errorf(
+					"The NoteSeeParam parameter %q has already"+
+						" been added, at %s",
+					param, whereAdded)
+			}
+
+			n.seeAlsoParam[param] = source
+		}
+
+		return nil
+	}
+}
+
 // AttrIsSet will return true if the supplied attribute is set on the
 // note. Multiple attributes may be given in which case they must all be set
 func (n Note) AttrIsSet(attr NoteAttributes) bool {
 	return n.Attributes&attr == attr
+}
+
+// SeeNotes returns a sorted list of the notes referenced by this note
+func (n Note) SeeNotes() []string {
+	notes := make([]string, 0, len(n.seeAlsoNote))
+	for note := range n.seeAlsoNote {
+		notes = append(notes, note)
+	}
+	sort.Strings(notes)
+	return notes
+}
+
+// SeeParams returns a sorted list of the params referenced by this note
+func (n Note) SeeParams() []string {
+	params := make([]string, 0, len(n.seeAlsoParam))
+	for param := range n.seeAlsoParam {
+		params = append(params, param)
+	}
+	sort.Strings(params)
+	return params
 }
