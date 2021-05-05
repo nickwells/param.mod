@@ -6,8 +6,8 @@ github.com/nickwells/errutil.mod v1.1.3 h1:RJdlJiVL/JvGmt8Pmu9vQLUnhAC9fBa1DXVKx
 github.com/nickwells/errutil.mod v1.1.3/go.mod h1:iyimvn+H6DnVjpaKBEAhkWAIvoeMjnJYJFU+88X+b9M=
 github.com/nickwells/filecheck.mod v1.1.10 h1:F47no8BT5Evdgoa2r6XfN28FOWLmc+gesGAvkBTySvw=
 github.com/nickwells/filecheck.mod v1.1.10/go.mod h1:G2rbyb9wMpuHjIYfg8plFbEylGYTgdYwdAL+/DC6JSc=
-github.com/nickwells/fileparse.mod v1.1.21 h1:sMnPnnm41wavhYE0F8U6ga/7ho3pgnMXB5bzR+HByGg=
-github.com/nickwells/fileparse.mod v1.1.21/go.mod h1:ROHMktFCLeAgWoqoi1FMNq1h/WOfeSoBJHRUEOSfT54=
+github.com/nickwells/fileparse.mod v1.1.22 h1:lZsFe+A/ay+SlvqsyexyIKhsZGw9ol2YzfyRIe6mkkE=
+github.com/nickwells/fileparse.mod v1.1.22/go.mod h1:ROHMktFCLeAgWoqoi1FMNq1h/WOfeSoBJHRUEOSfT54=
 github.com/nickwells/location.mod v1.2.18 h1:mv8cgNZqZcRPYMhDAM+vbqLyJ9fJZIzXEhwNfhyyyxM=
 github.com/nickwells/location.mod v1.2.18/go.mod h1:ue3q9eHkHhP34x3q3TLuiQk5X84Vl2uIUdZdRQxHmvQ=
 github.com/nickwells/mathutil.mod v1.0.18 h1:nOLNsgJgwE1XEMJjZ6CXklITOofIPGYjF+yf+IRsy5I=
@@ -21,7 +21,7 @@ github.com/nickwells/twrap.mod v1.4.12/go.mod h1:6A0rjOm6BlGfkoNlsn6prUrrSHLsvlq
 github.com/nickwells/xdg.mod v1.0.5 h1:BkCim2ft//W1dlmh96z39YpIL4dJE7UQ1dDcMHtnfdU=
 github.com/nickwells/xdg.mod v1.0.5/go.mod h1:h8lRJMpY6oXdD6E3jJuolpO9QJE5FcTvUe8eyRzgyQo=
 golang.org/x/sys v0.0.0-20201119102817-f84b799fce68/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
-golang.org/x/sys v0.0.0-20210326220804-49726bf1d181 h1:64ChN/hjER/taL4YJuA+gpLfIMT+/NFherRZixbxOhg=
-golang.org/x/sys v0.0.0-20210326220804-49726bf1d181/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
-golang.org/x/term v0.0.0-20210317153231-de623e64d2a6 h1:EC6+IGYTjPpRfv9a2b/6Puw0W+hLtAhkV1tPsXhutqs=
-golang.org/x/term v0.0.0-20210317153231-de623e64d2a6/go.mod h1:bj7SfCRtBDWHUb9snDiAeCFNEtKQo2Wmx5Cou7ajbmo=
+golang.org/x/sys v0.0.0-20210503173754-0981d6026fa6 h1:cdsMqa2nXzqlgs183pHxtvoVwU7CyzaCTAUOg94af4c=
+golang.org/x/sys v0.0.0-20210503173754-0981d6026fa6/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+golang.org/x/term v0.0.0-20210503060354-a79de5458b56 h1:b8jxX3zqjpqb2LklXPzKSGJhzyxCOZSz8ncv8Nv+y7w=
+golang.org/x/term v0.0.0-20210503060354-a79de5458b56/go.mod h1:tfny5GFUkzUvx4ps4ajbZsCe5lw1metzhBm9T3x7oIY=
