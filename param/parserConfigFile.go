@@ -390,12 +390,8 @@ func checkCFErrs(ps *PSet, errs []error, cf ConfigFileDetails, desc string) {
 // files.
 func (ps *PSet) getParamsFromConfigFiles() {
 	for gName, g := range ps.groups {
-		var lp = groupParamLineParser{
-			ps:    ps,
-			gName: gName,
-		}
 		desc := SrcConfigFilePfx + " for " + gName
-		fp := fileparse.New(desc, lp)
+		fp := fileparse.New(desc, groupParamLineParser{ps: ps, gName: gName})
 		for _, cf := range g.ConfigFiles {
 			errs := fp.Parse(cf.Name)
 
@@ -404,12 +400,8 @@ func (ps *PSet) getParamsFromConfigFiles() {
 	}
 
 	for _, cf := range ps.configFiles {
-		var lp = paramLineParser{
-			ps:    ps,
-			eRule: cf.eRule,
-		}
 		desc := SrcConfigFilePfx
-		fp := fileparse.New(desc, lp)
+		fp := fileparse.New(desc, paramLineParser{ps: ps, eRule: cf.eRule})
 		errs := fp.Parse(cf.Name)
 		checkCFErrs(ps, errs, cf, desc)
 	}
@@ -426,8 +418,7 @@ func ConfigFileActionFunc(loc location.L, p *ByName, paramVals []string) error {
 	desc := "supplied config file"
 
 	cf := ConfigFileDetails{Name: name, CfConstraint: filecheck.MustExist}
-	var lp = cmdLineParamLineParser{ps: p.ps}
-	fp := fileparse.New(desc, lp)
+	fp := fileparse.New(desc, cmdLineParamLineParser{ps: p.ps})
 	errs := fp.Parse(cf.Name)
 	checkCFErrs(p.ps, errs, cf, desc)
 
