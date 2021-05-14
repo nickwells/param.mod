@@ -10,6 +10,7 @@ import (
 
 	"github.com/nickwells/errutil.mod/errutil"
 	"github.com/nickwells/location.mod/location"
+	"github.com/nickwells/pager.mod/pager"
 )
 
 // DfltTerminalParam is the default value of the parameter that will stop
@@ -40,6 +41,7 @@ type FinalCheckFunc func() error
 // member. This lets you know precisely which parameters have been enabled
 // before calling Parse
 type PSet struct {
+	pager.Writers
 	parseCalledFrom string
 
 	progName     string
@@ -64,9 +66,6 @@ type PSet struct {
 	remHandler             RemHandler
 	trailingParamsExpected bool
 	trailingParamsName     string
-
-	errWriter io.Writer
-	stdWriter io.Writer
 
 	helper Helper
 
@@ -159,7 +158,7 @@ func SetErrWriter(w io.Writer) PSetOptFunc {
 		if w == nil {
 			return fmt.Errorf("param.SetErrWriter cannot take a nil value")
 		}
-		ps.errWriter = w
+		ps.SetErrWriter(w)
 		return nil
 	}
 }
@@ -171,21 +170,9 @@ func SetStdWriter(w io.Writer) PSetOptFunc {
 		if w == nil {
 			return fmt.Errorf("param.SetStdWriter cannot take a nil value")
 		}
-		ps.stdWriter = w
+		ps.SetStdWriter(w)
 		return nil
 	}
-}
-
-// StdWriter returns the current value of the StdWriter to which standard
-// messages should be written
-func (ps *PSet) StdWriter() io.Writer {
-	return ps.stdWriter
-}
-
-// ErrWriter returns the current value of the ErrWriter to which error
-// messages should be written
-func (ps *PSet) ErrWriter() io.Writer {
-	return ps.errWriter
 }
 
 // SetProgramDescription returns a PSetOptFunc which can be passed to
@@ -227,8 +214,7 @@ func NewSet(psof ...PSetOptFunc) (*PSet, error) {
 
 		terminalParam: DfltTerminalParam,
 
-		errWriter: os.Stderr,
-		stdWriter: os.Stdout,
+		Writers: pager.DfltWriters(),
 
 		exitOnParamSetupErr: true,
 	}
@@ -236,7 +222,7 @@ func NewSet(psof ...PSetOptFunc) (*PSet, error) {
 	for _, f := range psof {
 		err := f(ps)
 		if err != nil {
-			fmt.Fprintf(ps.errWriter,
+			fmt.Fprintf(ps.ErrWriter(),
 				"An error was detected while creating the PSet: %s\n",
 				err)
 			if ps.exitOnParamSetupErr {
@@ -253,7 +239,7 @@ func NewSet(psof ...PSetOptFunc) (*PSet, error) {
 
 	if ps.helper == nil {
 		var err = errors.New("A helper must be passed when creating a PSet")
-		fmt.Fprintln(ps.errWriter, err)
+		fmt.Fprintln(ps.ErrWriter(), err)
 		if ps.exitOnParamSetupErr {
 			os.Exit(1)
 		}

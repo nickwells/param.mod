@@ -3,6 +3,7 @@ package phelp
 import (
 	"os"
 
+	"github.com/nickwells/pager.mod/pager"
 	"github.com/nickwells/param.mod/v5/param"
 	"github.com/nickwells/twrap.mod/twrap"
 )
@@ -59,7 +60,7 @@ func (h StdHelp) ProcessArgs(ps *param.PSet) {
 
 	var twc *twrap.TWConf
 	printSep := false
-	var pgr *pager
+	var pgr *pager.Pager
 
 	var shouldExit = h.exitAfterParsing
 	var exitStatus = 0
@@ -71,7 +72,7 @@ func (h StdHelp) ProcessArgs(ps *param.PSet) {
 
 		if twc == nil {
 			if h.pageOutput {
-				pgr = pagerStart(ps)
+				pgr = pager.Start(ps)
 			}
 			twc = twrap.NewTWConfOrPanic(twrap.SetWriter(ps.StdWriter()))
 		}
@@ -88,7 +89,7 @@ func (h StdHelp) ProcessArgs(ps *param.PSet) {
 		shouldExit = shouldExit || a.shouldExit
 	}
 
-	pgr.done()
+	pgr.Done()
 
 	if shouldExit {
 		os.Exit(exitStatus)
