@@ -32,15 +32,22 @@ func init() {
 	gfc.AddKeepBadResultsFlag()
 }
 
-var int64ValPos1 int64 = 101
-var int64ValPos2 int64 = 102
+var (
+	int64ValPos1 int64 = 101
+	int64ValPos2 int64 = 102
 
-var int64Val1 int64 = 1
-var int64Val2 int64 = 2
+	int64Val1 int64 = 1
+	int64Val2 int64 = 2
+)
+
 var float64Val3 float64 = 3.333
+
 var boolVal4 bool
-var str5 string = "v1"
-var str6 string = "v2"
+
+var (
+	str5 = "v1"
+	str6 = "v2"
+)
 
 // setInitialValues sets the parameters to their initial values - resetting
 // any values overwritten by previous tests
@@ -242,7 +249,8 @@ func TestHelp(t *testing.T) {
 			params: []string{
 				"-help-groups",
 				paramGroupName,
-				"-param2=99"},
+				"-param2=99",
+			},
 			paramAdder: []param.PSetOptFunc{addByNameParams},
 		},
 		{
@@ -252,7 +260,8 @@ func TestHelp(t *testing.T) {
 				"-help-all",
 				"-help-groups",
 				paramGroupName,
-				"-param2=99"},
+				"-param2=99",
+			},
 			paramAdder: []param.PSetOptFunc{addByNameParams},
 		},
 		{
@@ -296,7 +305,8 @@ func TestHelp(t *testing.T) {
 			params: []string{
 				"-params-file",
 				"testdata/configFiles/param-cmdline.cfg",
-				"-param2=99"},
+				"-param2=99",
+			},
 			errsExpected: false,
 			paramAdder:   []param.PSetOptFunc{addByNameParams},
 		},
@@ -318,7 +328,8 @@ func TestHelp(t *testing.T) {
 			params: []string{
 				"-params-file",
 				"",
-				"-param2=99"},
+				"-param2=99",
+			},
 			errsExpected: true,
 			paramAdder:   []param.PSetOptFunc{addByNameParams},
 		},
@@ -330,7 +341,8 @@ func TestHelp(t *testing.T) {
 				"testdata/configFiles/param.cfg",
 				"-params-file",
 				"testdata/configFiles/param.cfg",
-				"-param2=99"},
+				"-param2=99",
+			},
 			errsExpected: true,
 			paramAdder:   []param.PSetOptFunc{addByNameParams},
 		},
@@ -340,7 +352,8 @@ func TestHelp(t *testing.T) {
 			params: []string{
 				"-help-groups",
 				"nonesuch1,nonesuch2,nonesuch3",
-				"-param2=99"},
+				"-param2=99",
+			},
 			errsExpected: true,
 			paramAdder:   []param.PSetOptFunc{addByNameParams},
 		},
@@ -351,7 +364,8 @@ func TestHelp(t *testing.T) {
 				"-help",
 				"-help-groups",
 				paramGroupName,
-				"-param2=99"},
+				"-param2=99",
+			},
 			paramAdder: []param.PSetOptFunc{addByNameParams},
 		},
 		{

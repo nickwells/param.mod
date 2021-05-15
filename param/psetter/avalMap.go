@@ -23,7 +23,7 @@ type AllowedValuesMapper interface {
 // Keys returns an unsorted list of keys to the AllowedVals map and the
 // length of the longest key.
 func (av AllowedVals) Keys() ([]string, int) {
-	var keys = make([]string, 0, len(av))
+	keys := make([]string, 0, len(av))
 	var maxKeyLen int
 
 	for k := range av {

@@ -128,15 +128,18 @@ const (
 
 var sectionAliases = psetter.Aliases{
 	paramHelpSectionAlias: []string{
-		posParamsHelpSectionName, groupedParamsHelpSectionName},
+		posParamsHelpSectionName, groupedParamsHelpSectionName,
+	},
 	standardHelpSectionAlias: []string{
 		introHelpSectionName, usageHelpSectionName,
-		posParamsHelpSectionName, groupedParamsHelpSectionName},
+		posParamsHelpSectionName, groupedParamsHelpSectionName,
+	},
 	allHelpSectionAlias: []string{
 		introHelpSectionName, usageHelpSectionName,
 		posParamsHelpSectionName, groupedParamsHelpSectionName,
 		notesHelpSectionName, sourcesHelpSectionName,
-		examplesHelpSectionName, refsHelpSectionName},
+		examplesHelpSectionName, refsHelpSectionName,
+	},
 
 	groupHelpSectionAlias: []string{groupsHelpSectionName},
 	grpHelpSectionAlias:   []string{groupsHelpSectionName},

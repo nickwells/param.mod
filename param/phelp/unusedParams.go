@@ -16,7 +16,7 @@ func showUnusedParams(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) int {
 	up := ps.UnusedParams()
 	twc.Println("Unused Parameters: ", len(up)) //nolint: errcheck
 
-	var paramsByName = make([]string, 0, len(up))
+	paramsByName := make([]string, 0, len(up))
 	for name := range up {
 		paramsByName = append(paramsByName, name)
 	}

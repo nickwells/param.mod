@@ -655,7 +655,6 @@ func TestParamParse(t *testing.T) {
 			errMapCheck(t, tc.IDStr(), errMap, tc.expectedEMap)
 		}
 	}
-
 }
 
 func TestParamByName(t *testing.T) {

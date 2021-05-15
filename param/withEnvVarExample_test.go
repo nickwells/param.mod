@@ -43,8 +43,11 @@ func Example_withEnvVar() {
 
 const wevExampleGroupName = "groupname"
 
-var wevExample1 bool
-var wevExample2 int64
+var (
+	wevExample1 bool
+
+	wevExample2 int64
+)
 
 // wevAddParams1 will set the "example1" parameter in the PSet
 func wevAddParams1(ps *param.PSet) error {

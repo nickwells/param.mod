@@ -11,6 +11,7 @@ import (
 )
 
 var CFValExample1 bool
+
 var CFValExample2 int64
 
 func TestConfigFileStrict(t *testing.T) {
@@ -109,12 +110,16 @@ func CFAddParams2(ps *param.PSet) error {
 	return nil
 }
 
-var groupCFName1 = "grp1"
-var groupCFName2 = "grp2"
-var paramInt1 int64
-var paramInt2 int64
-var paramBool1 bool
-var paramBool2 bool
+var (
+	groupCFName1 = "grp1"
+	groupCFName2 = "grp2"
+
+	paramInt1 int64
+	paramInt2 int64
+
+	paramBool1 bool
+	paramBool2 bool
+)
 
 type expVals struct {
 	pi1Val int64
@@ -180,7 +185,8 @@ func TestGroupConfigFile(t *testing.T) {
 			fileName: configFileNameNonesuch,
 			check:    filecheck.MustExist,
 			errsExpected: map[string][]string{
-				"config file for " + groupCFName1 + ": " + configFileNameNonesuch: {
+				"config file for " + groupCFName1 +
+					": " + configFileNameNonesuch: {
 					"no such file or directory",
 					configFileNameNonesuch,
 				},
@@ -202,7 +208,6 @@ func TestGroupConfigFile(t *testing.T) {
 		errMapCheck(t, tc.IDStr(), errMap, tc.errsExpected)
 		valsCheck(t, tc.IDStr(), tc.valsExpected)
 	}
-
 }
 
 // resetParamVals resets the param values to their initial state

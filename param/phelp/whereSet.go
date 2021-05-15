@@ -39,7 +39,6 @@ func printWhereSetIntro(twc *twrap.TWConf, ps *param.PSet, p *param.ByName) {
 	} else {
 		twc.Print(notSetIntro)
 	}
-
 }
 
 func showWhereParamsAreSet(h StdHelp, twc *twrap.TWConf, ps *param.PSet) int {

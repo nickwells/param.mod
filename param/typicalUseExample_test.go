@@ -21,8 +21,11 @@ func Example_typicalUse() {
 
 const tuExampleGroupName = "my-groupname"
 
-var tuExample1 bool
-var tuExample2 int64
+var (
+	tuExample1 bool
+
+	tuExample2 int64
+)
 
 // tuAddParams1 will add the "example1" parameter to the PSet
 func tuAddParams1(ps *param.PSet) error {

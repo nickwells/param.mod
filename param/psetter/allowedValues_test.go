@@ -26,13 +26,18 @@ func init() {
 	gfc.AddUpdateFlag()
 	gfc.AddKeepBadResultsFlag()
 }
+
 func TestAllowedValues(t *testing.T) {
 	var b bool
 	var dur time.Duration
 	var emptyStrList []string
-	var strToBoolMap = make(map[string]bool)
-	var goodStr = "aval"
-	var anyStr = ""
+	strToBoolMap := make(map[string]bool)
+
+	var (
+		goodStr = "aval"
+		anyStr  = ""
+	)
+
 	var f float64
 	var i int64
 	var intList []int64
@@ -114,7 +119,9 @@ func TestAllowedValues(t *testing.T) {
 		{
 			ID: testhelper.MkID("PathnameListAppender-Prepend"),
 			s: &psetter.PathnameListAppender{
-				Value: &emptyStrList, Prepend: true},
+				Value:   &emptyStrList,
+				Prepend: true,
+			},
 		},
 		{
 			ID: testhelper.MkID("Regexp"),

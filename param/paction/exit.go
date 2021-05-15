@@ -1,9 +1,10 @@
 package paction
 
 import (
+	"os"
+
 	"github.com/nickwells/location.mod/location"
 	"github.com/nickwells/param.mod/v5/param"
-	"os"
 )
 
 // Exit returns an ActionFunc that will exit with the given exit status. This

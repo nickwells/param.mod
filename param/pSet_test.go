@@ -75,7 +75,6 @@ func TestPSet(t *testing.T) {
 				t.Errorf(
 					"test %d: %s : err was expected to be: %s\n\t: but was: %s",
 					i, tc.testName, tc.expEStr, err)
-
 			}
 		} else {
 			if tc.errExpected {

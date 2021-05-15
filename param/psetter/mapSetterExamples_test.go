@@ -40,7 +40,7 @@ func ExampleMap_standard() {
 func ExampleMap_fixingInitialValue() {
 	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
 
-	var m = map[string]bool{"x": true}
+	m := map[string]bool{"x": true}
 	keys := []string{"x", "y"}
 
 	ps.Add("my-map", psetter.Map{Value: &m}, "help text")

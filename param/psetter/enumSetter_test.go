@@ -84,27 +84,13 @@ func TestEnumList(t *testing.T) {
 		expectedVal []string
 		errExpected bool
 	}{
-		{"e1",
-			[]string{"e1"},
-			false},
-		{"e2",
-			[]string{"e2"},
-			false},
-		{"e3",
-			[]string{"e3"},
-			false},
-		{"e3,e1",
-			[]string{"e3", "e1"},
-			false},
-		{"e4",
-			[]string{""},
-			true},
-		{"e2,e4",
-			[]string{""},
-			true},
-		{"",
-			[]string{""},
-			true},
+		{"e1", []string{"e1"}, false},
+		{"e2", []string{"e2"}, false},
+		{"e3", []string{"e3"}, false},
+		{"e3,e1", []string{"e3", "e1"}, false},
+		{"e4", []string{""}, true},
+		{"e2,e4", []string{""}, true},
+		{"", []string{""}, true},
 	}
 
 	for _, tc := range testCases {
@@ -154,27 +140,13 @@ func TestEnumMap(t *testing.T) { // nolint: gocyclo
 		expectedVal map[string]bool
 		errExpected bool
 	}{
-		{"e1",
-			map[string]bool{"e1": true},
-			false},
-		{"e2",
-			map[string]bool{"e2": true},
-			false},
-		{"e3",
-			map[string]bool{"e3": true},
-			false},
-		{"e3,e1",
-			map[string]bool{"e3": true, "e1": true},
-			false},
-		{"e4",
-			map[string]bool{},
-			true},
-		{"e2,e4",
-			map[string]bool{},
-			true},
-		{"",
-			map[string]bool{},
-			true},
+		{"e1", map[string]bool{"e1": true}, false},
+		{"e2", map[string]bool{"e2": true}, false},
+		{"e3", map[string]bool{"e3": true}, false},
+		{"e3,e1", map[string]bool{"e3": true, "e1": true}, false},
+		{"e4", map[string]bool{}, true},
+		{"e2,e4", map[string]bool{}, true},
+		{"", map[string]bool{}, true},
 	}
 
 	for _, tc := range testCases {

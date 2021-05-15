@@ -141,7 +141,6 @@ func checkTerminalFlags(ps *PSet) {
 // any errors
 func (bp *ByPos) processParam(loc *location.L, val string) {
 	err := bp.setter.SetWithVal(bp.name, val)
-
 	if err != nil {
 		name := fmt.Sprintf("Positional parameter: %d (%s)",
 			loc.Idx(), bp.name)

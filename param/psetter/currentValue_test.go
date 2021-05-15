@@ -11,55 +11,55 @@ import (
 )
 
 func TestCurrentValue(t *testing.T) {
-	var vBool bool = true
-	var setterBool = psetter.Bool{Value: &vBool}
-	var setterBoolInverted = psetter.Bool{Value: &vBool, Invert: true}
+	vBool := true
+	setterBool := psetter.Bool{Value: &vBool}
+	setterBoolInverted := psetter.Bool{Value: &vBool, Invert: true}
 
-	var vDuration time.Duration = 1 * time.Millisecond
-	var setterDuration = psetter.Duration{Value: &vDuration}
+	vDuration := 1 * time.Millisecond
+	setterDuration := psetter.Duration{Value: &vDuration}
 
-	var vEnumList []string = []string{"hello", "world"}
-	var setterEnumList = psetter.EnumList{Value: &vEnumList}
+	vEnumList := []string{"hello", "world"}
+	setterEnumList := psetter.EnumList{Value: &vEnumList}
 
-	var vEnumMap = map[string]bool{
+	vEnumMap := map[string]bool{
 		"hello": true,
 	}
-	var setterEnumMap = psetter.EnumMap{Value: &vEnumMap}
+	setterEnumMap := psetter.EnumMap{Value: &vEnumMap}
 
-	var vEnum string = "Hello, World!"
-	var setterEnum = psetter.Enum{Value: &vEnum}
+	vEnum := "Hello, World!"
+	setterEnum := psetter.Enum{Value: &vEnum}
 
-	var vFloat64 float64 = 3.14159
-	var setterFloat64 = psetter.Float64{Value: &vFloat64}
+	vFloat64 := float64(3.14159)
+	setterFloat64 := psetter.Float64{Value: &vFloat64}
 
-	var vInt64List []int64 = []int64{1, 2}
-	var setterInt64List = psetter.Int64List{Value: &vInt64List}
+	vInt64List := []int64{1, 2}
+	setterInt64List := psetter.Int64List{Value: &vInt64List}
 
-	var vInt64 int64 = 42
-	var setterInt64 = psetter.Int64{Value: &vInt64}
+	vInt64 := int64(42)
+	setterInt64 := psetter.Int64{Value: &vInt64}
 
-	var vMap = map[string]bool{
+	vMap := map[string]bool{
 		"hello": true,
 	}
-	var setterMap = psetter.Map{Value: &vMap}
+	setterMap := psetter.Map{Value: &vMap}
 
-	var setterNil = psetter.Nil{}
+	setterNil := psetter.Nil{}
 
-	var vPathname string = "/a/b/c"
-	var setterPathname = psetter.Pathname{Value: &vPathname}
+	vPathname := "/a/b/c"
+	setterPathname := psetter.Pathname{Value: &vPathname}
 
-	var vRegexp *regexp.Regexp = regexp.MustCompile("[a-z]*")
-	var setterRegexp = psetter.Regexp{Value: &vRegexp}
-	var setterRegexpNil = psetter.Regexp{}
+	vRegexp := regexp.MustCompile("[a-z]*")
+	setterRegexp := psetter.Regexp{Value: &vRegexp}
+	setterRegexpNil := psetter.Regexp{}
 
-	var vString string = "Hello, World!"
-	var setterString = psetter.String{Value: &vString}
+	vString := "Hello, World!"
+	setterString := psetter.String{Value: &vString}
 
-	var vStrList = []string{"hello", "world"}
-	var setterStrList = psetter.StrList{Value: &vStrList}
+	vStrList := []string{"hello", "world"}
+	setterStrList := psetter.StrList{Value: &vStrList}
 
 	vTimeLocation, _ := time.LoadLocation("UTC")
-	var setterTimeLocation = psetter.TimeLocation{Value: &vTimeLocation}
+	setterTimeLocation := psetter.TimeLocation{Value: &vTimeLocation}
 
 	testCases := []struct {
 		testhelper.ID

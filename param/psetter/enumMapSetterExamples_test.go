@@ -47,7 +47,7 @@ func ExampleEnumMap_standard() {
 func ExampleEnumMap_fixingInitialValue() {
 	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
 
-	var m = map[string]bool{"x": true}
+	m := map[string]bool{"x": true}
 	keys := []string{"x", "y"}
 
 	ps.Add("my-map",
@@ -88,7 +88,7 @@ func ExampleEnumMap_fixingInitialValue() {
 func ExampleEnumMap_hiddenMapEntries() {
 	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
 
-	var m = map[string]bool{"z": true}
+	m := map[string]bool{"z": true}
 	keys := []string{"x", "y", "z"}
 
 	ps.Add("my-map",
@@ -137,7 +137,7 @@ func ExampleEnumMap_withBadKey() {
 
 	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
 
-	var m = map[string]bool{"z": true}
+	m := map[string]bool{"z": true}
 
 	// we expect this to panic because the map has an entry which is not in
 	// the allowed values

@@ -62,8 +62,8 @@ func (h StdHelp) ProcessArgs(ps *param.PSet) {
 	printSep := false
 	var pgr *pager.Pager
 
-	var shouldExit = h.exitAfterParsing
-	var exitStatus = 0
+	shouldExit := h.exitAfterParsing
+	exitStatus := 0
 
 	for _, a := range actions {
 		if !a.shouldRun() {

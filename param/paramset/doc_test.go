@@ -7,8 +7,10 @@ import (
 	"github.com/nickwells/param.mod/v5/param/psetter"
 )
 
-var thingName string
-var action = "nothing"
+var (
+	thingName string
+	action    = "nothing"
+)
 
 // addParams will add parameters to the passed ParamSet
 func addParams(ps *param.PSet) error {

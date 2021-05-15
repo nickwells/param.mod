@@ -31,7 +31,7 @@ func ExampleBool_standard() {
 func ExampleBool_inverted() {
 	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
 
-	var p1 = true
+	p1 := true
 
 	ps.Add("dont-do-this", psetter.Bool{Value: &p1, Invert: true}, "help text")
 
@@ -49,7 +49,7 @@ func ExampleBool_inverted() {
 func ExampleBool_withValue() {
 	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
 
-	var p1 = true
+	p1 := true
 
 	ps.Add("do-this", psetter.Bool{Value: &p1}, "help text")
 
@@ -69,7 +69,7 @@ func ExampleBool_withValue() {
 func ExampleBool_withBadValue() {
 	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
 
-	var p1 = true
+	p1 := true
 
 	ps.Add("do-this", psetter.Bool{Value: &p1}, "help text")
 

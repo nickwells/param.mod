@@ -10,7 +10,7 @@ import (
 func ExampleEnum_standard() {
 	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
 
-	var s = "x"
+	s := "x"
 
 	ps.Add("my-string",
 		psetter.Enum{
@@ -40,7 +40,7 @@ func ExampleEnum_standard() {
 func ExampleEnum_withBadVal() {
 	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
 
-	var s = "x"
+	s := "x"
 
 	ps.Add("my-string",
 		psetter.Enum{
@@ -112,7 +112,7 @@ func ExampleEnum_withBadInitialValue() {
 
 	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
 
-	var s = "z"
+	s := "z"
 
 	// we expect this to panic because the Value has an invalid initial value
 	ps.Add("my-string",

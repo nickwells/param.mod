@@ -11,20 +11,20 @@ import (
 )
 
 func TestCheck(t *testing.T) {
-	var goodStr = "aval"
-	var goodStrAlt = "aval-alt"
-	var badStr = "bad val"
-	var anyStr = ""
+	goodStr := "aval"
+	goodStrAlt := "aval-alt"
+	badStr := "bad val"
+	anyStr := ""
 	var b bool
 	var dur time.Duration
 	var emptyStrList []string
-	var goodStrList = []string{goodStr}
-	var badStrList = []string{badStr}
-	var strToBoolMap = make(map[string]bool)
+	goodStrList := []string{goodStr}
+	badStrList := []string{badStr}
+	strToBoolMap := make(map[string]bool)
 	var strToBoolMapNil1 map[string]bool
 	var strToBoolMapNil2 map[string]bool
-	var strToBoolMapWithEntriesGood = map[string]bool{goodStr: true}
-	var strToBoolMapWithEntriesBad = map[string]bool{
+	strToBoolMapWithEntriesGood := map[string]bool{goodStr: true}
+	strToBoolMapWithEntriesBad := map[string]bool{
 		goodStr: true,
 		badStr:  true,
 	}
@@ -33,9 +33,9 @@ func TestCheck(t *testing.T) {
 	var intList []int64
 	var re *regexp.Regexp
 	var timeLoc *time.Location
-	var avalMapEmpty = psetter.AllowedVals{}
-	var avalMapOneEntry = psetter.AllowedVals{goodStr: "desc"}
-	var avalMapGood = psetter.AllowedVals{
+	avalMapEmpty := psetter.AllowedVals{}
+	avalMapOneEntry := psetter.AllowedVals{goodStr: "desc"}
+	avalMapGood := psetter.AllowedVals{
 		goodStr:    "desc",
 		goodStrAlt: "desc",
 	}

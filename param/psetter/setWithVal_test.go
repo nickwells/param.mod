@@ -14,14 +14,14 @@ import (
 
 func TestSetWithVal(t *testing.T) {
 	paramName := "setval-test"
-	var vBool bool = true
-	var setterBool = psetter.Bool{Value: &vBool}
+	vBool := true
+	setterBool := psetter.Bool{Value: &vBool}
 
-	var vDuration time.Duration = 1 * time.Millisecond
-	var setterDuration = psetter.Duration{Value: &vDuration}
+	vDuration := 1 * time.Millisecond
+	setterDuration := psetter.Duration{Value: &vDuration}
 
-	var vEnumList []string = []string{"hello", "world"}
-	var setterEnumList = psetter.EnumList{
+	vEnumList := []string{"hello", "world"}
+	setterEnumList := psetter.EnumList{
 		Value: &vEnumList,
 		AllowedVals: psetter.AllowedVals{
 			"hello": "hello description",
@@ -29,7 +29,7 @@ func TestSetWithVal(t *testing.T) {
 			"bye":   "bye description",
 		},
 	}
-	var setterEnumListWithChecks = psetter.EnumList{
+	setterEnumListWithChecks := psetter.EnumList{
 		Value: &vEnumList,
 		AllowedVals: psetter.AllowedVals{
 			"hello": "hello description",
@@ -42,10 +42,10 @@ func TestSetWithVal(t *testing.T) {
 		},
 	}
 
-	var vEnumMap = map[string]bool{
+	vEnumMap := map[string]bool{
 		"hello": true,
 	}
-	var setterEnumMap = psetter.EnumMap{
+	setterEnumMap := psetter.EnumMap{
 		Value: &vEnumMap,
 		AllowedVals: psetter.AllowedVals{
 			"hello": "hello description",
@@ -54,8 +54,8 @@ func TestSetWithVal(t *testing.T) {
 		},
 	}
 
-	var vEnum string = "hello"
-	var setterEnum = psetter.Enum{
+	vEnum := "hello"
+	setterEnum := psetter.Enum{
 		Value: &vEnum,
 		AllowedVals: psetter.AllowedVals{
 			"hello": "hello description",
@@ -64,9 +64,9 @@ func TestSetWithVal(t *testing.T) {
 		},
 	}
 
-	var vFloat64 float64 = 3.14159
-	var setterFloat64 = psetter.Float64{Value: &vFloat64}
-	var setterFloat64WithChecks = psetter.Float64{
+	vFloat64 := float64(3.14159)
+	setterFloat64 := psetter.Float64{Value: &vFloat64}
+	setterFloat64WithChecks := psetter.Float64{
 		Value: &vFloat64,
 		Checks: []check.Float64{
 			nil,
@@ -75,8 +75,8 @@ func TestSetWithVal(t *testing.T) {
 	}
 
 	var vInt64List []int64 = []int64{1, 2}
-	var setterInt64List = psetter.Int64List{Value: &vInt64List}
-	var setterInt64ListWithChecks = psetter.Int64List{
+	setterInt64List := psetter.Int64List{Value: &vInt64List}
+	setterInt64ListWithChecks := psetter.Int64List{
 		Value: &vInt64List,
 		Checks: []check.Int64Slice{
 			check.Int64SliceNoDups,
@@ -84,33 +84,33 @@ func TestSetWithVal(t *testing.T) {
 	}
 
 	var vInt64 int64 = 42
-	var setterInt64 = psetter.Int64{Value: &vInt64}
-	var setterInt64WithChecks = psetter.Int64{
+	setterInt64 := psetter.Int64{Value: &vInt64}
+	setterInt64WithChecks := psetter.Int64{
 		Value: &vInt64,
 		Checks: []check.Int64{
 			check.Int64GT(6),
 		},
 	}
 
-	var vMap = map[string]bool{
+	vMap := map[string]bool{
 		"hello": true,
 	}
-	var setterMap = psetter.Map{Value: &vMap}
+	setterMap := psetter.Map{Value: &vMap}
 
-	var vMapEmpty = map[string]bool{}
-	var setterMapEmpty = psetter.Map{Value: &vMapEmpty}
+	vMapEmpty := map[string]bool{}
+	setterMapEmpty := psetter.Map{Value: &vMapEmpty}
 
-	var setterNil = psetter.Nil{}
+	setterNil := psetter.Nil{}
 
 	var vPathname string
-	var setterPathname = psetter.Pathname{Value: &vPathname}
+	setterPathname := psetter.Pathname{Value: &vPathname}
 	var vPathname2 string
-	var setterPathnameWithExpectation = psetter.Pathname{
+	setterPathnameWithExpectation := psetter.Pathname{
 		Value:       &vPathname2,
 		Expectation: filecheck.DirExists(),
 	}
 	var vPathname3 string
-	var setterPathnameWithChecks = psetter.Pathname{
+	setterPathnameWithChecks := psetter.Pathname{
 		Value: &vPathname3,
 		Checks: []check.String{
 			nil,
@@ -119,10 +119,10 @@ func TestSetWithVal(t *testing.T) {
 	}
 
 	var vRegexp *regexp.Regexp
-	var setterRegexp = psetter.Regexp{Value: &vRegexp}
+	setterRegexp := psetter.Regexp{Value: &vRegexp}
 
 	var vString string
-	var setterStringWithChecks = psetter.String{
+	setterStringWithChecks := psetter.String{
 		Value: &vString,
 		Checks: []check.String{
 			nil,
@@ -131,7 +131,7 @@ func TestSetWithVal(t *testing.T) {
 	}
 
 	var vStrList []string
-	var setterStrListWithChecks = psetter.StrList{
+	setterStrListWithChecks := psetter.StrList{
 		Value: &vStrList,
 		Checks: []check.StringSlice{
 			nil,
@@ -140,7 +140,7 @@ func TestSetWithVal(t *testing.T) {
 	}
 
 	var vTimeLocation *time.Location
-	var setterTimeLocationWithChecks = psetter.TimeLocation{
+	setterTimeLocationWithChecks := psetter.TimeLocation{
 		Value:  &vTimeLocation,
 		Checks: []check.TimeLocation{nil},
 	}

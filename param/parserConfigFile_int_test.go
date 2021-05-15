@@ -46,7 +46,6 @@ func (s i64) SetWithVal(_ string, paramVal string) error {
 func (s i64) Set(name string) error {
 	return fmt.Errorf("a value must follow this parameter: %q,"+
 		" either following an '=' or as a next parameter", name)
-
 }
 
 // ValueReq returns Mandatory

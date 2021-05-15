@@ -116,7 +116,6 @@ func (ps *PSet) SetRemHandler(rh RemHandler) error {
 	if ps.parsed {
 		return errors.New("Parsing is already complete" +
 			" - you must set the RemHandler before calling Parse")
-
 	}
 	ps.remHandler = rh
 	ps.trailingParamsExpected = true
@@ -238,7 +237,7 @@ func NewSet(psof ...PSetOptFunc) (*PSet, error) {
 	}
 
 	if ps.helper == nil {
-		var err = errors.New("A helper must be passed when creating a PSet")
+		err := errors.New("A helper must be passed when creating a PSet")
 		fmt.Fprintln(ps.ErrWriter(), err)
 		if ps.exitOnParamSetupErr {
 			os.Exit(1)

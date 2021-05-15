@@ -54,5 +54,4 @@ func (c *Counter) MakeActionFunc() param.ActionFunc {
 			})
 		return nil
 	}
-
 }

@@ -23,7 +23,7 @@ type AllowedValuesAliasMapper interface {
 // Keys returns an unsorted list of keys to the Aliases map and the
 // length of the longest key.
 func (a Aliases) Keys() ([]string, int) {
-	var keys = make([]string, 0, len(a))
+	keys := make([]string, 0, len(a))
 	var maxKeyLen int
 
 	for k := range a {

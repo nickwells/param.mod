@@ -74,7 +74,6 @@ func TestStringList(t *testing.T) {
 			t.Errorf("case %d: StrList should have returned an error"+
 				" when SetWithVal(..., '%s') was called but didn't",
 				i, tc.val)
-
 		} else if !tc.shouldReturnErr {
 			if err != nil {
 				t.Errorf("case %d: StrList should not return an error"+

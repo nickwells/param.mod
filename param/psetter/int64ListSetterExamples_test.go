@@ -11,7 +11,7 @@ import (
 func ExampleInt64List_standard() {
 	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
 
-	var il = []int64{42}
+	il := []int64{42}
 
 	ps.Add("my-ints",
 		psetter.Int64List{
@@ -40,7 +40,7 @@ func ExampleInt64List_standard() {
 func ExampleInt64List_withPassingChecks() {
 	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
 
-	var il = []int64{42}
+	il := []int64{42}
 
 	ps.Add("my-ints",
 		psetter.Int64List{
@@ -74,7 +74,7 @@ func ExampleInt64List_withPassingChecks() {
 func ExampleInt64List_withFailingChecks() {
 	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
 
-	var il = []int64{42}
+	il := []int64{42}
 
 	ps.Add("my-ints",
 		psetter.Int64List{

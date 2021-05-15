@@ -141,7 +141,6 @@ func TestSetEnv(t *testing.T) {
 			panicked, tc.panicExpected,
 			panicVal, tc.panicMustContain)
 	}
-
 }
 
 func panicEnvPrefix(t *testing.T, seq []pfxFunc, ps *param.PSet) (panicked bool, panicVal interface{}) {
