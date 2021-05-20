@@ -74,7 +74,7 @@ func (h StdHelp) ProcessArgs(ps *param.PSet) {
 			if h.pageOutput {
 				pgr = pager.Start(ps)
 			}
-			twc = twrap.NewTWConfOrPanic(twrap.SetWriter(ps.StdWriter()))
+			twc = twrap.NewTWConfOrPanic(twrap.SetWriter(ps.StdW()))
 		}
 
 		if h.helpFormat != helpFmtTypeMarkdown {

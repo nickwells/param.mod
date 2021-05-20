@@ -51,7 +51,7 @@ func (nh noHelp) ErrorHandler(ps *param.PSet, errs param.ErrMap) {
 	if len(errs) == 0 {
 		return
 	}
-	twc, err := twrap.NewTWConf(twrap.SetWriter(ps.ErrWriter()))
+	twc, err := twrap.NewTWConf(twrap.SetWriter(ps.ErrW()))
 	if err != nil {
 		panic(fmt.Sprint("Couldn't build the text wrapper:", err))
 	}

@@ -14,7 +14,7 @@ func (nh noHelpNoExit) ProcessArgs(ps *param.PSet)       {}
 func (nh noHelpNoExit) Help(ps *param.PSet, s ...string) {}
 func (nh noHelpNoExit) AddParams(ps *param.PSet)         {}
 func (nh noHelpNoExit) ErrorHandler(ps *param.PSet, errs param.ErrMap) {
-	twc, err := twrap.NewTWConf(twrap.SetWriter(ps.ErrWriter()))
+	twc, err := twrap.NewTWConf(twrap.SetWriter(ps.ErrW()))
 	if err != nil {
 		panic(fmt.Sprint("Couldn't build the text wrapper:", err))
 	}

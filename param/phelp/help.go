@@ -33,13 +33,13 @@ func (h StdHelp) printHelpMessages(twc *twrap.TWConf, messages ...string) {
 // standard writer (stdout) and os.Exit will be called with an exit status of
 // 1 to indicate an error.
 func (h StdHelp) Help(ps *param.PSet, messages ...string) {
-	w := ps.StdWriter()
+	w := ps.StdW()
 
 	if h.sectionsChosen.hasNothingChosen() {
 		if err := h.setHelpSections(standardHelpSectionAlias); err != nil {
 			panic(fmt.Sprint("Couldn't set the default help sections:", err))
 		}
-		w = ps.ErrWriter()
+		w = ps.ErrW()
 	}
 	twc := twrap.NewTWConfOrPanic(twrap.SetWriter(w))
 

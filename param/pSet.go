@@ -157,7 +157,7 @@ func SetErrWriter(w io.Writer) PSetOptFunc {
 		if w == nil {
 			return fmt.Errorf("param.SetErrWriter cannot take a nil value")
 		}
-		ps.SetErrWriter(w)
+		ps.SetErrW(w)
 		return nil
 	}
 }
@@ -169,7 +169,7 @@ func SetStdWriter(w io.Writer) PSetOptFunc {
 		if w == nil {
 			return fmt.Errorf("param.SetStdWriter cannot take a nil value")
 		}
-		ps.SetStdWriter(w)
+		ps.SetStdW(w)
 		return nil
 	}
 }
@@ -213,7 +213,7 @@ func NewSet(psof ...PSetOptFunc) (*PSet, error) {
 
 		terminalParam: DfltTerminalParam,
 
-		Writers: pager.DfltWriters(),
+		Writers: pager.W(),
 
 		exitOnParamSetupErr: true,
 	}
@@ -221,7 +221,7 @@ func NewSet(psof ...PSetOptFunc) (*PSet, error) {
 	for _, f := range psof {
 		err := f(ps)
 		if err != nil {
-			fmt.Fprintf(ps.ErrWriter(),
+			fmt.Fprintf(ps.ErrW(),
 				"An error was detected while creating the PSet: %s\n",
 				err)
 			if ps.exitOnParamSetupErr {
@@ -238,7 +238,7 @@ func NewSet(psof ...PSetOptFunc) (*PSet, error) {
 
 	if ps.helper == nil {
 		err := errors.New("A helper must be passed when creating a PSet")
-		fmt.Fprintln(ps.ErrWriter(), err)
+		fmt.Fprintln(ps.ErrW(), err)
 		if ps.exitOnParamSetupErr {
 			os.Exit(1)
 		}

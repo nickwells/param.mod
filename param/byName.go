@@ -370,11 +370,11 @@ func (p *ByName) processParam(loc *location.L, paramParts []string) {
 // StdWriter returns the standard writer of the PSet that this parameter
 // belongs to
 func (p ByName) StdWriter() io.Writer {
-	return p.ps.StdWriter()
+	return p.ps.StdW()
 }
 
 // ErrWriter returns the error writer of the PSet that this parameter
 // belongs to
 func (p ByName) ErrWriter() io.Writer {
-	return p.ps.ErrWriter()
+	return p.ps.ErrW()
 }
