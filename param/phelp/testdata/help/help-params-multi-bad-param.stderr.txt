@@ -1,5 +1,5 @@
 PROGRAM NAME UNKNOWN: an error was found
-      help-params - 1 error
+      help-params:
             Bad parameter names: "no-such-param"
                                  "not-a-param"
             To see a list of parameter names try '-help-show params-named'.

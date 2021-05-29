@@ -1,5 +1,5 @@
 PROGRAM NAME UNKNOWN: an error was found
-      params-file - 1 error
+      params-file:
             no file name has been given
             At: [command line]: Supplied Parameter:2: -params-file
 

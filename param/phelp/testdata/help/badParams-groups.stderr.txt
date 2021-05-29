@@ -1,5 +1,5 @@
 PROGRAM NAME UNKNOWN: an error was found
-      help-groups - 1 error
+      help-groups:
             Bad group names: "nonesuch1"
                              "nonesuch2"
                              "nonesuch3"

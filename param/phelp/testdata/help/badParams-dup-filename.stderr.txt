@@ -1,5 +1,5 @@
 PROGRAM NAME UNKNOWN: an error was found
-      params-file - 1 error
+      params-file:
             the file name ("testdata/configFiles/param.cfg") has been seen
             before
             At: [command line]: Supplied Parameter:4: -params-file
