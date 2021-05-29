@@ -64,7 +64,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			"For the full help message use the -"+helpFullArgName+
 			" parameter",
 		param.Attrs(param.CommandLineOnly),
-		param.AltName("usage"),
+		param.AltNames("usage"),
 		param.PostAction(setHelpSections(h, standardHelpSectionAlias)),
 		param.GroupName(groupName))
 
@@ -72,7 +72,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		"show all parts of the help message and all"+
 			" parameters, including hidden ones."+
 			exitAfterHelpMessage,
-		param.AltName("help-f"),
+		param.AltNames("help-f"),
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.PostAction(setHelpSections(h, allHelpSectionAlias)),
 		param.PostAction(paction.SetBool(&h.showHiddenItems, true)),
@@ -84,7 +84,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			" standard help message. This will reveal them."+
 			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.AltName("help-a"),
+		param.AltNames("help-a"),
 		param.PostAction(paction.SetBool(&h.showHiddenItems, true)),
 		param.PostAction(paction.SetBool(&h.helpRequested, true)),
 		param.GroupName(groupName))
@@ -94,8 +94,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			" are shown, descriptions are not shown."+
 			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.AltName("help-s"),
-		param.AltName("help-short"),
+		param.AltNames("help-s", "help-short"),
 		param.PostAction(paction.SetBool(&h.hideDescriptions, true)),
 		param.PostAction(paction.SetBool(&h.helpRequested, true)),
 		param.GroupName(groupName))
@@ -107,8 +106,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			" and the "+helpSummaryArgName+" parameters."+
 			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.AltName("help-as"),
-		param.AltName("help-sa"),
+		param.AltNames("help-as", "help-sa"),
 		param.PostAction(paction.SetBool(&h.showHiddenItems, true)),
 		param.PostAction(paction.SetBool(&h.hideDescriptions, true)),
 		param.PostAction(paction.SetBool(&h.helpRequested, true)),
@@ -125,8 +123,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			" This will also force hidden parameters to be shown."+
 			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.AltName("help-group"),
-		param.AltName("help-g"),
+		param.AltNames("help-group", "help-g"),
 		param.ValueName("group-name,..."),
 		param.PostAction(checkGroups(h, ps)),
 		param.PostAction(paction.SetBool(&h.showHiddenItems, true)),
@@ -143,8 +140,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		"when printing the help message only show the listed parameters."+
 			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.AltName("help-param"),
-		param.AltName("help-p"),
+		param.AltNames("help-param", "help-p"),
 		param.ValueName("param-name,..."),
 		param.PostAction(checkParams(h, ps)),
 		param.GroupName(groupName))
@@ -159,8 +155,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		"when printing the help message only show the listed notes."+
 			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.AltName("help-note"),
-		param.AltName("help-n"),
+		param.AltNames("help-note", "help-n"),
 		param.ValueName("note-name,..."),
 		param.PostAction(checkNotes(h, ps)),
 		param.PostAction(setHelpSections(h, notesHelpSectionName)),
@@ -206,8 +201,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			" (as given by the value of the 'PAGER' environment"+
 			" variable or 'less' if 'PAGER' is not set or the command"+
 			" it refers to cannot be found)",
-		param.AltName("help-dont-page"),
-		param.AltName("help-no-pager"),
+		param.AltNames("help-dont-page", "help-no-pager"),
 		param.GroupName(groupName),
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 	)

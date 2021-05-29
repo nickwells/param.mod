@@ -95,8 +95,7 @@ func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
 			" with each parameter on a separate line. Comments,"+
 			" white space etc. will be"+
 			" treated as in any other configuration file",
-		param.AltName("params-from"),
-		param.AltName("params-f"),
+		param.AltNames("params-from", "params-f"),
 		param.PostAction(param.ConfigFileActionFunc),
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.GroupName(groupName))

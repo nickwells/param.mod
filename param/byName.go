@@ -252,6 +252,24 @@ func AltName(altName string) OptFunc {
 	}
 }
 
+// AltNames will attach multiple alternative names to the parameter.
+// It will return an error if any alternative name has already been used
+func AltNames(altNames ...string) OptFunc {
+	return func(p *ByName) error {
+		for _, altName := range altNames {
+			altName = strings.TrimSpace(altName)
+
+			if err := p.ps.nameCheck(altName, p.whereAdded); err != nil {
+				return err
+			}
+
+			p.ps.nameToParam[altName] = p
+			p.altNames = append(p.altNames, altName)
+		}
+		return nil
+	}
+}
+
 // ValueName returns an OptFunc that will set the short value name used in
 // the parameter summary (it follows the "=" after the parameter name). If
 // this is not empty this will be used in preference to either the param
