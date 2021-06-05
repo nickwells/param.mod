@@ -57,14 +57,14 @@ test-group1              [ 6 parameters, 1 hidden ]
                             that can be interpreted as true or false. The value
                             must be given after an '=', not as a following
                             value, as this is optional
-      [-param5=Enum]
+      [-param5=v1|v2]
             help...
             Allowed values: a string
                             The value must be one of the following:
                                v1: a value
                                v2: another value
             Initial value: v1
-      [-param6=Enum]
+      [-param6=v2|v1]
             help...
             Allowed values: (see parameter: param5)
             Initial value: v2
