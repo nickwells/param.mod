@@ -2,6 +2,7 @@ package psetter
 
 import (
 	"fmt"
+	"sort"
 )
 
 // Enum allows you to give a parameter that will only allow one of an
@@ -58,4 +59,35 @@ func (s Enum) CheckSetter(name string) {
 		panic(fmt.Sprintf("%sthe initial value (%s) is not valid",
 			intro, *s.Value))
 	}
+}
+
+// ValDescribe returns a brief description of the allowed values suitable for
+// appearing after the parameter name. Note that the full list of values is
+// truncated if it gets too long.
+func (s Enum) ValDescribe() string {
+	const maxValDescLen = 20
+	initialVal := *s.Value
+
+	var desc string
+	if s.ValueAllowed(initialVal) {
+		desc = initialVal
+	}
+	avals := []string{}
+	for val := range s.AllowedVals {
+		avals = append(avals, val)
+	}
+	sort.Strings(avals)
+	for _, val := range avals {
+		if val == initialVal {
+			continue
+		}
+		if len(desc) > 0 {
+			desc += "|"
+		}
+		if len(desc)+len(val) > maxValDescLen {
+			return desc + "..."
+		}
+		desc += val
+	}
+	return desc
 }
