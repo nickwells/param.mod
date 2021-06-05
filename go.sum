@@ -12,8 +12,8 @@ github.com/nickwells/location.mod v1.2.19 h1:oLPtx+VHRzXdrjgcNxmGQg8GUAMVZpfqhFP
 github.com/nickwells/location.mod v1.2.19/go.mod h1:X7kCYStvR9ceZsIjW+xLksGQd60WBqyH1O2HV5BrMlc=
 github.com/nickwells/mathutil.mod v1.0.19 h1:2ypVypTmPB23TmaMCx54B6DDRubkmOjvcHT1EXKrS1A=
 github.com/nickwells/mathutil.mod v1.0.19/go.mod h1:pRpxz7tr1B8OEdnug+0Tjiv0UCrGEaOsbyyw3+FLfJE=
-github.com/nickwells/pager.mod v1.0.2 h1:QoNbI/ir4SJ9ECjxStNjKL4MIE5XoWmokJcKare6x60=
-github.com/nickwells/pager.mod v1.0.2/go.mod h1:T8aAmD2k47T/nhwTQ/Hs5dAYuXwfKw1uMg5W0QsAtxw=
+github.com/nickwells/pager.mod v1.0.3 h1:hQnUa/w3B1xNk4polmBYel2qX/upkk+nL5Ebl17fmDI=
+github.com/nickwells/pager.mod v1.0.3/go.mod h1:GBTxz8ypkmq1HV2qdd92ob0H77a0BXvUO4cCRdnfqAU=
 github.com/nickwells/strdist.mod v1.1.2 h1:S7k5midagI1RgOyzwMQvjLS+MO/W06inQ9ZieFnN+AI=
 github.com/nickwells/strdist.mod v1.1.2/go.mod h1:kVBlSi2MtOHZ/SIpDRHYD/OXTDNyJq37gK7dqGnma4E=
 github.com/nickwells/testhelper.mod v1.15.1 h1:CHOqnYXRXkIUDAv0fubNx220MyKAiFMNmmKD1glFtvU=
@@ -23,7 +23,7 @@ github.com/nickwells/twrap.mod v1.4.14/go.mod h1:U/WQ+bTHs0BsLWHnrmHTwfJaZHnV3QI
 github.com/nickwells/xdg.mod v1.0.5 h1:BkCim2ft//W1dlmh96z39YpIL4dJE7UQ1dDcMHtnfdU=
 github.com/nickwells/xdg.mod v1.0.5/go.mod h1:h8lRJMpY6oXdD6E3jJuolpO9QJE5FcTvUe8eyRzgyQo=
 golang.org/x/sys v0.0.0-20201119102817-f84b799fce68/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
-golang.org/x/sys v0.0.0-20210525143221-35b2ab0089ea h1:+WiDlPBBaO+h9vPNZi8uJ3k4BkKQB7Iow3aqwHVA5hI=
-golang.org/x/sys v0.0.0-20210525143221-35b2ab0089ea/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+golang.org/x/sys v0.0.0-20210603125802-9665404d3644 h1:CA1DEQ4NdKphKeL70tvsWNdT5oFh1lOjihRcEDROi0I=
+golang.org/x/sys v0.0.0-20210603125802-9665404d3644/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/term v0.0.0-20210503060354-a79de5458b56 h1:b8jxX3zqjpqb2LklXPzKSGJhzyxCOZSz8ncv8Nv+y7w=
 golang.org/x/term v0.0.0-20210503060354-a79de5458b56/go.mod h1:tfny5GFUkzUvx4ps4ajbZsCe5lw1metzhBm9T3x7oIY=
