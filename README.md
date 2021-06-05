@@ -173,8 +173,8 @@ and `AddGroup...` functions on the `PSet`).
 ## Parameter files
 Parameter files are intended to allow common parameters to be set once in the
 file and avoid the need to repeat them each time a command is run. The files
-can include other files through a `#include` directive and comments can be
-added with a leading `//`. The values of the include directives and comment
+can include other files through an `@include` directive and comments can be
+added with a leading `#`. The values of the include directives and comment
 introducers can be changed programmatically or they can be disallowed. White
 space and blank lines are ignored and the parameters must not have their
 leading `-` or `--` characters.
