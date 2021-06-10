@@ -2,8 +2,8 @@ github.com/nickwells/check.mod v1.6.15 h1:/WtR408qZM0ItnfvroDKo2B6LvF34NJPyWyGt2
 github.com/nickwells/check.mod v1.6.15/go.mod h1:GcJoD+3Di7Xl7kHZJ8NZXqTnCuLhD6jLnPItKdQDopc=
 github.com/nickwells/english.mod v1.0.14 h1:SWUPJ6cBPOXfroGk/2kPpUG3GgY01bfTOAlg/Yvsv1s=
 github.com/nickwells/english.mod v1.0.14/go.mod h1:2LsgOCktzVKgRvysFJBUczJ5sMNgdtIIax1R38XH+/A=
-github.com/nickwells/errutil.mod v1.2.0 h1:+fchPqrLpz8SLzvYPiauCuYixNbjKRsO2TtbIKkVrOU=
-github.com/nickwells/errutil.mod v1.2.0/go.mod h1:fizmowLOgxt5bjMuEsTzIuy45Y0Y06DW9yUNLjisCvo=
+github.com/nickwells/errutil.mod v1.2.1 h1:G6f4MmD60XEjKPu5N/fKzh6NjGXtphXDz+z0SE0xJ4E=
+github.com/nickwells/errutil.mod v1.2.1/go.mod h1:SQv6BQcSp6vVAHEhkzAb3Fq+f9SlyeWNejgK6elkVuU=
 github.com/nickwells/filecheck.mod v1.1.11 h1:S5tQOgd8bWFpZW+ZhBp6DF8eI390QiE+Nna9VVMi4x8=
 github.com/nickwells/filecheck.mod v1.1.11/go.mod h1:sjaD9rXHmCF0nGFxKVSagoGfNw+A9Q8UxP3AmJfnJic=
 github.com/nickwells/fileparse.mod v1.1.23 h1:dvggDN9bNxTwkf8P7BFgVPU1viYxRKaxSQinFlQMBQo=
@@ -18,8 +18,8 @@ github.com/nickwells/strdist.mod v1.1.2 h1:S7k5midagI1RgOyzwMQvjLS+MO/W06inQ9Zie
 github.com/nickwells/strdist.mod v1.1.2/go.mod h1:kVBlSi2MtOHZ/SIpDRHYD/OXTDNyJq37gK7dqGnma4E=
 github.com/nickwells/testhelper.mod v1.15.1 h1:CHOqnYXRXkIUDAv0fubNx220MyKAiFMNmmKD1glFtvU=
 github.com/nickwells/testhelper.mod v1.15.1/go.mod h1:Ct/U2PjL0n9hGc+US6uR/s4NxSRI33NM+0ZkrDkG0XI=
-github.com/nickwells/twrap.mod v1.4.14 h1:ApwZHnSMJu2GgmK9oKnU/h4PrxHC1wMMp0/Ot3waToY=
-github.com/nickwells/twrap.mod v1.4.14/go.mod h1:U/WQ+bTHs0BsLWHnrmHTwfJaZHnV3QIrq31VKjTgXPo=
+github.com/nickwells/twrap.mod v1.4.15 h1:uY5TgaDrUxhUV1SVn09i45W1V3XS9YC8In1aJlOsmNM=
+github.com/nickwells/twrap.mod v1.4.15/go.mod h1:U/WQ+bTHs0BsLWHnrmHTwfJaZHnV3QIrq31VKjTgXPo=
 github.com/nickwells/xdg.mod v1.0.5 h1:BkCim2ft//W1dlmh96z39YpIL4dJE7UQ1dDcMHtnfdU=
 github.com/nickwells/xdg.mod v1.0.5/go.mod h1:h8lRJMpY6oXdD6E3jJuolpO9QJE5FcTvUe8eyRzgyQo=
 golang.org/x/sys v0.0.0-20201119102817-f84b799fce68/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
