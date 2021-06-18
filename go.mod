@@ -7,8 +7,8 @@ require (
 	github.com/nickwells/filecheck.mod v1.1.11
 	github.com/nickwells/fileparse.mod v1.1.23
 	github.com/nickwells/location.mod v1.2.19
-	github.com/nickwells/pager.mod v1.0.4
-	github.com/nickwells/strdist.mod v1.1.2
+	github.com/nickwells/pager.mod v1.0.5
+	github.com/nickwells/strdist.mod v1.1.3
 	github.com/nickwells/testhelper.mod v1.15.1
 	github.com/nickwells/twrap.mod v1.4.15
 	github.com/nickwells/xdg.mod v1.0.5
