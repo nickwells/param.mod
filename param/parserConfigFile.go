@@ -115,13 +115,11 @@ func (lp cmdLineParamLineParser) ParseLine(line string, loc *location.L) error {
 		paramParts[1] = strings.TrimSpace(paramParts[1])
 	}
 
-	p, exists := lp.ps.nameToParam[paramName]
-	if !exists {
+	if p, ok := lp.ps.nameToParam[paramName]; ok {
+		p.processParam(loc, paramParts)
+	} else {
 		lp.ps.recordUnexpectedParam(paramName, loc)
-		return nil
 	}
-
-	p.processParam(loc, paramParts)
 
 	return nil
 }
