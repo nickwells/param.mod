@@ -20,7 +20,7 @@ func SuggestParams(ps *PSet, s string) []string {
 // SuggestGroups finds those group names the shortest distance from the
 // passed value and returns them
 func SuggestGroups(ps *PSet, s string) []string {
-	names := make([]string, 0, len(ps.nameToParam))
+	names := make([]string, 0, len(ps.groups))
 	for n := range ps.groups {
 		names = append(names, n)
 	}
@@ -31,7 +31,7 @@ func SuggestGroups(ps *PSet, s string) []string {
 // SuggestNotes finds those note names the shortest distance from the
 // passed value and returns them
 func SuggestNotes(ps *PSet, s string) []string {
-	names := make([]string, 0, len(ps.nameToParam))
+	names := make([]string, 0, len(ps.notes))
 	for n := range ps.notes {
 		names = append(names, n)
 	}
