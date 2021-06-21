@@ -259,16 +259,22 @@ func checkGroups(h *StdHelp, ps *param.PSet) param.ActionFunc {
 		var badNames []string
 		for gName := range h.groupsChosen {
 			if !ps.HasGroupName(gName) {
+				delete(h.groupsChosen, gName)
+				matches, _ := ps.FindMatchingGroups(gName)
+				if len(matches) > 0 {
+					for _, gn := range matches {
+						h.groupsChosen[gn] = true
+					}
+					continue
+				}
 				badNames = append(badNames, fmt.Sprintf("%q", gName))
 			}
 		}
+
 		if len(badNames) == 0 {
 			return nil
 		}
-		if len(badNames) == len(h.groupsChosen) {
-			for k := range h.groupsChosen {
-				delete(h.groupsChosen, k)
-			}
+		if len(h.groupsChosen) == 0 {
 			err := h.unsetHelpSections(
 				groupsHelpSectionName, groupedParamsHelpSectionName)
 			if err != nil {
@@ -288,18 +294,23 @@ func checkGroups(h *StdHelp, ps *param.PSet) param.ActionFunc {
 func checkNotes(h *StdHelp, ps *param.PSet) param.ActionFunc {
 	return func(_ location.L, _ *param.ByName, _ []string) error {
 		var badNames []string
-		for n := range h.notesChosen {
-			if _, err := ps.GetNote(n); err != nil {
-				badNames = append(badNames, n)
+		for nName := range h.notesChosen {
+			if _, err := ps.GetNote(nName); err != nil {
+				delete(h.notesChosen, nName)
+				matches, _ := ps.FindMatchingNotes(nName)
+				if len(matches) > 0 {
+					for _, nn := range matches {
+						h.notesChosen[nn] = true
+					}
+					continue
+				}
+				badNames = append(badNames, nName)
 			}
 		}
 		if len(badNames) == 0 {
 			return nil
 		}
-		if len(badNames) == len(h.notesChosen) {
-			for k := range h.notesChosen {
-				delete(h.notesChosen, k)
-			}
+		if len(h.notesChosen) == 0 {
 			err := h.unsetHelpSections(notesHelpSectionName)
 			if err != nil {
 				return err
@@ -319,16 +330,22 @@ func checkParams(h *StdHelp, ps *param.PSet) param.ActionFunc {
 		for pName := range h.paramsChosen {
 			trimmedName := strings.TrimLeft(pName, "-")
 			if _, err := ps.GetParamByName(trimmedName); err != nil {
+				delete(h.paramsChosen, pName)
+				matches, _ := ps.FindMatchingNamedParams(trimmedName)
+				if len(matches) > 0 {
+					for _, pn := range matches {
+						h.paramsChosen[pn] = true
+					}
+					continue
+				}
 				badNames = append(badNames, fmt.Sprintf("%q", pName))
 			}
 		}
+
 		if len(badNames) == 0 {
 			return nil
 		}
-		if len(badNames) == len(h.paramsChosen) {
-			for k := range h.paramsChosen {
-				delete(h.paramsChosen, k)
-			}
+		if len(h.paramsChosen) == 0 {
 			err := h.unsetHelpSections(
 				namedParamsHelpSectionName, groupedParamsHelpSectionName)
 			if err != nil {
