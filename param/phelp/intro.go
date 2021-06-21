@@ -8,7 +8,7 @@ import (
 // showIntro prints the program name and, optionally, the description
 func showIntro(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	if h.sectionsChosen[usageHelpSectionName] &&
-		(h.hideDescriptions || ps.ProgDesc() == "") {
+		(h.showSummary || ps.ProgDesc() == "") {
 		return false
 	}
 
@@ -25,7 +25,7 @@ func showIntro(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 func showIntroFmtStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) {
 	twc.Print(ps.ProgName() + "\n")
 
-	if h.hideDescriptions {
+	if h.showSummary {
 		return
 	}
 	twc.Wrap(ps.ProgDesc(), 0)
@@ -35,7 +35,7 @@ func showIntroFmtStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) {
 func showIntroFmtMD(h StdHelp, twc *twrap.TWConf, ps *param.PSet) {
 	twc.Print("# " + ps.ProgBaseName() + "\n\n")
 
-	if h.hideDescriptions {
+	if h.showSummary {
 		return
 	}
 	desc := makeTextMarkdownSafe(ps.ProgDesc())

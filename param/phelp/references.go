@@ -27,7 +27,7 @@ func showReferencesFmtStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 
 	for _, r := range refs {
 		twc.Wrap("\n"+r.Name+"\n", paramIndent)
-		if h.hideDescriptions {
+		if h.showSummary {
 			continue
 		}
 		twc.Wrap(r.Desc, descriptionIndent)
@@ -44,7 +44,7 @@ func showReferencesFmtMD(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 		twc.Print("```\n")
 		twc.Wrap(r.Name, 0)
 		twc.Print("```\n")
-		if h.hideDescriptions {
+		if h.showSummary {
 			continue
 		}
 		desc := makeTextMarkdownSafe(r.Desc)

@@ -32,7 +32,7 @@ func printByPosParam(h StdHelp, twc *twrap.TWConf, ps *param.PSet, i int) {
 	bp, _ := ps.GetParamByPos(i)
 	twc.Wrap(fmt.Sprintf("%d) %s", i+1, bp.Name()), paramIndent)
 
-	if h.hideDescriptions {
+	if h.showSummary {
 		return
 	}
 	twc.Wrap(bp.Description(), descriptionIndent)
@@ -63,7 +63,7 @@ func showGroups(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 		if !groupCanBeShown(h, g) {
 			continue
 		}
-		if !h.hideDescriptions {
+		if !h.showSummary {
 			printSep = printSepIf(twc, printSep, minorSectionSeparator)
 		}
 		h.printGroup(twc, g, maxNameLen)
@@ -150,7 +150,7 @@ func (h StdHelp) printParamUsage(twc *twrap.TWConf, p *param.ByName) {
 	paramNames += optSuffix
 	twc.Wrap2Indent(paramNames, paramIndent, paramLine2Indent)
 
-	if h.hideDescriptions {
+	if h.showSummary {
 		return
 	}
 
@@ -298,7 +298,7 @@ func (h StdHelp) printGroup(twc *twrap.TWConf, g *param.Group, maxLen int) {
 		}
 	}
 	twc.Print(" ]\n")
-	if h.hideDescriptions {
+	if h.showSummary {
 		return
 	}
 	if g.Desc != "" {

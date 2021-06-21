@@ -95,7 +95,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.AltNames("help-s", "help-short"),
-		param.PostAction(paction.SetBool(&h.hideDescriptions, true)),
+		param.PostAction(paction.SetBool(&h.showSummary, true)),
 		param.PostAction(paction.SetBool(&h.helpRequested, true)),
 		param.GroupName(groupName))
 
@@ -108,7 +108,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.AltNames("help-as", "help-sa"),
 		param.PostAction(paction.SetBool(&h.showHiddenItems, true)),
-		param.PostAction(paction.SetBool(&h.hideDescriptions, true)),
+		param.PostAction(paction.SetBool(&h.showSummary, true)),
 		param.PostAction(paction.SetBool(&h.helpRequested, true)),
 		param.GroupName(groupName))
 

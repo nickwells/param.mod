@@ -7,12 +7,22 @@ import (
 
 // showConfigFiles prints the config files that can be used to configure the
 // behaviour of the program
-func showConfigFiles(twc *twrap.TWConf, cf []param.ConfigFileDetails) {
+func showConfigFiles(h StdHelp, twc *twrap.TWConf, cf []param.ConfigFileDetails) {
 	if len(cf) == 0 {
 		return
 	}
-	twc.Print("\n  Common Configuration Files\n\n")
+	if h.showSummary {
+		for _, f := range cf {
+			if f.ParamsMustExist() {
+				twc.Println("config-file::" + f.String())
+			} else {
+				twc.Println("multi-program-config-file::" + f.String())
+			}
+		}
+		return
+	}
 
+	twc.Print("\n  Common Configuration Files\n\n")
 	var hasStrictFiles bool
 	for _, f := range cf {
 		prefix := "      "
@@ -37,10 +47,18 @@ type groupCF struct {
 
 // showGroupConfigFiles prints the config files specific to particular groups
 // of parameters that can be used to configure the behaviour of the program
-func showGroupConfigFiles(twc *twrap.TWConf, gf []groupCF) {
+func showGroupConfigFiles(h StdHelp, twc *twrap.TWConf, gf []groupCF) {
 	if len(gf) == 0 {
 		return
 	}
+	if h.showSummary {
+		for _, f := range gf {
+			twc.Println("group-config-file:" + f.groupName +
+				":" + f.cf.String()) //nolint: errcheck
+		}
+		return
+	}
+
 	twc.Print("\n  Group Configuration Files\n\n")
 
 	for _, f := range gf {
@@ -68,6 +86,12 @@ func showGroupConfigFiles(twc *twrap.TWConf, gf []groupCF) {
 // program
 func showEnvPrefixes(h StdHelp, twc *twrap.TWConf, ep []string) {
 	if len(ep) == 0 {
+		return
+	}
+	if h.showSummary {
+		for _, e := range ep {
+			twc.Println("env-var-prefix::" + e)
+		}
 		return
 	}
 	twc.Print("\n  Environment Variables\n\n")
@@ -104,21 +128,25 @@ func showAltSources(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	ep := ps.EnvPrefixes()
 
 	if len(gf) == 0 && len(cf) == 0 && len(ep) == 0 {
-		twc.Wrap("There are no alternative sources, parameters can only"+
-			" be set through the command line",
-			textIndent)
+		if h.showSummary {
+			twc.Wrap("none", textIndent)
+		} else {
+			twc.Wrap("There are no alternative sources, parameters can only"+
+				" be set through the command line",
+				textIndent)
+		}
 		return true
 	}
 
-	twc.Print("Alternative Sources\n\n")
-	if !h.hideDescriptions {
+	if !h.showSummary {
+		twc.Print("Alternative Sources\n\n")
 		twc.Wrap("Program parameters may be set through the command line"+
 			" but also through these additional sources.",
 			0)
 	}
 
-	showGroupConfigFiles(twc, gf)
-	showConfigFiles(twc, cf)
+	showGroupConfigFiles(h, twc, gf)
+	showConfigFiles(h, twc, cf)
 	showEnvPrefixes(h, twc, ep)
 
 	twc.Print("\n")

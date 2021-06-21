@@ -183,10 +183,10 @@ type StdHelp struct {
 	paramsChosen   choices
 	notesChosen    choices
 
-	showHiddenItems  bool
-	hideDescriptions bool
-	helpRequested    bool
-	pageOutput       bool
+	showHiddenItems bool
+	showSummary     bool
+	helpRequested   bool
+	pageOutput      bool
 
 	helpFormat string
 

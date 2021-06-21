@@ -26,7 +26,7 @@ func showExamplesFmtStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 
 	for _, e := range ex {
 		twc.Wrap("\n"+e.Ex+"\n", paramIndent)
-		if h.hideDescriptions {
+		if h.showSummary {
 			continue
 		}
 		twc.Wrap(e.Desc, descriptionIndent)
@@ -43,7 +43,7 @@ func showExamplesFmtMD(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 		twc.Print("```sh\n")
 		twc.Print(e.Ex + "\n")
 		twc.Print("```\n")
-		if h.hideDescriptions {
+		if h.showSummary {
 			continue
 		}
 		desc := makeTextMarkdownSafe(e.Desc)

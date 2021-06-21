@@ -64,7 +64,7 @@ func showNotesFmtStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 			continue
 		}
 		twc.Wrap(n.Headline, paramIndent)
-		if h.hideDescriptions {
+		if h.showSummary {
 			continue
 		}
 
@@ -108,7 +108,7 @@ func showNotesFmtMD(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 
 	for _, headline := range keys {
 		twc.Print("## " + makeTextMarkdownSafe(headline) + "\n")
-		if h.hideDescriptions {
+		if h.showSummary {
 			continue
 		}
 
