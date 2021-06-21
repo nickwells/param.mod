@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path"
 	"sort"
 	"strings"
 
@@ -509,4 +510,61 @@ func (ps PSet) HasEnvPrefixes() bool {
 // config files for this program, false otherwise
 func (ps PSet) HasGlobalConfigFiles() bool {
 	return len(ps.configFiles) > 0
+}
+
+// FindMatchingNamedParams returns a, possibly empty, slice of parameter
+// names which match the pattern and an error which will only be non-nil if
+// the pattern is malformed.
+func (ps PSet) FindMatchingNamedParams(pattern string) ([]string, error) {
+	matches := []string{}
+
+	for name := range ps.nameToParam {
+		ok, err := path.Match(pattern, name)
+		if err != nil {
+			return []string{}, err
+		}
+		if ok {
+			matches = append(matches, name)
+		}
+	}
+
+	return matches, nil
+}
+
+// FindMatchingGroups returns a, possibly empty, slice of group names which
+// match the pattern and an error which will only be non-nil if the pattern
+// is malformed.
+func (ps PSet) FindMatchingGroups(pattern string) ([]string, error) {
+	matches := []string{}
+
+	for name := range ps.groups {
+		ok, err := path.Match(pattern, name)
+		if err != nil {
+			return []string{}, err
+		}
+		if ok {
+			matches = append(matches, name)
+		}
+	}
+
+	return matches, nil
+}
+
+// FindMatchingNotes returns a, possibly empty, slice of note names which
+// match the pattern and an error which will only be non-nil if the pattern
+// is malformed.
+func (ps PSet) FindMatchingNotes(pattern string) ([]string, error) {
+	matches := []string{}
+
+	for name := range ps.notes {
+		ok, err := path.Match(pattern, name)
+		if err != nil {
+			return []string{}, err
+		}
+		if ok {
+			matches = append(matches, name)
+		}
+	}
+
+	return matches, nil
 }
