@@ -1,6 +1,7 @@
 package psetter
 
 import (
+	"errors"
 	"fmt"
 	"sort"
 	"strconv"
@@ -45,8 +46,10 @@ type EnumMap struct {
 // entries in the map of strings pointed to by the Value. It returns a error
 // for the first invalid value.
 func (s EnumMap) SetWithVal(_ string, paramVal string) error {
-	sep := s.GetSeparator()
-	values := strings.Split(paramVal, sep)
+	if paramVal == "" {
+		return errors.New("empty value. Some value must be given")
+	}
+	values := strings.Split(paramVal, s.GetSeparator())
 
 	for i, v := range values {
 		parts := strings.SplitN(v, "=", 2)
@@ -143,4 +146,39 @@ func (s EnumMap) CheckSetter(name string) {
 				intro, k))
 		}
 	}
+}
+
+// ValDescribe returns a brief description of the allowed values suitable for
+// appearing after the parameter name. Note that the full list of values is
+// truncated if it gets too long.
+func (s EnumMap) ValDescribe() string {
+	const maxValDescLen = 20
+
+	var desc string
+
+	avals := []string{}
+	for val := range s.AllowedVals {
+		avals = append(avals, val)
+	}
+	for val := range s.Aliases {
+		avals = append(avals, val)
+	}
+
+	sort.Strings(avals)
+	sep := ""
+	var incomplete bool
+	optEqVal := [...]string{"", "=false", "=true"}
+	for i, val := range avals {
+		eqVal := optEqVal[i%len(optEqVal)]
+		if len(desc)+len(val)+len(eqVal)+len(sep) > maxValDescLen {
+			incomplete = true
+			continue
+		}
+		desc += sep + val + eqVal
+		sep = s.GetSeparator()
+	}
+	if incomplete {
+		desc += "..."
+	}
+	return desc
 }
