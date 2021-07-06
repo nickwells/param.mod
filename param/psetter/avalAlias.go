@@ -1,6 +1,7 @@
 package psetter
 
 import (
+	"errors"
 	"fmt"
 	"sort"
 	"strings"
@@ -63,24 +64,30 @@ func (a Aliases) String() string {
 // is not allowed.
 func (a Aliases) Check(av AllowedVals) error {
 	for ak, v := range a {
-		pfx := fmt.Sprintf("Alias %q is invalid", ak)
+		pfx := fmt.Sprintf("Bad alias: %q: %q - ", ak, v)
 		if len(v) == 0 {
-			return fmt.Errorf("%s - it has an empty value", pfx)
+			return errors.New(pfx + "it has an empty value")
 		}
 
 		if _, ok := av[ak]; ok {
-			return fmt.Errorf("%s - there is an allowed value of the same name",
-				pfx)
+			return errors.New(pfx + "an allowed value has the same name")
+		}
+
+		if ak == "" {
+			return errors.New(pfx + "the alias name may not be blank")
+		}
+		if strings.ContainsRune(ak, '=') {
+			return errors.New(pfx + "the alias name may not contain '=': ")
 		}
 
 		seenBefore := map[string]bool{}
 		for _, avk := range v {
 			if seenBefore[avk] {
-				return fmt.Errorf("%s - %q is in the list twice", pfx, avk)
+				return fmt.Errorf("%s%q appears more than once", pfx, avk)
 			}
 			seenBefore[avk] = true
 			if _, ok := av[avk]; !ok {
-				return fmt.Errorf("%s - %q is not in the allowed values",
+				return fmt.Errorf("%s%q is not an allowed value",
 					pfx, avk)
 			}
 		}

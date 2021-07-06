@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"sort"
+	"strings"
 )
 
 // AllowedVals - this maps allowed values for an enumerated parameter to
@@ -71,9 +72,18 @@ func (av AllowedVals) Check() error {
 	case 1:
 		return errors.New("the map of allowed values has only 1 entry. " +
 			minEntries)
-	default:
-		return nil
 	}
+
+	for k, v := range av {
+		pfx := fmt.Sprintf("Bad allowed value: %q: %q - ", k, v)
+		if k == "" {
+			return errors.New(pfx + "the allowed value may not be blank")
+		}
+		if strings.ContainsRune(k, '=') {
+			return errors.New(pfx + "the allowed value may not contain '=': ")
+		}
+	}
+	return nil
 }
 
 // AllowedValuesMap returns a copy of the map of allowed values. This will be

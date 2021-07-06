@@ -99,8 +99,7 @@ func TestSetterEnumMap(t *testing.T) {
 			},
 			ExpPanic: testhelper.MkExpPanic(
 				"psetter.EnumMap Check failed: ",
-				`Alias "x" is invalid`,
-				` - there is an allowed value of the same name`),
+				`Bad alias: "x": ["y"] - an allowed value has the same name`),
 		},
 		{
 			ID: testhelper.MkID("bad-alias-empty"),
@@ -116,8 +115,7 @@ func TestSetterEnumMap(t *testing.T) {
 			},
 			ExpPanic: testhelper.MkExpPanic(
 				"psetter.EnumMap Check failed: ",
-				`Alias "x" is invalid`,
-				` - it has an empty value`),
+				`Bad alias: "x": [] - it has an empty value`),
 		},
 		{
 			ID: testhelper.MkID("bad-alias-duplicate"),
@@ -133,7 +131,7 @@ func TestSetterEnumMap(t *testing.T) {
 			},
 			ExpPanic: testhelper.MkExpPanic(
 				"psetter.EnumMap Check failed: ",
-				`Alias "z" is invalid - "x" is in the list twice`),
+				`Bad alias: "z": ["x" "x"] - "x" appears more than once`),
 		},
 		{
 			ID: testhelper.MkID("bad-alias-not-an-aval"),
@@ -149,7 +147,7 @@ func TestSetterEnumMap(t *testing.T) {
 			},
 			ExpPanic: testhelper.MkExpPanic(
 				"psetter.EnumMap Check failed: ",
-				`Alias "z" is invalid - "a" is not in the allowed values`),
+				`Bad alias: "z": ["a"] - "a" is not an allowed value`),
 		},
 		{
 			ID: testhelper.MkID("hidden-initial-entry"),
