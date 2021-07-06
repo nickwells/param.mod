@@ -51,6 +51,17 @@ func (s EnumMap) SetWithVal(_ string, paramVal string) error {
 	}
 	values := strings.Split(paramVal, s.GetSeparator())
 
+	err := s.checkValues(paramVal, values)
+	if err != nil {
+		return err
+	}
+	s.setValues(values)
+	return nil
+}
+
+// checkValues checks that all the values given are OK and returns an error
+// for any bad value
+func (s EnumMap) checkValues(paramVal string, values []string) error {
 	for i, v := range values {
 		parts := strings.SplitN(v, "=", 2)
 		// check the name is an allowed value
@@ -66,11 +77,17 @@ func (s EnumMap) SetWithVal(_ string, paramVal string) error {
 				return fmt.Errorf("bad value: %q:"+
 					" part: %d (%q) is invalid."+
 					" The value (%q) cannot be interpreted"+
-					" as true or false: %s",
+					" as true or false: %w",
 					paramVal, i+1, v, parts[1], err)
 			}
 		}
 	}
+	return nil
+}
+
+// setValues sets the values in the Value map from the strings in the slice
+// which have already been checked for validity.
+func (s EnumMap) setValues(values []string) {
 	for _, v := range values {
 		parts := strings.SplitN(v, "=", 2)
 
@@ -88,7 +105,6 @@ func (s EnumMap) SetWithVal(_ string, paramVal string) error {
 			(*s.Value)[k] = b
 		}
 	}
-	return nil
 }
 
 // AllowedValues returns a string listing the allowed values
