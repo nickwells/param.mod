@@ -37,7 +37,7 @@ func (s Setter) Test(t *testing.T) {
 
 	panicked, panicVal := testhelper.PanicSafe(
 		func() {
-			s.PSetter.CheckSetter(s.Name)
+			s.PSetter.CheckSetter(s.ParamName)
 		})
 	testhelper.CheckExpPanic(t, panicked, panicVal, s)
 	if panicked || s.PanicExpected() {
