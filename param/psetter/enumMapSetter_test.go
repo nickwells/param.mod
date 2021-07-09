@@ -241,14 +241,10 @@ func TestSetterEnumMap(t *testing.T) {
 	for _, tc := range testCases {
 		tc.GFC = commonEnumMapGFC
 		tc.ValDescriber = true
-		tc.VRExp = param.Mandatory
 		if tc.ParamName == "" {
 			tc.ParamName = "set-enum-map"
 		}
-		tc.SetErr = testhelper.MkExpErr(
-			`a value must follow this parameter: "` +
-				tc.ParamName +
-				`", either following an '=' or as the next parameter`)
+		tc.SetVR(param.Mandatory)
 
 		nilMap = nil
 		emptyMap = map[string]bool{}
