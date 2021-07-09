@@ -31,6 +31,29 @@ type Setter struct {
 	ExtraTest func(*testing.T, Setter)
 }
 
+// SetVR sets the VRExp value to the supplied vr and generates appropriate
+// SetErr or SetWithValErr entries accordingly. The errors are generated
+// assuming that you have used the psetter.ValueReq... types when building
+// your Setter; if you have not used these types you may need to generate the
+// errors yourself.
+//
+// Note that this uses the Setters ParamName field so that must have its
+// final value before this method is called.
+func (s *Setter) SetVR(vr param.ValueReq) {
+	s.VRExp = vr
+
+	switch vr {
+	case param.Mandatory:
+		var vrm psetter.ValueReqMandatory
+		err := vrm.Set(s.ParamName)
+		s.SetErr = testhelper.MkExpErr(err.Error())
+	case param.None:
+		var vrm psetter.ValueReqNone
+		err := vrm.SetWithVal(s.ParamName, "")
+		s.SetWithValErr = testhelper.MkExpErr(err.Error())
+	}
+}
+
 // Test performs all the tests
 func (s Setter) Test(t *testing.T) {
 	t.Helper()
