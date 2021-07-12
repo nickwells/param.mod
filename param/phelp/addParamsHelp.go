@@ -204,6 +204,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		param.AltNames("help-dont-page", "help-no-pager"),
 		param.GroupName(groupName),
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
+		param.PostAction(paction.SetBool(&h.helpRequested, true)),
 	)
 
 	// Final checks
