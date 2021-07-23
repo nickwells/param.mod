@@ -89,7 +89,7 @@ func (s Setter) Test(t *testing.T) {
 		s.IDStr()+" - Set", err, s.SetErr)
 	cv = s.PSetter.CurrentValue()
 	s.GFC.Check(t,
-		s.IDStr()+" - Value after Set",
+		s.IDStr()+` - Value after Set("`+s.ParamName+`")`,
 		s.Name+".val-postSet", []byte(cv))
 
 	err = s.PSetter.SetWithVal(s.ParamName, s.ParamVal)
@@ -97,7 +97,8 @@ func (s Setter) Test(t *testing.T) {
 		s.IDStr()+" - SetWithVal", err, s.SetWithValErr)
 	cv = s.PSetter.CurrentValue()
 	s.GFC.Check(t,
-		s.IDStr()+" - Value after SetWithVal",
+		s.IDStr()+
+			` - Value after SetWithVal("`+s.ParamName+`", "`+s.ParamVal+")",
 		s.Name+".val-postSetWithVal", []byte(cv))
 
 	if s.ValDescriber {
