@@ -13,11 +13,35 @@ import (
 // =============================================
 
 // ByName represents a parameter which is set by matching a name - it
-// includes details such as: the primary name; any alternate names by which it
-// can be set; the name of the group to which it belongs; the action to take
-// when it is observed (typically setting a value); the description (used in
-// the help message); the place(s) where it has been set - the last one takes
-// precedence and the attributes
+// includes details such as:
+//
+// - the parameter name
+//
+// - any alternate names by which it can be set
+//
+// - the name of the group to which it belongs
+//
+// - the action to take when it is observed (typically setting a value)
+//
+// - the description (used in the help message)
+//
+// - the attributes
+//
+// - the place(s) where it has been set - the last one takes precedence
+//
+// This should not be created directly. The Add method on the PSet will
+// generate a ByName and add it to the set of program parameters, A pointer
+// to the ByName is returned.
+//
+// Most of the values and methods on this are for the purposes of generating
+// the help message and enforcing usage restrictions when parsing the program
+// parameters.
+//
+// For anyone not writing a bespoke help class the only useful method on this
+// class is the HasBeenSet method. You can record the ByName pointer returned
+// by the PSet.Add method and then in a FinalCheck function you can test
+// whether or not this and other parameters were set and use confirm that the
+// combination of parameters is allowed. See the PSet.AddFinalCheck method.
 type ByName struct {
 	ps              *PSet
 	name            string
