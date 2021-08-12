@@ -10,15 +10,20 @@ import (
 func ExampleEnumMap_standard() {
 	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
 
+	const (
+		XOption = "x"
+		YOption = "y"
+	)
+
 	var m map[string]bool
-	keys := []string{"x", "y"}
+	keys := []string{XOption, YOption}
 
 	ps.Add("my-map",
 		psetter.EnumMap{
 			Value: &m,
 			AllowedVals: psetter.AllowedVals{
-				"x": "X",
-				"y": "Y",
+				XOption: "a description of this option",
+				YOption: "what this option means",
 			},
 		}, "help text")
 
@@ -47,15 +52,20 @@ func ExampleEnumMap_standard() {
 func ExampleEnumMap_fixingInitialValue() {
 	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
 
+	const (
+		XOption = "x"
+		YOption = "y"
+	)
+
 	m := map[string]bool{"x": true}
-	keys := []string{"x", "y"}
+	keys := []string{XOption, YOption}
 
 	ps.Add("my-map",
 		psetter.EnumMap{
 			Value: &m,
 			AllowedVals: psetter.AllowedVals{
-				"x": "X",
-				"y": "Y",
+				XOption: "a description of this option",
+				YOption: "what this option means",
 			},
 		}, "help text")
 
@@ -88,15 +98,20 @@ func ExampleEnumMap_fixingInitialValue() {
 func ExampleEnumMap_hiddenMapEntries() {
 	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
 
+	const (
+		XOption = "x"
+		YOption = "y"
+	)
+
 	m := map[string]bool{"z": true}
-	keys := []string{"x", "y", "z"}
+	keys := []string{XOption, YOption, "z"}
 
 	ps.Add("my-map",
 		psetter.EnumMap{
 			Value: &m,
 			AllowedVals: psetter.AllowedVals{
-				"x": "X",
-				"y": "Y",
+				XOption: "a description of this option",
+				YOption: "what this option means",
 			},
 			AllowHiddenMapEntries: true,
 		}, "help text")
@@ -137,6 +152,11 @@ func ExampleEnumMap_withBadKey() {
 
 	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
 
+	const (
+		XOption = "x"
+		YOption = "y"
+	)
+
 	m := map[string]bool{"z": true}
 
 	// we expect this to panic because the map has an entry which is not in
@@ -145,8 +165,8 @@ func ExampleEnumMap_withBadKey() {
 		psetter.EnumMap{
 			Value: &m,
 			AllowedVals: psetter.AllowedVals{
-				"x": "X",
-				"y": "Y",
+				XOption: "a description of this option",
+				YOption: "what this option means",
 			},
 		}, "help text")
 	// Output:
@@ -168,12 +188,17 @@ func ExampleEnumMap_withNilValue() {
 
 	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
 
+	const (
+		XOption = "x"
+		YOption = "y"
+	)
+
 	// we expect this to panic because the map Value has not been initialised
 	ps.Add("my-map",
 		psetter.EnumMap{
 			AllowedVals: psetter.AllowedVals{
-				"x": "X",
-				"y": "Y",
+				XOption: "a description of this option",
+				YOption: "what this option means",
 			},
 		}, "help text")
 	// Output:

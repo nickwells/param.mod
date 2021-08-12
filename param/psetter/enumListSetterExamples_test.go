@@ -11,14 +11,19 @@ import (
 func ExampleEnumList_standard() {
 	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
 
+	const (
+		XOption = "x"
+		YOption = "y"
+	)
+
 	var ss []string
 
 	ps.Add("my-list",
 		psetter.EnumList{
 			Value: &ss,
 			AllowedVals: psetter.AllowedVals{
-				"x": "X",
-				"y": "Y",
+				XOption: "a description of this option",
+				YOption: "what this option means",
 			},
 		}, "help text")
 
@@ -45,14 +50,19 @@ func ExampleEnumList_standard() {
 func ExampleEnumList_withBadVals() {
 	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
 
+	const (
+		XOption = "x"
+		YOption = "y"
+	)
+
 	var ss []string
 
 	ps.Add("my-list",
 		psetter.EnumList{
 			Value: &ss,
 			AllowedVals: psetter.AllowedVals{
-				"x": "X",
-				"y": "Y",
+				XOption: "a description of this option",
+				YOption: "what this option means",
 			},
 		}, "help text")
 
@@ -84,14 +94,19 @@ func ExampleEnumList_withBadVals() {
 func ExampleEnumList_withPassingChecks() {
 	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
 
+	const (
+		XOption = "x"
+		YOption = "y"
+	)
+
 	var ss []string
 
 	ps.Add("my-list",
 		psetter.EnumList{
 			Value: &ss,
 			AllowedVals: psetter.AllowedVals{
-				"x": "X",
-				"y": "Y",
+				XOption: "a description of this option",
+				YOption: "what this option means",
 			},
 			Checks: []check.StringSlice{
 				check.StringSliceLenEQ(2),
@@ -123,14 +138,19 @@ func ExampleEnumList_withPassingChecks() {
 func ExampleEnumList_withFailingChecks() {
 	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
 
+	const (
+		XOption = "x"
+		YOption = "y"
+	)
+
 	var ss []string
 
 	ps.Add("my-list",
 		psetter.EnumList{
 			Value: &ss,
 			AllowedVals: psetter.AllowedVals{
-				"x": "X",
-				"y": "Y",
+				XOption: "a description of this option",
+				YOption: "what this option means",
 			},
 			Checks: []check.StringSlice{
 				check.StringSliceLenEQ(2),
@@ -173,12 +193,17 @@ func ExampleEnumList_withNilValue() {
 
 	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
 
+	const (
+		XOption = "x"
+		YOption = "y"
+	)
+
 	// we expect this to panic because the list Value has not been initialised
 	ps.Add("my-list",
 		psetter.EnumList{
 			AllowedVals: psetter.AllowedVals{
-				"x": "X",
-				"y": "Y",
+				XOption: "a description of this option",
+				YOption: "what this option means",
 			},
 		}, "help text")
 	// Output:

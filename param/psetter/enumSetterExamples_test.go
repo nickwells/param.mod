@@ -10,14 +10,19 @@ import (
 func ExampleEnum_standard() {
 	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
 
-	s := "x"
+	const (
+		XOption = "x"
+		YOption = "y"
+	)
+
+	s := XOption
 
 	ps.Add("my-string",
 		psetter.Enum{
 			Value: &s,
 			AllowedVals: psetter.AllowedVals{
-				"x": "X",
-				"y": "Y",
+				XOption: "a description of this option",
+				YOption: "what this option means",
 			},
 		}, "help text")
 
@@ -40,14 +45,19 @@ func ExampleEnum_standard() {
 func ExampleEnum_withBadVal() {
 	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
 
-	s := "x"
+	const (
+		XOption = "x"
+		YOption = "y"
+	)
+
+	s := XOption
 
 	ps.Add("my-string",
 		psetter.Enum{
 			Value: &s,
 			AllowedVals: psetter.AllowedVals{
-				"x": "X",
-				"y": "Y",
+				XOption: "a description of this option",
+				YOption: "what this option means",
 			},
 		}, "help text")
 
@@ -85,12 +95,17 @@ func ExampleEnum_withNilValue() {
 
 	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
 
+	const (
+		XOption = "x"
+		YOption = "y"
+	)
+
 	// we expect this to panic because the Value has not been initialised
 	ps.Add("my-string",
 		psetter.Enum{
 			AllowedVals: psetter.AllowedVals{
-				"x": "X",
-				"y": "Y",
+				XOption: "a description of this option",
+				YOption: "what this option means",
 			},
 		}, "help text")
 	// Output:
@@ -112,6 +127,11 @@ func ExampleEnum_withBadInitialValue() {
 
 	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
 
+	const (
+		XOption = "x"
+		YOption = "y"
+	)
+
 	s := "z"
 
 	// we expect this to panic because the Value has an invalid initial value
@@ -119,8 +139,8 @@ func ExampleEnum_withBadInitialValue() {
 		psetter.Enum{
 			Value: &s,
 			AllowedVals: psetter.AllowedVals{
-				"x": "X",
-				"y": "Y",
+				XOption: "a description of this option",
+				YOption: "what this option means",
 			},
 		}, "help text")
 	// Output:
