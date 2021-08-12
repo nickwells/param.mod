@@ -59,7 +59,7 @@ func (ps *PSet) EnvPrefixes() []string {
 // added by AddEnvPrefix. It should have the opposite effect to the
 // ConvertEnvVarNameToParamName function
 func ConvertParamNameToEnvVarName(name string) string {
-	return strings.Replace(name, "-", "_", -1)
+	return strings.ReplaceAll(name, "-", "_")
 }
 
 // ConvertEnvVarNameToParamName converts an environment variable name to a
@@ -67,7 +67,7 @@ func ConvertParamNameToEnvVarName(name string) string {
 // should have been stripped off first. It should have the opposite effect to
 // the ConvertParamNameToEnvVarName function
 func ConvertEnvVarNameToParamName(name string) string {
-	return strings.Replace(name, "_", "-", -1)
+	return strings.ReplaceAll(name, "_", "-")
 }
 
 func (ps *PSet) getParamsFromEnvironment() {

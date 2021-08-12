@@ -40,7 +40,7 @@ var (
 	int64Val2 int64 = 2
 )
 
-var float64Val3 float64 = 3.333
+var float64Val3 = float64(3.333)
 
 var boolVal4 bool
 
