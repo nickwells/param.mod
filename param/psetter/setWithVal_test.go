@@ -74,7 +74,7 @@ func TestSetWithVal(t *testing.T) {
 		},
 	}
 
-	var vInt64List []int64 = []int64{1, 2}
+	vInt64List := []int64{1, 2}
 	setterInt64List := psetter.Int64List{Value: &vInt64List}
 	setterInt64ListWithChecks := psetter.Int64List{
 		Value: &vInt64List,

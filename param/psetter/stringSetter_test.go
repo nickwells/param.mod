@@ -8,7 +8,7 @@ import (
 )
 
 func TestString(t *testing.T) {
-	var value string = "initialValue"
+	value := "initialValue"
 	ss := psetter.String{
 		Value: &value,
 	}
@@ -40,7 +40,7 @@ func TestString(t *testing.T) {
 }
 
 func TestStringList(t *testing.T) {
-	var value []string = make([]string, 0)
+	value := make([]string, 0)
 	ss := psetter.StrList{Value: &value}
 
 	if pvr := ss.ValueReq(); pvr != param.Mandatory {

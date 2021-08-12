@@ -37,7 +37,7 @@ func (s TimeLocation) CountChecks() int {
 func (s TimeLocation) SetWithVal(_ string, paramVal string) error {
 	v, err := time.LoadLocation(paramVal)
 	if err != nil {
-		convertedVal := strings.Replace(paramVal, " ", "_", -1)
+		convertedVal := strings.ReplaceAll(paramVal, " ", "_")
 		var e2 error
 		v, e2 = time.LoadLocation(convertedVal)
 		if e2 != nil {
