@@ -46,8 +46,8 @@ type Parser struct {
 // Test perfoms the test - it will call Parse on the PSet, passing the
 // Args. It will check that the mapped errors match the ErrMap returned by
 // Parse and then will call CmpFunc reporting any error that returns as a
-// test error.
-func (p Parser) Test(t *testing.T) {
+// test error. It will return a non-nil error if the test failed.
+func (p Parser) Test(t *testing.T) error {
 	t.Helper()
 
 	errMap := errutil.ErrMap(p.Ps.Parse(p.Args))
@@ -55,13 +55,17 @@ func (p Parser) Test(t *testing.T) {
 	if err := errMap.Matches(p.ExpParseErrors); err != nil {
 		t.Log(p.IDStr())
 		t.Logf("\t: Unexpected parsing errors: %s\n", err)
+		t.Logf("\t: Actual:\n%s\n", errMap)
+		t.Logf("\t: Expected:\n%s\n", p.ExpParseErrors)
 		t.Error("\t: Parsing failed in an unexpected way\n")
-		return
+		return err
 	}
 
 	if err := p.CheckFunc(p.Val, p.ExpVal); err != nil {
 		t.Log(p.IDStr())
 		t.Logf("\t: Unexpected error: %s\n", err)
 		t.Error("\t: The resultant value is not as expected\n")
+		return err
 	}
+	return nil
 }
