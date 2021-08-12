@@ -13,7 +13,7 @@ type Int64 struct {
 	ValueReqMandatory
 
 	// You must set a Value, the program will panic if not. This is a pointer
-	// to the int64 value that the setter is settng.
+	// to the int64 value that the setter is setting.
 	Value *int64
 	// The Checks, if any, are applied to the supplied parameter value and
 	// the Value will only be update if they all return a nil error.
