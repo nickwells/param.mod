@@ -16,10 +16,11 @@ import (
 // the PSet remembers whether Parse has previously been called and will panic
 // if called twice.
 //
-// If the CmpFunc returns
-// a non-nil error the test is taken to have failed. The CmpFunc will be
-// passed the Val and ExpVal values and should check that the contents of Val
-// after parsing the Args matches the ExpVal. Strictly all you need do is check that the .
+// If the CmpFunc returns a non-nil error the test is taken to have
+// failed. The CmpFunc will be passed the Val and ExpVal values and should
+// check that the contents of Val after parsing the Args matches the
+// ExpVal. You might find the testhelper.DiffVals func to be of help with
+// this.
 //
 // You should construct the PSet, adding params that set values in Val so
 // that when the supplied Args are Parsed they will update that value ready
