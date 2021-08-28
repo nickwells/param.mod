@@ -9,7 +9,7 @@ import (
 
 // ExampleTimeLocation_standard demonstrates the use of a TimeLocation setter
 func ExampleTimeLocation_standard() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	var loc *time.Location
 
@@ -28,14 +28,14 @@ func ExampleTimeLocation_standard() {
 // not been initialised. Note that in production code you should not recover
 // from the panic, instead you should fix the code that caused it.
 func ExampleTimeLocation_withNilValue() {
-	defer func() {
+	defer func() { // For test purposes only - do not recover in live code
 		if p := recover(); p != nil {
 			fmt.Println("panic")
 			fmt.Println(p)
 		}
 	}()
 
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	ps.Add("location", psetter.TimeLocation{}, "help text")
 

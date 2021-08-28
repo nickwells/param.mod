@@ -9,7 +9,7 @@ import (
 
 // ExampleString_standard demonstrates the use of a String setter
 func ExampleString_standard() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	var s string
 
@@ -26,7 +26,7 @@ func ExampleString_standard() {
 // ExampleString_withPassingChecks demonstrates how to add checks to be
 // applied to the value.
 func ExampleString_withPassingChecks() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	var s string
 
@@ -51,7 +51,7 @@ func ExampleString_withPassingChecks() {
 // return from ps.Parse as the standard Helper will report any errors and
 // abort the program.
 func ExampleString_withFailingChecks() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	var s string
 
@@ -84,14 +84,14 @@ func ExampleString_withFailingChecks() {
 // been initialised. Note that in production code you should not recover from
 // the panic, instead you should fix the code that caused it.
 func ExampleString_withNilValue() {
-	defer func() {
+	defer func() { // For test purposes only - do not recover in live code
 		if p := recover(); p != nil {
 			fmt.Println("panic")
 			fmt.Println(p)
 		}
 	}()
 
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	ps.Add("my-string", psetter.String{}, "help text")
 

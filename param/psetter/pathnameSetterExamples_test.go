@@ -10,7 +10,7 @@ import (
 
 // ExamplePathname_standard demonstrates the use of a Pathname setter.
 func ExamplePathname_standard() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	var pathname string
 
@@ -27,7 +27,7 @@ func ExamplePathname_standard() {
 // ExamplePathname_withPassingExpectation demonstrates the use of a Pathname
 // setter which has the Expectation set.
 func ExamplePathname_withPassingExpectation() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	var pathname string
 
@@ -51,7 +51,7 @@ func ExamplePathname_withPassingExpectation() {
 // to examine the return from ps.Parse as the standard Helper will report any
 // errors and abort the program.
 func ExamplePathname_withFailingExpectation() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	var pathname string
 
@@ -79,7 +79,7 @@ func ExamplePathname_withFailingExpectation() {
 // ExamplePathname_withPassingChecks demonstrates the use of a Pathname
 // setter which has Checks. Note that it also has the Expectation set.
 func ExamplePathname_withPassingChecks() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	var pathname string
 
@@ -106,14 +106,14 @@ func ExamplePathname_withPassingChecks() {
 // initialised. Note that in production code you should not recover
 // from the panic, instead you should fix the code that caused it.
 func ExamplePathname_withNilValue() {
-	defer func() {
+	defer func() { // For test purposes only - do not recover in live code
 		if p := recover(); p != nil {
 			fmt.Println("panic")
 			fmt.Println(p)
 		}
 	}()
 
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	// we expect this to panic because the bool Value has not been initialised
 	ps.Add("do-this", psetter.Pathname{}, "help text")

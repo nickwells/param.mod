@@ -9,7 +9,7 @@ import (
 
 // ExampleEnumList_standard demonstrates the use of an EnumList setter
 func ExampleEnumList_standard() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	const (
 		XOption = "x"
@@ -31,7 +31,9 @@ func ExampleEnumList_standard() {
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}
+
 	ps.Parse([]string{"-my-list", "x,y"})
+
 	fmt.Println("After  parsing")
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
@@ -48,7 +50,7 @@ func ExampleEnumList_standard() {
 // to examine the return from ps.Parse as the standard Helper will report any
 // errors and abort the program.
 func ExampleEnumList_withBadVals() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	const (
 		XOption = "x"
@@ -70,11 +72,14 @@ func ExampleEnumList_withBadVals() {
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}
+
 	// Parse the arguments. We supply a list of strings but note that one of
 	// them is not in the list of allowed values.
 	errMap := ps.Parse([]string{"-my-list", "x,z"})
+
 	// We expect to see an error reported.
 	logErrs(errMap)
+
 	// The slice of strings is unchanged due to the error.
 	fmt.Println("After  parsing")
 	for i, v := range ss {
@@ -92,7 +97,7 @@ func ExampleEnumList_withBadVals() {
 // additional checks to be applied to the passed arguments before the value
 // is set.
 func ExampleEnumList_withPassingChecks() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	const (
 		XOption = "x"
@@ -117,7 +122,9 @@ func ExampleEnumList_withPassingChecks() {
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}
+
 	ps.Parse([]string{"-my-list", "x,y"})
+
 	fmt.Println("After  parsing")
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
@@ -136,7 +143,7 @@ func ExampleEnumList_withPassingChecks() {
 // is normally no need to examine the return from ps.Parse as the standard
 // Helper will report any errors and abort the program.
 func ExampleEnumList_withFailingChecks() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	const (
 		XOption = "x"
@@ -161,11 +168,14 @@ func ExampleEnumList_withFailingChecks() {
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}
+
 	// Parse the arguments. We supply a list of strings, each of which is
 	// allowed. The resulting slice is of the wrong length.
 	errMap := ps.Parse([]string{"-my-list", "x"})
+
 	// We expect to see an error reported.
 	logErrs(errMap)
+
 	// The slice of strings is unchanged due to the error.
 	fmt.Println("After  parsing")
 	for i, v := range ss {
@@ -184,14 +194,14 @@ func ExampleEnumList_withFailingChecks() {
 // not been initialised. Note that in production code you should not recover
 // from the panic, instead you should fix the code that caused it.
 func ExampleEnumList_withNilValue() {
-	defer func() {
+	defer func() { // For test purposes only - do not recover in live code
 		if p := recover(); p != nil {
 			fmt.Println("panic")
 			fmt.Println(p)
 		}
 	}()
 
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	const (
 		XOption = "x"

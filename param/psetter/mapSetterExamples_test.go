@@ -8,7 +8,7 @@ import (
 
 // ExampleMap_standard demonstrates the use of an Map setter.
 func ExampleMap_standard() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	var m map[string]bool
 	keys := []string{"x", "y"}
@@ -38,7 +38,7 @@ func ExampleMap_standard() {
 // changed through the command line. That is, it is possible to change the
 // value of a map entry to false as well as to true.
 func ExampleMap_fixingInitialValue() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	m := map[string]bool{"x": true}
 	keys := []string{"x", "y"}
@@ -71,14 +71,14 @@ func ExampleMap_fixingInitialValue() {
 // been initialised. Note that in production code you should not recover from
 // the panic, instead you should fix the code that caused it.
 func ExampleMap_withNilValue() {
-	defer func() {
+	defer func() { // For test purposes only - do not recover in live code
 		if p := recover(); p != nil {
 			fmt.Println("panic")
 			fmt.Println(p)
 		}
 	}()
 
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	// we expect this to panic because the map Value has not been initialised
 	ps.Add("my-map", psetter.Map{}, "help text")

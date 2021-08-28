@@ -10,7 +10,7 @@ import (
 
 // ExampleTime_standard demonstrates the use of a Time setter
 func ExampleTime_standard() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	var t time.Time
 
@@ -27,7 +27,7 @@ func ExampleTime_standard() {
 // ExampleTime_withFormat demonstrates the use of a Time setter with a
 // non-default Format value
 func ExampleTime_withFormat() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	var t time.Time
 
@@ -49,7 +49,7 @@ func ExampleTime_withFormat() {
 // ExampleTime_withPassingChecks demonstrates how to add checks to be applied
 // to the value.
 func ExampleTime_withPassingChecks() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	var t time.Time
 
@@ -75,7 +75,7 @@ func ExampleTime_withPassingChecks() {
 // from ps.Parse as the standard Helper will report any errors and abort the
 // program.
 func ExampleTime_withFailingChecks() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	var t time.Time
 
@@ -108,14 +108,14 @@ func ExampleTime_withFailingChecks() {
 // been initialised. Note that in production code you should not recover from
 // the panic, instead you should fix the code that caused it.
 func ExampleTime_withNilValue() {
-	defer func() {
+	defer func() { // For test purposes only - do not recover in live code
 		if p := recover(); p != nil {
 			fmt.Println("panic")
 			fmt.Println(p)
 		}
 	}()
 
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	ps.Add("my-time", psetter.Time{}, "help text")
 

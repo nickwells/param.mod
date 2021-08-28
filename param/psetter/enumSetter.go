@@ -7,6 +7,22 @@ import (
 
 // Enum allows you to give a parameter that will only allow one of an
 // enumerated range of values which are specified in the AllowedVals map.
+//
+// It is recommended that you should use string constants for setting the
+// value and for initialising the allowed values map to avoid possible
+// errors.
+//
+// The advantages of const values are:
+//
+// - typos become compilation errors rather than silently failing.
+//
+// - the name of the constant value can distinguish between the string value
+// and it's meaning as a semantic element representing a flag used to choose
+// program behaviour.
+//
+// - the name that you give the const value can distinguish between identical
+// strings and show which of various flags with the same string value you
+// actually mean.
 type Enum struct {
 	ValueReqMandatory
 	// The AllowedVals must be set, the program will panic if not. The Value

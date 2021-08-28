@@ -8,7 +8,7 @@ import (
 
 // ExampleEnumMap_standard demonstrates the use of an EnumMap setter.
 func ExampleEnumMap_standard() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	const (
 		XOption = "x"
@@ -33,7 +33,9 @@ func ExampleEnumMap_standard() {
 			fmt.Printf("\tm[%s] = %v\n", k, v)
 		}
 	}
+
 	ps.Parse([]string{"-my-map", "x"})
+
 	fmt.Println("After  parsing")
 	for _, k := range keys {
 		if v, ok := m[k]; ok {
@@ -50,7 +52,7 @@ func ExampleEnumMap_standard() {
 // changed through the command line. That is, it is possible to change the
 // value of a map entry to false as well as to true.
 func ExampleEnumMap_fixingInitialValue() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	const (
 		XOption = "x"
@@ -75,7 +77,9 @@ func ExampleEnumMap_fixingInitialValue() {
 			fmt.Printf("\tm[%s] = %v\n", k, v)
 		}
 	}
+
 	ps.Parse([]string{"-my-map", "x=false,y"})
+
 	fmt.Println("After  parsing")
 	for _, k := range keys {
 		if v, ok := m[k]; ok {
@@ -96,7 +100,7 @@ func ExampleEnumMap_fixingInitialValue() {
 // reported. Note that it is not possible to set such a map value as the key
 // will be rejected as invalid.
 func ExampleEnumMap_hiddenMapEntries() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	const (
 		XOption = "x"
@@ -109,10 +113,13 @@ func ExampleEnumMap_hiddenMapEntries() {
 	ps.Add("my-map",
 		psetter.EnumMap{
 			Value: &m,
-			AllowedVals: psetter.AllowedVals{
+			AllowedVals: psetter.AllowedVals{ // Note there's no 'z' value
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},
+
+			// Setting AllowHiddenMapEntries to true prevents the 'z' entry
+			// causing an error
 			AllowHiddenMapEntries: true,
 		}, "help text")
 
@@ -122,7 +129,9 @@ func ExampleEnumMap_hiddenMapEntries() {
 			fmt.Printf("\tm[%s] = %v\n", k, v)
 		}
 	}
+
 	ps.Parse([]string{"-my-map", "y"})
+
 	fmt.Println("After  parsing")
 	for _, k := range keys {
 		if v, ok := m[k]; ok {
@@ -143,14 +152,14 @@ func ExampleEnumMap_hiddenMapEntries() {
 // you should not recover from the panic, instead you should fix the code
 // that caused it.
 func ExampleEnumMap_withBadKey() {
-	defer func() {
+	defer func() { // For test purposes only - do not recover in live code
 		if p := recover(); p != nil {
 			fmt.Println("panic")
 			fmt.Println(p)
 		}
 	}()
 
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	const (
 		XOption = "x"
@@ -164,7 +173,7 @@ func ExampleEnumMap_withBadKey() {
 	ps.Add("my-map",
 		psetter.EnumMap{
 			Value: &m,
-			AllowedVals: psetter.AllowedVals{
+			AllowedVals: psetter.AllowedVals{ // Note there's no 'z' value
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},
@@ -179,14 +188,14 @@ func ExampleEnumMap_withBadKey() {
 // been initialised. Note that in production code you should not recover from
 // the panic, instead you should fix the code that caused it.
 func ExampleEnumMap_withNilValue() {
-	defer func() {
+	defer func() { // For test purposes only - do not recover in live code
 		if p := recover(); p != nil {
 			fmt.Println("panic")
 			fmt.Println(p)
 		}
 	}()
 
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	const (
 		XOption = "x"

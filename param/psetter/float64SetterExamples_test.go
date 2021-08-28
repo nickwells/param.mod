@@ -9,7 +9,7 @@ import (
 
 // ExampleFloat64_standard demonstrates the use of a Float64 setter.
 func ExampleFloat64_standard() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	var f float64
 
@@ -33,7 +33,7 @@ func ExampleFloat64_standard() {
 // ExampleFloat64_withPassingChecks demonstrates how to add checks to be
 // applied to the value.
 func ExampleFloat64_withPassingChecks() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	var f float64
 
@@ -62,7 +62,7 @@ func ExampleFloat64_withPassingChecks() {
 // to examine the return from ps.Parse as the standard Helper will report any
 // errors and abort the program.
 func ExampleFloat64_withFailingChecks() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	var f float64
 
@@ -99,14 +99,14 @@ func ExampleFloat64_withFailingChecks() {
 // been initialised. Note that in production code you should not recover from
 // the panic, instead you should fix the code that caused it.
 func ExampleFloat64_withNilValue() {
-	defer func() {
+	defer func() { // For test purposes only - do not recover in live code
 		if p := recover(); p != nil {
 			fmt.Println("panic")
 			fmt.Println(p)
 		}
 	}()
 
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	// we expect this to panic because the map Value has not been initialised
 	ps.Add("my-float", psetter.Float64{}, "help text")

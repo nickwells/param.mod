@@ -10,9 +10,21 @@ import (
 // EnumList sets the values in a slice of strings. The values must be in
 // the allowed values map.
 //
-// It is recommended that you should use string constants for setting and
-// accessing the map entries and for initialising the allowed values map to
-// avoid possible errors.
+// It is recommended that you should use string constants for setting the
+// list entries and for initialising the allowed values map to avoid possible
+// errors.
+//
+// The advantages of const values are:
+//
+// - typos become compilation errors rather than silently failing.
+//
+// - the name of the constant value can distinguish between the string value
+// and it's meaning as a semantic element representing a flag used to choose
+// program behaviour.
+//
+// - the name that you give the const value can distinguish between identical
+// strings and show which of various flags with the same string value you
+// actually mean.
 type EnumList struct {
 	ValueReqMandatory
 	// The AllowedVals must be set, the program will panic if not. These are

@@ -12,7 +12,7 @@ import (
 // the Nil setter does nothing itself; any effect takes place through
 // associated action functions
 func ExampleNil_standard() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	var flag1 bool
 	var flag2 bool

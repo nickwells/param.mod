@@ -8,7 +8,7 @@ import (
 
 // ExampleEnum_standard demonstrates the use of an Enum setter.
 func ExampleEnum_standard() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	const (
 		XOption = "x"
@@ -28,7 +28,9 @@ func ExampleEnum_standard() {
 
 	fmt.Println("Before parsing")
 	fmt.Printf("\ts = %s\n", s)
+
 	ps.Parse([]string{"-my-string", "y"})
+
 	fmt.Println("After  parsing")
 	fmt.Printf("\ts = %s\n", s)
 	// Output:
@@ -43,7 +45,7 @@ func ExampleEnum_standard() {
 // no need to examine the return from ps.Parse as the standard Helper will
 // report any errors and abort the program.
 func ExampleEnum_withBadVal() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	const (
 		XOption = "x"
@@ -55,7 +57,7 @@ func ExampleEnum_withBadVal() {
 	ps.Add("my-string",
 		psetter.Enum{
 			Value: &s,
-			AllowedVals: psetter.AllowedVals{
+			AllowedVals: psetter.AllowedVals{ // Note there's no 'z' value
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},
@@ -63,11 +65,14 @@ func ExampleEnum_withBadVal() {
 
 	fmt.Println("Before parsing")
 	fmt.Printf("\ts = %s\n", s)
+
 	// Parse the arguments. We supply a value but note that it is not in the
 	// list of allowed values.
 	errMap := ps.Parse([]string{"-my-string", "z"})
+
 	// We expect to see an error reported.
 	logErrs(errMap)
+
 	// The value is unchanged due to the error.
 	fmt.Println("After  parsing")
 	fmt.Printf("\ts = %s\n", s)
@@ -86,14 +91,14 @@ func ExampleEnum_withBadVal() {
 // initialised. Note that in production code you should not recover from the
 // panic, instead you should fix the code that caused it.
 func ExampleEnum_withNilValue() {
-	defer func() {
+	defer func() { // For test purposes only - do not recover in live code
 		if p := recover(); p != nil {
 			fmt.Println("panic")
 			fmt.Println(p)
 		}
 	}()
 
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	const (
 		XOption = "x"
@@ -118,14 +123,14 @@ func ExampleEnum_withNilValue() {
 // values). Note that in production code you should not recover from the
 // panic, instead you should fix the code that caused it.
 func ExampleEnum_withBadInitialValue() {
-	defer func() {
+	defer func() { // For test purposes only - do not recover in live code
 		if p := recover(); p != nil {
 			fmt.Println("panic")
 			fmt.Println(p)
 		}
 	}()
 
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	const (
 		XOption = "x"
@@ -138,7 +143,7 @@ func ExampleEnum_withBadInitialValue() {
 	ps.Add("my-string",
 		psetter.Enum{
 			Value: &s,
-			AllowedVals: psetter.AllowedVals{
+			AllowedVals: psetter.AllowedVals{ // Note there's no 'z' value
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},

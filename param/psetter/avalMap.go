@@ -12,7 +12,22 @@ import (
 // program. It is also used to validate a supplied parameter.
 //
 // It can be used as a mixin type that can be embedded in a Setter to provide
-// a restricted set of allowed values
+// a restricted set of allowed values.
+//
+// It is recommended that you should use string constants for setting the
+// map entries.
+//
+// The advantages of const values are:
+//
+// - typos become compilation errors rather than silently failing.
+//
+// - the name of the constant value can distinguish between the string value
+// and it's meaning as a semantic element representing a flag used to choose
+// program behaviour.
+//
+// - the name that you give the const value can distinguish between identical
+// strings and show which of various flags with the same string value you
+// actually mean.
 type AllowedVals map[string]string
 
 // AllowedValuesMapper is the interface to be satisfied by a type having a

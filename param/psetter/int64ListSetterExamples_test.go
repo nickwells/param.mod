@@ -9,7 +9,7 @@ import (
 
 // ExampleInt64List_standard demonstrates the use of a Int64List setter.
 func ExampleInt64List_standard() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	il := []int64{42}
 
@@ -38,7 +38,7 @@ func ExampleInt64List_standard() {
 // ExampleInt64List_withPassingChecks demonstrates how to add checks to be
 // applied to the value.
 func ExampleInt64List_withPassingChecks() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	il := []int64{42}
 
@@ -72,7 +72,7 @@ func ExampleInt64List_withPassingChecks() {
 // to examine the return from ps.Parse as the standard Helper will report any
 // errors and abort the program.
 func ExampleInt64List_withFailingChecks() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	il := []int64{42}
 
@@ -113,14 +113,14 @@ func ExampleInt64List_withFailingChecks() {
 // been initialised. Note that in production code you should not recover from
 // the panic, instead you should fix the code that caused it.
 func ExampleInt64List_withNilValue() {
-	defer func() {
+	defer func() { // For test purposes only - do not recover in live code
 		if p := recover(); p != nil {
 			fmt.Println("panic")
 			fmt.Println(p)
 		}
 	}()
 
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	// we expect this to panic because the map Value has not been initialised
 	ps.Add("my-ints", psetter.Int64List{}, "help text")

@@ -29,7 +29,7 @@ func (myEditorStrList) Edit(paramName, paramVal string) (string, error) {
 
 // ExampleStrList_withEditor demonstrates the behaviour of the Editor.
 func ExampleStrList_withEditor() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	var ss []string
 	var myE myEditorStrList

@@ -9,7 +9,7 @@ import (
 
 // ExampleStrListAppender_standard demonstrates the use of a StrListAppender
 func ExampleStrListAppender_standard() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	ss := []string{"Hello"}
 
@@ -36,7 +36,7 @@ func ExampleStrListAppender_standard() {
 // ExampleStrListAppender_withPassingChecks demonstrates how to add checks to be
 // applied to the value.
 func ExampleStrListAppender_withPassingChecks() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	ss := []string{"Hello"}
 
@@ -72,7 +72,7 @@ func ExampleStrListAppender_withPassingChecks() {
 // return from ps.Parse as the standard Helper will report any errors and
 // abort the program.
 func ExampleStrListAppender_withFailingChecks() {
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	ss := []string{"Hello"}
 
@@ -113,14 +113,14 @@ func ExampleStrListAppender_withFailingChecks() {
 // not been initialised. Note that in production code you should not recover
 // from the panic, instead you should fix the code that caused it.
 func ExampleStrListAppender_withNilValue() {
-	defer func() {
+	defer func() { // For test purposes only - do not recover in live code
 		if p := recover(); p != nil {
 			fmt.Println("panic")
 			fmt.Println(p)
 		}
 	}()
 
-	ps := newPSetForTesting() // you would normally use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrDie()
 
 	// we expect this to panic because the list Value has not been initialised
 	ps.Add("my-list", psetter.StrListAppender{}, "help text")

@@ -12,7 +12,23 @@ import (
 // associated value are allowed.
 //
 // It can be used as a mixin type that can be embedded in a Setter to provide
-// alternative names for allowed values or to provide several names in one
+// alternative names for allowed values or to provide several names in one.
+//
+// It is recommended that you should use string constants for setting the
+// aliases and the entries in the slice of values they correspond to. This
+// will avoid possible errors.
+//
+// The advantages of const values are:
+//
+// - typos become compilation errors rather than silently failing.
+//
+// - the name of the constant value can distinguish between the string value
+// and it's meaning as a semantic element representing a flag used to choose
+// program behaviour.
+//
+// - the name that you give the const value can distinguish between identical
+// strings and show which of various flags with the same string value you
+// actually mean.
 type Aliases map[string][]string
 
 // AllowedValuesAliasMapper is the interface to be satisfied by a type having
