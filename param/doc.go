@@ -5,8 +5,8 @@ they can call Parse and command line parameters will be compared against
 the defined parameters and the corresponding values will be set.
 
 You can add parameters to the set of params to be checked with the Add
-function and you can add alternative names with AltName which returns an
-option function that will add the alternative name to the set of ways that a
+function and you can add alternative names with AltNames which returns an
+option function that will add the alternative names to the set of ways that a
 parameter can be referenced. Similarly the GroupName function allows you to
 group related parameters together so that they will be shown together in the
 usage message.
