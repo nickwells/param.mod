@@ -39,10 +39,7 @@ func ExampleStrList_withEditor() {
 			Value:  &ss,
 			Editor: myE,
 		}, "help text",
-		param.AltName("en"),
-		param.AltName("fr"),
-		param.AltName("es"),
-		param.AltName("de"),
+		param.AltNames("en", "fr", "es", "de"),
 	)
 
 	fmt.Println("Before parsing")

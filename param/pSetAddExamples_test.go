@@ -55,7 +55,7 @@ func ExamplePSet_Add_withExtras() {
 		// This gives an alternative string that can be used to set the
 		// parameter value. Each parameter name must be unique; the param
 		// package will panic if any duplicate names are used.
-		param.AltName("pn"),
+		param.AltNames("pn"),
 		// This provides a function to be called immediately after the
 		// parameter has been set. It uses an action function from the
 		// paction package that will set the fHasBeenSet variable to

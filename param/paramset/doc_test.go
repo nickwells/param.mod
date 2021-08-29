@@ -22,7 +22,7 @@ func addParams(ps *param.PSet) error {
 		Checks: []check.String{check.StringLenGT(0)},
 	},
 		"set the name of the thing to do that other thing to",
-		param.AltName("n"),
+		param.AltNames("n"),
 		param.Attrs(param.CommandLineOnly|param.MustBeSet),
 	)
 
@@ -40,7 +40,7 @@ func addParams(ps *param.PSet) error {
 			},
 		},
 		"give the action to perform on the thing",
-		param.AltName("a"),
+		param.AltNames("a"),
 		param.Attrs(param.MustBeSet),
 	)
 

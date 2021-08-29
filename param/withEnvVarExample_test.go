@@ -57,7 +57,7 @@ func wevAddParams1(ps *param.PSet) error {
 	ps.Add("example1",
 		psetter.Bool{Value: &wevExample1},
 		"here is where you would describe the parameter",
-		param.AltName("e1"),
+		param.AltNames("e1"),
 		param.GroupName(wevExampleGroupName))
 
 	return nil
@@ -68,7 +68,7 @@ func wevAddParams2(ps *param.PSet) error {
 	ps.Add("example2",
 		psetter.Int64{Value: &wevExample2},
 		"the description of the parameter",
-		param.AltName("e2"),
+		param.AltNames("e2"),
 		param.GroupName(wevExampleGroupName))
 
 	return nil

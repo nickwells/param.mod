@@ -38,7 +38,7 @@ func tuAddParams1(ps *param.PSet) error {
 	ps.Add("example1",
 		psetter.Bool{Value: &tuExample1},
 		"here is where you would describe the parameter",
-		param.AltName("e1"),
+		param.AltNames("e1"),
 		param.GroupName(tuExampleGroupName))
 
 	return nil
@@ -52,7 +52,7 @@ func tuAddParams2(ps *param.PSet) error {
 	ps.Add("example2",
 		psetter.Int64{Value: &tuExample2},
 		"the description of the parameter",
-		param.AltName("e2"))
+		param.AltNames("e2"))
 
 	return nil
 }

@@ -35,8 +35,7 @@ func ExampleStrListAppender_withEditor() {
 			Value:  &ss,
 			Editor: myE,
 		}, "help text",
-		param.AltName("next2"),
-		param.AltName("next3"),
+		param.AltNames("next2", "next3"),
 	)
 
 	fmt.Println("Before parsing")

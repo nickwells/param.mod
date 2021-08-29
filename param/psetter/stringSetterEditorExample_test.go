@@ -39,10 +39,7 @@ func ExampleString_withEditor() {
 			Value:  &s,
 			Editor: myE,
 		}, "help text",
-		param.AltName("en"),
-		param.AltName("fr"),
-		param.AltName("es"),
-		param.AltName("de"),
+		param.AltNames("en", "fr", "es", "de"),
 	)
 
 	fmt.Printf("Before parsing: s = %q\n", s)

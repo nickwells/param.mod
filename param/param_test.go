@@ -53,7 +53,7 @@ func TestParamAdd(t *testing.T) {
 				name:   "param-1",
 				setter: psetter.Int64{Value: &p1},
 				opts: []param.OptFunc{
-					param.AltName("param-1-alt"),
+					param.AltNames("param-1-alt"),
 					param.GroupName("test"),
 				},
 			},
@@ -75,7 +75,7 @@ func TestParamAdd(t *testing.T) {
 			npi: &namedParamInitialiser{
 				name:   "param-2",
 				setter: psetter.Int64{Value: &p1},
-				opts:   []param.OptFunc{param.AltName("param-1")},
+				opts:   []param.OptFunc{param.AltNames("param-1")},
 			},
 			ExpPanic: testhelper.MkExpPanic(
 				"parameter name",
@@ -87,7 +87,7 @@ func TestParamAdd(t *testing.T) {
 			npi: &namedParamInitialiser{
 				name:   "param-3",
 				setter: psetter.Int64{Value: &p1},
-				opts:   []param.OptFunc{param.AltName("?")},
+				opts:   []param.OptFunc{param.AltNames("?")},
 			},
 			ExpPanic: testhelper.MkExpPanic(
 				"parameter name",
@@ -99,7 +99,7 @@ func TestParamAdd(t *testing.T) {
 			npi: &namedParamInitialiser{
 				name:   "param-4",
 				setter: psetter.Int64{Value: &p1},
-				opts:   []param.OptFunc{param.AltName("param-1-alt")},
+				opts:   []param.OptFunc{param.AltNames("param-1-alt")},
 			},
 			ExpPanic: testhelper.MkExpPanic(
 				"parameter name",
@@ -206,7 +206,7 @@ func TestParamAddPos(t *testing.T) {
 						name:   "param-1",
 						setter: psetter.Int64{Value: &p1},
 						opts: []param.OptFunc{
-							param.AltName("param-1-alt"),
+							param.AltNames("param-1-alt"),
 							param.GroupName("test"),
 						},
 					},
@@ -217,7 +217,7 @@ func TestParamAddPos(t *testing.T) {
 						name:   "param-2",
 						setter: psetter.Int64{Value: &p1},
 						opts: []param.OptFunc{
-							param.AltName("param-2-alt"),
+							param.AltNames("param-2-alt"),
 							param.GroupName("test"),
 						},
 					},
@@ -260,7 +260,7 @@ func TestParamAddPos(t *testing.T) {
 						name:   "param-1",
 						setter: psetter.Int64{Value: &p1},
 						opts: []param.OptFunc{
-							param.AltName("param-1-alt"),
+							param.AltNames("param-1-alt"),
 							param.GroupName("test"),
 						},
 					},
@@ -301,7 +301,7 @@ func TestParamAddPos(t *testing.T) {
 						name:   "param-1",
 						setter: psetter.Int64{Value: &p1},
 						opts: []param.OptFunc{
-							param.AltName("param-1-alt"),
+							param.AltNames("param-1-alt"),
 							param.GroupName("test"),
 						},
 					},
@@ -672,7 +672,7 @@ func TestParamByName(t *testing.T) {
 			Value: &val1,
 		},
 		"an int64 parameter",
-		param.AltName(param1AltName))
+		param.AltNames(param1AltName))
 
 	altNames := p.AltNames()
 	if len(altNames) != 2 {

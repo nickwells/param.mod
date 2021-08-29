@@ -95,7 +95,7 @@ func CFAddParams1(ps *param.PSet) error {
 	ps.Add("example1",
 		psetter.Bool{Value: &CFValExample1},
 		"here is where you would describe the parameter",
-		param.AltName("e1"))
+		param.AltNames("e1"))
 
 	return nil
 }
@@ -105,7 +105,7 @@ func CFAddParams2(ps *param.PSet) error {
 	ps.Add("example2",
 		psetter.Int64{Value: &CFValExample2},
 		"the description of the parameter",
-		param.AltName("e2"))
+		param.AltNames("e2"))
 
 	return nil
 }

@@ -80,7 +80,7 @@ func addByNameParams(ps *param.PSet) error {
 	ps.Add("param1", psetter.Int64{Value: &int64Val1},
 		"help text for param1",
 		param.GroupName(paramGroupName),
-		param.AltName("param1-alt1"),
+		param.AltNames("param1-alt1"),
 		param.Attrs(param.CommandLineOnly),
 	)
 
@@ -89,14 +89,14 @@ func addByNameParams(ps *param.PSet) error {
 			" text to demonstrate the behaviour when text is wrapped"+
 			" across multiple lines",
 		param.GroupName(paramGroupName),
-		param.AltName("param2-alt2"),
+		param.AltNames("param2-alt2"),
 		param.Attrs(param.MustBeSet),
 	)
 
 	ps.Add("param3", psetter.Float64{Value: &float64Val3},
 		"help...",
 		param.GroupName(paramGroupName),
-		param.AltName("p3"),
+		param.AltNames("p3"),
 		param.Attrs(param.DontShowInStdUsage),
 	)
 

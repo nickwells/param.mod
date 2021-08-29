@@ -28,13 +28,13 @@ func Example_setDirectly() {
 		psetter.Bool{Value: &example1},
 		"here is where you would describe the parameter",
 		// optional additional settings
-		param.AltName("e1"))
+		param.AltNames("e1"))
 
 	ps.Add("example2",
 		psetter.Int64{Value: &example2},
 		"the description of the parameter",
 		// optional additional settings
-		param.AltName("e2"))
+		param.AltNames("e2"))
 
 	fmt.Println("example1:", example1)
 	fmt.Println("example2:", example2)
