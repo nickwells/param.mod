@@ -202,8 +202,9 @@ type StdHelp struct {
 	exitAfterHelp bool // this can only be set in test code
 
 	// completions-... values
-	zshCompDir    string
-	zshCompAction string
+	completionsQuiet bool
+	zshCompDir       string
+	zshCompAction    string
 }
 
 // NewStdHelp returns a pointer to a well-constructed instance of the

@@ -7,7 +7,7 @@ Usage: PROGRAM NAME UNKNOWN -param2=Int ...
 
 ===============
 
-common.params-completion [ 2 parameters ]
+common.params-completion [ 3 parameters ]
     These are the parameters for creating shell completion functions. You can
     specify where the completion files should be written, trigger the generation
     of the files and control whether they should be overwritten.
@@ -15,6 +15,13 @@ common.params-completion [ 2 parameters ]
     Parameters in this group may also be set in the configuration file:
     /home/ngw/.config/github.com/nickwells/param.mod/v5/param/phelp/group-common.params-completion.cfg
 
+      [-completions-quiet[=Bool] ]
+            suppress any messages produced after generating or updating the
+            completions file.
+            Allowed values: none (which will be taken as 'true') or some value
+                            that can be interpreted as true or false. The value
+                            must be given after an '=', not as a following
+                            value, as this is optional
       [-completions-zsh-dir=Pathname]
             which directory should a zsh completions function for this program
             be written to. The directory should be in the list of directories
@@ -99,10 +106,7 @@ common.params-help       [ 11 parameters ]
             will be paged using the standard pager (as given by the value of the
             'PAGER' environment variable or 'less' if 'PAGER' is not set or the
             command it refers to cannot be found)
-            Allowed values: none (which will be taken as 'true') or some value
-                            that can be interpreted as true or false. The value
-                            must be given after an '=', not as a following
-                            value, as this is optional
+            Allowed values: (see parameter: completions-quiet)
       [-help-notes=note-name,..., -help-note=note-name,...,
          -help-n=note-name,...]
             when printing the help message only show the listed notes.
@@ -178,12 +182,12 @@ common.params-params     [ 6 parameters ]
             will exit unless this flag is set to true. Note that the behaviour
             of the program cannot be guaranteed if this option is chosen and it
             should only be used in emergencies
-            Allowed values: (see parameter: help-no-page)
+            Allowed values: (see parameter: completions-quiet)
             Initial value: true
       [-params-dont-show-errors[=Bool] ]
             after all the parameters are set any errors detected will be
             reported unless this flag is set
-            Allowed values: (see parameter: help-no-page)
+            Allowed values: (see parameter: completions-quiet)
       [-params-exit-after-parsing[=Bool] ]
             exit after the parameters have been read and processed. This lets
             you check the parameters are valid and see what values get set
@@ -192,7 +196,7 @@ common.params-params     [ 6 parameters ]
             Note that the program may perform some operations as the parameters
             are processed and these will still take place even if this parameter
             is set.
-            Allowed values: (see parameter: help-no-page)
+            Allowed values: (see parameter: completions-quiet)
       [-params-file=filename, -params-from=filename, -params-f=filename]
             read in parameters from the given file. Note that the parameter file
             will be read as a configuration file with each parameter on a
@@ -215,14 +219,14 @@ common.params-params     [ 6 parameters ]
             your alternative sources.
 
             The program will exit after the parameters are processed.
-            Allowed values: (see parameter: help-no-page)
+            Allowed values: (see parameter: completions-quiet)
       [-params-show-where-set[=Bool] ]
             after all the parameters are set a message will be printed showing
             where they were set. This can be useful for debugging (especially if
             there are several config files in use).
 
             The program will exit after the parameters are processed.
-            Allowed values: (see parameter: help-no-page)
+            Allowed values: (see parameter: completions-quiet)
 ---------------
 test-group1              [ 6 parameters ]
     test parameters.
@@ -248,7 +252,7 @@ test-group1              [ 6 parameters ]
 
             This parameter value may only be set once. Any appearances after the
             first will not be used
-            Allowed values: (see parameter: help-no-page)
+            Allowed values: (see parameter: completions-quiet)
       [-param5=v1|v2]
             help...
             Allowed values: a string

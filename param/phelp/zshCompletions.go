@@ -195,14 +195,14 @@ func zshCompletionHandler(h StdHelp, twc *twrap.TWConf, ps *param.PSet) int {
 		filename := zshCompFileName(h, ps)
 		err := zshMakeNewCompFile(filename, ps)
 		if err == nil {
-			zshCompFileNotify(twc, filename)
+			zshCompFileNotify(h, twc, filename)
 		}
 		return zshHandleErr(err, ps)
 	case zshCompActionRepl:
 		filename := zshCompFileName(h, ps)
 		err := zshReplaceCompFile(filename, ps)
 		if err == nil {
-			zshCompFileNotify(twc, filename)
+			zshCompFileNotify(h, twc, filename)
 		}
 		return zshHandleErr(err, ps)
 	}
@@ -265,7 +265,10 @@ func zshReplaceCompFile(filename string, ps *param.PSet) error {
 
 // zshCompFileNotify writes a notification message informing the user that
 // the completion file has been successfully created.
-func zshCompFileNotify(twc *twrap.TWConf, filename string) {
+func zshCompFileNotify(h StdHelp, twc *twrap.TWConf, filename string) {
+	if h.completionsQuiet {
+		return
+	}
 	twc.Wrap(
 		"the zsh completion function has been written to "+filename+"."+
 			" You will need to run compinit and possibly restart your"+

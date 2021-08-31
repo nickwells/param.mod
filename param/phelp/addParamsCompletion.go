@@ -10,6 +10,7 @@ import (
 )
 
 const (
+	completionsQuiet          = "completions-quiet"
 	completionsZshDirArgName  = "completions-zsh-dir"
 	completionsZshMakeArgName = "completions-zsh-make"
 )
@@ -39,6 +40,16 @@ func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
 			" The directory should be in the list of directories"+
 			" given in the fpath shell variable."+
 			" See the zsh manual for more details.",
+		param.GroupName(groupName),
+		param.Attrs(param.DontShowInStdUsage),
+	)
+
+	ps.Add(completionsQuiet,
+		psetter.Bool{
+			Value: &h.completionsQuiet,
+		},
+		"suppress any messages produced after generating"+
+			" or updating the completions file.",
 		param.GroupName(groupName),
 		param.Attrs(param.DontShowInStdUsage),
 	)

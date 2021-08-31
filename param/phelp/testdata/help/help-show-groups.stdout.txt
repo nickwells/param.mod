@@ -1,7 +1,7 @@
 
 Parameter groups
 
-common.params-completion [ 2 parameters, all hidden ]
+common.params-completion [ 3 parameters, all hidden ]
     These are the parameters for creating shell completion functions. You can
     specify where the completion files should be written, trigger the generation
     of the files and control whether they should be overwritten.
