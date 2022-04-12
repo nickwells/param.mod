@@ -183,10 +183,8 @@ type OptFunc func(p *ByName) error
 //
 // Various other features of the parameter can be set by the OptFuncs which
 // may be passed after the description.
-func (ps *PSet) Add(name string,
-	setter Setter,
-	desc string,
-	opts ...OptFunc) *ByName {
+func (ps *PSet) Add(name string, setter Setter, desc string, opts ...OptFunc,
+) *ByName {
 	if ps.parsed {
 		panic("Parameters have already been parsed." +
 			" A new named parameter (" + name + ") cannot be added.")

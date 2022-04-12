@@ -236,7 +236,7 @@ func zshMakeNewCompFile(filename string, ps *param.PSet) error {
 		return err
 	}
 
-	w, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE, 0555)
+	w, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE, 0o555)
 	if err != nil {
 		return err
 	}
@@ -250,12 +250,12 @@ func zshMakeNewCompFile(filename string, ps *param.PSet) error {
 // zshReplaceCompFile will construct the named file (which may already
 // exist). It will return any errors found.
 func zshReplaceCompFile(filename string, ps *param.PSet) error {
-	_ = os.Chmod(filename, 0755)
-	w, err := os.OpenFile(filename, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0555)
+	_ = os.Chmod(filename, 0o755)
+	w, err := os.OpenFile(filename, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0o555)
 	if err != nil {
 		return err
 	}
-	_ = os.Chmod(filename, 0555)
+	_ = os.Chmod(filename, 0o555)
 
 	defer w.Close()
 	zshWriteCompFunc(ps, w)

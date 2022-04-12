@@ -61,10 +61,9 @@ type PosOptFunc func(bp *ByPos) error
 // documentation purposes and should be a very short value just used as a
 // hint at the intended purpose. The name should be expanded and explained by
 // the description.
-func (ps *PSet) AddByPos(name string,
-	setter Setter,
-	desc string,
-	opts ...PosOptFunc) *ByPos {
+func (ps *PSet) AddByPos(name string, setter Setter,
+	desc string, opts ...PosOptFunc,
+) *ByPos {
 	if ps.parsed {
 		panic("Parameters have already been parsed." +
 			" A new positional parameter (" + name + ") cannot be added.")

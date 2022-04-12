@@ -19,8 +19,9 @@ func (ps *PSet) reportMissingParams(missingCount int) {
 	if len(ps.byPos) == 1 {
 		byPosMiniHelp += " parameter should be: <" + ps.byPos[0].name + ">"
 	} else {
-		byPosMiniHelp +=
-			fmt.Sprintf(" %d parameters should be: ", len(ps.byPos))
+		byPosMiniHelp += fmt.Sprintf(
+			" %d parameters should be: ",
+			len(ps.byPos))
 		sep := "<"
 		for _, bp := range ps.byPos {
 			byPosMiniHelp += sep + bp.name
@@ -48,7 +49,8 @@ const (
 	parsingIncomplete
 )
 
-func (ps *PSet) handleParamsByPos(loc *location.L, params []string) parsingStatus {
+func (ps *PSet) handleParamsByPos(loc *location.L, params []string,
+) parsingStatus {
 	if len(ps.byPos) > 0 {
 		missingCount := len(ps.byPos) - len(params)
 		if missingCount > 0 {
