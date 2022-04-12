@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/check.mod/v2/check"
 )
 
 // Duration allows you to specify a parameter that can be used to set a

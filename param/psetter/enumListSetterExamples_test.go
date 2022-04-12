@@ -3,7 +3,7 @@ package psetter_test
 import (
 	"fmt"
 
-	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/param.mod/v5/param/psetter"
 )
 
@@ -114,7 +114,7 @@ func ExampleEnumList_withPassingChecks() {
 				YOption: "what this option means",
 			},
 			Checks: []check.StringSlice{
-				check.StringSliceLenEQ(2),
+				check.SliceLength[[]string](check.ValEQ(2)),
 			},
 		}, "help text")
 
@@ -160,7 +160,7 @@ func ExampleEnumList_withFailingChecks() {
 				YOption: "what this option means",
 			},
 			Checks: []check.StringSlice{
-				check.StringSliceLenEQ(2),
+				check.SliceLength[[]string](check.ValEQ(2)),
 			},
 		}, "help text")
 
@@ -184,7 +184,7 @@ func ExampleEnumList_withFailingChecks() {
 	// Output:
 	// Before parsing
 	// Errors for: my-list
-	//	: the length of the list (1) must equal 2
+	//	: the length of the list (1) is incorrect: the value (1) must equal 2
 	// At: [command line]: Supplied Parameter:2: -my-list x
 	// After  parsing
 }

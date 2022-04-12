@@ -1,7 +1,7 @@
 package psetter
 
 import (
-	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/check.mod/v2/check"
 )
 
 // String is the type for setting string values from

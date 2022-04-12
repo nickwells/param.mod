@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/param.mod/v5/param/psetter"
 )
 
@@ -35,7 +35,7 @@ func ExampleDuration_withPassingChecks() {
 		psetter.Duration{
 			Value: &v,
 			Checks: []check.Duration{
-				check.DurationBetween(time.Duration(0), 2*time.Hour),
+				check.ValBetween[time.Duration](time.Duration(0), 2*time.Hour),
 			},
 		},
 		"help text")
@@ -62,7 +62,7 @@ func ExampleDuration_withFailingChecks() {
 		psetter.Duration{
 			Value: &v,
 			Checks: []check.Duration{
-				check.DurationGT(2 * time.Hour),
+				check.ValGT[time.Duration](2 * time.Hour),
 			},
 		},
 		"help text")

@@ -3,7 +3,7 @@ package psetter_test
 import (
 	"fmt"
 
-	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/param.mod/v5/param/psetter"
 )
 
@@ -44,7 +44,7 @@ func ExampleStrListAppender_withPassingChecks() {
 		psetter.StrListAppender{
 			Value: &ss,
 			Checks: []check.String{
-				check.StringLenGT(5),
+				check.StringLength[string](check.ValGT(5)),
 			},
 		},
 		"help text")
@@ -80,7 +80,7 @@ func ExampleStrListAppender_withFailingChecks() {
 		psetter.StrListAppender{
 			Value: &ss,
 			Checks: []check.String{
-				check.StringLenLT(10),
+				check.StringLength[string](check.ValLT(10)),
 			},
 		},
 		"help text")
@@ -101,7 +101,7 @@ func ExampleStrListAppender_withFailingChecks() {
 	// Before parsing
 	//	ss[0] = "Hello"
 	// Errors for: next
-	//	: the length of the value (13) must be less than 10
+	//	: the length of the string (13) is incorrect: the value (13) must be less than 10
 	// At: [command line]: Supplied Parameter:4: -next my old friend
 	// After  parsing
 	//	ss[0] = "Hello"

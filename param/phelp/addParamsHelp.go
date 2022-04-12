@@ -6,7 +6,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/english.mod/english"
 	"github.com/nickwells/location.mod/location"
 	"github.com/nickwells/param.mod/v5/param"
@@ -112,54 +112,69 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		param.PostAction(paction.SetBool(&h.helpRequested, true)),
 		param.GroupName(groupName))
 
-	ps.Add(helpGroupsArgName,
-		psetter.Map{
-			Value: (*map[string]bool)(&h.groupsChosen),
-			Checks: []check.MapStringBool{
-				check.MapStringBoolTrueCountGT(0),
-			},
-		},
-		"when printing the help message only show the listed groups."+
-			" This will also force hidden parameters to be shown."+
-			exitAfterHelpMessage,
-		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.AltNames("help-group", "help-g"),
-		param.ValueName("group-name,..."),
-		param.PostAction(checkGroups(h, ps)),
-		param.PostAction(paction.SetBool(&h.showHiddenItems, true)),
-		param.GroupName(groupName))
+	{
+		boolCounter := check.NewCounter(check.ValEQ(true), check.ValGT(0))
 
-	ps.Add(helpParamsArgName,
-		psetter.Map{
-			Value: (*map[string]bool)(&h.paramsChosen),
-			Checks: []check.MapStringBool{
-				check.MapStringBoolTrueCountGT(0),
+		ps.Add(helpGroupsArgName,
+			psetter.Map{
+				Value: (*map[string]bool)(&h.groupsChosen),
+				Checks: []check.MapStringBool{
+					check.MapValAggregate[map[string]bool, string, bool](
+						boolCounter),
+				},
 			},
-			Editor: trimDashes{},
-		},
-		"when printing the help message only show the listed parameters."+
-			exitAfterHelpMessage,
-		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.AltNames("help-param", "help-p"),
-		param.ValueName("param-name,..."),
-		param.PostAction(checkParams(h, ps)),
-		param.GroupName(groupName))
+			"when printing the help message only show the listed groups."+
+				" This will also force hidden parameters to be shown."+
+				exitAfterHelpMessage,
+			param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
+			param.AltNames("help-group", "help-g"),
+			param.ValueName("group-name,..."),
+			param.PostAction(checkGroups(h, ps)),
+			param.PostAction(paction.SetBool(&h.showHiddenItems, true)),
+			param.GroupName(groupName))
+	}
 
-	ps.Add(helpNotesArgName,
-		psetter.Map{
-			Value: (*map[string]bool)(&h.notesChosen),
-			Checks: []check.MapStringBool{
-				check.MapStringBoolTrueCountGT(0),
+	{
+		boolCounter := check.NewCounter(check.ValEQ(true), check.ValGT(0))
+
+		ps.Add(helpParamsArgName,
+			psetter.Map{
+				Value: (*map[string]bool)(&h.paramsChosen),
+				Checks: []check.MapStringBool{
+					check.MapValAggregate[map[string]bool, string, bool](
+						boolCounter),
+				},
+				Editor: trimDashes{},
 			},
-		},
-		"when printing the help message only show the listed notes."+
-			exitAfterHelpMessage,
-		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.AltNames("help-note", "help-n"),
-		param.ValueName("note-name,..."),
-		param.PostAction(checkNotes(h, ps)),
-		param.PostAction(setHelpSections(h, notesHelpSectionName)),
-		param.GroupName(groupName))
+			"when printing the help message only show the listed parameters."+
+				exitAfterHelpMessage,
+			param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
+			param.AltNames("help-param", "help-p"),
+			param.ValueName("param-name,..."),
+			param.PostAction(checkParams(h, ps)),
+			param.GroupName(groupName))
+	}
+
+	{
+		boolCounter := check.NewCounter(check.ValEQ(true), check.ValGT(0))
+
+		ps.Add(helpNotesArgName,
+			psetter.Map{
+				Value: (*map[string]bool)(&h.notesChosen),
+				Checks: []check.MapStringBool{
+					check.MapValAggregate[map[string]bool, string, bool](
+						boolCounter),
+				},
+			},
+			"when printing the help message only show the listed notes."+
+				exitAfterHelpMessage,
+			param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
+			param.AltNames("help-note", "help-n"),
+			param.ValueName("note-name,..."),
+			param.PostAction(checkNotes(h, ps)),
+			param.PostAction(setHelpSections(h, notesHelpSectionName)),
+			param.GroupName(groupName))
+	}
 
 	ps.Add(helpShowArgName,
 		psetter.EnumMap{

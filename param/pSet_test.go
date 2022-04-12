@@ -9,7 +9,7 @@ import (
 	"github.com/nickwells/param.mod/v5/param"
 	"github.com/nickwells/param.mod/v5/param/paramset"
 	"github.com/nickwells/param.mod/v5/param/psetter"
-	"github.com/nickwells/testhelper.mod/testhelper"
+	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
 // TestPSet ...
@@ -181,7 +181,7 @@ func TestPSet_SetGroupDescription(t *testing.T) {
 		}
 
 		var panicked bool
-		var panicVal interface{}
+		var panicVal any
 		var stackTrace []byte
 
 		for _, sgdp := range tc.sgdParams {

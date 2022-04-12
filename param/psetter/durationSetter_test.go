@@ -5,9 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/param.mod/v5/param/psetter"
-	"github.com/nickwells/testhelper.mod/testhelper"
+	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
 func TestDuration(t *testing.T) {
@@ -15,7 +15,7 @@ func TestDuration(t *testing.T) {
 		name          string
 		val           string
 		expDuration   time.Duration
-		check         func(d time.Duration) error
+		check         check.ValCk[time.Duration]
 		errorExpected bool
 	}{
 		{
@@ -32,27 +32,27 @@ func TestDuration(t *testing.T) {
 		{
 			name:          "bad duration - 1 hour LT check",
 			val:           "1h",
-			check:         check.DurationLT(time.Duration(1) * time.Hour),
+			check:         check.ValLT[time.Duration](time.Duration(1) * time.Hour),
 			errorExpected: true,
 		},
 		{
 			name:          "good duration - 1 hour LT check",
 			val:           "1m",
 			expDuration:   time.Duration(1) * time.Minute,
-			check:         check.DurationLT(time.Duration(1) * time.Hour),
+			check:         check.ValLT[time.Duration](time.Duration(1) * time.Hour),
 			errorExpected: false,
 		},
 		{
 			name:          "good duration - 2 hour GT check",
 			val:           "2h",
 			expDuration:   time.Duration(2) * time.Hour,
-			check:         check.DurationGT(time.Duration(1) * time.Hour),
+			check:         check.ValGT[time.Duration](time.Duration(1) * time.Hour),
 			errorExpected: false,
 		},
 		{
 			name:          "bad duration - 1 hour GT check",
 			val:           "1h",
-			check:         check.DurationGT(time.Duration(1) * time.Hour),
+			check:         check.ValGT[time.Duration](time.Duration(1) * time.Hour),
 			errorExpected: true,
 		},
 	}
@@ -91,14 +91,14 @@ func TestDurationCountChecks(t *testing.T) {
 		},
 		{
 			name:     "one check",
-			checks:   []check.Duration{check.DurationLT(99)},
+			checks:   []check.Duration{check.ValLT[time.Duration](99)},
 			expCount: 1,
 		},
 		{
 			name: "two checks",
 			checks: []check.Duration{
-				check.DurationLT(99),
-				check.DurationGT(9),
+				check.ValLT[time.Duration](99),
+				check.ValGT[time.Duration](9),
 			},
 			expCount: 2,
 		},

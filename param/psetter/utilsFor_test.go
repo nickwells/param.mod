@@ -9,7 +9,7 @@ import (
 
 // panicSafeCheck runs the CheckSetter and catches any panic, returning true
 // if a panic was caught
-func panicSafeCheck(s param.Setter) (panicked bool, panicVal interface{}) {
+func panicSafeCheck(s param.Setter) (panicked bool, panicVal any) {
 	defer func() {
 		if r := recover(); r != nil {
 			panicked = true

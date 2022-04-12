@@ -5,7 +5,7 @@ import (
 
 	"github.com/nickwells/errutil.mod/errutil"
 	"github.com/nickwells/param.mod/v5/param"
-	"github.com/nickwells/testhelper.mod/testhelper"
+	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
 // Parser holds the values needed to test that the parameters given in a PSet
@@ -37,9 +37,9 @@ type Parser struct {
 	ExpParseErrors errutil.ErrMap
 	Ps             *param.PSet
 
-	Val       interface{}
-	ExpVal    interface{}
-	CheckFunc func(val, expVal interface{}) error
+	Val       any
+	ExpVal    any
+	CheckFunc func(val, expVal any) error
 
 	Args []string
 }

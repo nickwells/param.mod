@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/nickwells/param.mod/v5/param/psetter"
-	"github.com/nickwells/testhelper.mod/testhelper"
+	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
 func TestAllowedVals(t *testing.T) {

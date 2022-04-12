@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/check.mod/v2/check"
 )
 
 // TimeLocation allows you to give a parameter that can be used to set a
@@ -51,7 +51,7 @@ func (s TimeLocation) SetWithVal(_ string, paramVal string) error {
 			continue
 		}
 
-		err := check(v)
+		err := check(*v)
 		if err != nil {
 			return err
 		}

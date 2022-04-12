@@ -3,7 +3,7 @@ package psetter
 import (
 	"strings"
 
-	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/check.mod/v2/check"
 )
 
 // StrList allows you to specify a parameter that can be used to set a list

@@ -3,7 +3,7 @@ package psetter_test
 import (
 	"fmt"
 
-	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/param.mod/v5/param/psetter"
 )
 
@@ -41,7 +41,7 @@ func ExampleFloat64_withPassingChecks() {
 		psetter.Float64{
 			Value: &f,
 			Checks: []check.Float64{
-				check.Float64GT(5.0),
+				check.ValGT[float64](5.0),
 			},
 		}, "help text")
 
@@ -70,7 +70,7 @@ func ExampleFloat64_withFailingChecks() {
 		psetter.Float64{
 			Value: &f,
 			Checks: []check.Float64{
-				check.Float64GT(5.0),
+				check.ValGT[float64](5.0),
 			},
 		}, "help text")
 

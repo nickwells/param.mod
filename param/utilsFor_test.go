@@ -117,7 +117,9 @@ type paramInitialisers struct {
 // catches any panics. Then it returns the added parameter (if any), a
 // boolean indicating if a panic occurred and the value recovered from the
 // panic
-func panicSafeTestAddByPos(ps *param.PSet, ppi *posParamInitialiser) (pp *param.ByPos, panicked bool, panicVal interface{}) {
+func panicSafeTestAddByPos(ps *param.PSet, ppi *posParamInitialiser,
+) (pp *param.ByPos, panicked bool, panicVal any,
+) {
 	if ppi == nil {
 		return
 	}
@@ -136,7 +138,9 @@ func panicSafeTestAddByPos(ps *param.PSet, ppi *posParamInitialiser) (pp *param.
 // catches any panics. Then it returns the added parameter (if any), a
 // boolean indicating if a panic occurred and the value recovered from the
 // panic
-func panicSafeTestAddByName(ps *param.PSet, npi *namedParamInitialiser) (p *param.ByName, panicked bool, panicVal interface{}) {
+func panicSafeTestAddByName(ps *param.PSet, npi *namedParamInitialiser,
+) (p *param.ByName, panicked bool, panicVal any,
+) {
 	if npi == nil {
 		return
 	}
@@ -154,8 +158,9 @@ func panicSafeTestAddByName(ps *param.PSet, npi *namedParamInitialiser) (p *para
 // panicSafeTestParse parses the supplied parameters and catches any
 // panics. Then it returns a map of the errors (if any), a boolean indicating
 // if a panic occurred and the value recovered from the panic
-func panicSafeTestParse(ps *param.PSet, params []string) (
-	errMap param.ErrMap, panicked bool, panicVal interface{}, stackTrace []byte) {
+func panicSafeTestParse(ps *param.PSet, params []string,
+) (errMap param.ErrMap, panicked bool, panicVal any, stackTrace []byte,
+) {
 	defer func() {
 		if r := recover(); r != nil {
 			panicked = true
@@ -171,8 +176,9 @@ func panicSafeTestParse(ps *param.PSet, params []string) (
 // panicSafeSetGroupDescription sets the group description and catches any
 // panics. Then it returns a boolean indicating if a panic occurred and the
 // value recovered from the panic
-func panicSafeSetGroupDescription(ps *param.PSet, groupName, desc string) (
-	panicked bool, panicVal interface{}, stackTrace []byte) {
+func panicSafeSetGroupDescription(ps *param.PSet, groupName, desc string,
+) (panicked bool, panicVal any, stackTrace []byte,
+) {
 	defer func() {
 		if r := recover(); r != nil {
 			panicked = true

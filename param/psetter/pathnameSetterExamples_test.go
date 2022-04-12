@@ -3,7 +3,7 @@ package psetter_test
 import (
 	"fmt"
 
-	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/filecheck.mod/filecheck"
 	"github.com/nickwells/param.mod/v5/param/psetter"
 )
@@ -88,7 +88,7 @@ func ExamplePathname_withPassingChecks() {
 			Value:       &pathname,
 			Expectation: filecheck.IsNew(),
 			Checks: []check.String{
-				check.StringHasSuffix(".go"),
+				check.StringHasSuffix[string](".go"),
 			},
 		},
 		"help text")

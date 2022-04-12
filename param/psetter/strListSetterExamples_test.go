@@ -3,7 +3,7 @@ package psetter_test
 import (
 	"fmt"
 
-	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/param.mod/v5/param/psetter"
 )
 
@@ -46,7 +46,7 @@ func ExampleStrList_withPassingChecks() {
 		psetter.StrList{
 			Value: &ss,
 			Checks: []check.StringSlice{
-				check.StringSliceLenEQ(2),
+				check.SliceLength[[]string, string](check.ValEQ(2)),
 			},
 		}, "help text")
 
@@ -81,7 +81,7 @@ func ExampleStrList_withFailingChecks() {
 		psetter.StrList{
 			Value: &ss,
 			Checks: []check.StringSlice{
-				check.StringSliceLenEQ(2),
+				check.SliceLength[[]string, string](check.ValEQ(2)),
 			},
 		}, "help text")
 
@@ -102,7 +102,7 @@ func ExampleStrList_withFailingChecks() {
 	// Output:
 	// Before parsing
 	// Errors for: my-list
-	//	: the length of the list (1) must equal 2
+	//	: the length of the list (1) is incorrect: the value (1) must equal 2
 	// At: [command line]: Supplied Parameter:2: -my-list x
 	// After  parsing
 }

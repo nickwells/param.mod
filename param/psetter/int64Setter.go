@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/check.mod/v2/check"
 )
 
 // Int64 allows you to give a parameter that can be used to set an
@@ -31,7 +31,7 @@ func (s Int64) CountChecks() int {
 // an error. Only if the value is parsed successfully and no checks are
 // violated is the Value set.
 func (s Int64) SetWithVal(_ string, paramVal string) error {
-	v, err := strconv.ParseInt(paramVal, 0, 0)
+	v, err := strconv.ParseInt(paramVal, 0, 64)
 	if err != nil {
 		return fmt.Errorf("could not interpret %q as a whole number: %s",
 			paramVal, err)

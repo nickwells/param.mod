@@ -6,7 +6,7 @@ import (
 
 	"github.com/nickwells/param.mod/v5/param"
 	"github.com/nickwells/param.mod/v5/param/paramset"
-	"github.com/nickwells/testhelper.mod/testhelper"
+	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
 type pfxFunc struct {
@@ -143,7 +143,8 @@ func TestSetEnv(t *testing.T) {
 	}
 }
 
-func panicEnvPrefix(t *testing.T, seq []pfxFunc, ps *param.PSet) (panicked bool, panicVal interface{}) {
+func panicEnvPrefix(t *testing.T, seq []pfxFunc, ps *param.PSet,
+) (panicked bool, panicVal any) {
 	t.Helper()
 	defer func() {
 		if r := recover(); r != nil {

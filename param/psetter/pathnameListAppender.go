@@ -1,7 +1,7 @@
 package psetter
 
 import (
-	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/filecheck.mod/filecheck"
 	"github.com/nickwells/fileparse.mod/fileparse"
 )

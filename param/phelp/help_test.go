@@ -9,7 +9,7 @@ import (
 	"github.com/nickwells/param.mod/v5/param"
 	"github.com/nickwells/param.mod/v5/param/phelp"
 	"github.com/nickwells/param.mod/v5/param/psetter"
-	"github.com/nickwells/testhelper.mod/testhelper"
+	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
 const (

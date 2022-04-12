@@ -8,7 +8,7 @@ import (
 	"github.com/nickwells/param.mod/v5/param/paramset"
 	"github.com/nickwells/param.mod/v5/param/psetter"
 	"github.com/nickwells/param.mod/v5/paramtest"
-	"github.com/nickwells/testhelper.mod/testhelper"
+	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
 // MyConfig is an example of a struct that holds values to be set by the
@@ -22,10 +22,10 @@ type MyConfig struct {
 // cmpMyConfigStruct compares the value with the expected value and returns
 // an error if they differ.
 //
-// Note that the values are passed as interface{} values and converted
+// Note that the values are passed as any values and converted
 // locally to MyConfig values with tests made that the conversions are
 // successful.
-func cmpMyConfigStruct(iVal, iExpVal interface{}) error {
+func cmpMyConfigStruct(iVal, iExpVal any) error {
 	val, ok := iVal.(*MyConfig)
 	if !ok {
 		return errors.New("Bad value: not a pointer to MyConfig")

@@ -5,11 +5,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/filecheck.mod/filecheck"
 	"github.com/nickwells/param.mod/v5/param"
 	"github.com/nickwells/param.mod/v5/param/psetter"
-	"github.com/nickwells/testhelper.mod/testhelper"
+	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
 func TestSetWithVal(t *testing.T) {
@@ -37,7 +37,7 @@ func TestSetWithVal(t *testing.T) {
 			"bye":   "bye description",
 		},
 		Checks: []check.StringSlice{
-			check.StringSliceLenEQ(2),
+			check.SliceLength[[]string, string](check.ValEQ(2)),
 			nil,
 		},
 	}
@@ -70,7 +70,7 @@ func TestSetWithVal(t *testing.T) {
 		Value: &vFloat64,
 		Checks: []check.Float64{
 			nil,
-			check.Float64GT(5),
+			check.ValGT[float64](5),
 		},
 	}
 
@@ -79,7 +79,7 @@ func TestSetWithVal(t *testing.T) {
 	setterInt64ListWithChecks := psetter.Int64List{
 		Value: &vInt64List,
 		Checks: []check.Int64Slice{
-			check.Int64SliceNoDups,
+			check.SliceHasNoDups[[]int64, int64],
 		},
 	}
 
@@ -88,7 +88,7 @@ func TestSetWithVal(t *testing.T) {
 	setterInt64WithChecks := psetter.Int64{
 		Value: &vInt64,
 		Checks: []check.Int64{
-			check.Int64GT(6),
+			check.ValGT[int64](6),
 		},
 	}
 
@@ -114,7 +114,7 @@ func TestSetWithVal(t *testing.T) {
 		Value: &vPathname3,
 		Checks: []check.String{
 			nil,
-			check.StringHasPrefix("testdata"),
+			check.StringHasPrefix[string]("testdata"),
 		},
 	}
 
@@ -126,7 +126,7 @@ func TestSetWithVal(t *testing.T) {
 		Value: &vString,
 		Checks: []check.String{
 			nil,
-			check.StringHasPrefix("hello"),
+			check.StringHasPrefix[string]("hello"),
 		},
 	}
 
@@ -135,7 +135,7 @@ func TestSetWithVal(t *testing.T) {
 		Value: &vStrList,
 		Checks: []check.StringSlice{
 			nil,
-			check.StringSliceLenEQ(2),
+			check.SliceLength[[]string](check.ValEQ(2)),
 		},
 	}
 
@@ -198,8 +198,8 @@ func TestSetWithVal(t *testing.T) {
 		},
 		{
 			ID: testhelper.MkID("enum list with checks - bad value"),
-			ExpErr: testhelper.MkExpErr(
-				"the length of the list (1) must equal 2"),
+			ExpErr: testhelper.MkExpErr("the length of the list (1)" +
+				" is incorrect: the value (1) must equal 2"),
 			s:     setterEnumListWithChecks,
 			value: "hello",
 		},
@@ -285,7 +285,7 @@ func TestSetWithVal(t *testing.T) {
 		{
 			ID: testhelper.MkID("int64 list with checks - bad"),
 			ExpErr: testhelper.MkExpErr(
-				`list entries: 0 and 1 are duplicates, both are: 5`),
+				`duplicate list entries: 0 and 1 are both: 5`),
 			s:     setterInt64ListWithChecks,
 			value: "5,5",
 		},
@@ -387,7 +387,7 @@ func TestSetWithVal(t *testing.T) {
 		{
 			ID: testhelper.MkID("pathname with checks - bad"),
 			ExpErr: testhelper.MkExpErr(
-				"'a/b/c' should have 'testdata' as a prefix"),
+				`"a/b/c" should have "testdata" as a prefix`),
 			s:     setterPathnameWithChecks,
 			value: "a/b/c",
 		},
@@ -413,7 +413,7 @@ func TestSetWithVal(t *testing.T) {
 		{
 			ID: testhelper.MkID("String - bad"),
 			ExpErr: testhelper.MkExpErr(
-				"'goodbye,cruel,world' should have 'hello' as a prefix"),
+				`"goodbye,cruel,world" should have "hello" as a prefix`),
 			s:     setterStringWithChecks,
 			value: "goodbye,cruel,world",
 		},
@@ -425,8 +425,8 @@ func TestSetWithVal(t *testing.T) {
 		},
 		{
 			ID: testhelper.MkID("StringList - bad"),
-			ExpErr: testhelper.MkExpErr(
-				"the length of the list (3) must equal 2"),
+			ExpErr: testhelper.MkExpErr("the length of the list (3)" +
+				" is incorrect: the value (3) must equal 2"),
 			s:     setterStrListWithChecks,
 			value: "hello,cruel,world",
 		},

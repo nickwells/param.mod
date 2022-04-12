@@ -1,7 +1,7 @@
 package paramset_test
 
 import (
-	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/param.mod/v5/param"
 	"github.com/nickwells/param.mod/v5/param/paramset"
 	"github.com/nickwells/param.mod/v5/param/psetter"
@@ -19,7 +19,7 @@ func addParams(ps *param.PSet) error {
 	// the parameter is not given or if the value given is an empty string
 	ps.Add("name", psetter.String{
 		Value:  &thingName,
-		Checks: []check.String{check.StringLenGT(0)},
+		Checks: []check.String{check.StringLength[string](check.ValGT(0))},
 	},
 		"set the name of the thing to do that other thing to",
 		param.AltNames("n"),

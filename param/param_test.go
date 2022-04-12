@@ -7,7 +7,7 @@ import (
 
 	"github.com/nickwells/param.mod/v5/param"
 	"github.com/nickwells/param.mod/v5/param/psetter"
-	"github.com/nickwells/testhelper.mod/testhelper"
+	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
 func TestParamAdd(t *testing.T) {
@@ -380,7 +380,7 @@ func TestParamAddPos(t *testing.T) {
 	for _, tc := range testCases {
 		ps := makePSetOrFatal(t, tc.IDStr())
 		var panicked bool
-		var panicVal interface{}
+		var panicVal any
 
 		var posIdx int
 		for _, pi := range tc.pi {

@@ -3,7 +3,7 @@ package psetter
 import (
 	"time"
 
-	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/check.mod/v2/check"
 )
 
 // Time Formats given here can be used to set the Format member of the Time

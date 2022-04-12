@@ -3,7 +3,7 @@ package psetter_test
 import (
 	"fmt"
 
-	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/param.mod/v5/param/psetter"
 )
 
@@ -46,7 +46,7 @@ func ExampleInt64List_withPassingChecks() {
 		psetter.Int64List{
 			Value: &il,
 			Checks: []check.Int64Slice{
-				check.Int64SliceInt64Check(check.Int64GT(5.0)),
+				check.SliceAll[[]int64, int64](check.ValGT[int64](5)),
 			},
 		}, "help text")
 
@@ -80,7 +80,7 @@ func ExampleInt64List_withFailingChecks() {
 		psetter.Int64List{
 			Value: &il,
 			Checks: []check.Int64Slice{
-				check.Int64SliceInt64Check(check.Int64GT(5.0)),
+				check.SliceAll[[]int64, int64](check.ValGT[int64](5)),
 			},
 		}, "help text")
 

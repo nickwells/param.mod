@@ -3,7 +3,7 @@ package psetter_test
 import (
 	"fmt"
 
-	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/param.mod/v5/param/psetter"
 )
 
@@ -34,7 +34,7 @@ func ExampleString_withPassingChecks() {
 		psetter.String{
 			Value: &s,
 			Checks: []check.String{
-				check.StringLenGT(5),
+				check.StringLength[string](check.ValGT(5)),
 			},
 		}, "help text")
 
@@ -59,7 +59,7 @@ func ExampleString_withFailingChecks() {
 		psetter.String{
 			Value: &s,
 			Checks: []check.String{
-				check.StringLenGT(5),
+				check.StringLength[string](check.ValGT(5)),
 			},
 		}, "help text")
 
@@ -74,7 +74,7 @@ func ExampleString_withFailingChecks() {
 	// Output:
 	// Before parsing: s = ""
 	// Errors for: my-string
-	//	: the length of the value (3) must be greater than 5
+	//	: the length of the string (3) is incorrect: the value (3) must be greater than 5
 	// At: [command line]: Supplied Parameter:2: -my-string Hi!
 	// After  parsing: s = ""
 }
