@@ -19,10 +19,8 @@ func TestParamAdd(t *testing.T) {
 		paramShouldExist bool
 	}{
 		{
-			ID: testhelper.MkID("bad name - empty"),
-			npi: &namedParamInitialiser{
-				setter: psetter.Int64{Value: &p1},
-			},
+			ID:  testhelper.MkID("bad name - empty"),
+			npi: &namedParamInitialiser{setter: psetter.Int64{Value: &p1}},
 			ExpPanic: testhelper.MkExpPanic(
 				"the parameter name",
 				"is invalid. It must match"),
@@ -128,7 +126,8 @@ func TestParamAdd(t *testing.T) {
 // checkByNameVal checks the ByName value and the associated error
 func checkByNameVal(t *testing.T, tcID, paramName string,
 	p *param.ByName, err error,
-	sbs ShouldBeSetType) {
+	sbs ShouldBeSetType,
+) {
 	t.Helper()
 
 	if sbs == ShouldBeSet {
@@ -159,7 +158,8 @@ func checkByNameVal(t *testing.T, tcID, paramName string,
 // checkByPosVal checks the ByPos value and the associated error
 func checkByPosVal(t *testing.T, tcID string, paramIdx int,
 	p *param.ByPos, err error,
-	sbs ShouldBeSetType) {
+	sbs ShouldBeSetType,
+) {
 	t.Helper()
 
 	if sbs == ShouldBeSet {
@@ -410,8 +410,8 @@ func TestParamAddPos(t *testing.T) {
 		testhelper.CheckExpPanic(t, panicked, panicVal, tc)
 
 		if !panicked {
-			errMap, panicked, panicVal, stackTrace :=
-				panicSafeTestParse(ps, tc.paramsToParse)
+			errMap, panicked, panicVal, stackTrace := panicSafeTestParse(
+				ps, tc.paramsToParse)
 			if !testhelper.PanicCheckStringWithStack(t, tc.IDStr(),
 				panicked, false,
 				panicVal, []string{}, stackTrace) {
@@ -648,8 +648,8 @@ func TestParamParse(t *testing.T) {
 		for _, p := range tc.params {
 			panicSafeTestAddByName(ps, p)
 		}
-		errMap, panicked, panicVal, stackTrace :=
-			panicSafeTestParse(ps, tc.paramsPassed)
+		errMap, panicked, panicVal, stackTrace := panicSafeTestParse(
+			ps, tc.paramsPassed)
 		if !testhelper.ReportUnexpectedPanic(t, tc.IDStr(),
 			panicked, panicVal, stackTrace) {
 			errMapCheck(t, tc.IDStr(), errMap, tc.expectedEMap)

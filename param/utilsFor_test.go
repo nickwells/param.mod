@@ -62,7 +62,8 @@ type namedParamInitialiser struct {
 // compare compares the parameter with the initialiser values and reports an
 // error if it differs
 func (npi namedParamInitialiser) compare(
-	t *testing.T, tID string, p *param.ByName, sbs ShouldBeSetType) {
+	t *testing.T, tID string, p *param.ByName, sbs ShouldBeSetType,
+) {
 	t.Helper()
 
 	if p == nil {
