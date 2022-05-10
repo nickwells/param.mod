@@ -64,7 +64,7 @@ func addParams(ps *param.PSet) error {
 			Checks: []check.Int64{check.Int64LT(42)},
 		},
 		"this sets the value of param1",
-		param.AltName("p1"))
+		param.AltNames("p1", "p-1"))
 		
 	ps.Add("param-2", psetter.Bool{Value: &param2},
 		"this sets the value of param2")
