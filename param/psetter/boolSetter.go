@@ -13,12 +13,12 @@ import (
 // use it to set the value of a bool variable (default value: true) such as
 // 'xxx' which you can then test by saying:
 //
-//      if xxx { doXXX() }
+//	if xxx { doXXX() }
 //
 // rather than having to set the value of a variable which you would have to
 // call dontXXX and then test by saying:
 //
-//      if !dontXXX { doXXX() }
+//	if !dontXXX { doXXX() }
 //
 // The benefit is that you can avoid the ugly (and error prone) double
 // negative.

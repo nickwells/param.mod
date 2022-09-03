@@ -204,8 +204,8 @@ func checkExistenceConstraint(fName string, c filecheck.Exists) {
 // value are stripped off. For instance the following lines will have the
 // same effect of setting the value of the myParam attribute to 42:
 //
-//     myParam  = 42
-//     myParam=42
+//	myParam  = 42
+//	myParam=42
 //
 // The parameter name can be preceded by a comma-separated list of program
 // names and a slash in which case the parameter will only be applied when
@@ -218,8 +218,7 @@ func checkExistenceConstraint(fName string, c filecheck.Exists) {
 // parameter name and value any surrounding whitespace is stripped from the
 // program name before comparison. For instance:
 //
-//    myProg/myProgParam = 99
-//
+//	myProg/myProgParam = 99
 //
 // Parameters which don't take a value should appear on a line on their own,
 // without an equals character following. As with parameters which take a

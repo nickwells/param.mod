@@ -80,7 +80,7 @@ func (ps *PSet) SetGroupDescription(name, desc string) {
 //
 // Or for parameters specific to a package to use the package name prefixed with
 //
-//     'pkg.'
+//	'pkg.'
 //
 // for instance: 'pkg.param'
 //

@@ -15,7 +15,9 @@ The way to use this package is to create a PSet and then to add parameters to
 it and when you've set all the parameters you want, you call Parse on the
 PSet. You can create a PSet with the NewSet function but it is more
 convenient to use the convenience function from the paramset package:
-    paramset.NewOrDie(...)
+
+	paramset.NewOrDie(...)
+
 this will automatically set the mandatory helper to the Standard helper.
 
 The standard helper adds some parameters to the PSet. These allow the user to
@@ -41,6 +43,5 @@ processing is complete but before Parse returns to the caller. These final
 functions can check that the parameters have been set correctly. For instance
 you can use these final functions to make sure that a sensible combination of
 parameters has been set.
-
 */
 package param
