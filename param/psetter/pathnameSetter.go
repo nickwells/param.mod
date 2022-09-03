@@ -2,6 +2,7 @@ package psetter
 
 import (
 	"fmt"
+	"path/filepath"
 
 	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/filecheck.mod/filecheck"
@@ -21,6 +22,9 @@ type Pathname struct {
 	// The Checks, if any, are applied to the supplied parameter value and
 	// the new parameter will be applied only if they all return a nil error.
 	Checks []check.String
+	// ForceAbsolute, if set, causes any pathname value to be passed
+	// to filepath.Abs before setting the value.
+	ForceAbsolute bool
 }
 
 // CountChecks returns the number of check functions this setter has
@@ -40,6 +44,13 @@ func (s Pathname) SetWithVal(_ string, paramVal string) error {
 	pathname, err := fileparse.FixFileName(paramVal)
 	if err != nil {
 		return err
+	}
+
+	if s.ForceAbsolute {
+		pathname, err = filepath.Abs(pathname)
+		if err != nil {
+			return err
+		}
 	}
 
 	err = s.Expectation.StatusCheck(pathname)

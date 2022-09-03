@@ -1,6 +1,8 @@
 package psetter
 
 import (
+	"path/filepath"
+
 	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/filecheck.mod/filecheck"
 	"github.com/nickwells/fileparse.mod/fileparse"
@@ -30,6 +32,9 @@ type PathnameListAppender struct {
 	// Prepend will change the behaviour so that any new values are added at
 	// the start of the list of pathnames rather than the end.
 	Prepend bool
+	// ForceAbsolute, if set, causes any pathname value to be passed
+	// to filepath.Abs before setting the value.
+	ForceAbsolute bool
 }
 
 // CountChecks returns the number of check functions this setter has
@@ -47,6 +52,13 @@ func (s PathnameListAppender) SetWithVal(paramName, paramVal string) error {
 	pathname, err := fileparse.FixFileName(paramVal)
 	if err != nil {
 		return err
+	}
+
+	if s.ForceAbsolute {
+		pathname, err = filepath.Abs(pathname)
+		if err != nil {
+			return err
+		}
 	}
 
 	err = s.Expectation.StatusCheck(pathname)
