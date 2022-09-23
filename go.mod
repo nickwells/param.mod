@@ -11,7 +11,7 @@ require (
 	github.com/nickwells/strdist.mod v1.1.6
 	github.com/nickwells/testhelper.mod/v2 v2.0.1
 	github.com/nickwells/twrap.mod v1.4.18
-	github.com/nickwells/xdg.mod v1.0.6
+	github.com/nickwells/xdg.mod v1.0.8
 )
 
 require (
@@ -20,9 +20,9 @@ require (
 )
 
 require (
-	golang.org/x/exp v0.0.0-20220907003533-145caa8ea1d0 // indirect
-	golang.org/x/sys v0.0.0-20220907062415-87db552b00fd // indirect
-	golang.org/x/term v0.0.0-20220722155259-a9ba230a4035 // indirect
+	golang.org/x/exp v0.0.0-20220921164117-439092de6870 // indirect
+	golang.org/x/sys v0.0.0-20220919091848-fb04ddd9f9c8 // indirect
+	golang.org/x/term v0.0.0-20220919170432-7a66f970e087 // indirect
 )
 
 go 1.18
