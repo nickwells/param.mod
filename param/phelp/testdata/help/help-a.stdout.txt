@@ -102,10 +102,10 @@ common.params-help       [ 11 parameters ]
             Allowed values: a list of string values separated by ',' subject to
                             checks
       [-help-no-page[=Bool] , -help-dont-page[=Bool] , -help-no-pager[=Bool] ]
-            don't page the help output. Without this parameter the help message
-            will be paged using the standard pager (as given by the value of the
-            'PAGER' environment variable or 'less' if 'PAGER' is not set or the
-            command it refers to cannot be found)
+            show help but don't page the output. Without this parameter the help
+            message will be paged using the standard pager (as given by the
+            value of the 'PAGER' environment variable or 'less' if 'PAGER' is
+            not set or the command it refers to cannot be found)
             Allowed values: (see parameter: completions-quiet)
       [-help-notes=note-name,..., -help-note=note-name,...,
          -help-n=note-name,...]

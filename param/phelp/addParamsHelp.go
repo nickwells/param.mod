@@ -211,7 +211,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			Value:  &h.pageOutput,
 			Invert: true,
 		},
-		"don't page the help output. Without this parameter the"+
+		"show help but don't page the output. Without this parameter the"+
 			" help message will be paged using the standard pager"+
 			" (as given by the value of the 'PAGER' environment"+
 			" variable or 'less' if 'PAGER' is not set or the command"+
