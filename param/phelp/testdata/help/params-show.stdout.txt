@@ -7,9 +7,7 @@ details of where it has been set.
 
 common.params-completion [ 3 parameters, all hidden ]
 ---    : completions-quiet
-Set    : completions-zsh-dir
-             at : [config file for common.params-completion]:
-                  /home/ngw/.config/github.com/nickwells/param.mod/v5/param/phelp/group-common.params-completion.cfg:1
+---    : completions-zsh-dir
 ---    : completions-zsh-make
 
 ---------------

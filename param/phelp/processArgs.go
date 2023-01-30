@@ -70,7 +70,7 @@ func (h StdHelp) ProcessArgs(ps *param.PSet) {
 			continue
 		}
 
-		if twc == nil {
+		if twc == nil { // only make once (or not at all if nothing should run)
 			if h.pageOutput {
 				pgr = pager.Start(ps)
 			}

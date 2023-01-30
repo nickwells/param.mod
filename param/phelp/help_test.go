@@ -1,3 +1,5 @@
+//go:build linux || darwin
+
 package phelp_test
 
 import (
@@ -178,6 +180,21 @@ func addConfigFiles(ps *param.PSet, configFiles []configFileDetails) {
 }
 
 func TestHelp(t *testing.T) {
+	var ec testhelper.EnvCache
+
+	err := ec.Setenv(
+		testhelper.EnvEntry{Key: "HOME", Value: "./testdata"},
+		testhelper.EnvEntry{Key: "XDG_DATA_HOME", Value: ""},
+		testhelper.EnvEntry{Key: "XDG_DATA_DIRS", Value: ""},
+		testhelper.EnvEntry{Key: "XDG_CONFIG_DIRS", Value: ""},
+		testhelper.EnvEntry{Key: "XDG_CACHE_HOME", Value: ""},
+	)
+	if err != nil {
+		t.Fatalf("Cannot set the environment: %s\n", err)
+		return
+	}
+	defer ec.ResetEnv()
+
 	testCases := []struct {
 		testhelper.ID
 		params       []string

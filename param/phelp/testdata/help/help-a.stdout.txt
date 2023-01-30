@@ -13,7 +13,7 @@ common.params-completion [ 3 parameters ]
     of the files and control whether they should be overwritten.
 
     Parameters in this group may also be set in the configuration file:
-    /home/ngw/.config/github.com/nickwells/param.mod/v5/param/phelp/group-common.params-completion.cfg
+    testdata/.config/github.com/nickwells/param.mod/v5/param/phelp/group-common.params-completion.cfg
 
       [-completions-quiet[=Bool] ]
             suppress any messages produced after generating or updating the
@@ -29,8 +29,6 @@ common.params-completion [ 3 parameters ]
             details.
             Allowed values: a pathname. The filesystem object must exist and
                             must satisfy further checks
-            Initial value:
-            Current value: /home/ngw/.oh-my-zsh/custom/plugins
       [-completions-zsh-make=none|new|replace|...]
             how to create the zsh completions file. This specifies whether or if
             the file should be created. If it is set to any value other than
