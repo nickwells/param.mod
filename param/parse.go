@@ -95,7 +95,11 @@ func (ps *PSet) Parse(args ...[]string) ErrMap {
 
 	ps.helper.ProcessArgs(ps)
 
+	errCount := ps.errorCount
 	ps.remHandler.HandleRemainder(ps, loc)
+	if errCount != ps.errorCount {
+		ps.helper.ErrorHandler(ps, ps.errors)
+	}
 
 	return ps.errors
 }

@@ -55,6 +55,7 @@ type PSet struct {
 	groups       map[string]*Group
 	unusedParams map[string][]string
 	errors       ErrMap
+	errorCount   int
 	finalChecks  []FinalCheckFunc
 	envPrefixes  []string
 	configFiles  []ConfigFileDetails
@@ -251,14 +252,14 @@ func NewSet(psof ...PSetOptFunc) (*PSet, error) {
 }
 
 // Remainder returns any arguments that come after the terminal parameter.
-// Note this may be a nil slice if all the parameters have been processed.
 func (ps *PSet) Remainder() []string { return ps.remainingParams }
 
 // Errors returns the map of errors for the param set
 func (ps PSet) Errors() ErrMap { return ps.errors }
 
-// AddErr adds the error to the named entry in the Error Map
+// AddErr adds the errors to the named entry in the Error Map
 func (ps *PSet) AddErr(name string, err ...error) {
+	ps.errorCount += len(err)
 	ps.errors[name] = append(ps.errors[name], err...)
 }
 
