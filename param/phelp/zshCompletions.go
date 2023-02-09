@@ -23,7 +23,7 @@ const (
 )
 
 // zshCompHasAction returns true if the StdHelp zsh Completion Action is not
-// None, falsoe otherwise.
+// None, false otherwise.
 func zshCompHasAction(h StdHelp) bool {
 	return h.zshCompAction != zshCompActionNone
 }
@@ -189,7 +189,7 @@ func zshCompletionHandler(h StdHelp, twc *twrap.TWConf, ps *param.PSet) int {
 	case zshCompActionNone:
 		return 0
 	case zshCompActionShow:
-		zshWriteCompFunc(ps, os.Stdout)
+		zshWriteCompFunc(ps, twc.W)
 		return 0
 	case zshCompActionNew:
 		filename := zshCompFileName(h, ps)
