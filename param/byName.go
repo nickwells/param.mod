@@ -311,17 +311,22 @@ func ValueName(vName string) OptFunc {
 	}
 }
 
-// SeeAlso will add the names of parameters to the list of parameters
-// to be referenced when showing the help message. They will be checked
-// before the parameters are parsed to ensure that they are all valid
-// names. Note that it is not possible to check the names as they are added
-// since the referenced name might not have been added yet. It will return an
-// error if the referenced name has already been used.
+// SeeAlso will add the names of parameters to the list of parameters to be
+// referenced when showing the help message. They will be checked before the
+// parameters are parsed to ensure that they are all valid names. Note that
+// it is not possible to check the names as they are added since the
+// referenced name might not have been added yet. It will return an error if
+// the referenced name has already been used. A reference to the parameter
+// itself will be ignored; this allows the same group of parameter names to
+// be passed to each parameter in the group wihout self-reference.
 func SeeAlso(refs ...string) OptFunc {
 	source := caller()
 	return func(p *ByName) error {
 		for _, ref := range refs {
 			ref = strings.TrimSpace(ref)
+			if ref == p.name { // don't add a see-also to yourself
+				continue
+			}
 
 			if whereAdded, exists := p.seeAlso[ref]; exists {
 				return fmt.Errorf(
