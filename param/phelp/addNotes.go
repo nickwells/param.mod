@@ -1,6 +1,9 @@
 package phelp
 
-import "github.com/nickwells/param.mod/v5/param"
+import (
+	"github.com/nickwells/fileparse.mod/fileparse"
+	"github.com/nickwells/param.mod/v5/param"
+)
 
 // addNotes adds all the notes for the help message
 func addNotes(ps *param.PSet) {
@@ -49,6 +52,74 @@ func addNotes(ps *param.PSet) {
 			"For instance, for the prefix 'XX_' an environment"+
 			" variable called 'XX_a_b' will match a"+
 			" parameter called 'a-b'",
+		param.NoteAttrs(param.DontShowNoteInStdUsage))
+
+	ps.AddNote("Alternative Sources - Configuration Files",
+		"It is possible for a program to read parameters from files."+
+			"\n\n"+
+			"Parameters in such files are given one-per-line, the"+
+			" leading dash is not required. If"+
+			" any parameter value is required it is given after the"+
+			" parameter name, separated with an '='. White space"+
+			" at the start or end of the line is ignored as is any"+
+			" around the '='."+
+			" Parameters can be restricted to only be recognised for"+
+			" specific programs by giving a comma-separated list of"+
+			" program names followed by a '/'  before the parameter name."+
+			" This can be useful for group or shared parameter files"+
+			" (see below) and also allows you to configure the"+
+			" behaviour of a program by creating multiple linked"+
+			" copies under different names."+
+			"\n\n"+
+			"Blank lines in parameter files are ignored as is any text"+
+			" following a '"+fileparse.DefaultCommentIntro+"'."+
+			" Other files may be included by adding a"+
+			" line to the file starting"+
+			" with '"+fileparse.DefaultInclKeyWord+"'; any text"+
+			" following this keyword has surrounding whitespace"+
+			" removed and the remainder used as a filename to be processed."+
+			"\n\n"+
+			"Parameter files are either pre-declared and will be listed"+
+			" in the sources section of the manual"+
+			" (see '"+helpShowArgName+"' '"+sourcesHelpSectionName+"')"+
+			" or are provided on the command line with"+
+			" the '"+paramsFileArgName+"' parameter."+
+			"\n\n"+
+			"There is an additional distinction within the"+
+			" pre-declared configuration files: some configuration"+
+			" files are specific to a parameter group. Parameter"+
+			" groups are means of organisinmg parameters into"+
+			" logically-related collections. These groups of"+
+			" parameters can each have their own group-specific"+
+			" configuration files."+
+			" (see '"+helpShowArgName+"' '"+groupsHelpSectionName+"')."+
+			"\n\n"+
+			"The parameters in these various types of configuration"+
+			" file are handled slightly differently."+
+			"\n"+
+			"- Any valid"+
+			" parameters of the program can be set in a file given"+
+			" through the command-line"+
+			" parameter '"+paramsFileArgName+"'. They are treated"+
+			" as if they were given at the command line."+
+			"\n"+
+			"- Parameters given in pre-declared configuration"+
+			" files have an additional restriction that prevents"+
+			" parameters which are marked as 'command-line-only'"+
+			" from being set. An error will be raised if one is"+
+			" found in the file."+
+			"\n"+
+			"- Parameters given in a parameter-group"+
+			" configuration file must also be members of the"+
+			" parameter group."+
+			"\n"+
+			"- Additionally a configuration file may be shared"+
+			" between multiple programs in which case the parameters"+
+			" given in the file need not be parameters of the"+
+			" program. Such parameters will be silently ignored."+
+			" Such files, if any, will be highlighted in the list of"+
+			" sources. To detect such ignored parameters use"+
+			" the '"+paramsShowUnusedArgName+"' parameter.",
 		param.NoteAttrs(param.DontShowNoteInStdUsage))
 
 	ps.AddNote("Alternative Sources - Priority",
