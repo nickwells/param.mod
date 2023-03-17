@@ -23,20 +23,24 @@ func showConfigFiles(h StdHelp, twc *twrap.TWConf, cf []param.ConfigFileDetails)
 	}
 
 	twc.Print("\n  Common Configuration Files\n\n")
-	var hasStrictFiles bool
+	var hasNonStrictFiles bool
 	for _, f := range cf {
-		prefix := "      "
-		if f.ParamsMustExist() {
-			hasStrictFiles = true
-			prefix = "    * "
+		prefix := " "
+		if !f.ParamsMustExist() {
+			hasNonStrictFiles = true
+			prefix = "*"
 		}
-		twc.Printf("%s%s\n", prefix, f.String())
+		twc.Printf("    %s %s\n", prefix, f.String())
 	}
-	if hasStrictFiles {
+	if hasNonStrictFiles {
 		twc.Println() //nolint: errcheck
 		twc.WrapPrefixed("Note: ",
-			"the files marked with a '*' should only contain"+
-				" parameters valid for this program.", textIndent)
+			"the files marked with a '*' are allowed to contain"+
+				" parameters not valid for this program. Any such"+
+				" parameters will be silently ignored. To detect"+
+				" such parameters call the program with the"+
+				" '"+paramsShowUnusedArgName+"' parameter.",
+			textIndent)
 	}
 }
 
