@@ -76,6 +76,7 @@ func splitParamName(pName string) (progNames []string, paramName string) {
 	} else {
 		paramName = strings.TrimSpace(parts[0])
 	}
+	paramName = strings.TrimLeft(paramName, "-")
 
 	return
 }
