@@ -111,7 +111,7 @@ func (a Aliases) Check(av AllowedVals) error {
 	return nil
 }
 
-// AllowedValuesMap returns a copy of the map of allowed values. This will be
+// AllowedValuesAliasMap returns a copy of the map of aliases. This will be
 // used by the standard help package to generate a list of allowed values.
 func (a Aliases) AllowedValuesAliasMap() Aliases {
 	rval := make(map[string][]string)

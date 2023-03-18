@@ -7,6 +7,7 @@ import (
 	"github.com/nickwells/param.mod/v5/param"
 )
 
+// ParamTestFunc represents a function that can be used to test a parameter
 type ParamTestFunc func(location.L, *param.ByName, []string) bool
 
 // IsACommandLineParam returns true if the parameter has been set through

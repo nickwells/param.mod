@@ -29,7 +29,6 @@ func AppendStrings(val *[]string, s ...string) param.ActionFunc {
 //
 // This should be used if you want to apply the value of a string variable at
 // the time the ActionFunc is called rather than when it is first set.
-
 func AppendStringVal(val *[]string, s *string) param.ActionFunc {
 	return func(_ location.L, _ *param.ByName, _ []string) error {
 		*val = append(*val, *s)
