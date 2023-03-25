@@ -51,7 +51,7 @@ func (s configFileSetter) CurrentValue() string {
 }
 
 // CheckSetter checks that the seenBefore map has been initialised.
-func (s *configFileSetter) CheckSetter(name string) {
+func (s *configFileSetter) CheckSetter(_ string) {
 	if s.seenBefore == nil {
 		s.seenBefore = make(map[string]bool)
 	}

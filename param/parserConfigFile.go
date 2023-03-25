@@ -408,7 +408,7 @@ func (ps *PSet) getParamsFromConfigFiles() {
 // ConfigFileActionFunc can be called as an action func and will take the
 // second entry in the paramVals (which is expected to exist) as the name of
 // a config file from which to take parameters.
-func ConfigFileActionFunc(loc location.L, p *ByName, paramVals []string) error {
+func ConfigFileActionFunc(_ location.L, p *ByName, paramVals []string) error {
 	if len(paramVals) != 2 {
 		return errors.New("no config file name parameter has been given")
 	}

@@ -6,7 +6,7 @@ import (
 )
 
 // showUsageSummary prints the program name and a parameter summary
-func showUsageSummary(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
+func showUsageSummary(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	twc.Print("Usage: ", ps.ProgName())
 
 	bppCount := ps.CountByPosParams()

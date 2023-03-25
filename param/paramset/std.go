@@ -44,9 +44,9 @@ func NewOrDie(psof ...param.PSetOptFunc) *param.PSet {
 // particular there are no parameters added
 type noHelp struct{}
 
-func (nh noHelp) ProcessArgs(ps *param.PSet)       {}
-func (nh noHelp) Help(ps *param.PSet, s ...string) {}
-func (nh noHelp) AddParams(ps *param.PSet)         {}
+func (nh noHelp) ProcessArgs(_ *param.PSet)       {}
+func (nh noHelp) Help(_ *param.PSet, _ ...string) {}
+func (nh noHelp) AddParams(_ *param.PSet)         {}
 func (nh noHelp) ErrorHandler(ps *param.PSet, errs param.ErrMap) {
 	if len(errs) == 0 {
 		return

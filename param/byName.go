@@ -390,11 +390,16 @@ func (p *ByName) processParam(loc *location.L, paramParts []string) {
 
 	if p.AttrIsSet(SetOnlyOnce) &&
 		len(p.whereIsParamSet) > 0 {
-		// it's already been set so don't process the value
-	} else if len(paramParts) == 1 {
+		return
+	}
+
+	switch len(paramParts) {
+	case 1:
 		err = p.setter.Set(paramParts[0])
-	} else {
+	case 2:
 		err = p.setter.SetWithVal(paramParts[0], paramParts[1])
+	default:
+		err = loc.Error(fmt.Sprintf("bad parameter: %q", paramParts))
 	}
 
 	if err != nil {

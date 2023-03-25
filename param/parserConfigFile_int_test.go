@@ -11,10 +11,10 @@ import (
 
 type noHelpNoExitNoErrRpt struct{}
 
-func (nh noHelpNoExitNoErrRpt) ProcessArgs(ps *PSet)               {}
-func (nh noHelpNoExitNoErrRpt) Help(ps *PSet, s ...string)         {}
-func (nh noHelpNoExitNoErrRpt) AddParams(ps *PSet)                 {}
-func (nh noHelpNoExitNoErrRpt) ErrorHandler(ps *PSet, errs ErrMap) {}
+func (nh noHelpNoExitNoErrRpt) ProcessArgs(_ *PSet)            {}
+func (nh noHelpNoExitNoErrRpt) Help(_ *PSet, _ ...string)      {}
+func (nh noHelpNoExitNoErrRpt) AddParams(_ *PSet)              {}
+func (nh noHelpNoExitNoErrRpt) ErrorHandler(_ *PSet, _ ErrMap) {}
 
 var nhnenr noHelpNoExitNoErrRpt
 

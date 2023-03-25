@@ -23,5 +23,5 @@ func (s Nil) CurrentValue() string {
 }
 
 // CheckSetter does nothing.
-func (s Nil) CheckSetter(name string) {
+func (s Nil) CheckSetter(_ string) {
 }
