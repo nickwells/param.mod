@@ -37,6 +37,7 @@ common.params-completion [ 3 parameters ]
 
             This parameter may only be given on the command line, not in the
             configuration files for this group
+            See also: completions-zsh-dir
             Allowed values: a string
                             The value must be one of the following:
                                new    : only generate the zsh completions file

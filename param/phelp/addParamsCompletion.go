@@ -77,6 +77,7 @@ func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
 			" This specifies whether or if the file should be created."+
 			" If it is set to any value other than '"+zshCompActionNone+
 			"' then the program will exit after the parameters are processed.",
+		param.SeeAlso(completionsZshDirArgName),
 		param.GroupName(groupName),
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 	)
