@@ -398,6 +398,10 @@ func GroupName(name string) OptFunc {
 // any errors, record where it was set and call any associated post actions
 func (p *ByName) processParam(loc *location.L, paramParts []string) {
 	if p.AttrIsSet(SetOnlyOnce) && p.HasBeenSet() {
+		p.ps.AddErr(p.name,
+			loc.Error(fmt.Sprintf(
+				"This may only be set once but has already been set at %s",
+				p.whereIsParamSet[0])))
 		return
 	}
 
@@ -413,12 +417,11 @@ func (p *ByName) processParam(loc *location.L, paramParts []string) {
 	case 2:
 		err = p.setter.SetWithVal(paramParts[0], paramParts[1])
 	default:
-		err = loc.Error(fmt.Sprintf("bad parameter: %q", paramParts))
+		err = fmt.Errorf("bad parameter: %q", paramParts)
 	}
 
 	if err != nil {
-		p.ps.AddErr(p.name,
-			loc.Error(err.Error()))
+		p.ps.AddErr(p.name, loc.Error(err.Error()))
 		return
 	}
 
