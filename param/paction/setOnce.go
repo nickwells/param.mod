@@ -17,12 +17,12 @@ import (
 // system-wide config file since the user can just change it themselves -
 // it'll be more irritating than anything else.
 //
-// Note that for this to have the desired effect you must also set the
-// SetOnlyOnce parameter attribute. This will only audit the multiple
-// attempts and optionally set the error status on the parameter. If you do
-// not set the SetOnlyOnce parameter and you do not have the
-// ExitOnMultipleTries action set then it is possible that the parameter
-// could be set despite this ActionFunc being provided
+// Note that this is an alternative mechanism to the SetOnlyOnce parameter
+// attribute. It does NOT guarantee that the value won't be set multiple times,
+// only that an error will be returned (if the action value is set to
+// ErrorOnMultipleTries). If the SetOnlyOnce attribute is set on the
+// parameter then this function will only be called the first time the
+// parameter is set and will therefore have no effect.
 type SetOnce struct {
 	paramsSetAt param.Sources
 }
