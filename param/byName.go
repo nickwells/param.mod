@@ -37,11 +37,12 @@ import (
 // the help message and enforcing usage restrictions when parsing the program
 // parameters.
 //
-// For anyone not writing a bespoke help class the only useful method on this
-// class is the HasBeenSet method. You can record the ByName pointer returned
-// by the PSet.Add method and then in a FinalCheck function you can test
-// whether or not this and other parameters were set and use confirm that the
-// combination of parameters is allowed. See the PSet.AddFinalCheck method.
+// For anyone not writing a bespoke help class the only useful methods on
+// this class are the HasBeenSet and WhereSet methods. You can record the
+// ByName pointer returned by the PSet.Add method and then in a FinalCheck
+// function you can test whether or not this and other parameters were set
+// and confirm that the combination of parameters is allowed. See the
+// PSet.AddFinalCheck method.
 type ByName struct {
 	ps              *PSet
 	name            string
@@ -70,6 +71,11 @@ func (p ByName) AltNames() []string {
 	an := make([]string, len(p.altNames))
 	copy(an, p.altNames)
 	return an
+}
+
+// HasBeenSet will return true if the parameter has been set.
+func (p ByName) HasBeenSet() bool {
+	return len(p.whereIsParamSet) > 0
 }
 
 // WhereSet returns a copy of the list of places where the ByName parameter
@@ -242,11 +248,6 @@ func (ps *PSet) addByNameToGroup(p *ByName) {
 		ps.groups[p.groupName] = g
 	}
 	g.Params = append(g.Params, p)
-}
-
-// HasBeenSet will return true if the parameter has been set.
-func (p ByName) HasBeenSet() bool {
-	return len(p.whereIsParamSet) > 0
 }
 
 // Attrs returns an OptFunc which will set the attributes of the parameter to
