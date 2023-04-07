@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/nickwells/english.mod/english"
 	"github.com/nickwells/location.mod/location"
 )
 
@@ -118,19 +119,22 @@ func (ps *PSet) getParamsFromStringSlice(loc *location.L, params []string) {
 	ps.handleParamsByName(loc, params)
 }
 
-// trimParam trims the parameter of any leading dashes
+// trimParam trims the parameter of one or two leading dashes. It returns an
+// error if the parameter does not start with '-' or '--' or if the trimmed
+// parameter name is empty
 func trimParam(param string) (string, error) {
-	trimmedParam := strings.TrimPrefix(param, "--")
-	if trimmedParam != param {
-		return trimmedParam, nil
-	}
-	trimmedParam = strings.TrimPrefix(param, "-")
-	if trimmedParam != param {
-		if trimmedParam == "" {
-			return param, errors.New("the parameter name is blank")
+	prefixes := []string{"--", "-"}
+	for _, pfx := range prefixes {
+		trimmedParam := strings.TrimPrefix(param, pfx)
+		if trimmedParam != param {
+			if trimmedParam == "" {
+				return param, errors.New("the parameter name is blank")
+			}
+			return trimmedParam, nil
 		}
-		return trimmedParam, nil
 	}
 	return param, fmt.Errorf(
-		"parameter %q does not start with either '--' or '-'", param)
+		"parameter %q does not start with '%s'",
+		param,
+		english.Join(prefixes, "', '", "' or '"))
 }
