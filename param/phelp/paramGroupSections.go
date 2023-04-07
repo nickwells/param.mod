@@ -350,6 +350,12 @@ func printParamAttributes(twc *twrap.TWConf, p *param.ByName) {
 				" Any appearances after the first will not be used",
 			descriptionIndent)
 	}
+	if p.AttrIsSet(param.IsTerminalParam) {
+		twc.Wrap(
+			"\nNo more command-line parameters will be handled after this"+
+				" parameter. They will be handled separately.",
+			descriptionIndent)
+	}
 	if p.AttrIsSet(param.CommandLineOnly) && p.PSet().HasAltSources() {
 		var sources []string
 		if p.PSet().HasGlobalConfigFiles() {

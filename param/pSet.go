@@ -65,6 +65,7 @@ type PSet struct {
 
 	remainingParams        []string
 	terminalParam          string
+	terminalParamSeen      bool
 	remHandler             RemHandler
 	trailingParamsExpected bool
 	trailingParamsName     string

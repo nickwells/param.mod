@@ -76,14 +76,15 @@ func (ps *PSet) handleParamsByPos(loc *location.L, params []string,
 }
 
 func (ps *PSet) handleParamsByName(loc *location.L, params []string) {
-	for i := len(ps.byPos); i < len(params); i++ {
+	var i int
+	for i = len(ps.byPos); i < len(params); i++ {
 		pStr := params[i]
 		loc.Incr()
 		loc.SetContent(pStr)
 
 		if pStr == ps.terminalParam {
-			ps.remainingParams = params[i+1:]
-			return
+			ps.terminalParamSeen = true
+			break
 		}
 
 		paramParts := strings.SplitN(pStr, "=", 2)
@@ -93,24 +94,36 @@ func (ps *PSet) handleParamsByName(loc *location.L, params []string) {
 			continue
 		}
 
-		if p, ok := ps.nameToParam[trimmedParam]; ok {
-			if p.setter.ValueReq() == Mandatory &&
-				len(paramParts) == 1 {
-				if i < (len(params) - 1) {
-					i++
-					loc.Incr()
-					paramParts = append(paramParts, params[i])
-					loc.SetContent(strings.Join(paramParts, " "))
-				}
-			}
-			paramParts[0] = trimmedParam
-			p.processParam(loc, paramParts)
-		} else {
+		p, ok := ps.nameToParam[trimmedParam]
+		if !ok {
 			ps.recordUnexpectedParam(trimmedParam, loc)
+			continue
 		}
+
+		if p.setter.ValueReq() == Mandatory &&
+			len(paramParts) == 1 {
+			if i < (len(params) - 1) {
+				i++
+				loc.Incr()
+				paramParts = append(paramParts, params[i])
+				loc.SetContent(strings.Join(paramParts, " "))
+			}
+		}
+		paramParts[0] = trimmedParam
+		p.processParam(loc, paramParts)
+
+		if ps.terminalParamSeen {
+			break
+		}
+	}
+
+	if i < len(params) {
+		ps.remainingParams = params[i+1:]
 	}
 }
 
+// getParamsFromStringSlice processes first the positional parameters, if
+// any, and then the named parameters
 func (ps *PSet) getParamsFromStringSlice(loc *location.L, params []string) {
 	if ps.handleParamsByPos(loc, params) == parsingFinished {
 		return

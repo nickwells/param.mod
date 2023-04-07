@@ -163,6 +163,12 @@ const (
 	// when the usage message is printed unless the expanded usage message
 	// has been requested
 	DontShowInStdUsage
+	// IsTerminalParam means that when this parameter is encountered
+	// command-line parameter processing will stop. Any further parameters
+	// will be ignored and added to the slice of remaining params for
+	// subsequent processing by the application. Setting it will also set the
+	// CommandLineOnly attribute.
+	IsTerminalParam
 )
 
 // AttrIsSet will return true if the supplied attribute is set on the
@@ -251,9 +257,13 @@ func (ps *PSet) addByNameToGroup(p *ByName) {
 }
 
 // Attrs returns an OptFunc which will set the attributes of the parameter to
-// the passed value.
+// the passed value. Note that if the IsTerminal attribute is set then the
+// CommandLineOnly attribute is forced on as well.
 func Attrs(attrs Attributes) OptFunc {
 	return func(p *ByName) error {
+		if attrs&IsTerminalParam == IsTerminalParam {
+			attrs |= CommandLineOnly
+		}
 		p.attributes = attrs
 		return nil
 	}
@@ -387,12 +397,15 @@ func GroupName(name string) OptFunc {
 // processParam will call the parameter's setter processor and then record
 // any errors, record where it was set and call any associated post actions
 func (p *ByName) processParam(loc *location.L, paramParts []string) {
-	var err error
-
-	if p.AttrIsSet(SetOnlyOnce) &&
-		len(p.whereIsParamSet) > 0 {
+	if p.AttrIsSet(SetOnlyOnce) && p.HasBeenSet() {
 		return
 	}
+
+	if p.AttrIsSet(IsTerminalParam) {
+		p.ps.terminalParamSeen = true
+	}
+
+	var err error
 
 	switch len(paramParts) {
 	case 1:
