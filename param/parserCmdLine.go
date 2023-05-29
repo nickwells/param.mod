@@ -80,7 +80,7 @@ func (ps *PSet) handleParamsByName(loc *location.L, params []string) {
 	for i = len(ps.byPos); i < len(params); i++ {
 		pStr := params[i]
 		loc.Incr()
-		loc.SetContent(pStr)
+		loc.SetContent(fmt.Sprintf("%q", pStr))
 
 		if pStr == ps.terminalParam {
 			ps.terminalParamSeen = true
@@ -106,7 +106,8 @@ func (ps *PSet) handleParamsByName(loc *location.L, params []string) {
 				i++
 				loc.Incr()
 				paramParts = append(paramParts, params[i])
-				loc.SetContent(strings.Join(paramParts, " "))
+				loc.SetContent(
+					fmt.Sprintf("%q %q", paramParts[0], paramParts[1]))
 			}
 		}
 		paramParts[0] = trimmedParam
