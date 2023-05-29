@@ -1,6 +1,7 @@
 package paramtest
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/nickwells/errutil.mod/errutil"
@@ -31,6 +32,11 @@ import (
 // test from the standard help parameters. Note that this will mean that any
 // errors due to parameters whose names clash with standard parameters will
 // not be caught but this test can be performed separately.
+//
+// If you need to perform some setup before running the test or cleanup
+// afterwards you should set the Pre and Post runctions accordingly. If
+// either is nil then it is not run. Any errors returned by these functions
+// conmstitute a test failure and will be reported as such.
 type Parser struct {
 	testhelper.ID
 
@@ -41,6 +47,9 @@ type Parser struct {
 	ExpVal    any
 	CheckFunc func(val, expVal any) error
 
+	Pre  func() error
+	Post func() error
+
 	Args []string
 }
 
@@ -48,12 +57,33 @@ type Parser struct {
 // Args. It will check that the mapped errors match the ErrMap returned by
 // Parse and then will call CmpFunc reporting any error that returns as a
 // test error. It will return a non-nil error if the test failed.
-func (p Parser) Test(t *testing.T) error {
+func (p Parser) Test(t *testing.T) (err error) {
 	t.Helper()
+
+	if p.Pre != nil {
+		err = p.Pre()
+		if err != nil {
+			t.Log(p.IDStr())
+			t.Logf("\t: Unexpected test-setup error: %s\n", err)
+			t.Error("\t: error returned by the test 'Pre' func")
+			return err
+		}
+	}
+	if p.Post != nil {
+		defer func() {
+			postErr := p.Post()
+			if postErr != nil {
+				t.Log(p.IDStr())
+				t.Logf("\t: Unexpected test-cleanup error: %s\n", postErr)
+				t.Error("\t: error returned by the test 'Post' func")
+				err = errors.Join(err, postErr)
+			}
+		}()
+	}
 
 	errMap := errutil.ErrMap(p.Ps.Parse(p.Args))
 
-	if err := errMap.Matches(p.ExpParseErrors); err != nil {
+	if err = errMap.Matches(p.ExpParseErrors); err != nil {
 		t.Log(p.IDStr())
 		t.Logf("\t: Unexpected parsing errors: %s\n", err)
 		t.Logf("\t: Actual:\n%s\n", errMap)
@@ -62,7 +92,7 @@ func (p Parser) Test(t *testing.T) error {
 		return err
 	}
 
-	if err := p.CheckFunc(p.Val, p.ExpVal); err != nil {
+	if err = p.CheckFunc(p.Val, p.ExpVal); err != nil {
 		t.Log(p.IDStr())
 		t.Logf("\t: Unexpected error: %s\n", err)
 		t.Error("\t: The resultant value is not as expected\n")
