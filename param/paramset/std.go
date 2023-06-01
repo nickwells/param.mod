@@ -34,8 +34,22 @@ func NewOrDie(psof ...param.PSetOptFunc) *param.PSet {
 	ps, err := param.NewSet(opts...)
 	if err != nil {
 		fmt.Fprintf(os.Stderr,
-			"The program parameter set could not be created: %s", err)
+			"The program parameter set can't be made: %s", err)
 		os.Exit(1)
+	}
+	return ps
+}
+
+// NewOrPanic creates a new PSet with the standard helper set. It then checks
+// the error returned and if it is not nil it will panic with the returned
+// error wrapped in an explanatory message. This is a suitable choice if you
+// want to test the parameter generation and still have a simple API in your
+// program.
+func NewOrPanic(psof ...param.PSetOptFunc) *param.PSet {
+	opts := addHelperToOpts(psof)
+	ps, err := param.NewSet(opts...)
+	if err != nil {
+		panic(fmt.Errorf("The program parameter set can't be made: %w", err))
 	}
 	return ps
 }
