@@ -2,15 +2,16 @@ PROGRAM NAME UNKNOWN: 4 errors were found in 3 categories
       help-groups - 2 errors:
             1 : Bad group name: "notAGroup"
                 For a list of available group names try '-help-show groups'
-                At: [command line]: Supplied Parameter:2: -help-groups=notAGroup
+                At: [command line]: Supplied Parameter:2:
+                "-help-groups=notAGroup"
             2 : a value must follow this parameter: "help-groups", either
                 following an '=' or as the next parameter
-                At: [command line]: Supplied Parameter:3: -help-groups
+                At: [command line]: Supplied Parameter:3: "-help-groups"
       param2:
             this parameter must be set somewhere
       params-file:
             path: "testdata/nonesuch" should exist but doesn't
             At: [command line]: Supplied Parameter:1:
-            -params-file=testdata/nonesuch
+            "-params-file=testdata/nonesuch"
 
 Try the '-help' parameter for more information.

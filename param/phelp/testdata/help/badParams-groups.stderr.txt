@@ -4,7 +4,7 @@ PROGRAM NAME UNKNOWN: an error was found
                              "nonesuch2"
                              "nonesuch3"
             For a list of available group names try '-help-show groups'
-            At: [command line]: Supplied Parameter:2: -help-groups
-            nonesuch1,nonesuch2,nonesuch3
+            At: [command line]: Supplied Parameter:2: "-help-groups"
+            "nonesuch1,nonesuch2,nonesuch3"
 
 Try the '-help' parameter for more information.

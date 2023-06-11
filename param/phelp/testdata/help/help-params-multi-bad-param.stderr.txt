@@ -5,7 +5,7 @@ PROGRAM NAME UNKNOWN: an error was found
             To see a list of parameter names try '-help-show params-named'.
             To see a full list, add '-help-all'.
             To see just the names, add '-help-summary'.
-            At: [command line]: Supplied Parameter:2: -help-params
-            help-groups,help,no-such-param,not-a-param
+            At: [command line]: Supplied Parameter:2: "-help-params"
+            "help-groups,help,no-such-param,not-a-param"
 
 Try the '-help' parameter for more information.

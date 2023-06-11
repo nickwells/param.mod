@@ -99,7 +99,7 @@ func ExampleTime_withFailingChecks() {
 	// Before parsing: time = Monday
 	// Errors for: my-time
 	//	: the day of the week (Saturday) must be a Friday
-	// At: [command line]: Supplied Parameter:2: -my-time 2020/Apr/25T12:00:00
+	// At: [command line]: Supplied Parameter:2: "-my-time" "2020/Apr/25T12:00:00"
 	// After  parsing: time = Monday
 }
 

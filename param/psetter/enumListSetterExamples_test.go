@@ -89,7 +89,7 @@ func ExampleEnumList_withBadVals() {
 	// Before parsing
 	// Errors for: my-list
 	//	: value is not allowed: "z"
-	// At: [command line]: Supplied Parameter:2: -my-list x,z
+	// At: [command line]: Supplied Parameter:2: "-my-list" "x,z"
 	// After  parsing
 }
 
@@ -185,7 +185,7 @@ func ExampleEnumList_withFailingChecks() {
 	// Before parsing
 	// Errors for: my-list
 	//	: the length of the list (1) is incorrect: the value (1) must equal 2
-	// At: [command line]: Supplied Parameter:2: -my-list x
+	// At: [command line]: Supplied Parameter:2: "-my-list" "x"
 	// After  parsing
 }
 

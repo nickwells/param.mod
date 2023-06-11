@@ -1,6 +1,6 @@
 PROGRAM NAME UNKNOWN: an error was found
       params-file:
             no file name has been given
-            At: [command line]: Supplied Parameter:2: -params-file
+            At: [command line]: Supplied Parameter:2: "-params-file" ""
 
 Try the '-help' parameter for more information.
