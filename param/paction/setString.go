@@ -11,6 +11,8 @@ import (
 // set. For instance if you are setting some configuration for an operation
 // it implies that you want the operation performed. This saves forcing the
 // user to both specify the configuration and request the operation
+//
+// Deprecated: use SetVal[string] instead.
 func SetString(val *string, setTo string) param.ActionFunc {
 	return func(_ location.L, _ *param.ByName, _ []string) error {
 		*val = setTo
@@ -25,7 +27,10 @@ func SetString(val *string, setTo string) param.ActionFunc {
 // set. For instance if you are setting some configuration for an operation
 // it implies that you want the operation performed. This saves forcing the
 // user to both specify the configuration and request the operation
-func SetStringIf(val *string, setTo string, test ParamTestFunc) param.ActionFunc {
+//
+// Deprecated: use SetValIf[string] instead.
+func SetStringIf(val *string, setTo string, test ParamTestFunc,
+) param.ActionFunc {
 	return func(loc location.L, p *param.ByName, s []string) error {
 		if test(loc, p, s) {
 			*val = setTo

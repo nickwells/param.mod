@@ -15,6 +15,8 @@ import (
 // set. For instance if you are setting some configuration for an operation
 // it implies that you want the operation performed. This saves forcing the
 // user to both specify the configuration and request the operation.
+//
+// Deprecated: use SetMapVal[string, bool] instead.
 func SetMap(m map[string]bool, k string, b bool) param.ActionFunc {
 	return func(_ location.L, _ *param.ByName, _ []string) error {
 		m[k] = b
@@ -32,6 +34,8 @@ func SetMap(m map[string]bool, k string, b bool) param.ActionFunc {
 // set. For instance if you are setting some configuration for an operation
 // it implies that you want the operation performed. This saves forcing the
 // user to both specify the configuration and request the operation.
+//
+// Deprecated: use SetMapValIf[string, bool] instead.
 func SetMapIf(m map[string]bool, k string, b bool, test ParamTestFunc) param.ActionFunc {
 	return func(loc location.L, p *param.ByName, s []string) error {
 		if test(loc, p, s) {
