@@ -75,7 +75,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		param.AltNames("help-f"),
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.PostAction(setHelpSections(h, allHelpSectionAlias)),
-		param.PostAction(paction.SetBool(&h.showHiddenItems, true)),
+		param.PostAction(paction.SetVal(&h.showHiddenItems, true)),
 		param.GroupName(groupName))
 
 	ps.Add(helpShowHiddenArgName, psetter.Nil{},
@@ -85,8 +85,8 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.AltNames("help-a"),
-		param.PostAction(paction.SetBool(&h.showHiddenItems, true)),
-		param.PostAction(paction.SetBool(&h.helpRequested, true)),
+		param.PostAction(paction.SetVal(&h.showHiddenItems, true)),
+		param.PostAction(paction.SetVal(&h.helpRequested, true)),
 		param.GroupName(groupName))
 
 	ps.Add(helpSummaryArgName, psetter.Nil{},
@@ -95,8 +95,8 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.AltNames("help-s", "help-short"),
-		param.PostAction(paction.SetBool(&h.showSummary, true)),
-		param.PostAction(paction.SetBool(&h.helpRequested, true)),
+		param.PostAction(paction.SetVal(&h.showSummary, true)),
+		param.PostAction(paction.SetVal(&h.helpRequested, true)),
 		param.GroupName(groupName))
 
 	ps.Add("help-all-short", psetter.Nil{},
@@ -107,9 +107,9 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.AltNames("help-as", "help-sa"),
-		param.PostAction(paction.SetBool(&h.showHiddenItems, true)),
-		param.PostAction(paction.SetBool(&h.showSummary, true)),
-		param.PostAction(paction.SetBool(&h.helpRequested, true)),
+		param.PostAction(paction.SetVal(&h.showHiddenItems, true)),
+		param.PostAction(paction.SetVal(&h.showSummary, true)),
+		param.PostAction(paction.SetVal(&h.helpRequested, true)),
 		param.GroupName(groupName))
 
 	{
@@ -130,7 +130,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			param.AltNames("help-group", "help-g"),
 			param.ValueName("group-name,..."),
 			param.PostAction(checkGroups(h, ps)),
-			param.PostAction(paction.SetBool(&h.showHiddenItems, true)),
+			param.PostAction(paction.SetVal(&h.showHiddenItems, true)),
 			param.GroupName(groupName))
 	}
 
@@ -219,7 +219,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		param.AltNames("help-dont-page", "help-no-pager"),
 		param.GroupName(groupName),
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.PostAction(paction.SetBool(&h.helpRequested, true)),
+		param.PostAction(paction.SetVal(&h.helpRequested, true)),
 	)
 
 	// Final checks

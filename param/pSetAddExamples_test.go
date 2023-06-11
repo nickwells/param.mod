@@ -61,7 +61,7 @@ func ExamplePSet_Add_withExtras() {
 		// paction package that will set the fHasBeenSet variable to
 		// true. This can also be found by the HasBeenSet method on the
 		// ByName parameter.
-		param.PostAction(paction.SetBool(&fHasBeenSet, true)),
+		param.PostAction(paction.SetVal(&fHasBeenSet, true)),
 	)
 
 	fmt.Printf("param (f) value:   %3.1f\n", f)

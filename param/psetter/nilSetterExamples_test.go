@@ -18,8 +18,8 @@ func ExampleNil_standard() {
 	var flag2 bool
 
 	ps.Add("my-param", psetter.Nil{}, "help text",
-		param.PostAction(paction.SetBool(&flag1, true)),
-		param.PostAction(paction.SetBool(&flag2, true)),
+		param.PostAction(paction.SetVal(&flag1, true)),
+		param.PostAction(paction.SetVal(&flag2, true)),
 	)
 
 	fmt.Println("Before parsing")
