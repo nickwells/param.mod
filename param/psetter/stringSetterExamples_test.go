@@ -9,7 +9,7 @@ import (
 
 // ExampleString_standard demonstrates the use of a String setter
 func ExampleString_standard() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	var s string
 
@@ -26,7 +26,7 @@ func ExampleString_standard() {
 // ExampleString_withPassingChecks demonstrates how to add checks to be
 // applied to the value.
 func ExampleString_withPassingChecks() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	var s string
 
@@ -51,7 +51,7 @@ func ExampleString_withPassingChecks() {
 // return from ps.Parse as the standard Helper will report any errors and
 // abort the program.
 func ExampleString_withFailingChecks() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	var s string
 
@@ -91,7 +91,7 @@ func ExampleString_withNilValue() {
 		}
 	}()
 
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	ps.Add("my-string", psetter.String{}, "help text")
 

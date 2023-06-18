@@ -10,7 +10,7 @@ import (
 
 // ExampleTime_standard demonstrates the use of a Time setter
 func ExampleTime_standard() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	var t time.Time
 
@@ -27,7 +27,7 @@ func ExampleTime_standard() {
 // ExampleTime_withFormat demonstrates the use of a Time setter with a
 // non-default Format value
 func ExampleTime_withFormat() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	var t time.Time
 
@@ -49,7 +49,7 @@ func ExampleTime_withFormat() {
 // ExampleTime_withPassingChecks demonstrates how to add checks to be applied
 // to the value.
 func ExampleTime_withPassingChecks() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	var t time.Time
 
@@ -75,7 +75,7 @@ func ExampleTime_withPassingChecks() {
 // from ps.Parse as the standard Helper will report any errors and abort the
 // program.
 func ExampleTime_withFailingChecks() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	var t time.Time
 
@@ -115,7 +115,7 @@ func ExampleTime_withNilValue() {
 		}
 	}()
 
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	ps.Add("my-time", psetter.Time{}, "help text")
 

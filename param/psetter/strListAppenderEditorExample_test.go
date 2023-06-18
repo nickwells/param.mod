@@ -25,7 +25,7 @@ func (myEditorMult) Edit(paramName, paramVal string) (string, error) {
 
 // ExampleStrListAppender_withEditor demonstrates the behaviour of the Editor.
 func ExampleStrListAppender_withEditor() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	ss := []string{"Hello"}
 	var myE myEditorMult

@@ -8,7 +8,7 @@ import (
 
 // ExampleBool_standard demonstrates the use of a Bool setter.
 func ExampleBool_standard() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	var p1 bool
 
@@ -29,7 +29,7 @@ func ExampleBool_standard() {
 // default behaviour rather than turning it on as the standard action of this
 // setter would do.
 func ExampleBool_inverted() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	p1 := true
 
@@ -47,7 +47,7 @@ func ExampleBool_inverted() {
 // the value of the flag can be set to an explicit value by passing the value
 // required after the parameter (following an "=").
 func ExampleBool_withValue() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	p1 := true
 
@@ -67,7 +67,7 @@ func ExampleBool_withValue() {
 // ps.Parse as the standard Helper will report any errors and abort the
 // program.
 func ExampleBool_withBadValue() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	p1 := true
 
@@ -101,7 +101,7 @@ func ExampleBool_withNilValue() {
 		}
 	}()
 
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	// we expect this to panic because the bool Value has not been initialised
 	ps.Add("do-this", psetter.Bool{}, "help text")

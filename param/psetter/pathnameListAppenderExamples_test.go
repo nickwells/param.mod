@@ -10,7 +10,7 @@ import (
 
 // ExamplePathnameListAppender_standard demonstrates the use of a PathnameListAppender
 func ExamplePathnameListAppender_standard() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	ss := []string{"testdata/pathname/nonesuch.go"}
 
@@ -53,7 +53,7 @@ func ExamplePathnameListAppender_withNilValue() {
 		}
 	}()
 
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	// we expect this to panic because the list Value has not been initialised
 	ps.Add("my-list", psetter.PathnameListAppender{}, "help text")

@@ -8,7 +8,7 @@ import (
 
 // ExampleEnum_standard demonstrates the use of an Enum setter.
 func ExampleEnum_standard() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	const (
 		XOption = "x"
@@ -45,7 +45,7 @@ func ExampleEnum_standard() {
 // no need to examine the return from ps.Parse as the standard Helper will
 // report any errors and abort the program.
 func ExampleEnum_withBadVal() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	const (
 		XOption = "x"
@@ -98,7 +98,7 @@ func ExampleEnum_withNilValue() {
 		}
 	}()
 
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	const (
 		XOption = "x"
@@ -130,7 +130,7 @@ func ExampleEnum_withBadInitialValue() {
 		}
 	}()
 
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	const (
 		XOption = "x"

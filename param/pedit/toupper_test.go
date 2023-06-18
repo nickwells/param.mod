@@ -12,7 +12,7 @@ import (
 //
 // Note that the paramset function used here is just to make the example more
 // reliable. In production code you would be best to use
-// paramset.NewOrDie(...) which will set the standard helper and exit if
+// paramset.NewOrPanic(...) which will set the standard helper and panic if
 // there's any error. Similarly, in production code, you would call Parse
 // with no arguments in which case it will use the arguments given to the
 // program (os.Args).

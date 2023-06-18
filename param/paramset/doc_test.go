@@ -47,8 +47,8 @@ func addParams(ps *param.PSet) error {
 	return nil
 }
 
-func ExampleNewOrDie_simple() {
-	ps := paramset.NewOrDie(addParams,
+func ExampleNewOrPanic_simple() {
+	ps := paramset.NewOrPanic(addParams,
 		param.SetProgramDescription(
 			"a description of the purpose of the program"))
 	ps.Parse()

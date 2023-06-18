@@ -9,7 +9,7 @@ import (
 
 // ExampleEnumList_standard demonstrates the use of an EnumList setter
 func ExampleEnumList_standard() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	const (
 		XOption = "x"
@@ -50,7 +50,7 @@ func ExampleEnumList_standard() {
 // to examine the return from ps.Parse as the standard Helper will report any
 // errors and abort the program.
 func ExampleEnumList_withBadVals() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	const (
 		XOption = "x"
@@ -97,7 +97,7 @@ func ExampleEnumList_withBadVals() {
 // additional checks to be applied to the passed arguments before the value
 // is set.
 func ExampleEnumList_withPassingChecks() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	const (
 		XOption = "x"
@@ -143,7 +143,7 @@ func ExampleEnumList_withPassingChecks() {
 // is normally no need to examine the return from ps.Parse as the standard
 // Helper will report any errors and abort the program.
 func ExampleEnumList_withFailingChecks() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	const (
 		XOption = "x"
@@ -201,7 +201,7 @@ func ExampleEnumList_withNilValue() {
 		}
 	}()
 
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	const (
 		XOption = "x"

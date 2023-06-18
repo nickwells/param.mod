@@ -9,7 +9,7 @@ import (
 
 // ExampleStrListAppender_standard demonstrates the use of a StrListAppender
 func ExampleStrListAppender_standard() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	ss := []string{"Hello"}
 
@@ -36,7 +36,7 @@ func ExampleStrListAppender_standard() {
 // ExampleStrListAppender_withPassingChecks demonstrates how to add checks to be
 // applied to the value.
 func ExampleStrListAppender_withPassingChecks() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	ss := []string{"Hello"}
 
@@ -72,7 +72,7 @@ func ExampleStrListAppender_withPassingChecks() {
 // return from ps.Parse as the standard Helper will report any errors and
 // abort the program.
 func ExampleStrListAppender_withFailingChecks() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	ss := []string{"Hello"}
 
@@ -120,7 +120,7 @@ func ExampleStrListAppender_withNilValue() {
 		}
 	}()
 
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	// we expect this to panic because the list Value has not been initialised
 	ps.Add("my-list", psetter.StrListAppender{}, "help text")

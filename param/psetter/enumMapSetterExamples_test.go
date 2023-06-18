@@ -8,7 +8,7 @@ import (
 
 // ExampleEnumMap_standard demonstrates the use of an EnumMap setter.
 func ExampleEnumMap_standard() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	const (
 		XOption = "x"
@@ -52,7 +52,7 @@ func ExampleEnumMap_standard() {
 // changed through the command line. That is, it is possible to change the
 // value of a map entry to false as well as to true.
 func ExampleEnumMap_fixingInitialValue() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	const (
 		XOption = "x"
@@ -100,7 +100,7 @@ func ExampleEnumMap_fixingInitialValue() {
 // reported. Note that it is not possible to set such a map value as the key
 // will be rejected as invalid.
 func ExampleEnumMap_hiddenMapEntries() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	const (
 		XOption = "x"
@@ -159,7 +159,7 @@ func ExampleEnumMap_withBadKey() {
 		}
 	}()
 
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	const (
 		XOption = "x"
@@ -195,7 +195,7 @@ func ExampleEnumMap_withNilValue() {
 		}
 	}()
 
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	const (
 		XOption = "x"

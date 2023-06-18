@@ -10,7 +10,7 @@ import (
 
 // ExampleDuration_basic demonstrates the use of a Duration setter.
 func ExampleDuration_basic() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	var v time.Duration
 
@@ -27,7 +27,7 @@ func ExampleDuration_basic() {
 // ExampleDuration_withPassingChecks demonstrates how to specify additional
 // checks for a Duration value.
 func ExampleDuration_withPassingChecks() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	var v time.Duration
 
@@ -54,7 +54,7 @@ func ExampleDuration_withPassingChecks() {
 // normally no need to examine the return from ps.Parse as the standard
 // Helper will report any errors and abort the program.
 func ExampleDuration_withFailingChecks() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	var v time.Duration
 
@@ -95,7 +95,7 @@ func ExampleDuration_withNilValue() {
 		}
 	}()
 
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	// we expect this to panic because the Duration Value has not been
 	// initialised

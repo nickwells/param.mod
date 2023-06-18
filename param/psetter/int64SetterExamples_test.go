@@ -9,7 +9,7 @@ import (
 
 // ExampleInt64_standard demonstrates the use of a Int64 setter.
 func ExampleInt64_standard() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	var i int64
 
@@ -33,7 +33,7 @@ func ExampleInt64_standard() {
 // ExampleInt64_withPassingChecks demonstrates how to add checks to be
 // applied to the value.
 func ExampleInt64_withPassingChecks() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	var i int64
 
@@ -62,7 +62,7 @@ func ExampleInt64_withPassingChecks() {
 // return from ps.Parse as the standard Helper will report any errors and
 // abort the program.
 func ExampleInt64_withFailingChecks() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	var i int64
 
@@ -106,7 +106,7 @@ func ExampleInt64_withNilValue() {
 		}
 	}()
 
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	// we expect this to panic because the map Value has not been initialised
 	ps.Add("my-int", psetter.Int64{}, "help text")

@@ -9,7 +9,7 @@ import (
 
 // ExampleTimeLocation_standard demonstrates the use of a TimeLocation setter
 func ExampleTimeLocation_standard() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	var loc *time.Location
 
@@ -35,7 +35,7 @@ func ExampleTimeLocation_withNilValue() {
 		}
 	}()
 
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	ps.Add("location", psetter.TimeLocation{}, "help text")
 

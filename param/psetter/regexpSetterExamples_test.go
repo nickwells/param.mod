@@ -9,7 +9,7 @@ import (
 
 // ExampleRegexp_standard demonstrates the use of a Regexp setter.
 func ExampleRegexp_standard() {
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	var re *regexp.Regexp
 
@@ -45,7 +45,7 @@ func ExampleRegexp_withNilValue() {
 		}
 	}()
 
-	ps := newPSetForTesting() // use paramset.NewOrDie()
+	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	// we expect this to panic because the regexp pointer Value has not been
 	// initialised

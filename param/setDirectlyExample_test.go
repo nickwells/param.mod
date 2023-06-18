@@ -21,8 +21,9 @@ func Example_setDirectly() {
 	var example1 bool
 	var example2 int64
 
-	ps := paramset.NewOrDie()
-	ps.SetProgramDescription("what this program does")
+	ps := paramset.NewOrPanic(
+		param.SetProgramDescription("what this program does"),
+	)
 
 	ps.Add("example1",
 		psetter.Bool{Value: &example1},

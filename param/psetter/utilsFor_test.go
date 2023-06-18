@@ -23,9 +23,9 @@ func panicSafeCheck(s param.Setter) (panicked bool, panicVal any) {
 // newPSetForTesting returns a PSet suitable for use in a test (without all
 // the standard parameters and help functions)
 //
-// Note that the paramset function used here is just to make the example
-// more reliable. In production code you would be best to use
-// paramset.NewOrDie(...) which will set the standard helper and exit if
+// Note that the paramset function used here is just to make the example more
+// reliable. In production code you would be best to use
+// paramset.NewOrPanic(...) which will set the standard helper and panic if
 // there's any error.
 func newPSetForTesting() *param.PSet {
 	ps, _ := paramset.NewNoHelpNoExitNoErrRpt()

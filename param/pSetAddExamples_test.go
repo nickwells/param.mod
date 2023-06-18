@@ -15,7 +15,7 @@ import (
 // with no alternative names that can be used and the parameter will appear
 // in the standard usage message.
 func ExamplePSet_Add() {
-	ps := paramset.NewOrDie()
+	ps := paramset.NewOrPanic()
 
 	var f float64
 
@@ -27,7 +27,7 @@ func ExamplePSet_Add() {
 // PSet. This is used to add new parameters into the set. This example shows
 // the use of the additional options that can be passed to the Add call.
 func ExamplePSet_Add_withExtras() {
-	ps := paramset.NewOrDie()
+	ps := paramset.NewOrPanic()
 
 	var f float64
 	var fHasBeenSet bool
@@ -52,10 +52,10 @@ func ExamplePSet_Add_withExtras() {
 		// MustBeSet: it is an error that Parse will report if the parameter
 		//            is not given when Parse is called
 		param.Attrs(param.DontShowInStdUsage|param.MustBeSet),
-		// This gives an alternative string that can be used to set the
+		// This gives alternative strings that can be used to set the
 		// parameter value. Each parameter name must be unique; the param
 		// package will panic if any duplicate names are used.
-		param.AltNames("pn"),
+		param.AltNames("pn", "p-n"),
 		// This provides a function to be called immediately after the
 		// parameter has been set. It uses an action function from the
 		// paction package that will set the fHasBeenSet variable to
