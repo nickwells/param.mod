@@ -35,7 +35,7 @@ Here is the simplest possible way of using it:
 ```go
 func main() {
 	var who = "World!"
-	ps := paramset.NewOrDie()
+	ps := paramset.NewOrPanic()
 	ps.Add("who", psetter.String{Value: &who}, "who to greet")
 	ps.Parse()
 	fmt.Println("Hello,", who)
@@ -48,7 +48,7 @@ var param1 int64
 var param2 bool
 
 func main() {
-	ps := paramset.NewOrDie(addParams,
+	ps := paramset.NewOrPanic(addParams,
 		param.SetProgramDescription("this program will do cool stuff"))
 	ps.Parse()
 ```
@@ -76,6 +76,13 @@ func addParams(ps *param.PSet) error {
 This illustrates a simple use of the param package with a simple boolean flag
 and an integer which is checked to ensure it's less than 42. You can specify
 the behaviour much more precisely if you want.
+
+The recommended way of writing your code is to have a paramset.go file which
+contains just a makeParamSet function. This should take a pointer to a Prog
+struct (which is unique to the program). The Prog struct members should be
+set by the parameters (so you don't have any global variables) and the
+makeParamSet func will panic (due to the paramset.NewOrPanic call) and so can
+be tested by calling it from within a panic-safe wrapper.
 
 Additionally you can have positional parameters as well as named
 parameters. These must come at the front of the supplied parameters and can
