@@ -83,7 +83,7 @@ func addNotes(ps *param.PSet) {
 			" in the sources section of the manual"+
 			" (see '"+helpShowArgName+"' '"+sourcesHelpSectionName+"')"+
 			" or are provided on the command line with"+
-			" the '"+paramsFileArgName+"' parameter."+
+			" the '"+paramNameFile+"' parameter."+
 			"\n\n"+
 			"There is an additional distinction within the"+
 			" pre-declared configuration files: some configuration"+
@@ -100,7 +100,7 @@ func addNotes(ps *param.PSet) {
 			"- Any valid"+
 			" parameters of the program can be set in a file given"+
 			" through the command-line"+
-			" parameter '"+paramsFileArgName+"'. They are treated"+
+			" parameter '"+paramNameFile+"'. They are treated"+
 			" as if they were given at the command line."+
 			"\n"+
 			"- Parameters given in pre-declared configuration"+
@@ -119,7 +119,7 @@ func addNotes(ps *param.PSet) {
 			" program. Such parameters will be silently ignored."+
 			" Such files, if any, will be highlighted in the list of"+
 			" sources. To detect such ignored parameters use"+
-			" the '"+paramsShowUnusedArgName+"' parameter.",
+			" the '"+paramNameShowUnused+"' parameter.",
 		param.NoteAttrs(param.DontShowNoteInStdUsage))
 
 	ps.AddNote("Alternative Sources - Priority",
@@ -140,7 +140,7 @@ func addNotes(ps *param.PSet) {
 			" know where parameters have been set and to show any"+
 			" invalid parameters. The following parameters can be"+
 			" useful with these tasks: "+
-			paramsShowWhereSetArgName+", "+
-			paramsShowUnusedArgName,
+			paramNameShowWhereSet+", "+
+			paramNameShowUnused,
 		param.NoteAttrs(param.DontShowNoteInStdUsage))
 }

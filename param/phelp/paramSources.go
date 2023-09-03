@@ -39,7 +39,7 @@ func showConfigFiles(h StdHelp, twc *twrap.TWConf, cf []param.ConfigFileDetails)
 				" parameters not valid for this program. Any such"+
 				" parameters will be silently ignored. To detect"+
 				" such parameters call the program with the"+
-				" '"+paramsShowUnusedArgName+"' parameter.",
+				" '"+paramNameShowUnused+"' parameter.",
 			textIndent)
 	}
 }

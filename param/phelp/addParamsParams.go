@@ -6,12 +6,12 @@ import (
 )
 
 const (
-	paramsShowWhereSetArgName     = "params-show-where-set"
-	paramsShowUnusedArgName       = "params-show-unused"
-	paramsDontShowErrorsArgName   = "params-dont-show-errors"
-	paramsDontExitOnErrorsArgName = "params-dont-exit-on-errors"
-	paramsExitAfterParsingArgName = "params-exit-after-parsing"
-	paramsFileArgName             = "params-file"
+	paramNameShowWhereSet     = "params-show-where-set"
+	paramNameShowUnused       = "params-show-unused"
+	paramNameDontShowErrors   = "params-dont-show-errors"
+	paramNameDontExitOnErrors = "params-dont-exit-on-errors"
+	paramNameExitAfterParsing = "params-exit-after-parsing"
+	paramNameFile             = "params-file"
 )
 
 const (
@@ -29,7 +29,7 @@ func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
 			" There are parameters for showing where parameters"+
 			" have been set and for the handling of parameter errors.")
 
-	ps.Add(paramsShowWhereSetArgName,
+	ps.Add(paramNameShowWhereSet,
 		psetter.Bool{Value: &h.paramsShowWhereSet},
 		"after all the parameters are set a message will be printed"+
 			" showing where they were set. This can be useful for"+
@@ -39,7 +39,7 @@ func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.GroupName(groupName))
 
-	ps.Add(paramsShowUnusedArgName,
+	ps.Add(paramNameShowUnused,
 		psetter.Bool{Value: &h.paramsShowUnused},
 		"after all the parameters are set a message will be printed"+
 			" showing any parameters (including those from configuration"+
@@ -57,7 +57,7 @@ func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.GroupName(groupName))
 
-	ps.Add(paramsDontShowErrorsArgName,
+	ps.Add(paramNameDontShowErrors,
 		psetter.Bool{
 			Value:  &h.reportErrors,
 			Invert: true,
@@ -67,7 +67,7 @@ func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.GroupName(groupName))
 
-	ps.Add(paramsDontExitOnErrorsArgName,
+	ps.Add(paramNameDontExitOnErrors,
 		psetter.Bool{
 			Value:  &h.exitOnErrors,
 			Invert: true,
@@ -80,7 +80,7 @@ func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.GroupName(groupName))
 
-	ps.Add(paramsExitAfterParsingArgName,
+	ps.Add(paramNameExitAfterParsing,
 		psetter.Bool{Value: &h.exitAfterParsing},
 		"exit after the parameters have been read and processed. This"+
 			" lets you check the parameters are valid and see what"+
@@ -92,7 +92,7 @@ func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.GroupName(groupName))
 
-	ps.Add(paramsFileArgName,
+	ps.Add(paramNameFile,
 		&configFileSetter{},
 		"read in parameters from the given file. Note that the"+
 			" parameter file will be read as a configuration file"+
