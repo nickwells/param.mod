@@ -194,6 +194,7 @@ type StdHelp struct {
 
 	// params-... values
 	paramsShowWhereSet bool
+	paramsSetFormat    string
 	paramsShowUnused   bool
 	reportErrors       bool
 	exitOnErrors       bool
@@ -227,6 +228,8 @@ func NewStdHelp() *StdHelp {
 		zshCompAction: zshCompActionNone,
 
 		helpFormat: helpFmtTypeStd,
+
+		paramsSetFormat: paramSetFmtStd,
 	}
 }
 

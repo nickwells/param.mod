@@ -171,7 +171,7 @@ common.params-help       [ 11 parameters ]
 
             The program will exit after the help message is shown.
 ---------------
-common.params-params     [ 6 parameters ]
+common.params-params     [ 7 parameters ]
     These are the parameter-handling parameters. There are parameters for
     showing where parameters have been set and for the handling of parameter
     errors.
@@ -225,7 +225,25 @@ common.params-params     [ 6 parameters ]
             there are several config files in use).
 
             The program will exit after the parameters are processed.
+            See also: params-where-set-fmt
             Allowed values: (see parameter: completions-quiet)
+      [-params-where-set-fmt=std|short|table]
+            after all the parameters are set a message will be printed showing
+            where they were set. This parameter controls how this information is
+            shown.
+
+            The program will exit after the parameters are processed.
+            See also: params-show-where-set
+            Allowed values: a string
+                            The value must be one of the following:
+                               short: a short form of the information and only
+                                  showing values that have been set
+                               std  : the standard format for showing where and
+                                  if parameters are set
+                               table: the information on where parameters are
+                                  set in a tabular format. Only values that have
+                                  been set are shown
+            Initial value: std
 ---------------
 test-group1              [ 6 parameters ]
     test parameters.

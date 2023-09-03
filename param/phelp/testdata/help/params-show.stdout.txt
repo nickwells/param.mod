@@ -14,27 +14,28 @@ common.params-completion [ 3 parameters, all hidden ]
 common.params-help       [ 11 parameters, 10 hidden ]
 ---    : help or usage
 ---    : help-all or help-a
----    : help-all-short or help-as or help-sa
+---    : help-all-short, help-as or help-sa
 ---    : help-format
 ---    : help-full or help-f
----    : help-groups or help-group or help-g
----    : help-no-page or help-dont-page or help-no-pager
----    : help-notes or help-note or help-n
----    : help-params or help-param or help-p
+---    : help-groups, help-group or help-g
+---    : help-no-page, help-dont-page or help-no-pager
+---    : help-notes, help-note or help-n
+---    : help-params, help-param or help-p
 ---    : help-show
-Set    : help-summary or help-s or help-short
+Set    : help-summary, help-s or help-short
              at : [command line]: Supplied Parameter:3: "-help-s"
 
 ---------------
-common.params-params     [ 6 parameters, all hidden ]
+common.params-params     [ 7 parameters, all hidden ]
 ---    : params-dont-exit-on-errors
 ---    : params-dont-show-errors
 ---    : params-exit-after-parsing
----    : params-file or params-from or params-f
+---    : params-file, params-from or params-f
 Set    : params-show-unused
              at : [command line]: Supplied Parameter:2: "-params-show-unused"
 Set    : params-show-where-set
              at : [command line]: Supplied Parameter:1: "-params-show-where-set"
+---    : params-where-set-fmt
 
 ---------------
 test-group1              [ 6 parameters, 1 hidden ]

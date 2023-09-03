@@ -1,8 +1,17 @@
 package phelp
 
 import (
+	"github.com/nickwells/col.mod/v3/col"
+	"github.com/nickwells/col.mod/v3/col/colfmt"
+	"github.com/nickwells/english.mod/english"
 	"github.com/nickwells/param.mod/v5/param"
 	"github.com/nickwells/twrap.mod/twrap"
+)
+
+const (
+	paramSetFmtStd   = "std"
+	paramSetFmtShort = "short"
+	paramSetFmtTable = "table"
 )
 
 // paramErrorCnt returns the number of errors that have been seen
@@ -25,9 +34,7 @@ const (
 
 // printWhereSetIntro prints the introduction to the parameter name
 // indicating whether or not it has been set and if there are any errors
-func printWhereSetIntro(twc *twrap.TWConf, ps *param.PSet, p *param.ByName) {
-	errCount := paramErrorCnt(ps, p)
-
+func printWhereSetIntro(twc *twrap.TWConf, p *param.ByName, errCount int) {
 	if errCount > 0 {
 		if errCount < 10 {
 			twc.Printf("Errs %d : ", errCount)
@@ -42,6 +49,20 @@ func printWhereSetIntro(twc *twrap.TWConf, ps *param.PSet, p *param.ByName) {
 }
 
 func showWhereParamsAreSet(h StdHelp, twc *twrap.TWConf, ps *param.PSet) int {
+	switch h.paramsSetFormat {
+	case paramSetFmtStd:
+		showWhereSetStd(h, twc, ps)
+	case paramSetFmtShort:
+		showWhereSetShort(h, twc, ps)
+	case paramSetFmtTable:
+		showWhereSetTable(h, twc, ps)
+	default:
+		panic("the Format of the report on where params are set is unknown")
+	}
+	return 0
+}
+
+func showWhereSetStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) {
 	twc.Wrap("Parameter Summary\n\n"+
 		"This shows a summary of all the parameters."+
 		" If there are any errors with a parameter then that will be"+
@@ -61,15 +82,8 @@ func showWhereParamsAreSet(h StdHelp, twc *twrap.TWConf, ps *param.PSet) int {
 		printSep = true
 		h.printGroup(twc, g, maxNameLen)
 		for _, p := range g.Params {
-			printWhereSetIntro(twc, ps, p)
-
-			twc.Print(p.Name())
-			for _, altName := range p.AltNames() {
-				if altName != p.Name() {
-					twc.Print(" or ", altName)
-				}
-			}
-			twc.Print("\n")
+			printWhereSetIntro(twc, p, paramErrorCnt(ps, p))
+			twc.Println(english.Join(p.AltNames(), ", ", " or "))
 
 			intro := "at : "
 			whereSet := p.WhereSet()
@@ -81,5 +95,110 @@ func showWhereParamsAreSet(h StdHelp, twc *twrap.TWConf, ps *param.PSet) int {
 			}
 		}
 	}
-	return 0
+}
+
+func showWhereSetShort(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) {
+	groups := ps.GetGroups()
+
+	for _, g := range groups {
+		for _, p := range g.Params {
+			errCount := paramErrorCnt(ps, p)
+
+			if errCount == 0 && !p.HasBeenSet() {
+				continue
+			}
+			printWhereSetIntro(twc, p, errCount)
+
+			twc.Println(english.Join(p.AltNames(), ", ", " or "))
+
+			intro := "at : "
+			whereSet := p.WhereSet()
+			if len(whereSet) != 0 {
+				for _, loc := range whereSet {
+					twc.WrapPrefixed(intro, loc, len(notSetIntro)+4)
+					intro = "and: "
+				}
+			}
+		}
+	}
+}
+
+// skipWhereSetReport returns whether or not to report where the parameter has
+// been set or if it has any errors associated. It returns a bool and the
+// count of any errors found.
+func skipWhereSetReport(p *param.ByName) (bool, int) {
+	errCount := paramErrorCnt(p.PSet(), p)
+
+	return errCount == 0 && !p.HasBeenSet(), errCount
+}
+
+// calcColumnWidths calculates the maximum parameter group name and parameter
+// name lengths. It only gives the values for those which have been set or
+// where an error was detected.
+func calcColumnWidths(groups []*param.Group) (int, int) {
+	maxGNLen, maxPNLen := 0, 0
+
+	groupUsed := false
+	for _, g := range groups {
+		for _, p := range g.Params {
+			skip, _ := skipWhereSetReport(p)
+			if skip {
+				continue
+			}
+			groupUsed = true
+			for _, pName := range p.AltNames() {
+				if len(pName) > maxPNLen {
+					maxPNLen = len(pName)
+				}
+			}
+		}
+		if groupUsed {
+			if len(g.Name) > maxGNLen {
+				maxGNLen = len(g.Name)
+			}
+		}
+		groupUsed = false
+	}
+	return maxGNLen, maxPNLen
+}
+
+func showWhereSetTable(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) {
+	hdr, err := col.NewHeader()
+	if err != nil {
+		twc.Println("Cannot construct header for where-params-set table:", err)
+		return
+	}
+
+	groups := ps.GetGroups()
+	maxGroupNameLen, maxParamNameLen := calcColumnWidths(groups)
+
+	rpt := col.NewReport(hdr, twc.W,
+		col.New(&colfmt.Int{HandleZeroes: true}, "errs"),
+		col.New(&colfmt.String{W: maxGroupNameLen}, "parameter", "group"),
+		col.New(&colfmt.WrappedString{W: maxParamNameLen},
+			"parameter", "name"),
+		col.New(&colfmt.String{}, "set at"),
+	)
+	for _, g := range groups {
+		for _, p := range g.Params {
+			skip, errCount := skipWhereSetReport(p)
+
+			if skip {
+				continue
+			}
+			at := "-"
+			sep := ""
+			whereSet := p.WhereSet()
+			if len(whereSet) != 0 {
+				at = ""
+				for _, loc := range whereSet {
+					at += sep + loc
+					sep = "\n"
+				}
+			}
+			_ = rpt.PrintRow(errCount,
+				g.Name, english.Join(p.AltNames(), ", ", " or "),
+				at)
+		}
+	}
 }

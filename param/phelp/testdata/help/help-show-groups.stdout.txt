@@ -14,7 +14,7 @@ common.params-help       [ 11 parameters, 10 hidden ]
     These are parameters for printing a help message.
 
 ---------------
-common.params-params     [ 6 parameters, all hidden ]
+common.params-params     [ 7 parameters, all hidden ]
     These are the parameter-handling parameters. There are parameters for
     showing where parameters have been set and for the handling of parameter
     errors.

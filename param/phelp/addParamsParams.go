@@ -2,10 +2,12 @@ package phelp
 
 import (
 	"github.com/nickwells/param.mod/v5/param"
+	"github.com/nickwells/param.mod/v5/param/paction"
 	"github.com/nickwells/param.mod/v5/param/psetter"
 )
 
 const (
+	paramNameWhereSetFormat   = "params-where-set-fmt"
 	paramNameShowWhereSet     = "params-show-where-set"
 	paramNameShowUnused       = "params-show-unused"
 	paramNameDontShowErrors   = "params-dont-show-errors"
@@ -29,6 +31,29 @@ func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
 			" There are parameters for showing where parameters"+
 			" have been set and for the handling of parameter errors.")
 
+	ps.Add(paramNameWhereSetFormat,
+		psetter.Enum{
+			Value: &h.paramsSetFormat,
+			AllowedVals: psetter.AllowedVals{
+				paramSetFmtStd: "the standard format for showing" +
+					" where and if parameters are set",
+				paramSetFmtShort: "a short form of the information" +
+					" and only showing values that have been set",
+				paramSetFmtTable: "the information on where parameters" +
+					" are set in a tabular format. Only values that" +
+					" have been set are shown",
+			},
+		},
+		"after all the parameters are set a message will be printed"+
+			" showing where they were set. This parameter controls"+
+			" how this information is shown."+
+			exitAfterParamProcessing,
+		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
+		param.PostAction(paction.SetVal[bool](&h.paramsShowWhereSet, true)),
+		param.GroupName(groupName),
+		param.SeeAlso(paramNameShowWhereSet),
+	)
+
 	ps.Add(paramNameShowWhereSet,
 		psetter.Bool{Value: &h.paramsShowWhereSet},
 		"after all the parameters are set a message will be printed"+
@@ -37,7 +62,9 @@ func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
 			" files in use)."+
 			exitAfterParamProcessing,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.GroupName(groupName))
+		param.GroupName(groupName),
+		param.SeeAlso(paramNameWhereSetFormat),
+	)
 
 	ps.Add(paramNameShowUnused,
 		psetter.Bool{Value: &h.paramsShowUnused},
