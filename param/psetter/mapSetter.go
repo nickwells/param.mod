@@ -122,7 +122,7 @@ func (s Map) CurrentValue() string {
 // Value is nil or the map has not been created yet.
 func (s Map) CheckSetter(name string) {
 	if s.Value == nil {
-		panic(NilValueMessage(name, "psetter.Map"))
+		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
 	if *s.Value == nil {
 		*s.Value = make(map[string]bool)

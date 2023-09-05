@@ -1,6 +1,7 @@
 package psetter
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/nickwells/check.mod/v2/check"
@@ -89,6 +90,6 @@ func (s Time) CurrentValue() string {
 // Value is nil.
 func (s Time) CheckSetter(name string) {
 	if s.Value == nil {
-		panic(NilValueMessage(name, "psetter.Time"))
+		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
 }

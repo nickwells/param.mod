@@ -62,7 +62,7 @@ func (s Enum) CurrentValue() string {
 // Value is nil or there are no allowed values.
 func (s Enum) CheckSetter(name string) {
 	if s.Value == nil {
-		panic(NilValueMessage(name, "psetter.Enum"))
+		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
 	intro := name + ": psetter.Enum Check failed: "
 	if err := s.AllowedVals.Check(); err != nil {

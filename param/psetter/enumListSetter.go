@@ -109,16 +109,16 @@ func (s EnumList) CurrentValue() string {
 // CheckSetter panics if the setter has not been properly created - if the
 // Value is nil or there are no allowed values or the initial value is not
 // allowed.
-func (s EnumList) CheckSetter(name string) {
+func (s EnumList[T]) CheckSetter(name string) {
 	if s.Value == nil {
-		panic(NilValueMessage(name, "psetter.EnumList"))
+		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
-	intro := name + ": psetter.EnumList Check failed: "
+	intro := fmt.Sprintf("%s: %T Check failed: ", name, s)
 	if err := s.AllowedVals.Check(); err != nil {
 		panic(intro + err.Error())
 	}
 	for i, v := range *s.Value {
-		if _, ok := s.AllowedVals[v]; !ok {
+		if _, ok := s.AllowedVals[string(v)]; !ok {
 			panic(fmt.Sprintf(
 				"%selement %d (%s) in the current list of entries is invalid",
 				intro, i, v))

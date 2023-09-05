@@ -78,6 +78,6 @@ func (s Duration) CurrentValue() string {
 // Value is nil.
 func (s Duration) CheckSetter(name string) {
 	if s.Value == nil {
-		panic(NilValueMessage(name, "psetter.Duration"))
+		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
 }

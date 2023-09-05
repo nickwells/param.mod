@@ -68,6 +68,6 @@ func (s Float64) CurrentValue() string {
 // Value is nil.
 func (s Float64) CheckSetter(name string) {
 	if s.Value == nil {
-		panic(NilValueMessage(name, "psetter.Float64"))
+		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
 }

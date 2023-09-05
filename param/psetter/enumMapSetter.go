@@ -150,7 +150,7 @@ func (s EnumMap) CurrentValue() string {
 // allowed values.
 func (s EnumMap) CheckSetter(name string) {
 	if s.Value == nil {
-		panic(NilValueMessage(name, "psetter.EnumMap"))
+		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
 	if *s.Value == nil {
 		*s.Value = make(map[string]bool)

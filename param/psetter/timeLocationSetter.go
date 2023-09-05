@@ -81,6 +81,6 @@ func (s TimeLocation) CurrentValue() string {
 // Value is nil.
 func (s TimeLocation) CheckSetter(name string) {
 	if s.Value == nil {
-		panic(NilValueMessage(name, "psetter.TimeLocation"))
+		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
 }

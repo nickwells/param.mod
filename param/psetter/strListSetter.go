@@ -1,6 +1,7 @@
 package psetter
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/nickwells/check.mod/v2/check"
@@ -92,6 +93,6 @@ func (s StrList) CurrentValue() string {
 // Value is nil.
 func (s StrList) CheckSetter(name string) {
 	if s.Value == nil {
-		panic(NilValueMessage(name, "psetter.StrList"))
+		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
 }

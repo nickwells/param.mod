@@ -51,6 +51,6 @@ func (s Regexp) CurrentValue() string {
 // Value is nil.
 func (s Regexp) CheckSetter(name string) {
 	if s.Value == nil {
-		panic(NilValueMessage(name, "psetter.Regexp"))
+		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
 }

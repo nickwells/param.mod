@@ -82,6 +82,6 @@ func (s Bool) CurrentValue() string {
 // Value is nil
 func (s Bool) CheckSetter(name string) {
 	if s.Value == nil {
-		panic(NilValueMessage(name, "psetter.Bool"))
+		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
 }

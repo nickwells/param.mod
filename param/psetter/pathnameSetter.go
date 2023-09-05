@@ -94,6 +94,6 @@ func (s Pathname) CurrentValue() string {
 // Value is nil.
 func (s Pathname) CheckSetter(name string) {
 	if s.Value == nil {
-		panic(NilValueMessage(name, "psetter.Pathname"))
+		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
 }
