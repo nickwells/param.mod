@@ -25,7 +25,7 @@ import (
 // - the name that you give the const value can distinguish between identical
 // strings and show which of various flags with the same string value you
 // actually mean.
-type EnumList struct {
+type EnumList[T ~string] struct {
 	ValueReqMandatory
 	// The AllowedVals must be set, the program will panic if not. These are
 	// the only values that will be allowed in the slice of strings.
@@ -38,17 +38,17 @@ type EnumList struct {
 
 	// Value must be set, the program will panic if not. This is the slice of
 	// values that this setter is setting.
-	Value *[]string
+	Value *[]T
 	// The StrListSeparator allows you to override the default separator
 	// between list elements.
 	StrListSeparator
 	// The Checks, if any, are applied to the list of new values and the
 	// Value will only be updated if they all return a nil error.
-	Checks []check.StringSlice
+	Checks []check.ValCk[[]T]
 }
 
 // CountChecks returns the number of check functions this setter has
-func (s EnumList) CountChecks() int {
+func (s EnumList[T]) CountChecks() int {
 	return len(s.Checks)
 }
 
@@ -57,19 +57,21 @@ func (s EnumList) CountChecks() int {
 // only if all the values are in the allowed values list does it add them
 // to the slice of strings pointed to by the Value. It returns a error for
 // the first invalid value or if a check is breached.
-func (s EnumList) SetWithVal(_ string, paramVal string) error {
+func (s EnumList[T]) SetWithVal(_ string, paramVal string) error {
 	sep := s.GetSeparator()
 	vals := strings.Split(paramVal, sep)
-	aliasedVals := []string{}
+	aliasedVals := []T{}
 	for _, v := range vals {
 		if !s.ValueAllowed(v) {
 			if !s.Aliases.IsAnAlias(v) {
 				return fmt.Errorf("value is not allowed: %q", v)
 			}
-			aliasedVals = append(aliasedVals, s.Aliases.AliasVal(v)...)
+			for _, av := range s.Aliases.AliasVal(v) {
+				aliasedVals = append(aliasedVals, T(av))
+			}
 			continue
 		}
-		aliasedVals = append(aliasedVals, v)
+		aliasedVals = append(aliasedVals, T(v))
 	}
 
 	for _, check := range s.Checks {
@@ -88,13 +90,13 @@ func (s EnumList) SetWithVal(_ string, paramVal string) error {
 }
 
 // AllowedValues returns a string listing the allowed values
-func (s EnumList) AllowedValues() string {
+func (s EnumList[T]) AllowedValues() string {
 	return s.ListValDesc("string values") +
 		HasChecks(s) + "."
 }
 
 // CurrentValue returns the current setting of the parameter value
-func (s EnumList) CurrentValue() string {
+func (s EnumList[T]) CurrentValue() string {
 	str := ""
 	sep := ""
 

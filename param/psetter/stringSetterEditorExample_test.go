@@ -35,7 +35,7 @@ func ExampleString_withEditor() {
 	var myE myEditor
 
 	ps.Add("hello",
-		psetter.String{
+		psetter.String[string]{
 			Value:  &s,
 			Editor: myE,
 		}, "help text",

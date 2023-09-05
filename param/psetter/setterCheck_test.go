@@ -81,62 +81,62 @@ func TestCheck(t *testing.T) {
 		},
 		{
 			ID: testhelper.MkID("EnumList - ok - no strings"),
-			s: &psetter.EnumList{
+			s: &psetter.EnumList[string]{
 				Value:       &emptyStrList,
 				AllowedVals: avalMapGood,
 			},
 		},
 		{
 			ID: testhelper.MkID("EnumList - ok - good strings"),
-			s: &psetter.EnumList{
+			s: &psetter.EnumList[string]{
 				Value:       &goodStrList,
 				AllowedVals: avalMapGood,
 			},
 		},
 		{
 			ID: testhelper.MkID("EnumList - bad initial value"),
-			s: &psetter.EnumList{
+			s: &psetter.EnumList[string]{
 				Value:       &badStrList,
 				AllowedVals: avalMapGood,
 			},
 			ExpPanic: testhelper.MkExpPanic(
-				append([]string{"test: psetter.EnumList "},
+				append([]string{"test: psetter.EnumList[string] "},
 					badInitialList...)...),
 		},
 		{
 			ID: testhelper.MkID("EnumList - bad - no value"),
-			s:  &psetter.EnumList{},
-			ExpPanic: testhelper.MkExpPanic("test: psetter.EnumList " +
+			s:  &psetter.EnumList[string]{},
+			ExpPanic: testhelper.MkExpPanic("test: psetter.EnumList[string] " +
 				nilValueMsg),
 		},
 		{
 			ID: testhelper.MkID("EnumList - bad - no allowedValues"),
-			s: &psetter.EnumList{
+			s: &psetter.EnumList[string]{
 				Value: &emptyStrList,
 			},
 			ExpPanic: testhelper.MkExpPanic(
-				append([]string{"test: psetter.EnumList "},
+				append([]string{"test: psetter.EnumList[string] "},
 					tooFewAValsMsg...)...),
 		},
 		{
 			ID: testhelper.MkID("EnumList - bad - empty allowedValues"),
-			s: &psetter.EnumList{
+			s: &psetter.EnumList[string]{
 				Value:       &emptyStrList,
 				AllowedVals: avalMapEmpty,
 			},
 			ExpPanic: testhelper.MkExpPanic(
-				append([]string{"test: psetter.EnumList "},
+				append([]string{"test: psetter.EnumList[string] "},
 					tooFewAValsMsg...)...),
 		},
 		{
 			ID: testhelper.MkID("EnumList - bad - allowedValues" +
 				" - only one entry"),
-			s: &psetter.EnumList{
+			s: &psetter.EnumList[string]{
 				Value:       &emptyStrList,
 				AllowedVals: avalMapOneEntry,
 			},
 			ExpPanic: testhelper.MkExpPanic(
-				append([]string{"test: psetter.EnumList "},
+				append([]string{"test: psetter.EnumList[string] "},
 					tooFewAValsMsg...)...),
 		},
 		{
@@ -329,12 +329,12 @@ func TestCheck(t *testing.T) {
 		},
 		{
 			ID: testhelper.MkID("String - ok"),
-			s:  &psetter.String{Value: &anyStr},
+			s:  &psetter.String[string]{Value: &anyStr},
 		},
 		{
 			ID: testhelper.MkID("String - bad"),
-			s:  &psetter.String{},
-			ExpPanic: testhelper.MkExpPanic("test: psetter.String " +
+			s:  &psetter.String[string]{},
+			ExpPanic: testhelper.MkExpPanic("test: psetter.String[string] " +
 				nilValueMsg),
 		},
 		{

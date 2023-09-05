@@ -13,7 +13,7 @@ func ExampleString_standard() {
 
 	var s string
 
-	ps.Add("my-string", psetter.String{Value: &s}, "help text")
+	ps.Add("my-string", psetter.String[string]{Value: &s}, "help text")
 
 	fmt.Printf("Before parsing: s = %q\n", s)
 	ps.Parse([]string{"-my-string", "Hello, World!"})
@@ -31,7 +31,7 @@ func ExampleString_withPassingChecks() {
 	var s string
 
 	ps.Add("my-string",
-		psetter.String{
+		psetter.String[string]{
 			Value: &s,
 			Checks: []check.String{
 				check.StringLength[string](check.ValGT(5)),
@@ -56,7 +56,7 @@ func ExampleString_withFailingChecks() {
 	var s string
 
 	ps.Add("my-string",
-		psetter.String{
+		psetter.String[string]{
 			Value: &s,
 			Checks: []check.String{
 				check.StringLength[string](check.ValGT(5)),
@@ -93,9 +93,9 @@ func ExampleString_withNilValue() {
 
 	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
-	ps.Add("my-string", psetter.String{}, "help text")
+	ps.Add("my-string", psetter.String[string]{}, "help text")
 
 	// Output:
 	// panic
-	// my-string: psetter.String Check failed: the Value to be set is nil
+	// my-string: psetter.String[string] Check failed: the Value to be set is nil
 }

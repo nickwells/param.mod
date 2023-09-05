@@ -60,7 +60,7 @@ func AddMCParams(mc *MyConfig) func(ps *param.PSet) error {
 			"set the boolean flag",
 			param.AltNames("bool"),
 		)
-		ps.Add("s", psetter.String{Value: &mc.S},
+		ps.Add("s", psetter.String[string]{Value: &mc.S},
 			"set the string value",
 			param.AltNames("string"),
 		)

@@ -58,7 +58,7 @@ func TestAllowedValues(t *testing.T) {
 		},
 		{
 			ID: testhelper.MkID("EnumList"),
-			s: &psetter.EnumList{
+			s: &psetter.EnumList[string]{
 				Value: &emptyStrList,
 				AllowedVals: psetter.AllowedVals{
 					"aval":     "desc",
@@ -141,7 +141,7 @@ func TestAllowedValues(t *testing.T) {
 		},
 		{
 			ID: testhelper.MkID("String"),
-			s:  &psetter.String{Value: &anyStr},
+			s:  &psetter.String[string]{Value: &anyStr},
 		},
 		{
 			ID: testhelper.MkID("TimeLocation"),

@@ -9,7 +9,7 @@ import (
 
 func TestString(t *testing.T) {
 	value := "initialValue"
-	ss := psetter.String{
+	ss := psetter.String[string]{
 		Value: &value,
 	}
 

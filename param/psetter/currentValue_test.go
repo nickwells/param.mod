@@ -19,7 +19,7 @@ func TestCurrentValue(t *testing.T) {
 	setterDuration := psetter.Duration{Value: &vDuration}
 
 	vEnumList := []string{"hello", "world"}
-	setterEnumList := psetter.EnumList{Value: &vEnumList}
+	setterEnumList := psetter.EnumList[string]{Value: &vEnumList}
 
 	vEnumMap := map[string]bool{
 		"hello": true,
@@ -53,7 +53,7 @@ func TestCurrentValue(t *testing.T) {
 	setterRegexpNil := psetter.Regexp{}
 
 	vString := "Hello, World!"
-	setterString := psetter.String{Value: &vString}
+	setterString := psetter.String[string]{Value: &vString}
 
 	vStrList := []string{"hello", "world"}
 	setterStrList := psetter.StrList{Value: &vStrList}

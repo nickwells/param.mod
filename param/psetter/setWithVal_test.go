@@ -21,7 +21,7 @@ func TestSetWithVal(t *testing.T) {
 	setterDuration := psetter.Duration{Value: &vDuration}
 
 	vEnumList := []string{"hello", "world"}
-	setterEnumList := psetter.EnumList{
+	setterEnumList := psetter.EnumList[string]{
 		Value: &vEnumList,
 		AllowedVals: psetter.AllowedVals{
 			"hello": "hello description",
@@ -29,7 +29,7 @@ func TestSetWithVal(t *testing.T) {
 			"bye":   "bye description",
 		},
 	}
-	setterEnumListWithChecks := psetter.EnumList{
+	setterEnumListWithChecks := psetter.EnumList[string]{
 		Value: &vEnumList,
 		AllowedVals: psetter.AllowedVals{
 			"hello": "hello description",
@@ -122,7 +122,7 @@ func TestSetWithVal(t *testing.T) {
 	setterRegexp := psetter.Regexp{Value: &vRegexp}
 
 	var vString string
-	setterStringWithChecks := psetter.String{
+	setterStringWithChecks := psetter.String[string]{
 		Value: &vString,
 		Checks: []check.String{
 			nil,

@@ -61,7 +61,7 @@ func TestEnum(t *testing.T) {
 
 func TestEnumList(t *testing.T) {
 	var value []string
-	els := psetter.EnumList{
+	els := psetter.EnumList[string]{
 		Value: &value,
 		AllowedVals: psetter.AllowedVals{
 			"e1": "E1 explained",
@@ -76,7 +76,8 @@ func TestEnumList(t *testing.T) {
 	}
 
 	if err := els.Set(""); err == nil {
-		t.Error("EnumList should have returned an error when Set(...) was called")
+		t.Error(
+			"EnumList should have returned an error when Set(...) was called")
 	}
 
 	testCases := [...]struct {
