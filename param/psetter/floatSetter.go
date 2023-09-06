@@ -9,7 +9,7 @@ import (
 )
 
 // Float allows you to give a parameter that can be used to set a
-// float64 value.
+// float value (64 or 32 bit).
 type Float[T constraints.Float] struct {
 	ValueReqMandatory
 
