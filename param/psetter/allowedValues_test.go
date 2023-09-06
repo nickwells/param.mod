@@ -92,11 +92,11 @@ func TestAllowedValues(t *testing.T) {
 		},
 		{
 			ID: testhelper.MkID("Int64"),
-			s:  &psetter.Int64{Value: &i},
+			s:  &psetter.Int[int64]{Value: &i},
 		},
 		{
 			ID: testhelper.MkID("Int64List"),
-			s:  &psetter.Int64List{Value: &intList},
+			s:  &psetter.IntList[int64]{Value: &intList},
 		},
 		{
 			ID: testhelper.MkID("Map"),

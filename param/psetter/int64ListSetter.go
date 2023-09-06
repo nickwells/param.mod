@@ -6,26 +6,27 @@ import (
 	"strings"
 
 	"github.com/nickwells/check.mod/v2/check"
+	"golang.org/x/exp/constraints"
 )
 
-// Int64List allows you to give a parameter that can be used to set a
-// list (a slice) of int64's.
-type Int64List struct {
+// IntList allows you to give a parameter that can be used to set a
+// list (a slice) of ints's.
+type IntList[T constraints.Signed] struct {
 	ValueReqMandatory
 
 	// Value must be set, the program will panic if not. This is the slice of
 	// int64's that the setter is setting.
-	Value *[]int64
+	Value *[]T
 	// The StrListSeparator allows you to override the default separator
 	// between list elements.
 	StrListSeparator
 	// The Checks, if any, are applied to the supplied parameter value and
 	// the new parameter will be applied only if they all return a nil error
-	Checks []check.Int64Slice
+	Checks []check.ValCk[[]T]
 }
 
 // CountChecks returns the number of check functions this setter has
-func (s Int64List) CountChecks() int {
+func (s IntList[T]) CountChecks() int {
 	return len(s.Checks)
 }
 
@@ -33,18 +34,21 @@ func (s Int64List) CountChecks() int {
 // into a slice of int64's and sets the Value accordingly. The Checks, if
 // any, are run against the new list of int64's and if any Check returns a
 // non-nil error the Value is not updated and the error is returned.
-func (s Int64List) SetWithVal(_ string, paramVal string) error {
+func (s IntList[T]) SetWithVal(_ string, paramVal string) error {
 	sep := s.GetSeparator()
 	sv := strings.Split(paramVal, sep)
 
-	v := make([]int64, 0, len(sv))
+	v := make([]T, 0, len(sv))
 	for i, strVal := range sv {
-		intVal, err := strconv.ParseInt(strVal, 0, 0)
+		i64, err := strconv.ParseInt(strVal, 0, bitsInType(T(0)))
 		if err != nil {
 			return fmt.Errorf("bad value: %q:"+
 				" part: %d (%s) cannot be interpreted as a whole number: %s",
 				paramVal, i+1, strVal, err)
 		}
+
+		intVal := T(i64)
+
 		v = append(v, intVal)
 	}
 
@@ -66,12 +70,12 @@ func (s Int64List) SetWithVal(_ string, paramVal string) error {
 
 // AllowedValues returns a description of the allowed values. It includes the
 // separator to be used
-func (s Int64List) AllowedValues() string {
+func (s IntList[T]) AllowedValues() string {
 	return s.ListValDesc("whole numbers") + HasChecks(s)
 }
 
 // CurrentValue returns the current setting of the parameter value
-func (s Int64List) CurrentValue() string {
+func (s IntList[T]) CurrentValue() string {
 	cv := ""
 	sep := ""
 
@@ -85,8 +89,13 @@ func (s Int64List) CurrentValue() string {
 
 // CheckSetter panics if the setter has not been properly created - if the
 // Value is nil.
-func (s Int64List) CheckSetter(name string) {
+func (s IntList[T]) CheckSetter(name string) {
 	if s.Value == nil {
 		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
+}
+
+// ValDescribe returns a name describing the values allowed
+func (s IntList[T]) ValDescribe() string {
+	return "list-of-ints"
 }

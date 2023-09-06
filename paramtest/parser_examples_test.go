@@ -64,7 +64,7 @@ func AddMCParams(mc *MyConfig) func(ps *param.PSet) error {
 			"set the string value",
 			param.AltNames("string"),
 		)
-		ps.Add("i", psetter.Int64{Value: &mc.I64},
+		ps.Add("i", psetter.Int[int64]{Value: &mc.I64},
 			"set the int value",
 			param.AltNames("int"),
 		)

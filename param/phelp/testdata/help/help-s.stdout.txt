@@ -1,4 +1,4 @@
-Usage: PROGRAM NAME UNKNOWN -param2=Int ...
+Usage: PROGRAM NAME UNKNOWN -param2=int ...
 
 ===============
 
@@ -6,8 +6,8 @@ common.params-help       [ 11 parameters, 10 hidden ]
       [-help, -usage]
 ---------------
 test-group1              [ 6 parameters, 1 hidden ]
-      [-param1=Int, -param1-alt1=Int]
-      -param2=Int, -param2-alt2=Int
+      [-param1=int, -param1-alt1=int]
+      -param2=int, -param2-alt2=int
       [-param4[=Bool] ]
       [-param5=v1|v2]
       [-param6=v2|v1]

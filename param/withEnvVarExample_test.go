@@ -66,7 +66,7 @@ func wevAddParams1(ps *param.PSet) error {
 // wevAddParams2 will set the "example2" parameter in the PSet
 func wevAddParams2(ps *param.PSet) error {
 	ps.Add("example2",
-		psetter.Int64{Value: &wevExample2},
+		psetter.Int[int64]{Value: &wevExample2},
 		"the description of the parameter",
 		param.AltNames("e2"),
 		param.GroupName(wevExampleGroupName))

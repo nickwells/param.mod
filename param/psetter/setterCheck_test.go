@@ -260,22 +260,22 @@ func TestCheck(t *testing.T) {
 		},
 		{
 			ID: testhelper.MkID("Int64 - ok"),
-			s:  &psetter.Int64{Value: &i},
+			s:  &psetter.Int[int64]{Value: &i},
 		},
 		{
 			ID: testhelper.MkID("Int64 - bad"),
-			s:  &psetter.Int64{},
-			ExpPanic: testhelper.MkExpPanic("test: psetter.Int64 " +
+			s:  &psetter.Int[int64]{},
+			ExpPanic: testhelper.MkExpPanic("test: psetter.Int[int64] " +
 				nilValueMsg),
 		},
 		{
 			ID: testhelper.MkID("Int64List - ok"),
-			s:  &psetter.Int64List{Value: &intList},
+			s:  &psetter.IntList[int64]{Value: &intList},
 		},
 		{
 			ID: testhelper.MkID("Int64List - bad"),
-			s:  &psetter.Int64List{},
-			ExpPanic: testhelper.MkExpPanic("test: psetter.Int64List " +
+			s:  &psetter.IntList[int64]{},
+			ExpPanic: testhelper.MkExpPanic("test: psetter.IntList[int64] " +
 				nilValueMsg),
 		},
 		{

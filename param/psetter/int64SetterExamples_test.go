@@ -14,7 +14,7 @@ func ExampleInt64_standard() {
 	var i int64
 
 	ps.Add("my-int",
-		psetter.Int64{
+		psetter.Int[int64]{
 			Value: &i,
 		}, "help text")
 
@@ -38,7 +38,7 @@ func ExampleInt64_withPassingChecks() {
 	var i int64
 
 	ps.Add("my-int",
-		psetter.Int64{
+		psetter.Int[int64]{
 			Value: &i,
 			Checks: []check.Int64{
 				check.ValGT[int64](5),
@@ -67,7 +67,7 @@ func ExampleInt64_withFailingChecks() {
 	var i int64
 
 	ps.Add("my-int",
-		psetter.Int64{
+		psetter.Int[int64]{
 			Value: &i,
 			Checks: []check.Int64{
 				check.ValGT[int64](5),
@@ -109,8 +109,8 @@ func ExampleInt64_withNilValue() {
 	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	// we expect this to panic because the map Value has not been initialised
-	ps.Add("my-int", psetter.Int64{}, "help text")
+	ps.Add("my-int", psetter.Int[int64]{}, "help text")
 	// Output:
 	// panic
-	// my-int: psetter.Int64 Check failed: the Value to be set is nil
+	// my-int: psetter.Int[int64] Check failed: the Value to be set is nil
 }

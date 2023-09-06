@@ -103,7 +103,7 @@ func CFAddParams1(ps *param.PSet) error {
 // CFAddParams2 will set the "example2" parameter in the PSet
 func CFAddParams2(ps *param.PSet) error {
 	ps.Add("example2",
-		psetter.Int64{Value: &CFValExample2},
+		psetter.Int[int64]{Value: &CFValExample2},
 		"the description of the parameter",
 		param.AltNames("e2"))
 
@@ -251,10 +251,10 @@ func valsCheck(t *testing.T, testID string, vals expVals) {
 func addParamsForGroupCF(ps *param.PSet) {
 	ps.SetGroupDescription(groupCFName1, "blah blah blah - 1")
 	ps.SetGroupDescription(groupCFName2, "blah blah blah - 2")
-	ps.Add("pi1", psetter.Int64{Value: &paramInt1},
+	ps.Add("pi1", psetter.Int[int64]{Value: &paramInt1},
 		"param int val 1",
 		param.GroupName(groupCFName1))
-	ps.Add("pi2", psetter.Int64{Value: &paramInt2},
+	ps.Add("pi2", psetter.Int[int64]{Value: &paramInt2},
 		"param int val 2",
 		param.GroupName(groupCFName2))
 	ps.Add("pb1", psetter.Bool{Value: &paramBool1},

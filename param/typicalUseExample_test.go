@@ -58,7 +58,7 @@ func tuAddParams2(prog *progExampleTypicalUse) param.PSetOptFunc {
 		// groupname and so this will be in the default group for the command
 		// ("cmd")
 		ps.Add(paramNameExample2,
-			psetter.Int64{Value: &prog.tuExample2},
+			psetter.Int[int64]{Value: &prog.tuExample2},
 			"the description of the parameter",
 			param.AltNames("e2"),
 			param.SeeAlso(paramNameExample1),

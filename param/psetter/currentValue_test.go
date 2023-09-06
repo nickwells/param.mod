@@ -33,10 +33,10 @@ func TestCurrentValue(t *testing.T) {
 	setterFloat64 := psetter.Float[float64]{Value: &vFloat64}
 
 	vInt64List := []int64{1, 2}
-	setterInt64List := psetter.Int64List{Value: &vInt64List}
+	setterInt64List := psetter.IntList[int64]{Value: &vInt64List}
 
 	vInt64 := int64(42)
-	setterInt64 := psetter.Int64{Value: &vInt64}
+	setterInt64 := psetter.Int[int64]{Value: &vInt64}
 
 	vMap := map[string]bool{
 		"hello": true,

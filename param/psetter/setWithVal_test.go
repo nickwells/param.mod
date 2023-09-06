@@ -75,8 +75,8 @@ func TestSetWithVal(t *testing.T) {
 	}
 
 	vInt64List := []int64{1, 2}
-	setterInt64List := psetter.Int64List{Value: &vInt64List}
-	setterInt64ListWithChecks := psetter.Int64List{
+	setterInt64List := psetter.IntList[int64]{Value: &vInt64List}
+	setterInt64ListWithChecks := psetter.IntList[int64]{
 		Value: &vInt64List,
 		Checks: []check.Int64Slice{
 			check.SliceHasNoDups[[]int64, int64],
@@ -84,8 +84,8 @@ func TestSetWithVal(t *testing.T) {
 	}
 
 	var vInt64 int64 = 42
-	setterInt64 := psetter.Int64{Value: &vInt64}
-	setterInt64WithChecks := psetter.Int64{
+	setterInt64 := psetter.Int[int64]{Value: &vInt64}
+	setterInt64WithChecks := psetter.Int[int64]{
 		Value: &vInt64,
 		Checks: []check.Int64{
 			check.ValGT[int64](6),

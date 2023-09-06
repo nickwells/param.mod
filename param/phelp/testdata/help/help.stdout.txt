@@ -3,7 +3,7 @@ a description of what the program does (help)
 
 ===============
 
-Usage: PROGRAM NAME UNKNOWN -param2=Int ...
+Usage: PROGRAM NAME UNKNOWN -param2=int ...
 
 ===============
 
@@ -20,11 +20,11 @@ common.params-help       [ 11 parameters, 10 hidden ]
 test-group1              [ 6 parameters, 1 hidden ]
     test parameters.
 
-      [-param1=Int, -param1-alt1=Int]
+      [-param1=int, -param1-alt1=int]
             help text for param1
             Allowed values: any value that can be read as a whole number
             Initial value: 1
-      -param2=Int, -param2-alt2=Int
+      -param2=int, -param2-alt2=int
             help text for param2.
             With an embedded new line and a lot of text to demonstrate the
             behaviour when text is wrapped across multiple lines

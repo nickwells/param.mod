@@ -67,9 +67,9 @@ func setInitialValues() {
 
 // addByPosParams will add positional parameters to the passed ParamSet
 func addByPosParams(ps *param.PSet) error {
-	ps.AddByPos("pos1", psetter.Int64{Value: &int64ValPos1},
+	ps.AddByPos("pos1", psetter.Int[int64]{Value: &int64ValPos1},
 		"help text for first positional parameter")
-	ps.AddByPos("pos2", psetter.Int64{Value: &int64ValPos2},
+	ps.AddByPos("pos2", psetter.Int[int64]{Value: &int64ValPos2},
 		"help text for second positional parameter")
 
 	return nil
@@ -79,14 +79,14 @@ func addByPosParams(ps *param.PSet) error {
 func addByNameParams(ps *param.PSet) error {
 	ps.AddGroup(paramGroupName, "test parameters.")
 
-	ps.Add("param1", psetter.Int64{Value: &int64Val1},
+	ps.Add("param1", psetter.Int[int64]{Value: &int64Val1},
 		"help text for param1",
 		param.GroupName(paramGroupName),
 		param.AltNames("param1-alt1"),
 		param.Attrs(param.CommandLineOnly),
 	)
 
-	ps.Add("param2", psetter.Int64{Value: &int64Val2},
+	ps.Add("param2", psetter.Int[int64]{Value: &int64Val2},
 		"help text for param2.\nWith an embedded new line and a lot of"+
 			" text to demonstrate the behaviour when text is wrapped"+
 			" across multiple lines",

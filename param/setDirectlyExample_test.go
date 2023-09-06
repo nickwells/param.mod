@@ -32,7 +32,7 @@ func Example_setDirectly() {
 		param.AltNames("e1"))
 
 	ps.Add("example2",
-		psetter.Int64{Value: &example2},
+		psetter.Int[int64]{Value: &example2},
 		"the description of the parameter",
 		// optional additional settings
 		param.AltNames("e2"))

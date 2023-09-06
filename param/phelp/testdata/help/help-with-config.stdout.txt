@@ -5,7 +5,7 @@ With embedded new lines (help-with-config)
 
 ===============
 
-Usage: PROGRAM NAME UNKNOWN -param2=Int ...
+Usage: PROGRAM NAME UNKNOWN -param2=int ...
 
 ===============
 
@@ -29,14 +29,14 @@ test-group1              [ 6 parameters, 1 hidden ]
     testdata/configFiles/cfg1 (must exist)
     testdata/configFiles/cfg2
 
-      [-param1=Int, -param1-alt1=Int]
+      [-param1=int, -param1-alt1=int]
             help text for param1
 
             This parameter may only be given on the command line, not in the
             configuration files or as an environment variable
             Allowed values: any value that can be read as a whole number
             Initial value: 1
-      -param2=Int, -param2-alt2=Int
+      -param2=int, -param2-alt2=int
             help text for param2.
             With an embedded new line and a lot of text to demonstrate the
             behaviour when text is wrapped across multiple lines

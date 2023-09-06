@@ -14,7 +14,7 @@ func ExampleInt64List_standard() {
 	il := []int64{42}
 
 	ps.Add("my-ints",
-		psetter.Int64List{
+		psetter.IntList[int64]{
 			Value: &il,
 		}, "help text")
 
@@ -43,7 +43,7 @@ func ExampleInt64List_withPassingChecks() {
 	il := []int64{42}
 
 	ps.Add("my-ints",
-		psetter.Int64List{
+		psetter.IntList[int64]{
 			Value: &il,
 			Checks: []check.Int64Slice{
 				check.SliceAll[[]int64, int64](check.ValGT[int64](5)),
@@ -77,7 +77,7 @@ func ExampleInt64List_withFailingChecks() {
 	il := []int64{42}
 
 	ps.Add("my-ints",
-		psetter.Int64List{
+		psetter.IntList[int64]{
 			Value: &il,
 			Checks: []check.Int64Slice{
 				check.SliceAll[[]int64, int64](check.ValGT[int64](5)),
@@ -123,8 +123,8 @@ func ExampleInt64List_withNilValue() {
 	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	// we expect this to panic because the map Value has not been initialised
-	ps.Add("my-ints", psetter.Int64List{}, "help text")
+	ps.Add("my-ints", psetter.IntList[int64]{}, "help text")
 	// Output:
 	// panic
-	// my-ints: psetter.Int64List Check failed: the Value to be set is nil
+	// my-ints: psetter.IntList[int64] Check failed: the Value to be set is nil
 }
