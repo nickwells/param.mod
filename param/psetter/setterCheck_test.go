@@ -141,14 +141,14 @@ func TestCheck(t *testing.T) {
 		},
 		{
 			ID: testhelper.MkID("EnumMap - ok"),
-			s: &psetter.EnumMap{
+			s: &psetter.EnumMap[string]{
 				Value:       &strToBoolMap,
 				AllowedVals: avalMapGood,
 			},
 		},
 		{
 			ID: testhelper.MkID("EnumMap - ok - Values has entries"),
-			s: &psetter.EnumMap{
+			s: &psetter.EnumMap[string]{
 				Value:       &strToBoolMapWithEntriesGood,
 				AllowedVals: avalMapGood,
 			},
@@ -156,7 +156,7 @@ func TestCheck(t *testing.T) {
 		{
 			ID: testhelper.MkID(
 				"EnumMap - ok - Values has entries - missing allowed"),
-			s: &psetter.EnumMap{
+			s: &psetter.EnumMap[string]{
 				Value:                 &strToBoolMapWithEntriesBad,
 				AllowedVals:           avalMapGood,
 				AllowHiddenMapEntries: true,
@@ -165,45 +165,45 @@ func TestCheck(t *testing.T) {
 		{
 			ID: testhelper.MkID(
 				"EnumMap - bad - Values has entries - missing not allowed"),
-			s: &psetter.EnumMap{
+			s: &psetter.EnumMap[string]{
 				Value:       &strToBoolMapWithEntriesBad,
 				AllowedVals: avalMapGood,
 			},
 			ExpPanic: testhelper.MkExpPanic(
-				append([]string{"test: psetter.EnumMap"},
+				append([]string{"test: psetter.EnumMap[string]"},
 					"the map entry with key",
 					"is invalid - it is not in the allowed values map")...),
 		},
 		{
 			ID: testhelper.MkID("EnumMap - bad - no value"),
-			s:  &psetter.EnumMap{},
-			ExpPanic: testhelper.MkExpPanic("test: psetter.EnumMap " +
+			s:  &psetter.EnumMap[string]{},
+			ExpPanic: testhelper.MkExpPanic("test: psetter.EnumMap[string] " +
 				nilValueMsg),
 		},
 		{
 			ID: testhelper.MkID("EnumMap - good - nil map (created)"),
-			s: &psetter.EnumMap{
+			s: &psetter.EnumMap[string]{
 				Value:       &strToBoolMapNil1,
 				AllowedVals: avalMapGood,
 			},
 		},
 		{
 			ID: testhelper.MkID("EnumMap - bad - no allowedValues"),
-			s: &psetter.EnumMap{
+			s: &psetter.EnumMap[string]{
 				Value: &strToBoolMap,
 			},
 			ExpPanic: testhelper.MkExpPanic(
-				append([]string{"test: psetter.EnumMap "},
+				append([]string{"test: psetter.EnumMap[string] "},
 					tooFewAValsMsg...)...),
 		},
 		{
 			ID: testhelper.MkID("EnumMap - bad - empty allowedValues"),
-			s: &psetter.EnumMap{
+			s: &psetter.EnumMap[string]{
 				Value:       &strToBoolMap,
 				AllowedVals: avalMapEmpty,
 			},
 			ExpPanic: testhelper.MkExpPanic(
-				append([]string{"test: psetter.EnumMap "},
+				append([]string{"test: psetter.EnumMap[string] "},
 					tooFewAValsMsg...)...),
 		},
 		{

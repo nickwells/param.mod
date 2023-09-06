@@ -69,7 +69,7 @@ func TestAllowedValues(t *testing.T) {
 		},
 		{
 			ID: testhelper.MkID("EnumMap"),
-			s: &psetter.EnumMap{
+			s: &psetter.EnumMap[string]{
 				Value: &strToBoolMap,
 				AllowedVals: psetter.AllowedVals{
 					"aval":     "desc",

@@ -19,7 +19,7 @@ func ExampleEnumMap_standard() {
 	keys := []string{XOption, YOption}
 
 	ps.Add("my-map",
-		psetter.EnumMap{
+		psetter.EnumMap[string]{
 			Value: &m,
 			AllowedVals: psetter.AllowedVals{
 				XOption: "a description of this option",
@@ -63,7 +63,7 @@ func ExampleEnumMap_fixingInitialValue() {
 	keys := []string{XOption, YOption}
 
 	ps.Add("my-map",
-		psetter.EnumMap{
+		psetter.EnumMap[string]{
 			Value: &m,
 			AllowedVals: psetter.AllowedVals{
 				XOption: "a description of this option",
@@ -111,7 +111,7 @@ func ExampleEnumMap_hiddenMapEntries() {
 	keys := []string{XOption, YOption, "z"}
 
 	ps.Add("my-map",
-		psetter.EnumMap{
+		psetter.EnumMap[string]{
 			Value: &m,
 			AllowedVals: psetter.AllowedVals{ // Note there's no 'z' value
 				XOption: "a description of this option",
@@ -171,7 +171,7 @@ func ExampleEnumMap_withBadKey() {
 	// we expect this to panic because the map has an entry which is not in
 	// the allowed values
 	ps.Add("my-map",
-		psetter.EnumMap{
+		psetter.EnumMap[string]{
 			Value: &m,
 			AllowedVals: psetter.AllowedVals{ // Note there's no 'z' value
 				XOption: "a description of this option",
@@ -180,7 +180,7 @@ func ExampleEnumMap_withBadKey() {
 		}, "help text")
 	// Output:
 	// panic
-	// my-map: psetter.EnumMap Check failed: the map entry with key "z" is invalid - it is not in the allowed values map
+	// my-map: psetter.EnumMap[string] Check failed: the map entry with key "z" is invalid - it is not in the allowed values map
 }
 
 // ExampleEnumMap_withNilValue demonstrates the behaviour of the package when
@@ -204,7 +204,7 @@ func ExampleEnumMap_withNilValue() {
 
 	// we expect this to panic because the map Value has not been initialised
 	ps.Add("my-map",
-		psetter.EnumMap{
+		psetter.EnumMap[string]{
 			AllowedVals: psetter.AllowedVals{
 				XOption: "a description of this option",
 				YOption: "what this option means",
@@ -212,5 +212,5 @@ func ExampleEnumMap_withNilValue() {
 		}, "help text")
 	// Output:
 	// panic
-	// my-map: psetter.EnumMap Check failed: the Value to be set is nil
+	// my-map: psetter.EnumMap[string] Check failed: the Value to be set is nil
 }

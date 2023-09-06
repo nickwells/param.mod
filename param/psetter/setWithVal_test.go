@@ -45,7 +45,7 @@ func TestSetWithVal(t *testing.T) {
 	vEnumMap := map[string]bool{
 		"hello": true,
 	}
-	setterEnumMap := psetter.EnumMap{
+	setterEnumMap := psetter.EnumMap[string]{
 		Value: &vEnumMap,
 		AllowedVals: psetter.AllowedVals{
 			"hello": "hello description",

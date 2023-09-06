@@ -24,7 +24,7 @@ func TestCurrentValue(t *testing.T) {
 	vEnumMap := map[string]bool{
 		"hello": true,
 	}
-	setterEnumMap := psetter.EnumMap{Value: &vEnumMap}
+	setterEnumMap := psetter.EnumMap[string]{Value: &vEnumMap}
 
 	vEnum := "Hello, World!"
 	setterEnum := psetter.Enum[string]{Value: &vEnum}

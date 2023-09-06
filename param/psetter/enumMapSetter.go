@@ -30,7 +30,7 @@ import (
 // - the name that you give the const value can distinguish between identical
 // strings and show which of various flags with the same string value you
 // actually mean.
-type EnumMap struct {
+type EnumMap[T ~string] struct {
 	ValueReqMandatory
 	// The AllowedVals must be set, the program will panic if not. These are
 	// the allowed keys in the Values map
@@ -43,7 +43,7 @@ type EnumMap struct {
 
 	// Value must be set, the program will panic if not. This is the map of
 	// values that this setter is setting
-	Value *map[string]bool
+	Value *map[T]bool
 	// AllowHiddenMapEntries can be set to relax the checks on the initial
 	// entries in the Values map
 	AllowHiddenMapEntries bool
@@ -57,7 +57,7 @@ type EnumMap struct {
 // only if all the values are in the allowed values list does it set the
 // entries in the map of strings pointed to by the Value. It returns a error
 // for the first invalid value.
-func (s EnumMap) SetWithVal(_ string, paramVal string) error {
+func (s EnumMap[T]) SetWithVal(_ string, paramVal string) error {
 	if paramVal == "" {
 		return errors.New("empty value. Some value must be given")
 	}
@@ -73,7 +73,7 @@ func (s EnumMap) SetWithVal(_ string, paramVal string) error {
 
 // checkValues checks that all the values given are OK and returns an error
 // for any bad value
-func (s EnumMap) checkValues(paramVal string, values []string) error {
+func (s EnumMap[T]) checkValues(paramVal string, values []string) error {
 	for i, v := range values {
 		parts := strings.SplitN(v, "=", 2)
 		// check the name is an allowed value
@@ -99,7 +99,7 @@ func (s EnumMap) checkValues(paramVal string, values []string) error {
 
 // setValues sets the values in the Value map from the strings in the slice
 // which have already been checked for validity.
-func (s EnumMap) setValues(values []string) {
+func (s EnumMap[T]) setValues(values []string) {
 	for _, v := range values {
 		parts := strings.SplitN(v, "=", 2)
 
@@ -114,31 +114,31 @@ func (s EnumMap) setValues(values []string) {
 		}
 
 		for _, k := range keys {
-			(*s.Value)[k] = b
+			(*s.Value)[T(k)] = b
 		}
 	}
 }
 
 // AllowedValues returns a string listing the allowed values
-func (s EnumMap) AllowedValues() string {
+func (s EnumMap[T]) AllowedValues() string {
 	return s.ListValDesc("string values") +
 		".\n\nEach value can be set to false by following the value" +
 		" with '=false'; by default the value will be set to true."
 }
 
 // CurrentValue returns the current setting of the parameter value
-func (s EnumMap) CurrentValue() string {
+func (s EnumMap[T]) CurrentValue() string {
 	cv := ""
 
 	keys := make([]string, 0, len(*s.Value))
 	for k := range *s.Value {
-		keys = append(keys, k)
+		keys = append(keys, string(k))
 	}
 	sort.Strings(keys)
 
 	sep := ""
 	for _, k := range keys {
-		cv += sep + fmt.Sprintf("%s=%v", k, (*s.Value)[k])
+		cv += sep + fmt.Sprintf("%s=%v", k, (*s.Value)[T(k)])
 		sep = "\n"
 	}
 
@@ -148,15 +148,15 @@ func (s EnumMap) CurrentValue() string {
 // CheckSetter panics if the setter has not been properly created - if the
 // Value is nil or the map has not been created yet or if there are no
 // allowed values.
-func (s EnumMap) CheckSetter(name string) {
+func (s EnumMap[T]) CheckSetter(name string) {
 	if s.Value == nil {
 		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
 	if *s.Value == nil {
-		*s.Value = make(map[string]bool)
+		*s.Value = make(map[T]bool)
 	}
 
-	intro := name + ": psetter.EnumMap Check failed: "
+	intro := fmt.Sprintf("%s: %T Check failed: ", name, s)
 	if err := s.AllowedVals.Check(); err != nil {
 		panic(intro + err.Error())
 	}
@@ -168,7 +168,7 @@ func (s EnumMap) CheckSetter(name string) {
 		return
 	}
 	for k := range *s.Value {
-		if _, ok := s.AllowedVals[k]; !ok {
+		if _, ok := s.AllowedVals[string(k)]; !ok {
 			panic(fmt.Sprintf("%sthe map entry with key %q is invalid"+
 				" - it is not in the allowed values map",
 				intro, k))
@@ -179,7 +179,7 @@ func (s EnumMap) CheckSetter(name string) {
 // ValDescribe returns a brief description of the allowed values suitable for
 // appearing after the parameter name. Note that the full list of values is
 // truncated if it gets too long.
-func (s EnumMap) ValDescribe() string {
+func (s EnumMap[T]) ValDescribe() string {
 	const maxValDescLen = 20
 
 	var desc string

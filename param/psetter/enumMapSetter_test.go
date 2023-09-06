@@ -44,36 +44,36 @@ func TestSetterEnumMap(t *testing.T) {
 		{
 			ID: testhelper.MkID("no-val"),
 			ExpPanic: testhelper.MkExpPanic(
-				"psetter.EnumMap Check failed: ",
+				"psetter.EnumMap[string] Check failed: ",
 				"the Value to be set is nil"),
-			PSetter: psetter.EnumMap{},
+			PSetter: psetter.EnumMap[string]{},
 		},
 		{
 			ID: testhelper.MkID("no-allowed-vals"),
-			PSetter: psetter.EnumMap{
+			PSetter: psetter.EnumMap[string]{
 				Value: &nilMap,
 			},
 			ExpPanic: testhelper.MkExpPanic(
-				"psetter.EnumMap Check failed: ",
+				"psetter.EnumMap[string] Check failed: ",
 				"the map of allowed values has no entries.",
 				" It should have at least 2"),
 		},
 		{
 			ID: testhelper.MkID("only-one-allowed-val"),
-			PSetter: psetter.EnumMap{
+			PSetter: psetter.EnumMap[string]{
 				Value: &nilMap,
 				AllowedVals: psetter.AllowedVals{
 					"x": "x-desc",
 				},
 			},
 			ExpPanic: testhelper.MkExpPanic(
-				"psetter.EnumMap Check failed: ",
+				"psetter.EnumMap[string] Check failed: ",
 				"the map of allowed values has only 1 entry.",
 				" It should have at least 2"),
 		},
 		{
 			ID: testhelper.MkID("invalid-initial-entry"),
-			PSetter: psetter.EnumMap{
+			PSetter: psetter.EnumMap[string]{
 				Value: &zvalMap,
 				AllowedVals: psetter.AllowedVals{
 					"x": "x-desc",
@@ -81,13 +81,13 @@ func TestSetterEnumMap(t *testing.T) {
 				},
 			},
 			ExpPanic: testhelper.MkExpPanic(
-				"psetter.EnumMap Check failed: ",
+				"psetter.EnumMap[string] Check failed: ",
 				`the map entry with key "z" is invalid`,
 				" - it is not in the allowed values map"),
 		},
 		{
 			ID: testhelper.MkID("bad-alias-equals-aval"),
-			PSetter: psetter.EnumMap{
+			PSetter: psetter.EnumMap[string]{
 				Value: &zvalMap,
 				AllowedVals: psetter.AllowedVals{
 					"x": "x-desc",
@@ -98,12 +98,12 @@ func TestSetterEnumMap(t *testing.T) {
 				},
 			},
 			ExpPanic: testhelper.MkExpPanic(
-				"psetter.EnumMap Check failed: ",
+				"psetter.EnumMap[string] Check failed: ",
 				`Bad alias: "x": ["y"] - an allowed value has the same name`),
 		},
 		{
 			ID: testhelper.MkID("bad-alias-empty"),
-			PSetter: psetter.EnumMap{
+			PSetter: psetter.EnumMap[string]{
 				Value: &zvalMap,
 				AllowedVals: psetter.AllowedVals{
 					"x": "x-desc",
@@ -114,12 +114,12 @@ func TestSetterEnumMap(t *testing.T) {
 				},
 			},
 			ExpPanic: testhelper.MkExpPanic(
-				"psetter.EnumMap Check failed: ",
+				"psetter.EnumMap[string] Check failed: ",
 				`Bad alias: "x": [] - it has an empty value`),
 		},
 		{
 			ID: testhelper.MkID("bad-alias-duplicate"),
-			PSetter: psetter.EnumMap{
+			PSetter: psetter.EnumMap[string]{
 				Value: &zvalMap,
 				AllowedVals: psetter.AllowedVals{
 					"x": "x-desc",
@@ -130,12 +130,12 @@ func TestSetterEnumMap(t *testing.T) {
 				},
 			},
 			ExpPanic: testhelper.MkExpPanic(
-				"psetter.EnumMap Check failed: ",
+				"psetter.EnumMap[string] Check failed: ",
 				`Bad alias: "z": ["x" "x"] - "x" appears more than once`),
 		},
 		{
 			ID: testhelper.MkID("bad-alias-not-an-aval"),
-			PSetter: psetter.EnumMap{
+			PSetter: psetter.EnumMap[string]{
 				Value: &zvalMap,
 				AllowedVals: psetter.AllowedVals{
 					"x": "x-desc",
@@ -146,12 +146,12 @@ func TestSetterEnumMap(t *testing.T) {
 				},
 			},
 			ExpPanic: testhelper.MkExpPanic(
-				"psetter.EnumMap Check failed: ",
+				"psetter.EnumMap[string] Check failed: ",
 				`Bad alias: "z": ["a"] - "a" is not an allowed value`),
 		},
 		{
 			ID: testhelper.MkID("hidden-initial-entry"),
-			PSetter: psetter.EnumMap{
+			PSetter: psetter.EnumMap[string]{
 				Value: &zvalMap,
 				AllowedVals: psetter.AllowedVals{
 					"x": "x-desc",
@@ -163,7 +163,7 @@ func TestSetterEnumMap(t *testing.T) {
 		},
 		{
 			ID: testhelper.MkID("nil-map-z"),
-			PSetter: psetter.EnumMap{
+			PSetter: psetter.EnumMap[string]{
 				Value:       &nilMap,
 				AllowedVals: dfltAllowedVals,
 			},
@@ -178,7 +178,7 @@ func TestSetterEnumMap(t *testing.T) {
 		},
 		{
 			ID: testhelper.MkID("zval-map-z-false"),
-			PSetter: psetter.EnumMap{
+			PSetter: psetter.EnumMap[string]{
 				Value:       &zvalMap,
 				AllowedVals: dfltAllowedVals,
 			},
@@ -186,7 +186,7 @@ func TestSetterEnumMap(t *testing.T) {
 		},
 		{
 			ID: testhelper.MkID("zval-map-blank-val"),
-			PSetter: psetter.EnumMap{
+			PSetter: psetter.EnumMap[string]{
 				Value:       &zvalMap,
 				AllowedVals: dfltAllowedVals,
 			},
@@ -195,7 +195,7 @@ func TestSetterEnumMap(t *testing.T) {
 		},
 		{
 			ID: testhelper.MkID("empty-map-z-true"),
-			PSetter: psetter.EnumMap{
+			PSetter: psetter.EnumMap[string]{
 				Value:       &emptyMap,
 				AllowedVals: dfltAllowedVals,
 			},
@@ -203,7 +203,7 @@ func TestSetterEnumMap(t *testing.T) {
 		},
 		{
 			ID: testhelper.MkID("empty-map-z-bad"),
-			PSetter: psetter.EnumMap{
+			PSetter: psetter.EnumMap[string]{
 				Value:       &emptyMap,
 				AllowedVals: dfltAllowedVals,
 			},
@@ -215,7 +215,7 @@ func TestSetterEnumMap(t *testing.T) {
 		},
 		{
 			ID: testhelper.MkID("empty-map-aliases"),
-			PSetter: psetter.EnumMap{
+			PSetter: psetter.EnumMap[string]{
 				Value:       &emptyMap,
 				AllowedVals: dfltAllowedVals,
 				Aliases: psetter.Aliases{
@@ -229,7 +229,7 @@ func TestSetterEnumMap(t *testing.T) {
 		},
 		{
 			ID: testhelper.MkID("empty-map-z-true-sep-dot"),
-			PSetter: psetter.EnumMap{
+			PSetter: psetter.EnumMap[string]{
 				Value:            &emptyMap,
 				AllowedVals:      dfltAllowedVals,
 				StrListSeparator: psetter.StrListSeparator{Sep: "."},

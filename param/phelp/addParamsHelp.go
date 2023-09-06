@@ -177,7 +177,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 	}
 
 	ps.Add(helpShowArgName,
-		psetter.EnumMap{
+		psetter.EnumMap[string]{
 			Value:       (*map[string]bool)(&h.sectionsChosen),
 			AllowedVals: makeSectionAllowedVals(),
 			Aliases:     sectionAliases,

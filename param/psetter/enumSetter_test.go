@@ -116,7 +116,7 @@ func TestEnumList(t *testing.T) {
 
 func TestEnumMap(t *testing.T) { // nolint: gocyclo
 	var value map[string]bool
-	ems := psetter.EnumMap{
+	ems := psetter.EnumMap[string]{
 		Value: &value,
 		AllowedVals: psetter.AllowedVals{
 			"e1": "E1 explained",
