@@ -14,7 +14,7 @@ func ExampleFloat64_standard() {
 	var f float64
 
 	ps.Add("my-float",
-		psetter.Float64{
+		psetter.Float[float64]{
 			Value: &f,
 		}, "help text")
 
@@ -38,7 +38,7 @@ func ExampleFloat64_withPassingChecks() {
 	var f float64
 
 	ps.Add("my-float",
-		psetter.Float64{
+		psetter.Float[float64]{
 			Value: &f,
 			Checks: []check.Float64{
 				check.ValGT[float64](5.0),
@@ -67,7 +67,7 @@ func ExampleFloat64_withFailingChecks() {
 	var f float64
 
 	ps.Add("my-float",
-		psetter.Float64{
+		psetter.Float[float64]{
 			Value: &f,
 			Checks: []check.Float64{
 				check.ValGT[float64](5.0),
@@ -109,8 +109,8 @@ func ExampleFloat64_withNilValue() {
 	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	// we expect this to panic because the map Value has not been initialised
-	ps.Add("my-float", psetter.Float64{}, "help text")
+	ps.Add("my-float", psetter.Float[float64]{}, "help text")
 	// Output:
 	// panic
-	// my-float: psetter.Float64 Check failed: the Value to be set is nil
+	// my-float: psetter.Float[float64] Check failed: the Value to be set is nil
 }

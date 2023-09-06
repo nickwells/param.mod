@@ -23,14 +23,14 @@ import (
 // - the name that you give the const value can distinguish between identical
 // strings and show which of various flags with the same string value you
 // actually mean.
-type Enum struct {
+type Enum[T ~string] struct {
 	ValueReqMandatory
 	// The AllowedVals must be set, the program will panic if not. The Value
 	// is guaranteed to take one of these values.
 	AllowedVals
 	// Value must be set, the program will panic if not. This is the value
 	// being set
-	Value *string
+	Value *T
 	// AllowInvalidInitialValue can be set to relax the checks on the initial
 	// Value. It can be set to allow, for instance, an empty initial value to
 	// signify that no choice has yet been made.
@@ -40,38 +40,38 @@ type Enum struct {
 // SetWithVal (called when a value follows the parameter) checks the value
 // for validity and only if it is in the allowed values list does it set the
 // Value. It returns an error if the value is invalid.
-func (s Enum) SetWithVal(_ string, paramVal string) error {
+func (s Enum[T]) SetWithVal(_ string, paramVal string) error {
 	if s.ValueAllowed(paramVal) {
-		*s.Value = paramVal
+		*s.Value = T(paramVal)
 		return nil
 	}
 	return fmt.Errorf("value not allowed: %q", paramVal)
 }
 
 // AllowedValues returns a string listing the allowed values
-func (s Enum) AllowedValues() string {
+func (s Enum[T]) AllowedValues() string {
 	return "a string"
 }
 
 // CurrentValue returns the current setting of the parameter value
-func (s Enum) CurrentValue() string {
+func (s Enum[T]) CurrentValue() string {
 	return fmt.Sprintf("%v", *s.Value)
 }
 
 // CheckSetter panics if the setter has not been properly created - if the
 // Value is nil or there are no allowed values.
-func (s Enum) CheckSetter(name string) {
+func (s Enum[T]) CheckSetter(name string) {
 	if s.Value == nil {
 		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
-	intro := name + ": psetter.Enum Check failed: "
+	intro := fmt.Sprintf("%s: %T Check failed: ", name, s)
 	if err := s.AllowedVals.Check(); err != nil {
 		panic(intro + err.Error())
 	}
 	if s.AllowInvalidInitialValue {
 		return
 	}
-	if !s.ValueAllowed(*s.Value) {
+	if !s.ValueAllowed(string(*s.Value)) {
 		panic(fmt.Sprintf("%sthe initial value (%s) is not valid",
 			intro, *s.Value))
 	}
@@ -80,9 +80,9 @@ func (s Enum) CheckSetter(name string) {
 // ValDescribe returns a brief description of the allowed values suitable for
 // appearing after the parameter name. Note that the full list of values is
 // truncated if it gets too long.
-func (s Enum) ValDescribe() string {
+func (s Enum[T]) ValDescribe() string {
 	const maxValDescLen = 20
-	initialVal := *s.Value
+	initialVal := string(*s.Value)
 
 	var desc string
 	if s.ValueAllowed(initialVal) {

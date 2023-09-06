@@ -21,7 +21,7 @@ func ExampleToUpper_Edit() {
 	var s string
 
 	ps.Add("param",
-		psetter.String{
+		psetter.String[string]{
 			Value:  &s,
 			Editor: pedit.ToUpper{},
 		}, "help text",

@@ -27,10 +27,10 @@ func TestCurrentValue(t *testing.T) {
 	setterEnumMap := psetter.EnumMap{Value: &vEnumMap}
 
 	vEnum := "Hello, World!"
-	setterEnum := psetter.Enum{Value: &vEnum}
+	setterEnum := psetter.Enum[string]{Value: &vEnum}
 
 	vFloat64 := float64(3.14159)
-	setterFloat64 := psetter.Float64{Value: &vFloat64}
+	setterFloat64 := psetter.Float[float64]{Value: &vFloat64}
 
 	vInt64List := []int64{1, 2}
 	setterInt64List := psetter.Int64List{Value: &vInt64List}

@@ -18,7 +18,7 @@ func ExampleEnum_standard() {
 	s := XOption
 
 	ps.Add("my-string",
-		psetter.Enum{
+		psetter.Enum[string]{
 			Value: &s,
 			AllowedVals: psetter.AllowedVals{
 				XOption: "a description of this option",
@@ -55,7 +55,7 @@ func ExampleEnum_withBadVal() {
 	s := XOption
 
 	ps.Add("my-string",
-		psetter.Enum{
+		psetter.Enum[string]{
 			Value: &s,
 			AllowedVals: psetter.AllowedVals{ // Note there's no 'z' value
 				XOption: "a description of this option",
@@ -107,7 +107,7 @@ func ExampleEnum_withNilValue() {
 
 	// we expect this to panic because the Value has not been initialised
 	ps.Add("my-string",
-		psetter.Enum{
+		psetter.Enum[string]{
 			AllowedVals: psetter.AllowedVals{
 				XOption: "a description of this option",
 				YOption: "what this option means",
@@ -115,7 +115,7 @@ func ExampleEnum_withNilValue() {
 		}, "help text")
 	// Output:
 	// panic
-	// my-string: psetter.Enum Check failed: the Value to be set is nil
+	// my-string: psetter.Enum[string] Check failed: the Value to be set is nil
 }
 
 // ExampleEnum_withBadInitialValue demonstrates the behaviour of the package
@@ -141,7 +141,7 @@ func ExampleEnum_withBadInitialValue() {
 
 	// we expect this to panic because the Value has an invalid initial value
 	ps.Add("my-string",
-		psetter.Enum{
+		psetter.Enum[string]{
 			Value: &s,
 			AllowedVals: psetter.AllowedVals{ // Note there's no 'z' value
 				XOption: "a description of this option",
@@ -150,5 +150,5 @@ func ExampleEnum_withBadInitialValue() {
 		}, "help text")
 	// Output:
 	// panic
-	// my-string: psetter.Enum Check failed: the initial value (z) is not valid
+	// my-string: psetter.Enum[string] Check failed: the initial value (z) is not valid
 }

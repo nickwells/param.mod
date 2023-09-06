@@ -208,51 +208,54 @@ func TestCheck(t *testing.T) {
 		},
 		{
 			ID: testhelper.MkID("Enum - ok"),
-			s: &psetter.Enum{
+			s: &psetter.Enum[string]{
 				Value:       &goodStr,
 				AllowedVals: avalMapGood,
 			},
 		},
 		{
 			ID: testhelper.MkID("Enum - bad initial value"),
-			s: &psetter.Enum{
+			s: &psetter.Enum[string]{
 				Value:       &badStr,
 				AllowedVals: avalMapGood,
 			},
 			ExpPanic: testhelper.MkExpPanic(
-				append([]string{"test: psetter.Enum "}, badInitialVal...)...),
+				append([]string{"test: psetter.Enum[string] "},
+					badInitialVal...)...),
 		},
 		{
 			ID: testhelper.MkID("Enum - bad - no value"),
-			s:  &psetter.Enum{},
-			ExpPanic: testhelper.MkExpPanic("test: psetter.Enum " +
+			s:  &psetter.Enum[string]{},
+			ExpPanic: testhelper.MkExpPanic("test: psetter.Enum[string] " +
 				nilValueMsg),
 		},
 		{
 			ID: testhelper.MkID("Enum - bad - no allowedValues"),
-			s: &psetter.Enum{
+			s: &psetter.Enum[string]{
 				Value: &anyStr,
 			},
 			ExpPanic: testhelper.MkExpPanic(
-				append([]string{"test: psetter.Enum "}, tooFewAValsMsg...)...),
+				append([]string{"test: psetter.Enum[string] "},
+					tooFewAValsMsg...)...),
 		},
 		{
 			ID: testhelper.MkID("Enum - bad - empty allowedValues"),
-			s: &psetter.Enum{
+			s: &psetter.Enum[string]{
 				Value:       &anyStr,
 				AllowedVals: avalMapEmpty,
 			},
 			ExpPanic: testhelper.MkExpPanic(
-				append([]string{"test: psetter.Enum "}, tooFewAValsMsg...)...),
+				append([]string{"test: psetter.Enum[string] "},
+					tooFewAValsMsg...)...),
 		},
 		{
 			ID: testhelper.MkID("Float64 - ok"),
-			s:  &psetter.Float64{Value: &f},
+			s:  &psetter.Float[float64]{Value: &f},
 		},
 		{
 			ID: testhelper.MkID("Float64 - bad"),
-			s:  &psetter.Float64{},
-			ExpPanic: testhelper.MkExpPanic("test: psetter.Float64 " +
+			s:  &psetter.Float[float64]{},
+			ExpPanic: testhelper.MkExpPanic("test: psetter.Float[float64] " +
 				nilValueMsg),
 		},
 		{

@@ -9,7 +9,7 @@ import (
 
 func TestEnum(t *testing.T) {
 	var value string
-	es := psetter.Enum{
+	es := psetter.Enum[string]{
 		Value: &value,
 		AllowedVals: psetter.AllowedVals{
 			"e1": "E1 explained",

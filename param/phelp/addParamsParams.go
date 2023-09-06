@@ -32,7 +32,7 @@ func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
 			" have been set and for the handling of parameter errors.")
 
 	ps.Add(paramNameWhereSetFormat,
-		psetter.Enum{
+		psetter.Enum[string]{
 			Value: &h.paramsSetFormat,
 			AllowedVals: psetter.AllowedVals{
 				paramSetFmtStd: "the standard format for showing" +

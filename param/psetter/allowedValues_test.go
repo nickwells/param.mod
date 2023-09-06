@@ -78,7 +78,7 @@ func TestAllowedValues(t *testing.T) {
 		},
 		{
 			ID: testhelper.MkID("Enum"),
-			s: &psetter.Enum{
+			s: &psetter.Enum[string]{
 				Value: &goodStr,
 				AllowedVals: psetter.AllowedVals{
 					"aval":     "desc",
@@ -88,7 +88,7 @@ func TestAllowedValues(t *testing.T) {
 		},
 		{
 			ID: testhelper.MkID("Float64"),
-			s:  &psetter.Float64{Value: &f},
+			s:  &psetter.Float[float64]{Value: &f},
 		},
 		{
 			ID: testhelper.MkID("Int64"),

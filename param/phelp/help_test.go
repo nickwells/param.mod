@@ -95,7 +95,7 @@ func addByNameParams(ps *param.PSet) error {
 		param.Attrs(param.MustBeSet),
 	)
 
-	ps.Add("param3", psetter.Float64{Value: &float64Val3},
+	ps.Add("param3", psetter.Float[float64]{Value: &float64Val3},
 		"help...",
 		param.GroupName(paramGroupName),
 		param.AltNames("p3"),
@@ -108,7 +108,7 @@ func addByNameParams(ps *param.PSet) error {
 		param.Attrs(param.SetOnlyOnce),
 	)
 
-	ps.Add("param5", psetter.Enum{
+	ps.Add("param5", psetter.Enum[string]{
 		AllowedVals: psetter.AllowedVals{
 			"v1": "a value",
 			"v2": "another value",
@@ -119,7 +119,7 @@ func addByNameParams(ps *param.PSet) error {
 		param.GroupName(paramGroupName),
 	)
 
-	ps.Add("param6", psetter.Enum{
+	ps.Add("param6", psetter.Enum[string]{
 		AllowedVals: psetter.AllowedVals{
 			"v1": "a value",
 			"v2": "another value",

@@ -19,7 +19,7 @@ func ExamplePSet_Add() {
 
 	var f float64
 
-	ps.Add("param-name", psetter.Float64{Value: &f},
+	ps.Add("param-name", psetter.Float[float64]{Value: &f},
 		"a parameter description for the usage message")
 }
 
@@ -34,7 +34,7 @@ func ExamplePSet_Add_withExtras() {
 
 	// We only capture the return value so that we can report the settings
 	// below.
-	p := ps.Add("param-name", psetter.Float64{Value: &f},
+	p := ps.Add("param-name", psetter.Float[float64]{Value: &f},
 		"a parameter description for the usage message",
 		// The following parameters are optional - a list of zero or more
 		// functions that set some of the extra features of the parameter

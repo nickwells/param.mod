@@ -13,6 +13,7 @@ require (
 	github.com/nickwells/testhelper.mod/v2 v2.2.0
 	github.com/nickwells/twrap.mod v1.5.2
 	github.com/nickwells/xdg.mod v1.0.9
+	golang.org/x/exp v0.0.0-20230817173708-d852ddb80c63
 )
 
 require (
@@ -21,7 +22,6 @@ require (
 )
 
 require (
-	golang.org/x/exp v0.0.0-20230817173708-d852ddb80c63 // indirect
 	golang.org/x/sys v0.12.0 // indirect
 	golang.org/x/term v0.11.0 // indirect
 )

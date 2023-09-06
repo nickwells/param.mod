@@ -189,7 +189,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 	)
 
 	ps.Add(helpFormatArgName,
-		psetter.Enum{
+		psetter.Enum[string]{
 			Value: &h.helpFormat,
 			AllowedVals: psetter.AllowedVals{
 				helpFmtTypeStd: "the standard format." +

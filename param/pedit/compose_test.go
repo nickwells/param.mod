@@ -21,7 +21,7 @@ func ExampleComposite_Edit() {
 	var s string
 
 	ps.Add("param",
-		psetter.String{
+		psetter.String[string]{
 			Value: &s,
 			Editor: pedit.Composite{
 				Editors: []psetter.Editor{

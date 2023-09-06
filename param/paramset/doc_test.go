@@ -17,7 +17,7 @@ func addParams(ps *param.PSet) error {
 	// This adds a parameter to the PSet that can be given with either of two
 	// names: '-name' or '-n'. The parameter parsing will report an error if
 	// the parameter is not given or if the value given is an empty string
-	ps.Add("name", psetter.String{
+	ps.Add("name", psetter.String[string]{
 		Value:  &thingName,
 		Checks: []check.String{check.StringLength[string](check.ValGT(0))},
 	},
@@ -31,7 +31,7 @@ func addParams(ps *param.PSet) error {
 	// values: 'delete', 'copy' or 'nothing'. An error will be reported if
 	// the parameter is not seen
 	ps.Add("action",
-		psetter.Enum{
+		psetter.Enum[string]{
 			Value: &action,
 			AllowedVals: psetter.AllowedVals{
 				"delete":  "delete the thing",

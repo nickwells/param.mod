@@ -55,7 +55,7 @@ func TestSetWithVal(t *testing.T) {
 	}
 
 	vEnum := "hello"
-	setterEnum := psetter.Enum{
+	setterEnum := psetter.Enum[string]{
 		Value: &vEnum,
 		AllowedVals: psetter.AllowedVals{
 			"hello": "hello description",
@@ -65,8 +65,8 @@ func TestSetWithVal(t *testing.T) {
 	}
 
 	vFloat64 := float64(3.14159)
-	setterFloat64 := psetter.Float64{Value: &vFloat64}
-	setterFloat64WithChecks := psetter.Float64{
+	setterFloat64 := psetter.Float[float64]{Value: &vFloat64}
+	setterFloat64WithChecks := psetter.Float[float64]{
 		Value: &vFloat64,
 		Checks: []check.Float64{
 			nil,

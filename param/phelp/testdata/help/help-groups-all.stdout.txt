@@ -12,7 +12,7 @@ test-group1              [ 6 parameters ]
             Allowed values: any value that can be read as a whole number
             Initial value: 2
             Current value: 99
-      [-param3=Float, -p3=Float]
+      [-param3=float, -p3=float]
             help...
             Allowed values: any value that can be read as a number with a
                             decimal place
