@@ -38,6 +38,9 @@ func TestCurrentValue(t *testing.T) {
 	vInt64 := int64(42)
 	setterInt64 := psetter.Int[int64]{Value: &vInt64}
 
+	vUint64 := uint64(42)
+	setterUint64 := psetter.Uint[uint64]{Value: &vUint64}
+
 	vMap := map[string]bool{
 		"hello": true,
 	}
@@ -109,6 +112,11 @@ func TestCurrentValue(t *testing.T) {
 		{
 			ID:            testhelper.MkID("Int64 - 42"),
 			s:             setterInt64,
+			expectedValue: "42",
+		},
+		{
+			ID:            testhelper.MkID("Uint64 - 42"),
+			s:             setterUint64,
 			expectedValue: "42",
 		},
 		{

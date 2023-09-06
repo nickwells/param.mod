@@ -40,6 +40,7 @@ func TestAllowedValues(t *testing.T) {
 
 	var f float64
 	var i int64
+	var ui uint64
 	var intList []int64
 	var re *regexp.Regexp
 	var timeLoc *time.Location
@@ -93,6 +94,10 @@ func TestAllowedValues(t *testing.T) {
 		{
 			ID: testhelper.MkID("Int64"),
 			s:  &psetter.Int[int64]{Value: &i},
+		},
+		{
+			ID: testhelper.MkID("Uint64"),
+			s:  &psetter.Uint[uint64]{Value: &ui},
 		},
 		{
 			ID: testhelper.MkID("Int64List"),
