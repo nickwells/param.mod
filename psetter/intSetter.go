@@ -41,10 +41,6 @@ func (s Int[T]) SetWithVal(_ string, paramVal string) error {
 	v := T(v64)
 
 	for _, check := range s.Checks {
-		if check == nil {
-			continue
-		}
-
 		err := check(v)
 		if err != nil {
 			return err
@@ -66,10 +62,18 @@ func (s Int[T]) CurrentValue() string {
 }
 
 // CheckSetter panics if the setter has not been properly created - if the
-// Value is nil.
+// Value is nil or if it has nil Checks.
 func (s Int[T]) CheckSetter(name string) {
+	// Check the value is not nil
 	if s.Value == nil {
 		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
+	}
+
+	// Check there are no nil Check funcs
+	for i, check := range s.Checks {
+		if check == nil {
+			panic(NilCheckMessage(name, fmt.Sprintf("%T", s), i))
+		}
 	}
 }
 

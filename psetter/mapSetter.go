@@ -78,10 +78,6 @@ func (s Map[T]) SetWithVal(paramName string, paramVal string) error {
 	}
 
 	for _, check := range s.Checks {
-		if check == nil {
-			continue
-		}
-
 		err = check(m)
 		if err != nil {
 			return err
@@ -120,11 +116,22 @@ func (s Map[T]) CurrentValue() string {
 }
 
 // CheckSetter panics if the setter has not been properly created - if the
-// Value is nil or the map has not been created yet.
+// Value is nil or or if it has nil Checks. If the the map has not been
+// created yet it will be created here.
 func (s Map[T]) CheckSetter(name string) {
+	// Check the value is not nil
 	if s.Value == nil {
 		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
+
+	// Check there are no nil Check funcs
+	for i, check := range s.Checks {
+		if check == nil {
+			panic(NilCheckMessage(name, fmt.Sprintf("%T", s), i))
+		}
+	}
+
+	// make the map if it is nil
 	if *s.Value == nil {
 		*s.Value = make(map[T]bool)
 	}

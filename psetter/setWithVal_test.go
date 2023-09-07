@@ -38,7 +38,6 @@ func TestSetWithVal(t *testing.T) {
 		},
 		Checks: []check.StringSlice{
 			check.SliceLength[[]string, string](check.ValEQ(2)),
-			nil,
 		},
 	}
 
@@ -69,7 +68,6 @@ func TestSetWithVal(t *testing.T) {
 	setterFloat64WithChecks := psetter.Float[float64]{
 		Value: &vFloat64,
 		Checks: []check.Float64{
-			nil,
 			check.ValGT[float64](5),
 		},
 	}
@@ -113,7 +111,6 @@ func TestSetWithVal(t *testing.T) {
 	setterPathnameWithChecks := psetter.Pathname{
 		Value: &vPathname3,
 		Checks: []check.String{
-			nil,
 			check.StringHasPrefix[string]("testdata"),
 		},
 	}
@@ -125,7 +122,6 @@ func TestSetWithVal(t *testing.T) {
 	setterStringWithChecks := psetter.String[string]{
 		Value: &vString,
 		Checks: []check.String{
-			nil,
 			check.StringHasPrefix[string]("hello"),
 		},
 	}
@@ -134,7 +130,6 @@ func TestSetWithVal(t *testing.T) {
 	setterStrListWithChecks := psetter.StrList[string]{
 		Value: &vStrList,
 		Checks: []check.StringSlice{
-			nil,
 			check.SliceLength[[]string](check.ValEQ(2)),
 		},
 	}
@@ -142,7 +137,7 @@ func TestSetWithVal(t *testing.T) {
 	var vTimeLocation *time.Location
 	setterTimeLocationWithChecks := psetter.TimeLocation{
 		Value:  &vTimeLocation,
-		Checks: []check.TimeLocation{nil},
+		Checks: []check.TimeLocation{},
 	}
 
 	testCases := []struct {
@@ -174,7 +169,7 @@ func TestSetWithVal(t *testing.T) {
 		{
 			ID: testhelper.MkID("duration - bad value"),
 			ExpErr: testhelper.MkExpErr(
-				"could not parse 'whoops - a bad duration' as a duration: "),
+				`could not parse "whoops - a bad duration" as a duration: `),
 			s:     setterDuration,
 			value: "whoops - a bad duration",
 		},

@@ -60,9 +60,9 @@ func TestDuration(t *testing.T) {
 	for i, tc := range testCases {
 		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
 		var d time.Duration
-		ds := psetter.Duration{
-			Value:  &d,
-			Checks: []check.Duration{tc.check},
+		ds := psetter.Duration{Value: &d}
+		if tc.check != nil {
+			ds.Checks = []check.Duration{tc.check}
 		}
 
 		err := ds.SetWithVal("", tc.val)

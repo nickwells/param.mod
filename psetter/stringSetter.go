@@ -33,20 +33,16 @@ func (s String[T]) CountChecks() int {
 // returns an error if the check is not satisfied. Only if the check
 // is not violated is the Value set.
 func (s String[T]) SetWithVal(paramName, paramVal string) error {
-	for _, check := range s.Checks {
-		if check == nil {
-			continue
-		}
-
-		err := check(T(paramVal))
+	if s.Editor != nil {
+		var err error
+		paramVal, err = s.Editor.Edit(paramName, paramVal)
 		if err != nil {
 			return err
 		}
 	}
 
-	if s.Editor != nil {
-		var err error
-		paramVal, err = s.Editor.Edit(paramName, paramVal)
+	for _, check := range s.Checks {
+		err := check(T(paramVal))
 		if err != nil {
 			return err
 		}
@@ -68,9 +64,17 @@ func (s String[T]) CurrentValue() string {
 }
 
 // CheckSetter panics if the setter has not been properly created - if the
-// Value is nil.
+// Value is nil or if it has nil Checks.
 func (s String[T]) CheckSetter(name string) {
+	// Check the value is not nil
 	if s.Value == nil {
 		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
+	}
+
+	// Check there are no nil Check funcs
+	for i, check := range s.Checks {
+		if check == nil {
+			panic(NilCheckMessage(name, fmt.Sprintf("%T", s), i))
+		}
 	}
 }

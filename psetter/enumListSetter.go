@@ -75,10 +75,6 @@ func (s EnumList[T]) SetWithVal(_ string, paramVal string) error {
 	}
 
 	for _, check := range s.Checks {
-		if check == nil {
-			continue
-		}
-
 		err := check(aliasedVals)
 		if err != nil {
 			return err
@@ -112,18 +108,30 @@ func (s EnumList[T]) CurrentValue() string {
 // Value is nil or there are no allowed values or the initial value is not
 // allowed.
 func (s EnumList[T]) CheckSetter(name string) {
+	// Check the value is not nil
 	if s.Value == nil {
 		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
+
+	// Check that the AllowedVals map is well formed
 	intro := fmt.Sprintf("%s: %T Check failed: ", name, s)
 	if err := s.AllowedVals.Check(); err != nil {
 		panic(intro + err.Error())
 	}
+
+	// Check that the current values are all allowed
 	for i, v := range *s.Value {
 		if _, ok := s.AllowedVals[string(v)]; !ok {
 			panic(fmt.Sprintf(
 				"%selement %d (%s) in the current list of entries is invalid",
 				intro, i, v))
+		}
+	}
+
+	// Check there are no nil Check funcs
+	for i, check := range s.Checks {
+		if check == nil {
+			panic(NilCheckMessage(name, fmt.Sprintf("%T", s), i))
 		}
 	}
 }
