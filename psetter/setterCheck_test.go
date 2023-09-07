@@ -322,12 +322,12 @@ func TestCheck(t *testing.T) {
 		},
 		{
 			ID: testhelper.MkID("StrList - ok"),
-			s:  &psetter.StrList{Value: &emptyStrList},
+			s:  &psetter.StrList[string]{Value: &emptyStrList},
 		},
 		{
 			ID: testhelper.MkID("StrList - bad"),
-			s:  &psetter.StrList{},
-			ExpPanic: testhelper.MkExpPanic("test: psetter.StrList " +
+			s:  &psetter.StrList[string]{},
+			ExpPanic: testhelper.MkExpPanic("test: psetter.StrList[string] " +
 				nilValueMsg),
 		},
 		{

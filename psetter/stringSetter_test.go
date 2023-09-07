@@ -41,7 +41,7 @@ func TestString(t *testing.T) {
 
 func TestStringList(t *testing.T) {
 	value := make([]string, 0)
-	ss := psetter.StrList{Value: &value}
+	ss := psetter.StrList[string]{Value: &value}
 
 	if pvr := ss.ValueReq(); pvr != param.Mandatory {
 		t.Error("StrList should need a value."+

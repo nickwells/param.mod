@@ -131,7 +131,7 @@ func TestSetWithVal(t *testing.T) {
 	}
 
 	var vStrList []string
-	setterStrListWithChecks := psetter.StrList{
+	setterStrListWithChecks := psetter.StrList[string]{
 		Value: &vStrList,
 		Checks: []check.StringSlice{
 			nil,

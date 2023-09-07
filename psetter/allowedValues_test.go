@@ -134,15 +134,18 @@ func TestAllowedValues(t *testing.T) {
 		},
 		{
 			ID: testhelper.MkID("StrList"),
-			s:  &psetter.StrList{Value: &emptyStrList},
+			s:  &psetter.StrList[string]{Value: &emptyStrList},
 		},
 		{
 			ID: testhelper.MkID("StrListAppender"),
-			s:  &psetter.StrListAppender{Value: &emptyStrList},
+			s:  &psetter.StrListAppender[string]{Value: &emptyStrList},
 		},
 		{
 			ID: testhelper.MkID("StrListAppender-Prepend"),
-			s:  &psetter.StrListAppender{Value: &emptyStrList, Prepend: true},
+			s: &psetter.StrListAppender[string]{
+				Value:   &emptyStrList,
+				Prepend: true,
+			},
 		},
 		{
 			ID: testhelper.MkID("String"),

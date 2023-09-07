@@ -16,16 +16,16 @@ import (
 // there is no way to pass multiple values at the same time. Also note that
 // there is no way to reset the value, if this feature is required another
 // parameter could be set up that will do this.
-type StrListAppender struct {
+type StrListAppender[T ~string] struct {
 	ValueReqMandatory
 
 	// You must set a Value, the program will panic if not. This is the slice
 	// of strings that the setter is appending to.
-	Value *[]string
+	Value *[]T
 	// The Checks, if any, are applied to the supplied parameter value and
 	// the new parameter will be added to the list only if they all return a
 	// nil error.
-	Checks []check.String
+	Checks []check.ValCk[T]
 	// The Editor, if present, is applied to the parameter value after any
 	// checks are applied and allows the programmer to modify the value
 	// supplied before using it to set the Value.
@@ -36,7 +36,7 @@ type StrListAppender struct {
 }
 
 // CountChecks returns the number of check functions this setter has
-func (s StrListAppender) CountChecks() int {
+func (s StrListAppender[T]) CountChecks() int {
 	return len(s.Checks)
 }
 
@@ -46,18 +46,7 @@ func (s StrListAppender) CountChecks() int {
 // one) to the parameter value. If the Editor returns a non-nil error then
 // that is returned and the Value is left unchanged.  Finally, it will append
 // the checked and possibly edited value to the slice of strings.
-func (s StrListAppender) SetWithVal(paramName, paramVal string) error {
-	for _, check := range s.Checks {
-		if check == nil {
-			continue
-		}
-
-		err := check(paramVal)
-		if err != nil {
-			return err
-		}
-	}
-
+func (s StrListAppender[T]) SetWithVal(paramName, paramVal string) error {
 	if s.Editor != nil {
 		var err error
 		paramVal, err = s.Editor.Edit(paramName, paramVal)
@@ -66,17 +55,29 @@ func (s StrListAppender) SetWithVal(paramName, paramVal string) error {
 		}
 	}
 
+	v := T(paramVal)
+	for _, check := range s.Checks {
+		if check == nil {
+			continue
+		}
+
+		err := check(v)
+		if err != nil {
+			return err
+		}
+	}
+
 	if s.Prepend {
-		*s.Value = append([]string{paramVal}, *s.Value...)
+		*s.Value = append([]T{v}, *s.Value...)
 		return nil
 	}
-	*s.Value = append(*s.Value, paramVal)
+	*s.Value = append(*s.Value, v)
 	return nil
 }
 
 // AllowedValues returns a description of the allowed values. It includes the
 // separator to be used
-func (s StrListAppender) AllowedValues() string {
+func (s StrListAppender[T]) AllowedValues() string {
 	const (
 		intro = "a string that will be added to the"
 		outro = " existing list of values"
@@ -89,12 +90,12 @@ func (s StrListAppender) AllowedValues() string {
 }
 
 // CurrentValue returns the current setting of the parameter value
-func (s StrListAppender) CurrentValue() string {
+func (s StrListAppender[T]) CurrentValue() string {
 	cv := ""
 	sep := ""
 
 	for _, v := range *s.Value {
-		cv += sep + v
+		cv += sep + string(v)
 		sep = "\n"
 	}
 
@@ -103,7 +104,7 @@ func (s StrListAppender) CurrentValue() string {
 
 // CheckSetter panics if the setter has not been properly created - if the
 // Value is nil.
-func (s StrListAppender) CheckSetter(name string) {
+func (s StrListAppender[T]) CheckSetter(name string) {
 	if s.Value == nil {
 		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}

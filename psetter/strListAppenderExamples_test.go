@@ -13,7 +13,7 @@ func ExampleStrListAppender_standard() {
 
 	ss := []string{"Hello"}
 
-	ps.Add("next", psetter.StrListAppender{Value: &ss}, "help text")
+	ps.Add("next", psetter.StrListAppender[string]{Value: &ss}, "help text")
 
 	fmt.Println("Before parsing")
 	for i, v := range ss {
@@ -41,7 +41,7 @@ func ExampleStrListAppender_withPassingChecks() {
 	ss := []string{"Hello"}
 
 	ps.Add("next",
-		psetter.StrListAppender{
+		psetter.StrListAppender[string]{
 			Value: &ss,
 			Checks: []check.String{
 				check.StringLength[string](check.ValGT(5)),
@@ -77,7 +77,7 @@ func ExampleStrListAppender_withFailingChecks() {
 	ss := []string{"Hello"}
 
 	ps.Add("next",
-		psetter.StrListAppender{
+		psetter.StrListAppender[string]{
 			Value: &ss,
 			Checks: []check.String{
 				check.StringLength[string](check.ValLT(10)),
@@ -123,8 +123,8 @@ func ExampleStrListAppender_withNilValue() {
 	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	// we expect this to panic because the list Value has not been initialised
-	ps.Add("my-list", psetter.StrListAppender{}, "help text")
+	ps.Add("my-list", psetter.StrListAppender[string]{}, "help text")
 	// Output:
 	// panic
-	// my-list: psetter.StrListAppender Check failed: the Value to be set is nil
+	// my-list: psetter.StrListAppender[string] Check failed: the Value to be set is nil
 }

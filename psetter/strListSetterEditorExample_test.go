@@ -35,7 +35,7 @@ func ExampleStrList_withEditor() {
 	var myE myEditorStrList
 
 	ps.Add("hello",
-		psetter.StrList{
+		psetter.StrList[string]{
 			Value:  &ss,
 			Editor: myE,
 		}, "help text",

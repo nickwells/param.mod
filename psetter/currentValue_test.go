@@ -59,7 +59,7 @@ func TestCurrentValue(t *testing.T) {
 	setterString := psetter.String[string]{Value: &vString}
 
 	vStrList := []string{"hello", "world"}
-	setterStrList := psetter.StrList{Value: &vStrList}
+	setterStrList := psetter.StrList[string]{Value: &vStrList}
 
 	vTimeLocation, _ := time.LoadLocation("UTC")
 	setterTimeLocation := psetter.TimeLocation{Value: &vTimeLocation}

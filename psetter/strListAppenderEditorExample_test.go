@@ -31,7 +31,7 @@ func ExampleStrListAppender_withEditor() {
 	var myE myEditorMult
 
 	ps.Add("next",
-		psetter.StrListAppender{
+		psetter.StrListAppender[string]{
 			Value:  &ss,
 			Editor: myE,
 		}, "help text",

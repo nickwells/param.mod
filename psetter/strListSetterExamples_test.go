@@ -14,7 +14,7 @@ func ExampleStrList_standard() {
 	var ss []string
 
 	ps.Add("my-list",
-		psetter.StrList{
+		psetter.StrList[string]{
 			Value: &ss,
 		}, "help text")
 
@@ -43,7 +43,7 @@ func ExampleStrList_withPassingChecks() {
 	var ss []string
 
 	ps.Add("my-list",
-		psetter.StrList{
+		psetter.StrList[string]{
 			Value: &ss,
 			Checks: []check.StringSlice{
 				check.SliceLength[[]string, string](check.ValEQ(2)),
@@ -78,7 +78,7 @@ func ExampleStrList_withFailingChecks() {
 	var ss []string
 
 	ps.Add("my-list",
-		psetter.StrList{
+		psetter.StrList[string]{
 			Value: &ss,
 			Checks: []check.StringSlice{
 				check.SliceLength[[]string, string](check.ValEQ(2)),
@@ -122,8 +122,8 @@ func ExampleStrList_withNilValue() {
 	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	// we expect this to panic because the list Value has not been initialised
-	ps.Add("my-list", psetter.StrList{}, "help text")
+	ps.Add("my-list", psetter.StrList[string]{}, "help text")
 	// Output:
 	// panic
-	// my-list: psetter.StrList Check failed: the Value to be set is nil
+	// my-list: psetter.StrList[string] Check failed: the Value to be set is nil
 }
