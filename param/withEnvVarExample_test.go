@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/nickwells/param.mod/v5/param"
-	"github.com/nickwells/param.mod/v5/param/paramset"
-	"github.com/nickwells/param.mod/v5/param/psetter"
+	"github.com/nickwells/param.mod/v6/param"
+	"github.com/nickwells/param.mod/v6/paramset"
+	"github.com/nickwells/param.mod/v6/psetter"
 )
 
 // Example_withEnvVar shows how to use the param package using environment

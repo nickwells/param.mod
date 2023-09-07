@@ -3,10 +3,10 @@ package param_test
 import (
 	"fmt"
 
-	"github.com/nickwells/param.mod/v5/param"
-	"github.com/nickwells/param.mod/v5/param/paction"
-	"github.com/nickwells/param.mod/v5/param/paramset"
-	"github.com/nickwells/param.mod/v5/param/psetter"
+	"github.com/nickwells/param.mod/v6/param"
+	"github.com/nickwells/param.mod/v6/paction"
+	"github.com/nickwells/param.mod/v6/paramset"
+	"github.com/nickwells/param.mod/v6/psetter"
 )
 
 // ExamplePSet_Add shows the usage of the Add method of the PSet. This is
