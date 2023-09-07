@@ -9,7 +9,7 @@ Usage: PROGRAM NAME UNKNOWN -param2=int ...
 
 ===============
 
-common.params-help       [ 11 parameters, 10 hidden ]
+stdParams-help   [ 11 parameters, 10 hidden ]
     These are parameters for printing a help message.
 
       [-help, -usage]
@@ -22,7 +22,7 @@ common.params-help       [ 11 parameters, 10 hidden ]
             This parameter may only be given on the command line, not in the
             configuration files or as an environment variable
 ---------------
-test-group1              [ 6 parameters, 1 hidden ]
+test-group1      [ 6 parameters, 1 hidden ]
     test parameters.
 
     Parameters in this group may also be set in one of the configuration files:

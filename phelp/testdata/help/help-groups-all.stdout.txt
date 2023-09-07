@@ -1,4 +1,4 @@
-test-group1              [ 6 parameters ]
+test-group1      [ 6 parameters ]
     test parameters.
 
       [-param1=int, -param1-alt1=int]

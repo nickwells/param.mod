@@ -2,4 +2,4 @@
 
 package phelp
 
-//go:generate mkparamfilefunc -group common.params-completion -funcs personalOnly -private
+//go:generate mkparamfilefunc -group stdParams-cmpl -funcs personalOnly -private

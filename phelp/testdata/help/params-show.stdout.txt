@@ -5,13 +5,13 @@ parameter then that will be indicated along with a count of the number of
 errors. If a parameter has been set then that will be indicated along with
 details of where it has been set.
 
-common.params-completion [ 3 parameters, all hidden ]
+stdParams-cmpl   [ 3 parameters, all hidden ]
 ---    : completions-quiet
 ---    : completions-zsh-dir
 ---    : completions-zsh-make
 
 ---------------
-common.params-help       [ 11 parameters, 10 hidden ]
+stdParams-help   [ 11 parameters, 10 hidden ]
 ---    : help or usage
 ---    : help-all or help-a
 ---    : help-all-short, help-as or help-sa
@@ -26,7 +26,7 @@ Set    : help-summary, help-s or help-short
              at : [command line]: Supplied Parameter:3: "-help-s"
 
 ---------------
-common.params-params     [ 7 parameters, all hidden ]
+stdParams-params [ 7 parameters, all hidden ]
 ---    : params-dont-exit-on-errors
 ---    : params-dont-show-errors
 ---    : params-exit-after-parsing
@@ -38,7 +38,7 @@ Set    : params-show-where-set
 ---    : params-where-set-fmt
 
 ---------------
-test-group1              [ 6 parameters, 1 hidden ]
+test-group1      [ 6 parameters, 1 hidden ]
 ---    : param1 or param1-alt1
 Errs 1 : param2 or param2-alt2
 Set    : param3 or p3
@@ -62,10 +62,10 @@ Usage: PROGRAM NAME UNKNOWN -param2=int ...
 
 ===============
 
-common.params-help       [ 11 parameters, 10 hidden ]
+stdParams-help   [ 11 parameters, 10 hidden ]
       [-help, -usage]
 ---------------
-test-group1              [ 6 parameters, 1 hidden ]
+test-group1      [ 6 parameters, 1 hidden ]
       [-param1=int, -param1-alt1=int]
       -param2=int, -param2-alt2=int
       [-param4[=Bool] ]

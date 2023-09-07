@@ -7,13 +7,13 @@ Usage: PROGRAM NAME UNKNOWN -param2=int ...
 
 ===============
 
-common.params-completion [ 3 parameters ]
+stdParams-cmpl   [ 3 parameters ]
     These are the parameters for creating shell completion functions. You can
     specify where the completion files should be written, trigger the generation
     of the files and control whether they should be overwritten.
 
     Parameters in this group may also be set in the configuration file:
-    testdata/.config/github.com/nickwells/param.mod/v5/param/phelp/group-common.params-completion.cfg
+    testdata/.config/github.com/nickwells/param.mod/v6/phelp/group-stdParams-cmpl.cfg
 
       [-completions-quiet[=Bool] ]
             suppress any messages produced after generating or updating the
@@ -55,7 +55,7 @@ common.params-completion [ 3 parameters ]
                                   instead printed to standard output.
             Initial value: none
 ---------------
-common.params-help       [ 11 parameters ]
+stdParams-help   [ 11 parameters ]
     These are parameters for printing a help message.
 
       [-help, -usage]
@@ -171,7 +171,7 @@ common.params-help       [ 11 parameters ]
 
             The program will exit after the help message is shown.
 ---------------
-common.params-params     [ 7 parameters ]
+stdParams-params [ 7 parameters ]
     These are the parameter-handling parameters. There are parameters for
     showing where parameters have been set and for the handling of parameter
     errors.
@@ -245,7 +245,7 @@ common.params-params     [ 7 parameters ]
                                   been set are shown
             Initial value: std
 ---------------
-test-group1              [ 6 parameters ]
+test-group1      [ 6 parameters ]
     test parameters.
 
       [-param1=int, -param1-alt1=int]

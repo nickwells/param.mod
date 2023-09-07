@@ -24,7 +24,7 @@ Positional Parameters
 
 ===============
 
-common.params-help       [ 11 parameters, 10 hidden ]
+stdParams-help   [ 11 parameters, 10 hidden ]
     These are parameters for printing a help message.
 
       [-help, -usage]
@@ -34,7 +34,7 @@ common.params-help       [ 11 parameters, 10 hidden ]
             For a brief help message use the -help-summary parameter
             For the full help message use the -help-full parameter
 ---------------
-test-group1              [ 6 parameters, 1 hidden ]
+test-group1      [ 6 parameters, 1 hidden ]
     test parameters.
 
       [-param1=int, -param1-alt1=int]

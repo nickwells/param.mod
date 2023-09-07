@@ -5,7 +5,7 @@ additional sources.
 
   Group Configuration Files
 
-    common.params-completion:  testdata/.config/github.com/nickwells/param.mod/v5/param/phelp/group-common.params-completion.cfg
+    stdParams-cmpl:  testdata/.config/github.com/nickwells/param.mod/v6/phelp/group-stdParams-cmpl.cfg
 
     Note: parameters given in group config files must be valid parameters of the
           program and members of the parameter group.

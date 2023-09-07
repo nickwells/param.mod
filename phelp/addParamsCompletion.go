@@ -10,15 +10,15 @@ import (
 )
 
 const (
-	completionsQuiet          = "completions-quiet"
-	completionsZshDirArgName  = "completions-zsh-dir"
-	completionsZshMakeArgName = "completions-zsh-make"
+	paramNameCompletionsQuiet   = "completions-quiet"
+	paranNameCompletionsZshDir  = "completions-zsh-dir"
+	paramNameCompletionsZshMake = "completions-zsh-make"
 )
 
 // addParamCompletionParams will add the standard parameters for specifying
 // and creating shell completion functions into the parameter set
 func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
-	groupName := groupNamePfx + "-completion"
+	groupName := groupNamePfx + "-cmpl"
 
 	ps.AddGroup(groupName,
 		"These are the parameters for"+
@@ -28,9 +28,9 @@ func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
 			" trigger the generation of the files and"+
 			" control whether they should be overwritten.")
 
-	setConfigFileForGroupCommonParamsCompletion(ps) //nolint: errcheck
+	setConfigFileForGroupStdParamsCmpl(ps) //nolint: errcheck
 
-	zshDirParam := ps.Add(completionsZshDirArgName,
+	zshDirParam := ps.Add(paranNameCompletionsZshDir,
 		psetter.Pathname{
 			Value:       &h.zshCompDir,
 			Expectation: filecheck.DirExists(),
@@ -44,7 +44,7 @@ func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
 		param.Attrs(param.DontShowInStdUsage),
 	)
 
-	ps.Add(completionsQuiet,
+	ps.Add(paramNameCompletionsQuiet,
 		psetter.Bool{
 			Value: &h.completionsQuiet,
 		},
@@ -55,7 +55,7 @@ func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
 	)
 
 	const needZshDir = " The zsh completions directory name must be specified."
-	zshMakeCompletionsParam := ps.Add(completionsZshMakeArgName,
+	zshMakeCompletionsParam := ps.Add(paramNameCompletionsZshMake,
 		psetter.Enum[string]{
 			AllowedVals: psetter.AllowedVals{
 				zshCompActionRepl: "any existing zsh completions" +
@@ -77,7 +77,7 @@ func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
 			" This specifies whether or if the file should be created."+
 			" If it is set to any value other than '"+zshCompActionNone+
 			"' then the program will exit after the parameters are processed.",
-		param.SeeAlso(completionsZshDirArgName),
+		param.SeeAlso(paranNameCompletionsZshDir),
 		param.GroupName(groupName),
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 	)

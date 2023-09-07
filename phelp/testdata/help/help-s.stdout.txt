@@ -2,10 +2,10 @@ Usage: PROGRAM NAME UNKNOWN -param2=int ...
 
 ===============
 
-common.params-help       [ 11 parameters, 10 hidden ]
+stdParams-help   [ 11 parameters, 10 hidden ]
       [-help, -usage]
 ---------------
-test-group1              [ 6 parameters, 1 hidden ]
+test-group1      [ 6 parameters, 1 hidden ]
       [-param1=int, -param1-alt1=int]
       -param2=int, -param2-alt2=int
       [-param4[=Bool] ]

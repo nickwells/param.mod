@@ -1,25 +1,25 @@
 
 Parameter groups
 
-common.params-completion [ 3 parameters, all hidden ]
+stdParams-cmpl   [ 3 parameters, all hidden ]
     These are the parameters for creating shell completion functions. You can
     specify where the completion files should be written, trigger the generation
     of the files and control whether they should be overwritten.
 
     Parameters in this group may also be set in the configuration file:
-    testdata/.config/github.com/nickwells/param.mod/v5/param/phelp/group-common.params-completion.cfg
+    testdata/.config/github.com/nickwells/param.mod/v6/phelp/group-stdParams-cmpl.cfg
 
 ---------------
-common.params-help       [ 11 parameters, 10 hidden ]
+stdParams-help   [ 11 parameters, 10 hidden ]
     These are parameters for printing a help message.
 
 ---------------
-common.params-params     [ 7 parameters, all hidden ]
+stdParams-params [ 7 parameters, all hidden ]
     These are the parameter-handling parameters. There are parameters for
     showing where parameters have been set and for the handling of parameter
     errors.
 
 ---------------
-test-group1              [ 6 parameters, 1 hidden ]
+test-group1      [ 6 parameters, 1 hidden ]
     test parameters.
 
