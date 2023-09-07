@@ -1,9 +1,7 @@
 package pedit
 
-import "github.com/nickwells/param.mod/v6/psetter"
-
 type Composite struct {
-	Editors []psetter.Editor
+	Editors []Editor
 }
 
 func (c Composite) Edit(paramName, paramVal string) (string, error) {
