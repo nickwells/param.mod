@@ -95,10 +95,10 @@ func TestSetWithVal(t *testing.T) {
 	vMap := map[string]bool{
 		"hello": true,
 	}
-	setterMap := psetter.Map{Value: &vMap}
+	setterMap := psetter.Map[string]{Value: &vMap}
 
 	vMapEmpty := map[string]bool{}
-	setterMapEmpty := psetter.Map{Value: &vMapEmpty}
+	setterMapEmpty := psetter.Map[string]{Value: &vMapEmpty}
 
 	setterNil := psetter.Nil{}
 

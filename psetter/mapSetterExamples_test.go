@@ -13,7 +13,7 @@ func ExampleMap_standard() {
 	var m map[string]bool
 	keys := []string{"x", "y"}
 
-	ps.Add("my-map", psetter.Map{Value: &m}, "help text")
+	ps.Add("my-map", psetter.Map[string]{Value: &m}, "help text")
 
 	fmt.Println("Before parsing")
 	for _, k := range keys {
@@ -43,7 +43,7 @@ func ExampleMap_fixingInitialValue() {
 	m := map[string]bool{"x": true}
 	keys := []string{"x", "y"}
 
-	ps.Add("my-map", psetter.Map{Value: &m}, "help text")
+	ps.Add("my-map", psetter.Map[string]{Value: &m}, "help text")
 
 	fmt.Println("Before parsing")
 	for _, k := range keys {
@@ -81,8 +81,8 @@ func ExampleMap_withNilValue() {
 	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	// we expect this to panic because the map Value has not been initialised
-	ps.Add("my-map", psetter.Map{}, "help text")
+	ps.Add("my-map", psetter.Map[string]{}, "help text")
 	// Output:
 	// panic
-	// my-map: psetter.Map Check failed: the Value to be set is nil
+	// my-map: psetter.Map[string] Check failed: the Value to be set is nil
 }

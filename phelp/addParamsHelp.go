@@ -9,8 +9,8 @@ import (
 	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/english.mod/english"
 	"github.com/nickwells/location.mod/location"
-	"github.com/nickwells/param.mod/v6/param"
 	"github.com/nickwells/param.mod/v6/paction"
+	"github.com/nickwells/param.mod/v6/param"
 	"github.com/nickwells/param.mod/v6/psetter"
 )
 
@@ -116,7 +116,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		boolCounter := check.NewCounter(check.ValEQ(true), check.ValGT(0))
 
 		ps.Add(helpGroupsArgName,
-			psetter.Map{
+			psetter.Map[string]{
 				Value: (*map[string]bool)(&h.groupsChosen),
 				Checks: []check.MapStringBool{
 					check.MapValAggregate[map[string]bool, string, bool](
@@ -138,7 +138,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		boolCounter := check.NewCounter(check.ValEQ(true), check.ValGT(0))
 
 		ps.Add(helpParamsArgName,
-			psetter.Map{
+			psetter.Map[string]{
 				Value: (*map[string]bool)(&h.paramsChosen),
 				Checks: []check.MapStringBool{
 					check.MapValAggregate[map[string]bool, string, bool](
@@ -159,7 +159,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		boolCounter := check.NewCounter(check.ValEQ(true), check.ValGT(0))
 
 		ps.Add(helpNotesArgName,
-			psetter.Map{
+			psetter.Map[string]{
 				Value: (*map[string]bool)(&h.notesChosen),
 				Checks: []check.MapStringBool{
 					check.MapValAggregate[map[string]bool, string, bool](

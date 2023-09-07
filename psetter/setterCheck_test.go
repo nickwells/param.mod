@@ -280,19 +280,19 @@ func TestCheck(t *testing.T) {
 		},
 		{
 			ID: testhelper.MkID("Map - ok"),
-			s: &psetter.Map{
+			s: &psetter.Map[string]{
 				Value: &strToBoolMap,
 			},
 		},
 		{
 			ID: testhelper.MkID("Map - bad - no value"),
-			s:  &psetter.Map{},
-			ExpPanic: testhelper.MkExpPanic("test: psetter.Map " +
+			s:  &psetter.Map[string]{},
+			ExpPanic: testhelper.MkExpPanic("test: psetter.Map[string] " +
 				nilValueMsg),
 		},
 		{
 			ID: testhelper.MkID("Map - good - nil map"),
-			s: &psetter.Map{
+			s: &psetter.Map[string]{
 				Value: &strToBoolMapNil2,
 			},
 		},

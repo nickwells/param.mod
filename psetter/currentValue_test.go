@@ -44,7 +44,7 @@ func TestCurrentValue(t *testing.T) {
 	vMap := map[string]bool{
 		"hello": true,
 	}
-	setterMap := psetter.Map{Value: &vMap}
+	setterMap := psetter.Map[string]{Value: &vMap}
 
 	setterNil := psetter.Nil{}
 

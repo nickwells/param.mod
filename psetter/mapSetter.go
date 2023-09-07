@@ -12,15 +12,15 @@ import (
 
 // Map sets the entry in a map of strings. Each value from the
 // parameter is used as a key in the map with the map entry set to true.
-type Map struct {
+type Map[T ~string] struct {
 	ValueReqMandatory
 
 	// You must set a Value, the program will panic if not. This is the map
 	// of strings to bool that the setter is setting
-	Value *map[string]bool
+	Value *map[T]bool
 	// The Checks, if any, are applied to the supplied parameter value and
 	// the new parameter will be applied only if they all return a nil error
-	Checks []check.MapStringBool
+	Checks []check.ValCk[map[T]bool]
 	// The Editor, if present, is applied to the parameter value after any
 	// checks are applied and allows the programmer to modify the value
 	// supplied before using it to set the Value.
@@ -31,7 +31,7 @@ type Map struct {
 }
 
 // CountChecks returns the number of check functions this setter has
-func (s Map) CountChecks() int {
+func (s Map[T]) CountChecks() int {
 	return len(s.Checks)
 }
 
@@ -48,11 +48,11 @@ func (s Map) CountChecks() int {
 // will update the Value with the new entries.
 //
 // Note that the Value map is not replaced compmletely, just updated.
-func (s Map) SetWithVal(paramName string, paramVal string) error {
+func (s Map[T]) SetWithVal(paramName string, paramVal string) error {
 	var err error
 	sep := s.GetSeparator()
 	values := strings.Split(paramVal, sep)
-	m := map[string]bool{}
+	m := map[T]bool{}
 
 	for i, v := range values {
 		parts := strings.SplitN(v, "=", 2)
@@ -74,7 +74,7 @@ func (s Map) SetWithVal(paramName string, paramVal string) error {
 					paramVal, i+1, v, parts[1], err)
 			}
 		}
-		m[key] = b
+		m[T(key)] = b
 	}
 
 	for _, check := range s.Checks {
@@ -89,30 +89,30 @@ func (s Map) SetWithVal(paramName string, paramVal string) error {
 	}
 
 	for k, b := range m {
-		(*s.Value)[k] = b
+		(*s.Value)[T(k)] = b
 	}
 	return nil
 }
 
 // AllowedValues returns a string listing the allowed values
-func (s Map) AllowedValues() string {
+func (s Map[T]) AllowedValues() string {
 	return "a list of string values separated by '" +
 		s.GetSeparator() + "'" + HasChecks(s)
 }
 
 // CurrentValue returns the current setting of the parameter value
-func (s Map) CurrentValue() string {
+func (s Map[T]) CurrentValue() string {
 	cv := ""
 
 	keys := make([]string, 0, len(*s.Value))
 	for k := range *s.Value {
-		keys = append(keys, k)
+		keys = append(keys, string(k))
 	}
 	sort.Strings(keys)
 
 	sep := ""
 	for _, k := range keys {
-		cv += sep + fmt.Sprintf("%s=%v", k, (*s.Value)[k])
+		cv += sep + fmt.Sprintf("%s=%v", k, (*s.Value)[T(k)])
 		sep = "\n"
 	}
 
@@ -121,11 +121,11 @@ func (s Map) CurrentValue() string {
 
 // CheckSetter panics if the setter has not been properly created - if the
 // Value is nil or the map has not been created yet.
-func (s Map) CheckSetter(name string) {
+func (s Map[T]) CheckSetter(name string) {
 	if s.Value == nil {
 		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
 	if *s.Value == nil {
-		*s.Value = make(map[string]bool)
+		*s.Value = make(map[T]bool)
 	}
 }

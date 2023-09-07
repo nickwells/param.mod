@@ -105,7 +105,7 @@ func TestAllowedValues(t *testing.T) {
 		},
 		{
 			ID: testhelper.MkID("Map"),
-			s: &psetter.Map{
+			s: &psetter.Map[string]{
 				Value: &strToBoolMap,
 			},
 		},

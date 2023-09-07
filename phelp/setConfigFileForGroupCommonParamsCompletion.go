@@ -25,8 +25,7 @@ func setConfigFileForGroupCommonParamsCompletion(ps *param.PSet) error {
 			"github.com",
 			"nickwells",
 			"param.mod",
-			"v5",
-			"param",
+			"v6",
 			"phelp",
 			"group-common.params-completion.cfg"),
 		filecheck.Optional)
