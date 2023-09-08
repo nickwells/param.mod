@@ -29,7 +29,7 @@ func tuAddParams1(prog *progExampleTypicalUse) param.PSetOptFunc {
 		// we must set the group description before we can use the group name.
 		// Parameters which don't explicitly set the group name are put in the
 		// pre-declared "cmd" group
-		ps.SetGroupDescription(groupNameTypicalExample,
+		ps.AddGroup(groupNameTypicalExample,
 			"The parameters for my command")
 
 		ps.Add(paramNameExample1,

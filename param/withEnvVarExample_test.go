@@ -51,7 +51,7 @@ var (
 
 // wevAddParams1 will set the "example1" parameter in the PSet
 func wevAddParams1(ps *param.PSet) error {
-	ps.SetGroupDescription(wevExampleGroupName,
+	ps.AddGroup(wevExampleGroupName,
 		"The parameters for my command")
 
 	ps.Add("example1",

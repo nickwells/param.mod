@@ -269,24 +269,6 @@ func Attrs(attrs Attributes) OptFunc {
 	}
 }
 
-// AltName will attach an alternative name to the parameter.
-// It will return an error if the alternative name has already been used.
-//
-// Deprecated: use AltNames
-func AltName(altName string) OptFunc {
-	return func(p *ByName) error {
-		altName = strings.TrimSpace(altName)
-
-		if err := p.ps.nameCheck(altName, p.whereAdded); err != nil {
-			return err
-		}
-
-		p.ps.nameToParam[altName] = p
-		p.altNames = append(p.altNames, altName)
-		return nil
-	}
-}
-
 // AltNames will attach multiple alternative names to the parameter.
 // It will return an error if any alternative name has already been used
 func AltNames(altNames ...string) OptFunc {

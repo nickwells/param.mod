@@ -249,8 +249,8 @@ func valsCheck(t *testing.T, testID string, vals expVals) {
 }
 
 func addParamsForGroupCF(ps *param.PSet) {
-	ps.SetGroupDescription(groupCFName1, "blah blah blah - 1")
-	ps.SetGroupDescription(groupCFName2, "blah blah blah - 2")
+	ps.AddGroup(groupCFName1, "blah blah blah - 1")
+	ps.AddGroup(groupCFName2, "blah blah blah - 2")
 	ps.Add("pi1", psetter.Int[int64]{Value: &paramInt1},
 		"param int val 1",
 		param.GroupName(groupCFName1))

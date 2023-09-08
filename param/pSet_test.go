@@ -185,7 +185,7 @@ func TestPSet_SetGroupDescription(t *testing.T) {
 		var stackTrace []byte
 
 		for _, sgdp := range tc.sgdParams {
-			panicked, panicVal, stackTrace = panicSafeSetGroupDescription(ps,
+			panicked, panicVal, stackTrace = panicSafeAddGroup(ps,
 				sgdp.name, sgdp.desc)
 			if panicked {
 				break

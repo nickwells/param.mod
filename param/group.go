@@ -60,13 +60,6 @@ func (g *Group) SetHiddenCount() int {
 	return g.HiddenCount
 }
 
-// SetGroupDescription will call AddGroup
-//
-// Deprecated: use AddGroup
-func (ps *PSet) SetGroupDescription(name, desc string) {
-	ps.AddGroup(name, desc)
-}
-
 // AddGroup will add a new param group to the PSet and set the
 // descriptive text. It will panic if the description has already been set -
 // this is to ensure that the group name is distinct. This description is

@@ -174,10 +174,10 @@ func panicSafeTestParse(ps *param.PSet, params []string,
 	return errMap, panicked, panicVal, stackTrace
 }
 
-// panicSafeSetGroupDescription sets the group description and catches any
+// panicSafeAddGroup sets the group description and catches any
 // panics. Then it returns a boolean indicating if a panic occurred and the
 // value recovered from the panic
-func panicSafeSetGroupDescription(ps *param.PSet, groupName, desc string,
+func panicSafeAddGroup(ps *param.PSet, groupName, desc string,
 ) (panicked bool, panicVal any, stackTrace []byte,
 ) {
 	defer func() {
@@ -187,7 +187,7 @@ func panicSafeSetGroupDescription(ps *param.PSet, groupName, desc string,
 			stackTrace = debug.Stack()
 		}
 	}()
-	ps.SetGroupDescription(groupName, desc)
+	ps.AddGroup(groupName, desc)
 	return panicked, panicVal, stackTrace
 }
 
