@@ -29,12 +29,12 @@ type EnumList[T ~string] struct {
 	ValueReqMandatory
 	// The AllowedVals must be set, the program will panic if not. These are
 	// the only values that will be allowed in the slice of strings.
-	AllowedVals
+	AllowedVals[T]
 
 	// The Aliases need not be given but if they are then each alias must not
 	// be in AllowedVals and all of the resulting values must be in
 	// AllowedVals.
-	Aliases
+	Aliases[T]
 
 	// Value must be set, the program will panic if not. This is the slice of
 	// values that this setter is setting.
@@ -66,7 +66,7 @@ func (s EnumList[T]) SetWithVal(_ string, paramVal string) error {
 			if !s.Aliases.IsAnAlias(v) {
 				return fmt.Errorf("value is not allowed: %q", v)
 			}
-			for _, av := range s.Aliases.AliasVal(v) {
+			for _, av := range s.Aliases.AliasVal(T(v)) {
 				aliasedVals = append(aliasedVals, T(av))
 			}
 			continue
@@ -121,7 +121,7 @@ func (s EnumList[T]) CheckSetter(name string) {
 
 	// Check that the current values are all allowed
 	for i, v := range *s.Value {
-		if _, ok := s.AllowedVals[string(v)]; !ok {
+		if _, ok := s.AllowedVals[v]; !ok {
 			panic(fmt.Sprintf(
 				"%selement %d (%s) in the current list of entries is invalid",
 				intro, i, v))

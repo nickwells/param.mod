@@ -21,7 +21,7 @@ func ExampleEnumMap_standard() {
 	ps.Add("my-map",
 		psetter.EnumMap[string]{
 			Value: &m,
-			AllowedVals: psetter.AllowedVals{
+			AllowedVals: psetter.AllowedVals[string]{
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},
@@ -65,7 +65,7 @@ func ExampleEnumMap_fixingInitialValue() {
 	ps.Add("my-map",
 		psetter.EnumMap[string]{
 			Value: &m,
-			AllowedVals: psetter.AllowedVals{
+			AllowedVals: psetter.AllowedVals[string]{
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},
@@ -113,7 +113,7 @@ func ExampleEnumMap_hiddenMapEntries() {
 	ps.Add("my-map",
 		psetter.EnumMap[string]{
 			Value: &m,
-			AllowedVals: psetter.AllowedVals{ // Note there's no 'z' value
+			AllowedVals: psetter.AllowedVals[string]{ // Note there's no 'z' value
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},
@@ -173,7 +173,7 @@ func ExampleEnumMap_withBadKey() {
 	ps.Add("my-map",
 		psetter.EnumMap[string]{
 			Value: &m,
-			AllowedVals: psetter.AllowedVals{ // Note there's no 'z' value
+			AllowedVals: psetter.AllowedVals[string]{ // Note there's no 'z' value
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},
@@ -205,7 +205,7 @@ func ExampleEnumMap_withNilValue() {
 	// we expect this to panic because the map Value has not been initialised
 	ps.Add("my-map",
 		psetter.EnumMap[string]{
-			AllowedVals: psetter.AllowedVals{
+			AllowedVals: psetter.AllowedVals[string]{
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},

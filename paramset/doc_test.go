@@ -33,7 +33,7 @@ func addParams(ps *param.PSet) error {
 	ps.Add("action",
 		psetter.Enum[string]{
 			Value: &action,
-			AllowedVals: psetter.AllowedVals{
+			AllowedVals: psetter.AllowedVals[string]{
 				"delete":  "delete the thing",
 				"copy":    "copy the thing",
 				"nothing": "do nothing",

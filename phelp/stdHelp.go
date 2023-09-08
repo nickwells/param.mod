@@ -94,8 +94,8 @@ var helpSectionsInOrder = []helpSection{
 
 // makeSectionAllowedVals constructs an AllowedVals map from the
 // helpSectionsInOrder slice
-func makeSectionAllowedVals() psetter.AllowedVals {
-	rval := psetter.AllowedVals{}
+func makeSectionAllowedVals() psetter.AllowedVals[string] {
+	rval := psetter.AllowedVals[string]{}
 	for _, s := range helpSectionsInOrder {
 		if _, duplicate := rval[s.name]; duplicate {
 			panic(fmt.Sprintf("Bad help section: %q appears twice", s.name))
@@ -126,7 +126,7 @@ const (
 	groupedParamsHelpSectionAlias = "grouped-params"
 )
 
-var sectionAliases = psetter.Aliases{
+var sectionAliases = psetter.Aliases[string]{
 	paramHelpSectionAlias: []string{
 		posParamsHelpSectionName, groupedParamsHelpSectionName,
 	},

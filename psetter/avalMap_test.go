@@ -10,7 +10,7 @@ import (
 func TestAllowedVals(t *testing.T) {
 	testCases := []struct {
 		testhelper.ID
-		avMap   psetter.AllowedVals
+		avMap   psetter.AllowedVals[string]
 		expAVal string
 	}{
 		{

@@ -33,9 +33,9 @@ func TestCheck(t *testing.T) {
 	var intList []int64
 	var re *regexp.Regexp
 	var timeLoc *time.Location
-	avalMapEmpty := psetter.AllowedVals{}
-	avalMapOneEntry := psetter.AllowedVals{goodStr: "desc"}
-	avalMapGood := psetter.AllowedVals{
+	avalMapEmpty := psetter.AllowedVals[string]{}
+	avalMapOneEntry := psetter.AllowedVals[string]{goodStr: "desc"}
+	avalMapGood := psetter.AllowedVals[string]{
 		goodStr:    "desc",
 		goodStrAlt: "desc",
 	}

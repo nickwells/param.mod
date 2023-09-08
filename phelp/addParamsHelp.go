@@ -191,7 +191,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 	ps.Add(helpFormatArgName,
 		psetter.Enum[string]{
 			Value: &h.helpFormat,
-			AllowedVals: psetter.AllowedVals{
+			AllowedVals: psetter.AllowedVals[string]{
 				helpFmtTypeStd: "the standard format." +
 					" This is almost certainly what you want",
 				helpFmtTypeMarkdown: "markdown format. This will have" +

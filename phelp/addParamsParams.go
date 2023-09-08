@@ -1,8 +1,8 @@
 package phelp
 
 import (
-	"github.com/nickwells/param.mod/v6/param"
 	"github.com/nickwells/param.mod/v6/paction"
+	"github.com/nickwells/param.mod/v6/param"
 	"github.com/nickwells/param.mod/v6/psetter"
 )
 
@@ -34,7 +34,7 @@ func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
 	ps.Add(paramNameWhereSetFormat,
 		psetter.Enum[string]{
 			Value: &h.paramsSetFormat,
-			AllowedVals: psetter.AllowedVals{
+			AllowedVals: psetter.AllowedVals[string]{
 				paramSetFmtStd: "the standard format for showing" +
 					" where and if parameters are set",
 				paramSetFmtShort: "a short form of the information" +

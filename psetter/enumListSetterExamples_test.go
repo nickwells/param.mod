@@ -21,7 +21,7 @@ func ExampleEnumList_standard() {
 	ps.Add("my-list",
 		psetter.EnumList[string]{
 			Value: &ss,
-			AllowedVals: psetter.AllowedVals{
+			AllowedVals: psetter.AllowedVals[string]{
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},
@@ -62,7 +62,7 @@ func ExampleEnumList_withBadVals() {
 	ps.Add("my-list",
 		psetter.EnumList[string]{
 			Value: &ss,
-			AllowedVals: psetter.AllowedVals{
+			AllowedVals: psetter.AllowedVals[string]{
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},
@@ -109,7 +109,7 @@ func ExampleEnumList_withPassingChecks() {
 	ps.Add("my-list",
 		psetter.EnumList[string]{
 			Value: &ss,
-			AllowedVals: psetter.AllowedVals{
+			AllowedVals: psetter.AllowedVals[string]{
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},
@@ -155,7 +155,7 @@ func ExampleEnumList_withFailingChecks() {
 	ps.Add("my-list",
 		psetter.EnumList[string]{
 			Value: &ss,
-			AllowedVals: psetter.AllowedVals{
+			AllowedVals: psetter.AllowedVals[string]{
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},
@@ -211,7 +211,7 @@ func ExampleEnumList_withNilValue() {
 	// we expect this to panic because the list Value has not been initialised
 	ps.Add("my-list",
 		psetter.EnumList[string]{
-			AllowedVals: psetter.AllowedVals{
+			AllowedVals: psetter.AllowedVals[string]{
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},

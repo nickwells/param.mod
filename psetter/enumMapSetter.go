@@ -34,12 +34,12 @@ type EnumMap[T ~string] struct {
 	ValueReqMandatory
 	// The AllowedVals must be set, the program will panic if not. These are
 	// the allowed keys in the Values map
-	AllowedVals
+	AllowedVals[T]
 
 	// The Aliases need not be given but if they are then each alias must not
 	// be in AllowedVals and all of the resulting values must be in
 	// AllowedVals.
-	Aliases
+	Aliases[T]
 
 	// Value must be set, the program will panic if not. This is the map of
 	// values that this setter is setting
@@ -82,6 +82,7 @@ func (s EnumMap[T]) checkValues(paramVal string, values []string) error {
 				" The name (%q) is not allowed",
 				paramVal, i+1, v, parts[0])
 		}
+
 		if len(parts) == 2 {
 			// check that the bool can be parsed
 			_, err := strconv.ParseBool(parts[1])
@@ -103,9 +104,10 @@ func (s EnumMap[T]) setValues(values []string) {
 	for _, v := range values {
 		parts := strings.SplitN(v, "=", 2)
 
-		keys := []string{parts[0]}
+		name := T(parts[0])
+		keys := []T{name}
 		if s.Aliases.IsAnAlias(parts[0]) {
-			keys = s.AliasVal(parts[0])
+			keys = s.AliasVal(name)
 		}
 
 		b := true
@@ -114,7 +116,7 @@ func (s EnumMap[T]) setValues(values []string) {
 		}
 
 		for _, k := range keys {
-			(*s.Value)[T(k)] = b
+			(*s.Value)[k] = b
 		}
 	}
 }
@@ -168,7 +170,7 @@ func (s EnumMap[T]) CheckSetter(name string) {
 		return
 	}
 	for k := range *s.Value {
-		if _, ok := s.AllowedVals[string(k)]; !ok {
+		if _, ok := s.AllowedVals[k]; !ok {
 			panic(fmt.Sprintf("%sthe map entry with key %q is invalid"+
 				" - it is not in the allowed values map",
 				intro, k))
@@ -184,13 +186,9 @@ func (s EnumMap[T]) ValDescribe() string {
 
 	var desc string
 
-	avals := []string{}
-	for val := range s.AllowedVals {
-		avals = append(avals, val)
-	}
-	for val := range s.Aliases {
-		avals = append(avals, val)
-	}
+	avals, _ := s.AllowedVals.Keys()
+	aliasKeys, _ := s.Aliases.Keys()
+	avals = append(avals, aliasKeys...)
 
 	sort.Strings(avals)
 	sep := ""

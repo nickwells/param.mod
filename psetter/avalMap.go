@@ -28,22 +28,22 @@ import (
 // - the name that you give the const value can distinguish between identical
 // strings and show which of various flags with the same string value you
 // actually mean.
-type AllowedVals map[string]string
+type AllowedVals[T ~string] map[T]string
 
 // AllowedValuesMapper is the interface to be satisfied by a type having a
 // map of allowed values.
 type AllowedValuesMapper interface {
-	AllowedValuesMap() AllowedVals
+	AllowedValuesMap() AllowedVals[string]
 }
 
 // Keys returns an unsorted list of keys to the AllowedVals map and the
 // length of the longest key.
-func (av AllowedVals) Keys() ([]string, int) {
+func (av AllowedVals[T]) Keys() ([]string, int) {
 	keys := make([]string, 0, len(av))
 	var maxKeyLen int
 
 	for k := range av {
-		keys = append(keys, k)
+		keys = append(keys, string(k))
 		if len(k) > maxKeyLen {
 			maxKeyLen = len(k)
 		}
@@ -54,7 +54,7 @@ func (av AllowedVals) Keys() ([]string, int) {
 
 // String returns a string documenting the entries in the map - each entry is
 // on a separate line
-func (av AllowedVals) String() string {
+func (av AllowedVals[T]) String() string {
 	if av == nil {
 		return ""
 	}
@@ -64,7 +64,7 @@ func (av AllowedVals) String() string {
 
 	sep := ""
 	for _, k := range keys {
-		avals += sep + fmt.Sprintf("   %-*s: ", maxKeyLen, k) + av[k]
+		avals += sep + fmt.Sprintf("   %-*s: ", maxKeyLen, k) + av[T(k)]
 		sep = "\n"
 	}
 	return avals
@@ -78,7 +78,7 @@ func (av AllowedVals) String() string {
 // then the parameter can never be set correctly and if it only has a single
 // entry then the current (initial) value is the only allowed value and so
 // there is no need for a parameter as no alternative can ever be allowed.
-func (av AllowedVals) Check() error {
+func (av AllowedVals[T]) Check() error {
 	minEntries := "It should have at least 2"
 	switch len(av) {
 	case 0:
@@ -94,7 +94,7 @@ func (av AllowedVals) Check() error {
 		if k == "" {
 			return errors.New(pfx + "the allowed value may not be blank")
 		}
-		if strings.ContainsRune(k, '=') {
+		if strings.ContainsRune(string(k), '=') {
 			return errors.New(pfx + "the allowed value may not contain '=': ")
 		}
 	}
@@ -103,17 +103,17 @@ func (av AllowedVals) Check() error {
 
 // AllowedValuesMap returns a copy of the map of allowed values. This will be
 // used by the standard help package to generate a list of allowed values.
-func (av AllowedVals) AllowedValuesMap() AllowedVals {
+func (av AllowedVals[T]) AllowedValuesMap() AllowedVals[string] {
 	rval := make(map[string]string)
 	for k, v := range av {
-		rval[k] = v
+		rval[string(k)] = v
 	}
 	return rval
 }
 
 // ValueAllowed returns true if the passed value is a key in the allowed
 // values map
-func (av AllowedVals) ValueAllowed(val string) bool {
-	_, ok := av[val]
+func (av AllowedVals[T]) ValueAllowed(val string) bool {
+	_, ok := av[T(val)]
 	return ok
 }

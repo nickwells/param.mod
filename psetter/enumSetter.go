@@ -27,7 +27,7 @@ type Enum[T ~string] struct {
 	ValueReqMandatory
 	// The AllowedVals must be set, the program will panic if not. The Value
 	// is guaranteed to take one of these values.
-	AllowedVals
+	AllowedVals[T]
 	// Value must be set, the program will panic if not. This is the value
 	// being set
 	Value *T
@@ -90,9 +90,10 @@ func (s Enum[T]) ValDescribe() string {
 	}
 	avals := []string{}
 	for val := range s.AllowedVals {
-		avals = append(avals, val)
+		avals = append(avals, string(val))
 	}
 	sort.Strings(avals)
+
 	for _, val := range avals {
 		if val == initialVal {
 			continue
