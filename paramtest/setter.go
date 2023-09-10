@@ -37,7 +37,7 @@ type Setter struct {
 // your Setter; if you have not used these types you may need to generate the
 // errors yourself.
 //
-// Note that this uses the Setters ParamName field so that must have its
+// Note that this uses the Setter's ParamName field so that must have its
 // final value before this method is called.
 func (s *Setter) SetVR(vr param.ValueReq) {
 	s.VRExp = vr
