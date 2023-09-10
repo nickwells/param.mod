@@ -29,8 +29,7 @@ func New(psof ...param.PSetOptFunc) (*param.PSet, error) {
 // and exit with a non-zero exit status. This is a suitable choice unless you
 // want to perform any special error handling.
 func NewOrDie(psof ...param.PSetOptFunc) *param.PSet {
-	opts := addHelperToOpts(psof)
-	ps, err := param.NewSet(opts...)
+	ps, err := New(psof...)
 	if err != nil {
 		fmt.Fprintf(os.Stderr,
 			"The program parameter set can't be made: %s", err)
@@ -45,8 +44,7 @@ func NewOrDie(psof ...param.PSetOptFunc) *param.PSet {
 // want to test the parameter generation and still have a simple API in your
 // program.
 func NewOrPanic(psof ...param.PSetOptFunc) *param.PSet {
-	opts := addHelperToOpts(psof)
-	ps, err := param.NewSet(opts...)
+	ps, err := New(psof...)
 	if err != nil {
 		panic(fmt.Errorf("The program parameter set can't be made: %w", err))
 	}
