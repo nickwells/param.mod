@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/nickwells/check.mod/v2/check"
-	"github.com/nickwells/param.mod/v6/pedit"
 )
 
 // Map sets the entry in a map of strings. Each value from the
@@ -24,7 +23,7 @@ type Map[T ~string] struct {
 	// The Editor, if present, is applied to the parameter value after any
 	// checks are applied and allows the programmer to modify the value
 	// supplied before using it to set the Value.
-	Editor pedit.Editor
+	Editor Editor
 	// The StrListSeparator allows you to override the default separator
 	// between list elements.
 	StrListSeparator

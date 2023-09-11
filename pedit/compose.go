@@ -1,9 +1,11 @@
 package pedit
 
+import "github.com/nickwells/param.mod/v6/psetter"
+
 // Composite combines multiple editors which are applied in sequence with the
 // results of each being passed to the next. It implements the Editor interface
 type Composite struct {
-	Editors []Editor
+	Editors []psetter.Editor
 }
 
 // Edit applies the Editors in sequence, passing the results of the first to

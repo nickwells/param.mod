@@ -1,4 +1,4 @@
-package pedit
+package psetter
 
 // Editor defines an interface providing an Edit function. This is used to
 // edit a parameter value before setting the value. The expected use by the

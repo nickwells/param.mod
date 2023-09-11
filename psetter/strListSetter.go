@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/nickwells/check.mod/v2/check"
-	"github.com/nickwells/param.mod/v6/pedit"
 )
 
 // StrList allows you to specify a parameter that can be used to set a list
@@ -26,7 +25,7 @@ type StrList[T ~string] struct {
 	// The Editor, if present, is applied to each of the listed parameter
 	// values after any checks are applied and allows the programmer to
 	// modify the value supplied before using it to set the Value.
-	Editor pedit.Editor
+	Editor Editor
 }
 
 // CountChecks returns the number of check functions this setter has

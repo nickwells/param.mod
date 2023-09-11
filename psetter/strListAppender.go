@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/nickwells/check.mod/v2/check"
-	"github.com/nickwells/param.mod/v6/pedit"
 )
 
 // StrListAppender allows you to specify a parameter that can be used to add
@@ -29,7 +28,7 @@ type StrListAppender[T ~string] struct {
 	// The Editor, if present, is applied to the parameter value after any
 	// checks are applied and allows the programmer to modify the value
 	// supplied before using it to set the Value.
-	Editor pedit.Editor
+	Editor Editor
 	// Prepend will change the behaviour so that any new values are added at
 	// the start of the list of strings rather than the end.
 	Prepend bool

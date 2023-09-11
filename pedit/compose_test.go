@@ -24,7 +24,7 @@ func ExampleComposite_Edit() {
 		psetter.String[string]{
 			Value: &s,
 			Editor: pedit.Composite{
-				Editors: []pedit.Editor{
+				Editors: []psetter.Editor{
 					pedit.ToUpper{},
 					pedit.AddPrefix{Prefix: "before-"},
 					pedit.AddSuffix{Suffix: "-after"},

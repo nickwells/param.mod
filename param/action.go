@@ -8,7 +8,7 @@ import "github.com/nickwells/location.mod/location"
 // loc gives details on where the param was seen, this includes a description
 // of the source (for instance "command line")
 //
-// param is the parameter which was matched.
+// p is the parameter which was matched.
 //
 // paramValues will have one or possibly two entries: the name used to match
 // the param and (possibly) the value string.
