@@ -291,8 +291,8 @@ func AltNames(altNames ...string) OptFunc {
 // the parameter summary (it follows the "=" after the parameter name). If
 // this is not empty this will be used in preference to either the param
 // setter's value description or the setter's type name. This allows a
-// per-parameter value name to be given. It will return an error if the vName
-// is the empty string.
+// per-parameter value name to be given for a more helpful usage message. It
+// will return an error if the vName is the empty string.
 func ValueName(vName string) OptFunc {
 	return func(p *ByName) error {
 		if vName == "" {

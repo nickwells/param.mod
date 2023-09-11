@@ -45,10 +45,8 @@ func (s PathnameListAppender) CountChecks() int {
 
 // SetWithVal (called when a value follows the parameter) takes the parameter
 // value and runs the checks against it. If any check returns a non-nil error
-// it will return the error. Otherwise it will apply the Editor (if there is
-// one) to the parameter value. If the Editor returns a non-nil error then
-// that is returned and the Value is left unchanged.  Finally, it will append
-// the checked and possibly edited value to the slice of strings.
+// it will return the error. Otherwise it will append
+// the checked value to the slice of strings.
 func (s PathnameListAppender) SetWithVal(_, paramVal string) error {
 	pathname, err := fileparse.FixFileName(paramVal)
 	if err != nil {

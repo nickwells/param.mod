@@ -21,7 +21,8 @@ func init() {
 }
 
 // GroupNameCheck checks that the group name is valid and returns an error if
-// not
+// not. A group name must start with a letter followed by zero or more
+// letters, digits, dots, dashes or underscores.
 func GroupNameCheck(name string) error {
 	if !groupNameCheckRE.MatchString(name) {
 		return fmt.Errorf(
