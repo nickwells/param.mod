@@ -81,7 +81,7 @@ func showWhereSetStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) {
 		}
 		printSep = true
 		h.printGroup(twc, g, maxNameLen)
-		for _, p := range g.Params {
+		for _, p := range g.Params() {
 			printWhereSetIntro(twc, p, paramErrorCnt(ps, p))
 			twc.Println(english.Join(p.AltNames(), ", ", " or "))
 
@@ -101,7 +101,7 @@ func showWhereSetShort(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) {
 	groups := ps.GetGroups()
 
 	for _, g := range groups {
-		for _, p := range g.Params {
+		for _, p := range g.Params() {
 			errCount := paramErrorCnt(ps, p)
 
 			if errCount == 0 && !p.HasBeenSet() {
@@ -140,7 +140,7 @@ func calcColumnWidths(groups []*param.Group) (int, int) {
 
 	groupUsed := false
 	for _, g := range groups {
-		for _, p := range g.Params {
+		for _, p := range g.Params() {
 			skip, _ := skipWhereSetReport(p)
 			if skip {
 				continue
@@ -153,8 +153,8 @@ func calcColumnWidths(groups []*param.Group) (int, int) {
 			}
 		}
 		if groupUsed {
-			if len(g.Name) > maxGNLen {
-				maxGNLen = len(g.Name)
+			if len(g.Name()) > maxGNLen {
+				maxGNLen = len(g.Name())
 			}
 		}
 		groupUsed = false
@@ -180,7 +180,7 @@ func showWhereSetTable(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) {
 		col.New(&colfmt.String{}, "set at"),
 	)
 	for _, g := range groups {
-		for _, p := range g.Params {
+		for _, p := range g.Params() {
 			skip, errCount := skipWhereSetReport(p)
 
 			if skip {
@@ -197,7 +197,7 @@ func showWhereSetTable(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) {
 				}
 			}
 			_ = rpt.PrintRow(errCount,
-				g.Name, english.Join(p.AltNames(), ", ", " or "),
+				g.Name(), english.Join(p.AltNames(), ", ", " or "),
 				at)
 		}
 	}

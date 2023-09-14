@@ -3,8 +3,8 @@ package param_test
 import (
 	"fmt"
 
-	"github.com/nickwells/param.mod/v6/param"
 	"github.com/nickwells/param.mod/v6/paction"
+	"github.com/nickwells/param.mod/v6/param"
 	"github.com/nickwells/param.mod/v6/paramset"
 	"github.com/nickwells/param.mod/v6/psetter"
 )
@@ -42,7 +42,7 @@ func ExamplePSet_Add_withExtras() {
 		// This next line returns a function that sets the group name of the
 		// parameter. All parameters with the same group name will be shown
 		// together in the usage message.
-		param.GroupName("test.group"),
+		param.GroupName("test-group"),
 		// This sets flags on the parameter:
 		//
 		// DontShowInStdUsage: the parameter will not be shown in the default
@@ -67,8 +67,8 @@ func ExamplePSet_Add_withExtras() {
 	fmt.Printf("param (f) value:   %3.1f\n", f)
 	fmt.Printf("fHasBeenSet value: %v\n", fHasBeenSet)
 	fmt.Printf("param HasBeenSet?: %v\n", p.HasBeenSet())
-	fmt.Printf("group name: %s\n", p.GroupName())
-	fmt.Printf("param name: %s\n", p.Name())
+	fmt.Printf("group name: %q\n", p.GroupName())
+	fmt.Printf("param name: %q\n", p.Name())
 	fmt.Printf("CommandLineOnly:    %t\n", p.AttrIsSet(param.CommandLineOnly))
 	fmt.Printf("MustBeSet:          %t\n", p.AttrIsSet(param.MustBeSet))
 	fmt.Printf("SetOnlyOnce:        %t\n", p.AttrIsSet(param.SetOnlyOnce))
@@ -77,8 +77,8 @@ func ExamplePSet_Add_withExtras() {
 	// Output: param (f) value:   0.0
 	// fHasBeenSet value: false
 	// param HasBeenSet?: false
-	// group name: test.group
-	// param name: param-name
+	// group name: "test-group"
+	// param name: "param-name"
 	// CommandLineOnly:    false
 	// MustBeSet:          true
 	// SetOnlyOnce:        false

@@ -44,8 +44,8 @@ func printByPosParam(h StdHelp, twc *twrap.TWConf, ps *param.PSet, i int) {
 func getMaxGroupNameLen(groups []*param.Group) int {
 	maxNameLen := 0
 	for _, g := range groups {
-		if len(g.Name) > maxNameLen {
-			maxNameLen = len(g.Name)
+		if len(g.Name()) > maxNameLen {
+			maxNameLen = len(g.Name())
 		}
 	}
 	return maxNameLen
@@ -77,7 +77,7 @@ func showParamsByName(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	groups := ps.GetGroups()
 	paramsToShow := make([]*param.ByName, 0)
 	for _, g := range groups {
-		for _, p := range g.Params {
+		for _, p := range g.Params() {
 			if paramCanBeShown(h, p) {
 				paramsToShow = append(paramsToShow, p)
 			}
@@ -113,8 +113,8 @@ func showParamsByGroupName(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 		}
 
 		printGroup := true
-		for _, p := range g.Params {
-			if paramCanBeShown(h, p) || h.groupsChosen[g.Name] {
+		for _, p := range g.Params() {
+			if paramCanBeShown(h, p) || h.groupsChosen[g.Name()] {
 				if printGroup {
 					printSep = printSepIf(twc, printSep, minorSectionSeparator)
 					h.printGroup(twc, g, maxNameLen)
@@ -279,30 +279,30 @@ func groupCanBeShown(h StdHelp, g *param.Group) bool {
 		return true
 	}
 
-	return h.groupsChosen[g.Name]
+	return h.groupsChosen[g.Name()]
 }
 
 // printGroup prints the group name etc
 func (h StdHelp) printGroup(twc *twrap.TWConf, g *param.Group, maxLen int) {
-	twc.Printf("%-*.*s [ ", maxLen, maxLen, g.Name)
-	if len(g.Params) == 1 {
+	twc.Printf("%-*.*s [ ", maxLen, maxLen, g.Name())
+	if len(g.Params()) == 1 {
 		twc.Print("1 parameter")
 	} else {
-		twc.Printf("%d parameters", len(g.Params))
+		twc.Printf("%d parameters", len(g.Params()))
 	}
-	if g.HiddenCount > 0 && !h.showHiddenItems {
+	if g.HiddenCount() > 0 && !h.showHiddenItems {
 		if g.AllParamsHidden() {
 			twc.Print(", all hidden")
 		} else {
-			twc.Printf(", %d hidden", g.HiddenCount)
+			twc.Printf(", %d hidden", g.HiddenCount())
 		}
 	}
 	twc.Print(" ]\n")
 	if h.showSummary {
 		return
 	}
-	if g.Desc != "" {
-		twc.Wrap(g.Desc, textIndent)
+	if desc := g.Desc(); desc != "" {
+		twc.Wrap(desc, textIndent)
 	}
 	printGroupConfigFile(twc, g)
 	twc.Print("\n")
@@ -381,10 +381,10 @@ func printParamAttributes(twc *twrap.TWConf, p *param.ByName) {
 }
 
 func printGroupConfigFile(twc *twrap.TWConf, g *param.Group) {
-	if len(g.ConfigFiles) > 0 {
+	if len(g.ConfigFiles()) > 0 {
 		twc.Wrap(
 			"\nParameters in this group may also be set "+
-				altSrcConfigFiles(g.ConfigFiles),
+				altSrcConfigFiles(g.ConfigFiles()),
 			textIndent)
 	}
 }

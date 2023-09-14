@@ -423,22 +423,22 @@ func (ps *PSet) TerminalParam() string { return ps.terminalParam }
 // parameters. For instance, the parameter can be in the wrong group if the
 // parameter group name is changed after it has been added to the param
 // set. Likewise the DontShowInStdUsage attribute can be set after the
-// parameter has been added. I take it to be unlikely that the package wil be
-// used in this way but better safe than sorry. This will also clear out any
-// groups with no parameters, set the HiddenCount on each group and finally
-// sort the parameters in each group in alphabetical order.
+// parameter has been added. I take it to be unlikely that the package will
+// be used in this way but better safe than sorry. This will also clear out
+// any groups with no parameters and sort the parameters in each group in
+// alphabetical order.
 func (ps *PSet) fixGroups() {
 	for name, g := range ps.groups {
 		var badGroup bool
-		for _, p := range g.Params {
+		for _, p := range g.params {
 			if p.groupName != name {
 				badGroup = true
 			}
 		}
 
 		if badGroup {
-			params := g.Params
-			g.Params = nil
+			params := g.params
+			g.params = nil
 			for _, p := range params {
 				ps.addByNameToGroup(p)
 			}
@@ -446,18 +446,14 @@ func (ps *PSet) fixGroups() {
 	}
 
 	for name, g := range ps.groups {
-		if g.Params == nil {
+		if g.params == nil {
 			delete(ps.groups, name)
 		}
 	}
 
 	for _, g := range ps.groups {
-		g.SetHiddenCount()
-	}
-
-	for _, g := range ps.groups {
-		sort.Slice(g.Params, func(i, j int) bool {
-			return g.Params[i].name < g.Params[j].name
+		sort.Slice(g.params, func(i, j int) bool {
+			return g.params[i].name < g.params[j].name
 		})
 	}
 }
@@ -467,15 +463,16 @@ func (ps *PSet) fixGroups() {
 // by the primary parameter name.
 func (ps *PSet) GetGroups() []*Group {
 	ps.fixGroups()
-	grpParams := make([]*Group, 0, len(ps.groups))
+
+	groups := make([]*Group, 0, len(ps.groups))
 	for _, g := range ps.groups {
-		grpParams = append(grpParams, g)
+		groups = append(groups, g)
 	}
-	sort.Slice(grpParams, func(i, j int) bool {
-		return grpParams[i].Name < grpParams[j].Name
+	sort.Slice(groups, func(i, j int) bool {
+		return groups[i].name < groups[j].name
 	})
 
-	return grpParams
+	return groups
 }
 
 // GetGroupByName returns a pointer to the details for the named Group. If
@@ -495,7 +492,7 @@ func (ps PSet) HasAltSources() bool {
 		return true
 	}
 	for _, g := range ps.groups {
-		if len(g.ConfigFiles) > 0 {
+		if len(g.configFiles) > 0 {
 			return true
 		}
 	}

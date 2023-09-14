@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"regexp"
 	"runtime"
+	"slices"
 	"strings"
 )
 
@@ -34,31 +35,55 @@ func GroupNameCheck(name string) error {
 
 // Group holds details about a group of parameters
 type Group struct {
-	Name        string
-	Desc        string
-	Params      []*ByName
-	HiddenCount int
-	ConfigFiles []ConfigFileDetails
+	name        string
+	desc        string
+	params      []*ByName
+	configFiles []ConfigFileDetails
 	setFrom     string
+}
+
+// Name returns the group name
+func (g Group) Name() string {
+	return g.name
+}
+
+// Desc returns the group description
+func (g Group) Desc() string {
+	return g.desc
+}
+
+// Params returns a shallow copy of the slice of parameters in the group
+func (g Group) Params() []*ByName {
+	return slices.Clone(g.params)
+}
+
+// HiddenCount returns the number of parameters in this group which have the
+// DontShowInStdUsage attribute set.
+func (g Group) HiddenCount() int {
+	hiddenCount := 0
+	for _, p := range g.params {
+		if p.AttrIsSet(DontShowInStdUsage) {
+			hiddenCount++
+		}
+	}
+	return hiddenCount
 }
 
 // AllParamsHidden returns true if all the parameters are marked as not to be
 // shown in the standard usage message, false otherwise
 func (g Group) AllParamsHidden() bool {
-	return len(g.Params) == g.HiddenCount
-}
-
-// SetHiddenCount counts how many params have the DontShowInStdUsage
-// attribute set and records this in the HiddenCount field. It also returns
-// the value
-func (g *Group) SetHiddenCount() int {
-	g.HiddenCount = 0
-	for _, p := range g.Params {
-		if p.AttrIsSet(DontShowInStdUsage) {
-			g.HiddenCount++
+	for _, p := range g.params {
+		if !p.AttrIsSet(DontShowInStdUsage) {
+			return false
 		}
 	}
-	return g.HiddenCount
+	return true
+}
+
+// ConfigFiles returns a shallow copy of the slice of group-specific
+// configuration files for this group
+func (g Group) ConfigFiles() []ConfigFileDetails {
+	return slices.Clone(g.configFiles)
 }
 
 // AddGroup will add a new param group to the PSet and set the
@@ -95,7 +120,7 @@ func (ps *PSet) AddGroup(name, desc string) {
 	if exists && g.setFrom != "" {
 		msg := fmt.Sprintf(
 			"The description for param group %s is already set to:\n%s\nat: %s",
-			name, g.Desc, g.setFrom)
+			name, g.desc, g.setFrom)
 		panic(msg)
 	}
 
@@ -103,27 +128,17 @@ func (ps *PSet) AddGroup(name, desc string) {
 	stkSize := runtime.Stack(stk, false)
 
 	g = &Group{
-		Name:    name,
-		Desc:    desc,
+		name:    name,
+		desc:    desc,
 		setFrom: string(stk[:stkSize]),
 	}
 
 	ps.groups[name] = g
 }
 
-// GetGroupDesc returns the description for the named group or the empty
-// string if the group does not exist.
-func (ps *PSet) GetGroupDesc(grpName string) string {
-	g, ok := ps.groups[grpName]
-	if !ok {
-		return ""
-	}
-	return g.Desc
-}
-
-// HasGroupName returns true if the PSet has a group with the given name,
-// false otherwise
-func (ps *PSet) HasGroupName(grpName string) bool {
-	_, ok := ps.groups[grpName]
-	return ok
+// GetGroup returns a group pointer and a bool indicating whether the PSet
+// has a group with the given name,
+func (ps *PSet) GetGroup(gName string) (*Group, bool) {
+	g, ok := ps.groups[gName]
+	return g, ok
 }

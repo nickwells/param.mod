@@ -24,7 +24,7 @@ func showUsageSummary(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 		groups := ps.GetGroups()
 		var hasOptionalParams bool
 		for _, g := range groups {
-			for _, bn := range g.Params {
+			for _, bn := range g.Params() {
 				if bn.AttrIsSet(param.MustBeSet) {
 					twc.Print(" -" + bn.Name() +
 						valueNeededStr(bn))

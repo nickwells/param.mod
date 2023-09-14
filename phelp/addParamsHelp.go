@@ -274,7 +274,7 @@ func checkGroups(h *StdHelp, ps *param.PSet) param.ActionFunc {
 	return func(_ location.L, _ *param.ByName, _ []string) error {
 		var badNames []string
 		for gName := range h.groupsChosen {
-			if !ps.HasGroupName(gName) {
+			if _, ok := ps.GetGroup(gName); !ok {
 				delete(h.groupsChosen, gName)
 				matches, _ := ps.FindMatchingGroups(gName)
 				if len(matches) > 0 {

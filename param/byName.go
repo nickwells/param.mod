@@ -250,10 +250,10 @@ func (ps *PSet) Add(name string, setter Setter, desc string, opts ...OptFunc,
 func (ps *PSet) addByNameToGroup(p *ByName) {
 	g, ok := ps.groups[p.groupName]
 	if !ok {
-		g = &Group{Name: p.groupName}
+		g = &Group{name: p.groupName}
 		ps.groups[p.groupName] = g
 	}
-	g.Params = append(g.Params, p)
+	g.params = append(g.params, p)
 }
 
 // Attrs returns an OptFunc which will set the attributes of the parameter to

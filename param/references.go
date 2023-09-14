@@ -3,17 +3,27 @@ package param
 // Reference records a name and a description for the "See Also" section of the
 // help message
 type Reference struct {
-	Name string
-	Desc string
+	name string
+	desc string
 }
 
 // AddReference adds a reference to the set of references on the PSet
 func (ps *PSet) AddReference(name, desc string) {
 	ps.references = append(ps.references,
 		Reference{
-			Name: name,
-			Desc: desc,
+			name: name,
+			desc: desc,
 		})
+}
+
+// Name returns the Reference name
+func (r Reference) Name() string {
+	return r.name
+}
+
+// Desc returns the text of the Reference
+func (r Reference) Desc() string {
+	return r.desc
 }
 
 // HasReferences returns true if the PSet has any references

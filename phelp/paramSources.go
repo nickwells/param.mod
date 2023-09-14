@@ -111,10 +111,10 @@ func getGroupConfigFiles(ps *param.PSet) []groupCF {
 	gf := []groupCF{}
 
 	groups := ps.GetGroups()
-	for _, grp := range groups {
-		for _, configFile := range grp.ConfigFiles {
+	for _, g := range groups {
+		for _, configFile := range g.ConfigFiles() {
 			gf = append(gf, groupCF{
-				groupName: grp.Name,
+				groupName: g.Name(),
 				cf:        configFile,
 			})
 		}

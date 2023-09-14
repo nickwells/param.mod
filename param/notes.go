@@ -3,8 +3,9 @@ package param
 import (
 	"fmt"
 	"runtime"
-	"sort"
 	"strings"
+
+	"golang.org/x/exp/slices"
 )
 
 // NoteAttributes records various flags that can be set on a Note
@@ -20,12 +21,22 @@ const (
 // Note records additional text to be attached to the help message which does
 // not sit under any of the other parts
 type Note struct {
-	Headline     string
-	Text         string
-	Attributes   NoteAttributes
+	headline     string
+	text         string
+	attributes   NoteAttributes
 	addedAt      string
 	seeAlsoNote  map[string]string
 	seeAlsoParam map[string]string
+}
+
+// Headline returns the note's headline text
+func (n Note) Headline() string {
+	return n.headline
+}
+
+// Text returns the note's text
+func (n Note) Text() string {
+	return n.text
 }
 
 // AddNote adds an note to the set of notes on the PSet. The headline of the
@@ -41,8 +52,8 @@ func (ps *PSet) AddNote(headline, text string, opts ...NoteOptFunc) *Note {
 	stkSize := runtime.Stack(stk, false)
 
 	n := &Note{
-		Headline:     headline,
-		Text:         text,
+		headline:     headline,
+		text:         text,
 		addedAt:      string(stk[:stkSize]),
 		seeAlsoNote:  make(map[string]string),
 		seeAlsoParam: make(map[string]string),
@@ -54,7 +65,7 @@ func (ps *PSet) AddNote(headline, text string, opts ...NoteOptFunc) *Note {
 		}
 	}
 
-	ps.notes[n.Headline] = n
+	ps.notes[n.headline] = n
 	return n
 }
 
@@ -92,7 +103,7 @@ type NoteOptFunc func(n *Note) error
 // The passed value.
 func NoteAttrs(attrs NoteAttributes) NoteOptFunc {
 	return func(n *Note) error {
-		n.Attributes = attrs
+		n.attributes = attrs
 		return nil
 	}
 }
@@ -151,7 +162,7 @@ func NoteSeeParam(params ...string) NoteOptFunc {
 // AttrIsSet will return true if the supplied attribute is set on the
 // note. Multiple attributes may be given in which case they must all be set
 func (n Note) AttrIsSet(attr NoteAttributes) bool {
-	return n.Attributes&attr == attr
+	return n.attributes&attr == attr
 }
 
 // SeeNotes returns a sorted list of the notes referenced by this note
@@ -160,7 +171,7 @@ func (n Note) SeeNotes() []string {
 	for note := range n.seeAlsoNote {
 		notes = append(notes, note)
 	}
-	sort.Strings(notes)
+	slices.Sort(notes)
 	return notes
 }
 
@@ -170,6 +181,6 @@ func (n Note) SeeParams() []string {
 	for param := range n.seeAlsoParam {
 		params = append(params, param)
 	}
-	sort.Strings(params)
+	slices.Sort(params)
 	return params
 }

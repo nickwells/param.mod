@@ -101,7 +101,7 @@ type groupNameAndDesc struct {
 // resulting PSet matches expectations
 func TestPSet_SetGroupDescription(t *testing.T) {
 	testCases := []struct {
-		name             string
+		testhelper.ID
 		sgdParams        []groupNameAndDesc
 		panicExpected    bool
 		panicMsgContains []string
@@ -109,7 +109,7 @@ func TestPSet_SetGroupDescription(t *testing.T) {
 		groupsExpected   map[string]bool
 	}{
 		{
-			name: "all good",
+			ID: testhelper.MkID("all good"),
 			sgdParams: []groupNameAndDesc{
 				{name: "a", desc: "group A desc"},
 				{name: "b", desc: "group B desc"},
@@ -129,7 +129,7 @@ func TestPSet_SetGroupDescription(t *testing.T) {
 			},
 		},
 		{
-			name: "reset description",
+			ID: testhelper.MkID("reset description"),
 			sgdParams: []groupNameAndDesc{
 				{name: "a", desc: "group A desc"},
 				{name: "b", desc: "group B desc"},
@@ -152,7 +152,7 @@ func TestPSet_SetGroupDescription(t *testing.T) {
 			},
 		},
 		{
-			name: "bad group name",
+			ID: testhelper.MkID("bad group name"),
 			sgdParams: []groupNameAndDesc{
 				{name: "99", desc: "group 99 desc"},
 			},
@@ -172,12 +172,10 @@ func TestPSet_SetGroupDescription(t *testing.T) {
 		},
 	}
 
-	for i, tc := range testCases {
-		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
-
+	for _, tc := range testCases {
 		ps, err := paramset.NewNoHelpNoExitNoErrRpt()
 		if err != nil {
-			t.Fatal(tcID, " : couldn't construct the PSet: ", err)
+			t.Fatal(tc.IDStr(), " : couldn't construct the PSet: ", err)
 		}
 
 		var panicked bool
@@ -191,24 +189,29 @@ func TestPSet_SetGroupDescription(t *testing.T) {
 				break
 			}
 		}
-		testhelper.PanicCheckStringWithStack(t, tcID,
+		testhelper.PanicCheckStringWithStack(t, tc.IDStr(),
 			panicked, tc.panicExpected,
 			panicVal, tc.panicMsgContains, stackTrace)
 
 		for _, gd := range tc.expectedDescs {
-			desc := ps.GetGroupDesc(gd.name)
-			if desc != gd.desc {
-				t.Log(tcID)
+			g, ok := ps.GetGroup(gd.name)
+			if !ok {
+				if gd.desc != "" {
+					t.Log(tc.IDStr())
+					t.Errorf("\t : group %q was not found", gd.name)
+				}
+			} else if g.Desc() != gd.desc {
+				t.Log(tc.IDStr())
 				t.Logf("\t: expected: %s", gd.desc)
-				t.Logf("\t:  but was: %s", desc)
+				t.Logf("\t:  but was: %s", g.Desc())
 				t.Errorf("\t : bad group description for '%s'", gd.name)
 			}
 		}
 
 		for gName, expected := range tc.groupsExpected {
-			hasName := ps.HasGroupName(gName)
-			if hasName != expected {
-				t.Log(tcID)
+			_, ok := ps.GetGroup(gName)
+			if ok != expected {
+				t.Log(tc.IDStr())
 				if expected {
 					t.Errorf("\t: the group description for '%s'"+
 						" was not found when expected",
@@ -226,34 +229,32 @@ func TestPSet_SetGroupDescription(t *testing.T) {
 // TestPSet_SetTerminalParam sets override values for the terminal parameter
 func TestPSet_SetTerminalParam(t *testing.T) {
 	testCases := []struct {
-		name  string
+		testhelper.ID
 		tpVal string
 		setTP bool
 	}{
 		{
-			name:  "don't set",
+			ID:    testhelper.MkID("don't set"),
 			tpVal: param.DfltTerminalParam,
 		},
 		{
-			name:  "new val",
+			ID:    testhelper.MkID("new val"),
 			tpVal: "xxx",
 			setTP: true,
 		},
 	}
 
-	for i, tc := range testCases {
-		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
-
+	for _, tc := range testCases {
 		ps, err := paramset.NewNoHelpNoExitNoErrRpt()
 		if err != nil {
-			t.Fatal(tcID, " : couldn't construct the PSet: ", err)
+			t.Fatal(tc.IDStr(), " : couldn't construct the PSet: ", err)
 		}
 
 		if tc.setTP {
 			ps.SetTerminalParam(tc.tpVal)
 		}
 		if ps.TerminalParam() != tc.tpVal {
-			t.Log(tcID)
+			t.Log(tc.IDStr())
 			t.Logf("\t: expected: %s", tc.tpVal)
 			t.Logf("\t:      got: %s", ps.TerminalParam())
 			t.Errorf("\t: Bad TerminalParam")
@@ -270,17 +271,17 @@ type GroupAndParams struct {
 }
 
 type paramGroupTC struct {
-	name            string
+	testhelper.ID
 	npi             []*namedParamInitialiser
 	expectedResults []GroupAndParams
 }
 
 // reportParamGroup prints the param group details
-func reportParamGroup(t *testing.T, paramGroups []*param.Group) {
+func reportParamGroup(t *testing.T, groups []*param.Group) {
 	t.Helper()
-	for _, pg := range paramGroups {
-		t.Logf("\t: Group: %s\n", pg.Name)
-		for _, p := range pg.Params {
+	for _, g := range groups {
+		t.Logf("\t: Group: %s\n", g.Name())
+		for _, p := range g.Params() {
 			t.Logf("\t\t%s\n", p.Name())
 		}
 	}
@@ -290,44 +291,43 @@ func reportParamGroup(t *testing.T, paramGroups []*param.Group) {
 func checkParamGroup(t *testing.T, i int, tc paramGroupTC, ps *param.PSet) {
 	t.Helper()
 
-	tcID := fmt.Sprintf("test %d: %s", i, tc.name)
-	paramGroups := ps.GetGroups()
-	if len(paramGroups) != len(tc.expectedResults) {
-		t.Log(tcID)
+	groups := ps.GetGroups()
+	if len(groups) != len(tc.expectedResults) {
+		t.Log(tc.IDStr())
 		t.Logf("\t: expected: %d", len(tc.expectedResults))
-		t.Logf("\t:      got: %d", len(paramGroups))
-		reportParamGroup(t, paramGroups)
+		t.Logf("\t:      got: %d", len(groups))
+		reportParamGroup(t, groups)
 		t.Error("\t: the number of Groups returned is unexpected")
 		return
 	}
-	for idx, pg := range paramGroups {
-		tcIDGrp := tcID + fmt.Sprintf(" - group %d", idx)
-		if pg.Name != tc.expectedResults[idx].groupName {
+	for idx, g := range groups {
+		tcIDGrp := tc.IDStr() + fmt.Sprintf(" - group %d", idx)
+		if g.Name() != tc.expectedResults[idx].groupName {
 			t.Log(tcIDGrp)
 			t.Logf("\t: expected: %s", tc.expectedResults[idx].groupName)
-			t.Logf("\t:      got: %s", pg.Name)
-			reportParamGroup(t, paramGroups)
+			t.Logf("\t:      got: %s", g.Name())
+			reportParamGroup(t, groups)
 			t.Error("\t: the group name is unexpected")
 		}
-		if len(pg.Params) != len(tc.expectedResults[idx].paramNames) {
+		if len(g.Params()) != len(tc.expectedResults[idx].paramNames) {
 			t.Log(tcIDGrp)
 			t.Logf("\t: expected: %d", len(tc.expectedResults[idx].paramNames))
-			t.Logf("\t:      got: %d", len(pg.Params))
-			reportParamGroup(t, paramGroups)
+			t.Logf("\t:      got: %d", len(g.Params()))
+			reportParamGroup(t, groups)
 			t.Error("\t: the number of parameters is unexpected")
 		}
-		if pg.HiddenCount != tc.expectedResults[idx].hiddenCount {
+		if g.HiddenCount() != tc.expectedResults[idx].hiddenCount {
 			t.Log(tcIDGrp)
 			t.Logf("\t: expected: %d", tc.expectedResults[idx].hiddenCount)
-			t.Logf("\t:      got: %d", pg.HiddenCount)
-			reportParamGroup(t, paramGroups)
+			t.Logf("\t:      got: %d", g.HiddenCount())
+			reportParamGroup(t, groups)
 			t.Error("\t: the number of hidden parameters is unexpected")
 		}
-		if pg.AllParamsHidden() != tc.expectedResults[idx].allHidden {
+		if g.AllParamsHidden() != tc.expectedResults[idx].allHidden {
 			t.Log(tcIDGrp)
 			t.Logf("\t: expected: %v", tc.expectedResults[idx].allHidden)
-			t.Logf("\t:      got: %v", pg.AllParamsHidden())
-			reportParamGroup(t, paramGroups)
+			t.Logf("\t:      got: %v", g.AllParamsHidden())
+			reportParamGroup(t, groups)
 			t.Error("\t: the number of hidden parameters is unexpected")
 		}
 	}
@@ -337,10 +337,10 @@ func TestGetParamGroups(t *testing.T) {
 	var boolVar bool
 	testCases := []paramGroupTC{
 		{
-			name: "no params",
+			ID: testhelper.MkID("no params"),
 		},
 		{
-			name: "one param, default group",
+			ID: testhelper.MkID("one param, default group"),
 			npi: []*namedParamInitialiser{
 				{
 					name:   "param",
@@ -358,7 +358,7 @@ func TestGetParamGroups(t *testing.T) {
 			},
 		},
 		{
-			name: "two params, default group",
+			ID: testhelper.MkID("two params, default group"),
 			npi: []*namedParamInitialiser{
 				{
 					name:   "param",
@@ -382,7 +382,7 @@ func TestGetParamGroups(t *testing.T) {
 			},
 		},
 		{
-			name: "two params, two groups",
+			ID: testhelper.MkID("two params, two groups"),
 			npi: []*namedParamInitialiser{
 				{
 					name:   "param",
@@ -413,7 +413,7 @@ func TestGetParamGroups(t *testing.T) {
 			},
 		},
 		{
-			name: "three params, two hidden, two groups",
+			ID: testhelper.MkID("three params, two hidden, two groups"),
 			npi: []*namedParamInitialiser{
 				{
 					name:   "aaa",

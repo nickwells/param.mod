@@ -20,7 +20,7 @@ func noteCanBeShown(h StdHelp, n *param.Note) bool {
 		}
 		return true
 	}
-	return h.notesChosen[n.Headline]
+	return h.notesChosen[n.Headline()]
 }
 
 // showNotes produces the Notes section of the help message
@@ -63,12 +63,12 @@ func showNotesFmtStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 		if !noteCanBeShown(h, n) {
 			continue
 		}
-		twc.Wrap(n.Headline, paramIndent)
+		twc.Wrap(n.Headline(), paramIndent)
 		if h.showSummary {
 			continue
 		}
 
-		twc.Wrap(n.Text, descriptionIndent)
+		twc.Wrap(n.Text(), descriptionIndent)
 
 		showNotesRefsFmtStd(twc, n.SeeParams(), "Parameter")
 		showNotesRefsFmtStd(twc, n.SeeNotes(), "Note")
@@ -113,7 +113,7 @@ func showNotesFmtMD(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 		}
 
 		n := notes[headline]
-		text := makeTextMarkdownSafe(n.Text)
+		text := makeTextMarkdownSafe(n.Text())
 		r := strings.NewReplacer("\n", "\n\n")
 		text = r.Replace(text)
 		twc.Wrap(text, 0)

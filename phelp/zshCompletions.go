@@ -169,11 +169,11 @@ func zshWriteCompFunc(ps *param.PSet, w io.Writer) {
 	groups := ps.GetGroups()
 	totArgs := len(groups)
 	for _, g := range groups {
-		totArgs += len(g.Params)
+		totArgs += len(g.Params())
 	}
 	args := make([]string, 0, totArgs)
 	for _, g := range groups {
-		for _, p := range g.Params {
+		for _, p := range g.Params() {
 			args = append(args, zshOptSpec(p)...)
 		}
 	}

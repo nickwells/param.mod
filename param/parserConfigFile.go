@@ -283,7 +283,7 @@ func (ps *PSet) SetGroupConfigFile(gName, fName string, c filecheck.Exists) {
 		panic("param group '" + gName + "' has not been created.")
 	}
 
-	g.ConfigFiles = []ConfigFileDetails{
+	g.configFiles = []ConfigFileDetails{
 		{
 			Name:         fName,
 			CfConstraint: c,
@@ -337,7 +337,7 @@ func (ps *PSet) AddGroupConfigFile(gName, fName string, c filecheck.Exists) {
 		panic("param group '" + gName + "' has not been created.")
 	}
 
-	g.ConfigFiles = append(g.ConfigFiles,
+	g.configFiles = append(g.configFiles,
 		ConfigFileDetails{
 			Name:         fName,
 			CfConstraint: c,
@@ -355,8 +355,8 @@ func (ps *PSet) ConfigFiles() []ConfigFileDetails {
 // ConfigFilesForGroup returns a copy of the current config file details for
 // the given group name.
 func (ps *PSet) ConfigFilesForGroup(gName string) []ConfigFileDetails {
-	cf := make([]ConfigFileDetails, len(ps.groups[gName].ConfigFiles))
-	copy(cf, ps.groups[gName].ConfigFiles)
+	cf := make([]ConfigFileDetails, len(ps.groups[gName].configFiles))
+	copy(cf, ps.groups[gName].configFiles)
 	return cf
 }
 
@@ -390,7 +390,7 @@ func (ps *PSet) getParamsFromConfigFiles() {
 	for gName, g := range ps.groups {
 		desc := SrcConfigFilePfx + " for " + gName
 		fp := fileparse.New(desc, groupParamLineParser{ps: ps, gName: gName})
-		for _, cf := range g.ConfigFiles {
+		for _, cf := range g.configFiles {
 			errs := fp.Parse(cf.Name)
 
 			checkCFErrs(ps, errs, cf, desc)
