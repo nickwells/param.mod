@@ -1,7 +1,6 @@
 package param_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/nickwells/param.mod/v6/param"
@@ -16,13 +15,13 @@ type pfxFunc struct {
 
 func TestSetEnv(t *testing.T) {
 	testCases := []struct {
-		name             string
+		testhelper.ID
 		seq              []pfxFunc
 		panicExpected    bool
 		panicMustContain []string
 	}{
 		{
-			name: "empty set - SetEnvPrefix - empty prefix",
+			ID: testhelper.MkID("empty set - SetEnvPrefix - empty prefix"),
 			seq: []pfxFunc{
 				{
 					pfx: "",
@@ -31,12 +30,12 @@ func TestSetEnv(t *testing.T) {
 			},
 			panicExpected: true,
 			panicMustContain: []string{
-				"Can't set '' as an environment variable prefix. ",
-				"The environment prefix must not be empty",
+				`Can't set "" as an environment variable prefix. `,
+				`The environment prefix must not be empty`,
 			},
 		},
 		{
-			name: "empty set - AddEnvPrefix - empty prefix",
+			ID: testhelper.MkID("empty set - AddEnvPrefix - empty prefix"),
 			seq: []pfxFunc{
 				{
 					pfx: "",
@@ -45,12 +44,12 @@ func TestSetEnv(t *testing.T) {
 			},
 			panicExpected: true,
 			panicMustContain: []string{
-				"Can't add '' as an environment variable prefix. ",
-				"The environment prefix must not be empty",
+				`Can't add "" as an environment variable prefix. `,
+				`The environment prefix must not be empty`,
 			},
 		},
 		{
-			name: "one prefix - AddEnvPrefix - empty prefix",
+			ID: testhelper.MkID("one prefix - AddEnvPrefix - empty prefix"),
 			seq: []pfxFunc{
 				{
 					pfx: "somePfx_",
@@ -63,12 +62,12 @@ func TestSetEnv(t *testing.T) {
 			},
 			panicExpected: true,
 			panicMustContain: []string{
-				"Can't add '' as an environment variable prefix. ",
-				"The environment prefix must not be empty",
+				`Can't add "" as an environment variable prefix. `,
+				`The environment prefix must not be empty`,
 			},
 		},
 		{
-			name: "empty set - SetEnvPrefix - good prefix",
+			ID: testhelper.MkID("empty set - SetEnvPrefix - good prefix"),
 			seq: []pfxFunc{
 				{
 					pfx: "somePfx_",
@@ -78,7 +77,7 @@ func TestSetEnv(t *testing.T) {
 			panicExpected: false,
 		},
 		{
-			name: "one prefix - AddEnvPrefix - good prefix",
+			ID: testhelper.MkID("one prefix - AddEnvPrefix - good prefix"),
 			seq: []pfxFunc{
 				{
 					pfx: "somePfx_",
@@ -92,7 +91,7 @@ func TestSetEnv(t *testing.T) {
 			panicExpected: false,
 		},
 		{
-			name: "one prefix - AddEnvPrefix - bad prefix",
+			ID: testhelper.MkID("one prefix - AddEnvPrefix - bad prefix"),
 			seq: []pfxFunc{
 				{
 					pfx: "some_Pfx_",
@@ -105,12 +104,12 @@ func TestSetEnv(t *testing.T) {
 			},
 			panicExpected: true,
 			panicMustContain: []string{
-				"Can't add 'some_' as an environment variable prefix. ",
-				"It's a prefix of the already added: 'some_Pfx_'",
+				`Can't add "some_" as an environment variable prefix. `,
+				`It's a prefix of the already added: "some_Pfx_"`,
 			},
 		},
 		{
-			name: "one prefix - AddEnvPrefix - bad prefix",
+			ID: testhelper.MkID("one prefix - AddEnvPrefix - bad prefix"),
 			seq: []pfxFunc{
 				{
 					pfx: "some_",
@@ -123,21 +122,19 @@ func TestSetEnv(t *testing.T) {
 			},
 			panicExpected: true,
 			panicMustContain: []string{
-				"Can't add 'some_Pfx_' as an environment variable prefix. ",
-				"The already added: 'some_' is a prefix of it",
+				`Can't add "some_Pfx_" as an environment variable prefix. `,
+				`The already added: "some_" is a prefix of it`,
 			},
 		},
 	}
-	for i, tc := range testCases {
-		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
-
+	for _, tc := range testCases {
 		ps, err := paramset.NewNoHelpNoExitNoErrRpt()
 		if err != nil {
-			t.Fatal(tcID, " : couldn't construct the PSet: ", err)
+			t.Fatal(tc.IDStr(), " : couldn't construct the PSet: ", err)
 		}
 		panicked, panicVal := panicEnvPrefix(t, tc.seq, ps)
 
-		testhelper.PanicCheckString(t, tcID,
+		testhelper.PanicCheckString(t, tc.IDStr(),
 			panicked, tc.panicExpected,
 			panicVal, tc.panicMustContain)
 	}

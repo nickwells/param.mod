@@ -72,17 +72,17 @@ func TestStringList(t *testing.T) {
 		err := ss.SetWithVal("", tc.val)
 		if tc.shouldReturnErr && err == nil {
 			t.Errorf("case %d: StrList should have returned an error"+
-				" when SetWithVal(..., '%s') was called but didn't",
+				" when SetWithVal(..., %q) was called but didn't",
 				i, tc.val)
 		} else if !tc.shouldReturnErr {
 			if err != nil {
 				t.Errorf("case %d: StrList should not return an error"+
-					" when SetWithVal(..., '%s') was called but did. Err: %s",
+					" when SetWithVal(..., %q) was called but did. Err: %s",
 					i, tc.val, err)
 			} else if len(value) != len(tc.expectedVal) {
 				t.Errorf("case %d: StrList should have set"+
 					" %d entries in the value list"+
-					" when SetWithVal(..., '%s') was called"+
+					" when SetWithVal(..., %q) was called"+
 					" but %d values were set",
 					i, len(tc.expectedVal), tc.val, len(value))
 			}

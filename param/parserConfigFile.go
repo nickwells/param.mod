@@ -274,7 +274,7 @@ func (ps *PSet) SetConfigFileStrict(fName string, c filecheck.Exists) {
 func (ps *PSet) SetGroupConfigFile(gName, fName string, c filecheck.Exists) {
 	if c == filecheck.MustNotExist {
 		panic(fmt.Sprintf(
-			"config file '%s' (group '%s'): bad existence constraint.",
+			"config file %q (group %q): bad existence constraint.",
 			fName, gName))
 	}
 
@@ -328,7 +328,7 @@ func (ps *PSet) AddConfigFileStrict(fName string, c filecheck.Exists) {
 func (ps *PSet) AddGroupConfigFile(gName, fName string, c filecheck.Exists) {
 	if c == filecheck.MustNotExist {
 		panic(fmt.Sprintf(
-			"config file '%s' (group '%s'): bad existence constraint.",
+			"config file %q (group %q): bad existence constraint.",
 			fName, gName))
 	}
 

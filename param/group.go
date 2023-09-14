@@ -27,7 +27,7 @@ func init() {
 func GroupNameCheck(name string) error {
 	if !groupNameCheckRE.MatchString(name) {
 		return fmt.Errorf(
-			"the group name '%s' is invalid. It must match: '%s'",
+			"the group name %q is invalid. It must match: %q",
 			name, groupNameCheckRE.String())
 	}
 	return nil

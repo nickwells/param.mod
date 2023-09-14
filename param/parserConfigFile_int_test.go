@@ -30,7 +30,7 @@ type i64 struct {
 func (s i64) SetWithVal(_ string, paramVal string) error {
 	v, err := strconv.ParseInt(paramVal, 0, 0)
 	if err != nil {
-		return fmt.Errorf("could not parse '%s' as an integer value: %s",
+		return fmt.Errorf("could not parse %q as an integer value: %s",
 			paramVal, err)
 	}
 

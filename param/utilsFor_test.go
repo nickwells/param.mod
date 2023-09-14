@@ -76,13 +76,13 @@ func (npi namedParamInitialiser) compare(
 
 	if p.Name() != npi.name {
 		t.Log(tID)
-		t.Errorf("\t: the name did not match: '%s' != '%s'\n",
+		t.Errorf("\t: the name did not match: %q != %q\n",
 			p.Name(), npi.name)
 		return
 	}
 	if p.Description() != npi.desc {
 		t.Log(tID)
-		t.Errorf("\t: the description did not match: '%s' != '%s'\n",
+		t.Errorf("\t: the description did not match: %q != %q\n",
 			p.Description(), npi.desc)
 		return
 	}
@@ -261,7 +261,7 @@ func errMapCheck(t *testing.T, testID string, errMap param.ErrMap, expected map[
 		for _, s := range expStrs {
 			if !errsContainStr(errs, s) {
 				nameLogged = logName(t, nameLogged, testID)
-				t.Errorf("\t: errors for '%s' should contain '%s' but don't",
+				t.Errorf("\t: errors for %q should contain %q but don't",
 					k, s)
 			}
 		}
@@ -270,7 +270,7 @@ func errMapCheck(t *testing.T, testID string, errMap param.ErrMap, expected map[
 	for k := range expected {
 		if _, ok := errMap[k]; !ok {
 			nameLogged = logName(t, nameLogged, testID)
-			t.Errorf("\t: error map should contain '%s' but doesn't", k)
+			t.Errorf("\t: error map should contain %q but doesn't", k)
 		}
 	}
 

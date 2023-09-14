@@ -14,7 +14,7 @@ import (
 // variable name is passed on for matching against parameters
 func (ps *PSet) SetEnvPrefix(prefix string) {
 	panicMsgIntro := fmt.Sprintf(
-		"Can't set '%s' as an environment variable prefix.", prefix)
+		"Can't set %q as an environment variable prefix.", prefix)
 	if prefix == "" {
 		panic(panicMsgIntro + " The environment prefix must not be empty")
 	}
@@ -28,18 +28,18 @@ func (ps *PSet) SetEnvPrefix(prefix string) {
 // prefixes or vice versa then it panics
 func (ps *PSet) AddEnvPrefix(prefix string) {
 	panicMsgIntro := fmt.Sprintf(
-		"Can't add '%s' as an environment variable prefix.", prefix)
+		"Can't add %q as an environment variable prefix.", prefix)
 	if prefix == "" {
 		panic(panicMsgIntro + " The environment prefix must not be empty")
 	}
 
 	for _, ep := range ps.envPrefixes {
 		if strings.HasPrefix(ep, prefix) {
-			panic(fmt.Sprintf("%s It's a prefix of the already added: '%s'",
+			panic(fmt.Sprintf("%s It's a prefix of the already added: %q",
 				panicMsgIntro, ep))
 		}
 		if strings.HasPrefix(prefix, ep) {
-			panic(fmt.Sprintf("%s The already added: '%s' is a prefix of it",
+			panic(fmt.Sprintf("%s The already added: %q is a prefix of it",
 				panicMsgIntro, ep))
 		}
 	}

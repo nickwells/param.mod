@@ -159,7 +159,7 @@ func TestPSet_SetGroupDescription(t *testing.T) {
 			panicExpected: true,
 			panicMsgContains: []string{
 				"Invalid group name:",
-				"the group name '99' is invalid. It must match",
+				`the group name "99" is invalid. It must match`,
 			},
 			expectedDescs: []groupNameAndDesc{
 				{name: "a", desc: ""},
@@ -204,7 +204,7 @@ func TestPSet_SetGroupDescription(t *testing.T) {
 				t.Log(tc.IDStr())
 				t.Logf("\t: expected: %s", gd.desc)
 				t.Logf("\t:  but was: %s", g.Desc())
-				t.Errorf("\t : bad group description for '%s'", gd.name)
+				t.Errorf("\t : bad group description for %q", gd.name)
 			}
 		}
 
@@ -213,11 +213,11 @@ func TestPSet_SetGroupDescription(t *testing.T) {
 			if ok != expected {
 				t.Log(tc.IDStr())
 				if expected {
-					t.Errorf("\t: the group description for '%s'"+
+					t.Errorf("\t: the group description for %q"+
 						" was not found when expected",
 						gName)
 				} else {
-					t.Errorf("\t: the group description for '%s'"+
+					t.Errorf("\t: the group description for %q"+
 						" was found when not expected",
 						gName)
 				}
