@@ -27,9 +27,13 @@ const (
 	helpNoPageArgName     = "help-no-page"
 )
 
+// helpFmt is a string type used to determine the format in which to display
+// the help text
+type helpFmt string
+
 const (
-	helpFmtTypeStd      = "standard"
-	helpFmtTypeMarkdown = "markdown"
+	helpFmtTypeStd      = helpFmt("standard")
+	helpFmtTypeMarkdown = helpFmt("markdown")
 )
 
 const (
@@ -189,9 +193,9 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 	)
 
 	ps.Add(helpFormatArgName,
-		psetter.Enum[string]{
+		psetter.Enum[helpFmt]{
 			Value: &h.helpFormat,
-			AllowedVals: psetter.AllowedVals[string]{
+			AllowedVals: psetter.AllowedVals[helpFmt]{
 				helpFmtTypeStd: "the standard format." +
 					" This is almost certainly what you want",
 				helpFmtTypeMarkdown: "markdown format. This will have" +

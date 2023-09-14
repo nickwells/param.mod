@@ -188,7 +188,7 @@ type StdHelp struct {
 	helpRequested   bool
 	pageOutput      bool
 
-	helpFormat string
+	helpFormat helpFmt
 
 	avalShownAlready map[string]string
 
