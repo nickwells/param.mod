@@ -3,8 +3,8 @@ package param
 // Example records a sample usage and a description for the "Examples"
 // section of the help message
 type Example struct {
-	Ex   string
-	Desc string
+	ex   string
+	desc string
 }
 
 // AddExample adds an example to the set of examples on the PSet. Note that
@@ -12,9 +12,19 @@ type Example struct {
 func (ps *PSet) AddExample(ex, desc string) {
 	ps.examples = append(ps.examples,
 		Example{
-			Ex:   ex,
-			Desc: desc,
+			ex:   ex,
+			desc: desc,
 		})
+}
+
+// Ex returns the example text
+func (ex Example) Ex() string {
+	return ex.ex
+}
+
+// Desc returns the descriptive text for the example
+func (ex Example) Desc() string {
+	return ex.desc
 }
 
 // HasExamples returns true if the PSet has any entries in the set of examples
