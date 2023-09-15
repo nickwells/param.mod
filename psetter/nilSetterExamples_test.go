@@ -3,8 +3,8 @@ package psetter_test
 import (
 	"fmt"
 
-	"github.com/nickwells/param.mod/v6/param"
 	"github.com/nickwells/param.mod/v6/paction"
+	"github.com/nickwells/param.mod/v6/param"
 	"github.com/nickwells/param.mod/v6/psetter"
 )
 

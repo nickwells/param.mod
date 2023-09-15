@@ -8,32 +8,33 @@ import (
 
 	"github.com/nickwells/param.mod/v6/param"
 	"github.com/nickwells/param.mod/v6/paramset"
+	"github.com/nickwells/param.mod/v6/paramtest"
 	"github.com/nickwells/param.mod/v6/psetter"
 	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
-// TestPSet ...
+// TestPSet runs various tests around constructing a parameter set
 func TestPSet(t *testing.T) {
 	var buff bytes.Buffer
 
 	testCases := []struct {
-		testName    string
+		testhelper.ID
 		psOpts      []param.PSetOptFunc
 		errExpected bool
 		expEStr     string
 	}{
 		{
-			testName: "nil",
+			ID: testhelper.MkID("nil"),
 		},
 		{
-			testName: "set writers",
+			ID: testhelper.MkID("set writers"),
 			psOpts: []param.PSetOptFunc{
 				param.SetStdWriter(&buff),
 				param.SetErrWriter(&buff),
 			},
 		},
 		{
-			testName: "bad error writer",
+			ID: testhelper.MkID("bad error writer"),
 			psOpts: []param.PSetOptFunc{
 				param.SetErrWriter(&buff),
 				param.SetErrWriter(nil),
@@ -42,7 +43,7 @@ func TestPSet(t *testing.T) {
 			expEStr:     "param.SetErrWriter cannot take a nil value",
 		},
 		{
-			testName: "bad std writer",
+			ID: testhelper.MkID("bad std writer"),
 			psOpts: []param.PSetOptFunc{
 				param.SetErrWriter(&buff),
 				param.SetStdWriter(nil),
@@ -51,7 +52,7 @@ func TestPSet(t *testing.T) {
 			expEStr:     "param.SetStdWriter cannot take a nil value",
 		},
 		{
-			testName: "setopt error",
+			ID: testhelper.MkID("setopt error"),
 			psOpts: []param.PSetOptFunc{
 				param.SetErrWriter(&buff),
 				func(ps *param.PSet) error { return errors.New("whoops") },
@@ -61,7 +62,7 @@ func TestPSet(t *testing.T) {
 		},
 	}
 
-	for i, tc := range testCases {
+	for _, tc := range testCases {
 		opts := make([]param.PSetOptFunc, 1, 1+len(tc.psOpts))
 		opts[0] = param.DontExitOnParamSetupErr
 		opts = append(opts, tc.psOpts...)
@@ -69,22 +70,76 @@ func TestPSet(t *testing.T) {
 		ps, err := paramset.NewNoHelpNoExitNoErrRpt(opts...)
 		if err != nil {
 			if !tc.errExpected {
-				t.Errorf("test %d: %s : returned an unexpected error: %s",
-					i, tc.testName, err)
+				t.Log(tc.IDStr())
+				t.Errorf("\t: returned an unexpected error: %s", err)
 			} else if err.Error() != tc.expEStr {
-				t.Errorf(
-					"test %d: %s : err was expected to be: %s\n\t: but was: %s",
-					i, tc.testName, tc.expEStr, err)
+				t.Log(tc.IDStr())
+				t.Logf("\t: err was expected to be: %s", tc.expEStr)
+				t.Logf("\t:                but was: %s", err)
+				t.Errorf("\t: bad error")
 			}
 		} else {
 			if tc.errExpected {
-				t.Errorf("test %d: %s : didn't return an expected error",
-					i, tc.testName)
+				t.Log(tc.IDStr())
+				t.Errorf("\t: didn't return an expected error")
 			}
 
 			if ps.AreSet() {
-				t.Errorf("test %d: %s : the parsed flag is unexpectedly set",
-					i, tc.testName)
+				t.Log(tc.IDStr())
+				t.Errorf("\t: the parsed flag is unexpectedly set")
+			}
+		}
+	}
+}
+
+// checkGroupDescs checks that the groups in the param set all have the
+// expected description.
+func checkGroupDescs(
+	t *testing.T,
+	testName string,
+	ps *param.PSet,
+	expectedDescs []groupNameAndDesc,
+) {
+	t.Helper()
+
+	for _, gd := range expectedDescs {
+		g, ok := ps.GetGroup(gd.name)
+		if !ok {
+			if gd.desc != "" {
+				t.Log(testName)
+				t.Errorf("\t : group %q was not found", gd.name)
+			}
+		} else if g.Desc() != gd.desc {
+			t.Log(testName)
+			t.Logf("\t: expected: %s", gd.desc)
+			t.Logf("\t:  but was: %s", g.Desc())
+			t.Errorf("\t : bad group description for %q", gd.name)
+		}
+	}
+}
+
+// checkGroupExistence checks that the groups in the param set all have the
+// expected description.
+func checkGroupExistence(
+	t *testing.T,
+	testName string,
+	ps *param.PSet,
+	groupsExpected map[string]bool,
+) {
+	t.Helper()
+
+	for gName, expected := range groupsExpected {
+		_, ok := ps.GetGroup(gName)
+		if ok != expected {
+			t.Log(testName)
+			if expected {
+				t.Errorf("\t: the group description for %q"+
+					" was not found when expected",
+					gName)
+			} else {
+				t.Errorf("\t: the group description for %q"+
+					" was found when not expected",
+					gName)
 			}
 		}
 	}
@@ -173,10 +228,7 @@ func TestPSet_SetGroupDescription(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		ps, err := paramset.NewNoHelpNoExitNoErrRpt()
-		if err != nil {
-			t.Fatal(tc.IDStr(), " : couldn't construct the PSet: ", err)
-		}
+		ps := paramtest.MakeParamSetOrFatal(t, tc.IDStr())
 
 		var panicked bool
 		var panicVal any
@@ -193,36 +245,9 @@ func TestPSet_SetGroupDescription(t *testing.T) {
 			panicked, tc.panicExpected,
 			panicVal, tc.panicMsgContains, stackTrace)
 
-		for _, gd := range tc.expectedDescs {
-			g, ok := ps.GetGroup(gd.name)
-			if !ok {
-				if gd.desc != "" {
-					t.Log(tc.IDStr())
-					t.Errorf("\t : group %q was not found", gd.name)
-				}
-			} else if g.Desc() != gd.desc {
-				t.Log(tc.IDStr())
-				t.Logf("\t: expected: %s", gd.desc)
-				t.Logf("\t:  but was: %s", g.Desc())
-				t.Errorf("\t : bad group description for %q", gd.name)
-			}
-		}
+		checkGroupDescs(t, tc.IDStr(), ps, tc.expectedDescs)
 
-		for gName, expected := range tc.groupsExpected {
-			_, ok := ps.GetGroup(gName)
-			if ok != expected {
-				t.Log(tc.IDStr())
-				if expected {
-					t.Errorf("\t: the group description for %q"+
-						" was not found when expected",
-						gName)
-				} else {
-					t.Errorf("\t: the group description for %q"+
-						" was found when not expected",
-						gName)
-				}
-			}
-		}
+		checkGroupExistence(t, tc.IDStr(), ps, tc.groupsExpected)
 	}
 }
 
@@ -288,7 +313,7 @@ func reportParamGroup(t *testing.T, groups []*param.Group) {
 }
 
 // checkParamGroup confirms that the param groups are as expected
-func checkParamGroup(t *testing.T, i int, tc paramGroupTC, ps *param.PSet) {
+func checkParamGroup(t *testing.T, tc paramGroupTC, ps *param.PSet) {
 	t.Helper()
 
 	groups := ps.GetGroups()
@@ -460,14 +485,11 @@ func TestGetParamGroups(t *testing.T) {
 		},
 	}
 
-	for i, tc := range testCases {
-		ps, err := paramset.NewNoHelpNoExit()
-		if err != nil {
-			t.Fatal("Cannot construct the PSet:", err.Error())
-		}
+	for _, tc := range testCases {
+		ps := paramtest.MakeParamSetOrFatal(t, tc.IDStr())
 		for _, npi := range tc.npi {
 			ps.Add(npi.name, npi.setter, npi.desc, npi.opts...)
 		}
-		checkParamGroup(t, i, tc, ps)
+		checkParamGroup(t, tc, ps)
 	}
 }

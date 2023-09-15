@@ -7,8 +7,8 @@ import (
 	"github.com/nickwells/param.mod/v6/psetter"
 )
 
-// ExampleUint64_standard demonstrates the use of a Uint64 setter.
-func ExampleUint64_standard() {
+// ExampleUint_standard demonstrates the use of a Uint setter.
+func ExampleUint_standard() {
 	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	var i uint64
@@ -30,9 +30,9 @@ func ExampleUint64_standard() {
 	//	i = 1
 }
 
-// ExampleUint64_withPassingChecks demonstrates how to add checks to be
+// ExampleUint_withPassingChecks demonstrates how to add checks to be
 // applied to the value.
-func ExampleUint64_withPassingChecks() {
+func ExampleUint_withPassingChecks() {
 	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	var i uint64
@@ -57,11 +57,11 @@ func ExampleUint64_withPassingChecks() {
 	//	i = 6
 }
 
-// ExampleUint64_withFailingChecks demonstrates how to add checks to be
+// ExampleUint_withFailingChecks demonstrates how to add checks to be
 // applied to the value. Note that there is normally no need to examine the
 // return from ps.Parse as the standard Helper will report any errors and
 // abort the program.
-func ExampleUint64_withFailingChecks() {
+func ExampleUint_withFailingChecks() {
 	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	var i uint64
@@ -94,11 +94,11 @@ func ExampleUint64_withFailingChecks() {
 	//	i = 0
 }
 
-// ExampleUint64_withNilValue demonstrates the behaviour of the package when
+// ExampleUint_withNilValue demonstrates the behaviour of the package when
 // an invalid setter is provided. In this case the Value to be set has not
 // been initialised. Note that in production code you should not recover from
 // the panic, instead you should fix the code that caused it.
-func ExampleUint64_withNilValue() {
+func ExampleUint_withNilValue() {
 	defer func() { // For test purposes only - do not recover in live code
 		if p := recover(); p != nil {
 			fmt.Println("panic")

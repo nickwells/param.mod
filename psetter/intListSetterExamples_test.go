@@ -7,8 +7,8 @@ import (
 	"github.com/nickwells/param.mod/v6/psetter"
 )
 
-// ExampleInt64List_standard demonstrates the use of a Int64List setter.
-func ExampleInt64List_standard() {
+// ExampleIntList_standard demonstrates the use of a IntList setter.
+func ExampleIntList_standard() {
 	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	il := []int64{42}
@@ -35,9 +35,9 @@ func ExampleInt64List_standard() {
 	//	il[1] = 23
 }
 
-// ExampleInt64List_withPassingChecks demonstrates how to add checks to be
+// ExampleIntList_withPassingChecks demonstrates how to add checks to be
 // applied to the value.
-func ExampleInt64List_withPassingChecks() {
+func ExampleIntList_withPassingChecks() {
 	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	il := []int64{42}
@@ -45,7 +45,7 @@ func ExampleInt64List_withPassingChecks() {
 	ps.Add("my-ints",
 		psetter.IntList[int64]{
 			Value: &il,
-			Checks: []check.Int64Slice{
+			Checks: []check.ValCk[[]int64]{
 				check.SliceAll[[]int64, int64](check.ValGT[int64](5)),
 			},
 		}, "help text")
@@ -67,11 +67,11 @@ func ExampleInt64List_withPassingChecks() {
 	//	il[1] = 23
 }
 
-// ExampleInt64List_withFailingChecks demonstrates how to add checks to be
+// ExampleIntList_withFailingChecks demonstrates how to add checks to be
 // applied to the value. Note that there is normally no need
 // to examine the return from ps.Parse as the standard Helper will report any
 // errors and abort the program.
-func ExampleInt64List_withFailingChecks() {
+func ExampleIntList_withFailingChecks() {
 	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	il := []int64{42}
@@ -79,7 +79,7 @@ func ExampleInt64List_withFailingChecks() {
 	ps.Add("my-ints",
 		psetter.IntList[int64]{
 			Value: &il,
-			Checks: []check.Int64Slice{
+			Checks: []check.ValCk[[]int64]{
 				check.SliceAll[[]int64, int64](check.ValGT[int64](5)),
 			},
 		}, "help text")
@@ -108,11 +108,11 @@ func ExampleInt64List_withFailingChecks() {
 	//	il[0] = 42
 }
 
-// ExampleInt64List_withNilValue demonstrates the behaviour of the package when
+// ExampleIntList_withNilValue demonstrates the behaviour of the package when
 // an invalid setter is provided. In this case the Value to be set has not
 // been initialised. Note that in production code you should not recover from
 // the panic, instead you should fix the code that caused it.
-func ExampleInt64List_withNilValue() {
+func ExampleIntList_withNilValue() {
 	defer func() { // For test purposes only - do not recover in live code
 		if p := recover(); p != nil {
 			fmt.Println("panic")
