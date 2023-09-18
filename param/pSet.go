@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"path"
+	"slices"
 	"sort"
 	"strings"
 
@@ -258,10 +259,18 @@ func (ps *PSet) Remainder() []string { return ps.remainingParams }
 // Errors returns the map of errors for the param set
 func (ps PSet) Errors() ErrMap { return ps.errors }
 
-// AddErr adds the errors to the named entry in the Error Map
-func (ps *PSet) AddErr(name string, err ...error) {
-	ps.errorCount += len(err)
-	ps.errors[name] = append(ps.errors[name], err...)
+// AddErr adds the errors to the named entry in the Error Map. Any nil errors
+// are filtered out of the slice and if the slice is empty no change is made
+func (ps *PSet) AddErr(name string, errs ...error) {
+	errs = slices.DeleteFunc[[]error, error](
+		errs, func(e error) bool { return e == nil })
+
+	if len(errs) == 0 {
+		return
+	}
+
+	ps.errorCount += len(errs)
+	ps.errors[name] = append(ps.errors[name], errs...)
 }
 
 // Help will call the helper's Help function
