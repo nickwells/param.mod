@@ -10,7 +10,7 @@ stdParams-cmpl   [ 3 parameters, all hidden ]
     testdata/.config/github.com/nickwells/param.mod/v6/phelp/group-stdParams-cmpl.cfg
 
 ---------------
-stdParams-help   [ 11 parameters, 10 hidden ]
+stdParams-help   [ 12 parameters, 11 hidden ]
     These are parameters for printing a help message.
 
 ---------------

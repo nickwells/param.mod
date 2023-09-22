@@ -11,7 +11,7 @@ stdParams-cmpl   [ 3 parameters, all hidden ]
 ---    : completions-zsh-make
 
 ---------------
-stdParams-help   [ 11 parameters, 10 hidden ]
+stdParams-help   [ 12 parameters, 11 hidden ]
 ---    : help or usage
 ---    : help-all or help-a
 ---    : help-all-short, help-as or help-sa
@@ -24,6 +24,7 @@ stdParams-help   [ 11 parameters, 10 hidden ]
 ---    : help-show
 Set    : help-summary, help-s or help-short
              at : [command line]: Supplied Parameter:3: "-help-s"
+---    : help-width
 
 ---------------
 stdParams-params [ 7 parameters, all hidden ]
@@ -62,7 +63,7 @@ Usage: PROGRAM NAME UNKNOWN -param2=int ...
 
 ===============
 
-stdParams-help   [ 11 parameters, 10 hidden ]
+stdParams-help   [ 12 parameters, 11 hidden ]
       [-help, -usage]
 ---------------
 test-group1      [ 6 parameters, 1 hidden ]

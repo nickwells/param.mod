@@ -41,7 +41,9 @@ func (h StdHelp) Help(ps *param.PSet, messages ...string) {
 		}
 		w = ps.ErrW()
 	}
-	twc := twrap.NewTWConfOrPanic(twrap.SetWriter(w))
+	twc := twrap.NewTWConfOrPanic(
+		twrap.SetWriter(w),
+		twrap.SetTargetLineLen(h.helpLineLen))
 
 	printSep := false
 	if len(messages) > 0 {

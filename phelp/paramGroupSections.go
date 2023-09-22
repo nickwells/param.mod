@@ -211,7 +211,9 @@ func showSeeNotes(twc *twrap.TWConf, p *param.ByName) {
 // showAllowedVals prints the allowed values for a parameter. It will print
 // a reference to an earlier parameter if the allowed value text has been
 // seen already and the text is longer than 50 characters
-func (h StdHelp) showAllowedVals(twc *twrap.TWConf, pName string, s param.Setter) {
+func (h StdHelp) showAllowedVals(
+	twc *twrap.TWConf, pName string, s param.Setter,
+) {
 	const prefix = "Allowed values: "
 	const longString = 50
 

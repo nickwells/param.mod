@@ -2,7 +2,7 @@ Usage: PROGRAM NAME UNKNOWN -param2=int ...
 
 ===============
 
-stdParams-help   [ 11 parameters, 10 hidden ]
+stdParams-help   [ 12 parameters, 11 hidden ]
       [-help, -usage]
 ---------------
 test-group1      [ 6 parameters, 1 hidden ]

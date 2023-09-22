@@ -55,7 +55,7 @@ stdParams-cmpl   [ 3 parameters ]
                                   instead printed to standard output.
             Initial value: none
 ---------------
-stdParams-help   [ 11 parameters ]
+stdParams-help   [ 12 parameters ]
     These are parameters for printing a help message.
 
       [-help, -usage]
@@ -170,6 +170,15 @@ stdParams-help   [ 11 parameters ]
             descriptions are not shown.
 
             The program will exit after the help message is shown.
+      [-help-width=int]
+            when showing help wrap the output to the width given here.
+
+            Note that some shells will set the COLUMNS variable to the width of
+            the current terminal. You can pass this as the value to get a
+            full-width help message.
+            Allowed values: any value that can be read as a whole number subject
+                            to checks
+            Initial value: 80
 ---------------
 stdParams-params [ 7 parameters ]
     These are the parameter-handling parameters. There are parameters for

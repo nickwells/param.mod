@@ -188,7 +188,8 @@ type StdHelp struct {
 	helpRequested   bool
 	pageOutput      bool
 
-	helpFormat helpFmt
+	helpLineLen int
+	helpFormat  helpFmt
 
 	avalShownAlready map[string]string
 
@@ -227,7 +228,8 @@ func NewStdHelp() *StdHelp {
 
 		zshCompAction: zshCompActionNone,
 
-		helpFormat: helpFmtTypeStd,
+		helpLineLen: twrap.DfltTargetLineLen,
+		helpFormat:  helpFmtTypeStd,
 
 		paramsSetFormat: paramSetFmtStd,
 	}

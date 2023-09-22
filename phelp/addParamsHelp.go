@@ -25,6 +25,7 @@ const (
 	helpNotesArgName      = "help-notes"
 	helpFormatArgName     = "help-format"
 	helpNoPageArgName     = "help-no-page"
+	helpWidthArgName      = "help-width"
 )
 
 // helpFmt is a string type used to determine the format in which to display
@@ -221,6 +222,23 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			" variable or 'less' if 'PAGER' is not set or the command"+
 			" it refers to cannot be found)",
 		param.AltNames("help-dont-page", "help-no-pager"),
+		param.GroupName(groupName),
+		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
+		param.PostAction(paction.SetVal(&h.helpRequested, true)),
+	)
+
+	ps.Add(helpWidthArgName,
+		psetter.Int[int]{
+			Value: &h.helpLineLen,
+			Checks: []check.ValCk[int]{
+				check.ValGT[int](0),
+			},
+		},
+		"when showing help wrap the output to the width given here."+
+			"\n\n"+
+			"Note that some shells will set the COLUMNS variable"+
+			" to the width of the current terminal. You can pass"+
+			" this as the value to get a full-width help message.",
 		param.GroupName(groupName),
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.PostAction(paction.SetVal(&h.helpRequested, true)),

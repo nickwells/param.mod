@@ -12,7 +12,7 @@ Usage: PROGRAM NAME UNKNOWN ...
 
 ===============
 
-stdParams-help   [ 11 parameters, 10 hidden ]
+stdParams-help   [ 12 parameters, 11 hidden ]
     These are parameters for printing a help message.
 
       [-help, -usage]

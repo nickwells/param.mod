@@ -78,7 +78,7 @@ func (s Calculated[T]) AllowedValues() string {
 	if s.NoDefault {
 		return ""
 	}
-	return s.Default.Name
+	return "Either " + s.Default.Name + ", or"
 }
 
 // AllowedValuesMap returns the allowed values and their associated tags

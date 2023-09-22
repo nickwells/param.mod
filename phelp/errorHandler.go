@@ -23,7 +23,9 @@ func (h StdHelp) ErrorHandler(ps *param.PSet, errMap param.ErrMap) {
 	if !h.reportErrors {
 		return
 	}
-	twc := twrap.NewTWConfOrPanic(twrap.SetWriter(ps.ErrW()))
+	twc := twrap.NewTWConfOrPanic(
+		twrap.SetWriter(ps.ErrW()),
+		twrap.SetTargetLineLen(h.helpLineLen))
 
 	ReportErrors(twc, ps.ProgName(), errMap)
 
@@ -38,7 +40,9 @@ func (h StdHelp) ErrorHandler(ps *param.PSet, errMap param.ErrMap) {
 // ReportErrors but writing to the error writer
 func reportErrors(h StdHelp, _ *twrap.TWConf, ps *param.PSet) int {
 	if h.reportErrors {
-		twc := twrap.NewTWConfOrPanic(twrap.SetWriter(ps.ErrW()))
+		twc := twrap.NewTWConfOrPanic(
+			twrap.SetWriter(ps.ErrW()),
+			twrap.SetTargetLineLen(h.helpLineLen))
 		ReportErrors(twc, ps.ProgName(), ps.Errors())
 	}
 
