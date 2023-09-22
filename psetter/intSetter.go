@@ -5,16 +5,17 @@ import (
 	"strconv"
 
 	"github.com/nickwells/check.mod/v2/check"
+	"github.com/nickwells/mathutil.mod/v2/mathutil"
 	"golang.org/x/exp/constraints"
 )
 
-// Int allows you to give a parameter that can be used to set an
-// int64 value.
+// Int allows you to give a parameter that can be used to set a signed
+// integer value.
 type Int[T constraints.Signed] struct {
 	ValueReqMandatory
 
 	// You must set a Value, the program will panic if not. This is a pointer
-	// to the int64 value that the setter is setting.
+	// to the signed integer value that the setter is setting.
 	Value *T
 	// The Checks, if any, are applied to the supplied parameter value and
 	// the Value will only be update if they all return a nil error.
@@ -32,7 +33,7 @@ func (s Int[T]) CountChecks() int {
 // an error. Only if the value is parsed successfully and no checks are
 // violated is the Value set.
 func (s Int[T]) SetWithVal(_ string, paramVal string) error {
-	v64, err := strconv.ParseInt(paramVal, 0, bitsInType(T(0)))
+	v64, err := strconv.ParseInt(paramVal, 0, mathutil.BitsInType(T(0)))
 	if err != nil {
 		return fmt.Errorf("could not interpret %q as a whole number: %s",
 			paramVal, err)

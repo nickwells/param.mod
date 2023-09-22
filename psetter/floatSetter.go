@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/nickwells/check.mod/v2/check"
+	"github.com/nickwells/mathutil.mod/v2/mathutil"
 	"golang.org/x/exp/constraints"
 )
 
@@ -33,7 +34,7 @@ func (s Float[T]) CountChecks() int {
 // and the error is returned. Only if the parameter value is parsed
 // successfully and no checks fail is the Value set.
 func (s Float[T]) SetWithVal(_ string, paramVal string) error {
-	v64, err := strconv.ParseFloat(paramVal, bitsInType(T(0)))
+	v64, err := strconv.ParseFloat(paramVal, mathutil.BitsInType(T(0)))
 	if err != nil {
 		return fmt.Errorf("could not interpret %q as a number: %s",
 			paramVal, err)

@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/nickwells/check.mod/v2/check"
+	"github.com/nickwells/mathutil.mod/v2/mathutil"
 	"golang.org/x/exp/constraints"
 )
 
@@ -40,7 +41,7 @@ func (s IntList[T]) SetWithVal(_ string, paramVal string) error {
 
 	v := make([]T, 0, len(sv))
 	for i, strVal := range sv {
-		i64, err := strconv.ParseInt(strVal, 0, bitsInType(T(0)))
+		i64, err := strconv.ParseInt(strVal, 0, mathutil.BitsInType(T(0)))
 		if err != nil {
 			return fmt.Errorf("bad value: %q:"+
 				" part: %d (%s) cannot be interpreted as a whole number: %s",

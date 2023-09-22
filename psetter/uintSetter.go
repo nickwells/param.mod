@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/nickwells/check.mod/v2/check"
+	"github.com/nickwells/mathutil.mod/v2/mathutil"
 	"golang.org/x/exp/constraints"
 )
 
@@ -32,7 +33,7 @@ func (s Uint[T]) CountChecks() int {
 // an error. Only if the value is parsed successfully and no checks are
 // violated is the Value set.
 func (s Uint[T]) SetWithVal(_ string, paramVal string) error {
-	v64, err := strconv.ParseUint(paramVal, 0, bitsInType(T(0)))
+	v64, err := strconv.ParseUint(paramVal, 0, mathutil.BitsInType(T(0)))
 	if err != nil {
 		return fmt.Errorf(
 			"could not interpret %q as a positive whole number: %s",
