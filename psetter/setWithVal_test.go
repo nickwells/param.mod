@@ -1,6 +1,7 @@
 package psetter_test
 
 import (
+	"errors"
 	"regexp"
 	"testing"
 	"time"
@@ -138,6 +139,39 @@ func TestSetWithVal(t *testing.T) {
 	setterTimeLocationWithChecks := psetter.TimeLocation{
 		Value:  &vTimeLocation,
 		Checks: []check.TimeLocation{},
+	}
+
+	var vCSInt int
+	calcSetterWithChecks := psetter.Calculated[int]{
+		Value: &vCSInt,
+		CalcMap: map[string]psetter.NamedCalc[int]{
+			"std": {
+				Name: "standard",
+				Calc: func(_, _ string) (int, error) { return 42, nil },
+			},
+			"std2": {
+				Name: "bad standard",
+				Calc: func(_, _ string) (int, error) { return 24, nil },
+			},
+		},
+		NoDefault: true,
+		Checks:    []check.ValCk[int]{check.ValEQ[int](42)},
+	}
+	calcSetterWithBadTC := psetter.Calculated[int]{
+		Value: &vCSInt,
+		CalcMap: map[string]psetter.NamedCalc[int]{
+			"std": {
+				Name: "standard",
+				Calc: func(_, _ string) (int, error) { return 42, nil },
+			},
+			"std2": {
+				Name: "bad standard",
+				Calc: func(_, _ string) (int, error) {
+					return 24, errors.New("bad value")
+				},
+			},
+		},
+		NoDefault: true,
 	}
 
 	testCases := []struct {
@@ -443,6 +477,30 @@ func TestSetWithVal(t *testing.T) {
 				"could not find \"nonesuch\" as a time location"),
 			s:     setterTimeLocationWithChecks,
 			value: "nonesuch",
+		},
+		{
+			ID:     testhelper.MkID("Calculated[int] with checks - good"),
+			s:      calcSetterWithChecks,
+			value:  "std",
+			expVal: "42",
+		},
+		{
+			ID:     testhelper.MkID("Calculated[int] with checks - bad"),
+			ExpErr: testhelper.MkExpErr("the value (24) must equal 42"),
+			s:      calcSetterWithChecks,
+			value:  "std2",
+		},
+		{
+			ID:     testhelper.MkID("Calculated[int] with TC - good"),
+			s:      calcSetterWithBadTC,
+			value:  "std",
+			expVal: "42",
+		},
+		{
+			ID:     testhelper.MkID("Calculated[int] with TC - bad"),
+			ExpErr: testhelper.MkExpErr("bad value"),
+			s:      calcSetterWithBadTC,
+			value:  "std2",
 		},
 	}
 

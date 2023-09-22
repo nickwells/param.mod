@@ -54,6 +54,13 @@ func TestCheck(t *testing.T) {
 		"in the current list of entries is invalid",
 	}
 
+	nc := psetter.NamedCalc[int64]{
+		Name: "name",
+		Calc: func(_, _ string) (int64, error) {
+			return 42, nil
+		},
+	}
+
 	testCases := []struct {
 		testhelper.ID
 		testhelper.ExpPanic
@@ -349,6 +356,73 @@ func TestCheck(t *testing.T) {
 			s:  &psetter.TimeLocation{},
 			ExpPanic: testhelper.MkExpPanic("test: psetter.TimeLocation " +
 				nilValueMsg),
+		},
+		{
+			ID: testhelper.MkID("Calculated - ok, with default"),
+			s: &psetter.Calculated[int64]{
+				Value: &i,
+				CalcMap: map[string]psetter.NamedCalc[int64]{
+					"s1": nc,
+				},
+				Default: nc,
+			},
+		},
+		{
+			ID: testhelper.MkID("Calculated - ok, no default"),
+			s: &psetter.Calculated[int64]{
+				Value: &i,
+				CalcMap: map[string]psetter.NamedCalc[int64]{
+					"s1": nc,
+					"s2": nc,
+				},
+				NoDefault: true,
+			},
+		},
+		{
+			ID:       testhelper.MkID("Calculated - bad, empty CalcMap"),
+			ExpPanic: testhelper.MkExpPanic("the CalcMap cannot be empty"),
+			s: &psetter.Calculated[int64]{
+				Value: &i,
+			},
+		},
+		{
+			ID: testhelper.MkID(
+				"Calculated - bad, no default, len CalcMap < 2"),
+			ExpPanic: testhelper.MkExpPanic(
+				"with no default value the CalcMap must have" +
+					" at least 2 entries"),
+			s: &psetter.Calculated[int64]{
+				Value: &i,
+				CalcMap: map[string]psetter.NamedCalc[int64]{
+					"s1": nc,
+				},
+				NoDefault: true,
+			},
+		},
+		{
+			ID: testhelper.MkID("Calculated - bad - bad default Name"),
+			ExpPanic: testhelper.MkExpPanic(
+				"the default NamedCalc is invalid:" +
+					" the Name must not be empty"),
+			s: &psetter.Calculated[int64]{
+				Value: &i,
+				CalcMap: map[string]psetter.NamedCalc[int64]{
+					"s1": nc,
+				},
+			},
+		},
+		{
+			ID: testhelper.MkID("Calculated - bad - bad default Calc"),
+			ExpPanic: testhelper.MkExpPanic(
+				"the default NamedCalc is invalid:" +
+					" the Calc must not be nil"),
+			s: &psetter.Calculated[int64]{
+				Value: &i,
+				CalcMap: map[string]psetter.NamedCalc[int64]{
+					"s1": nc,
+				},
+				Default: psetter.NamedCalc[int64]{Name: "name"},
+			},
 		},
 	}
 
