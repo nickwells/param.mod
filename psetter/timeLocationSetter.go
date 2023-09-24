@@ -6,6 +6,8 @@ import (
 	"time"
 
 	"github.com/nickwells/check.mod/v2/check"
+	"github.com/nickwells/english.mod/english"
+	"github.com/nickwells/strdist.mod/strdist"
 )
 
 // TimeLocation allows you to give a parameter that can be used to set a
@@ -18,6 +20,11 @@ type TimeLocation struct {
 	// a pointer to the pointer to the Location, you should initialise it
 	// with the address of the Location pointer.
 	Value **time.Location
+
+	// Locations (which can be empty) is used to provide an improved error
+	// message when the location cannot be loaded.
+	Locations []string
+
 	// The Checks, if any, are applied to the supplied parameter value and
 	// the new parameter will be applied only if they all return a nil error.
 	Checks []check.TimeLocation
@@ -26,6 +33,77 @@ type TimeLocation struct {
 // CountChecks returns the number of check functions this setter has
 func (s TimeLocation) CountChecks() int {
 	return len(s.Checks)
+}
+
+// makeSuggestionStr formats the alternate locations into a message suitable
+// for presentation to the user.
+func (s TimeLocation) makeSuggestionStr(altLocs []string) string {
+	if len(altLocs) == 0 {
+		return ""
+	}
+
+	preamble := ", did you mean "
+	if len(altLocs) > 1 {
+		preamble += "one of "
+	}
+
+	return preamble + `"` + english.Join(altLocs, `", "`, `" or "`) + `"`
+}
+
+// suggestAltTimeLocation tries to find values in the list of available
+// locations which are similar to the badLoc value
+func (s TimeLocation) suggestAltTimeLocation(badLoc string) string {
+	if len(s.Locations) == 0 {
+		return ""
+	}
+
+	var altLocs []string
+	for _, f := range []func(string, []string) []string{
+		// This finds matches against the locations
+		func(s string, locs []string) []string {
+			return strdist.CaseBlindCosineFinder.FindNStrLike(3, s, locs...)
+		},
+		// This finds those entries in Locations which have a name with parts
+		// separated by a '/'. This is how geographical timezone locations
+		// are represented, for instance Europe/London, Asia/Jerusalem or
+		// America/Indiana/Indianapolis. The match is just against the last
+		// part of the name, the city name (London, Jerusalem or
+		// Indianapolis). Any discovered matches are then mapped back to the
+		// original full name.
+		func(s string, locs []string) []string {
+			justCities := []string{} // a misnomer as they aren't all city names
+			backMap := map[string][]string{}
+			for _, l := range locs {
+				parts := strings.Split(l, "/")
+				if len(parts) > 1 {
+					city := parts[len(parts)-1]
+					justCities = append(justCities, city)
+					backMap[city] = append(backMap[city], l)
+				}
+			}
+			matches := strdist.CaseBlindCosineFinder.FindNStrLike(
+				3, s, justCities...)
+			if len(matches) == 0 {
+				return matches
+			}
+			rval := []string{}
+			for _, m := range matches {
+				rval = append(rval, backMap[m]...)
+			}
+			return rval
+		},
+	} {
+		altLocs = f(badLoc, s.Locations)
+		if len(altLocs) > 0 {
+			break
+		}
+		altLocs = f(strings.ReplaceAll(badLoc, " ", "_"), s.Locations)
+		if len(altLocs) > 0 {
+			break
+		}
+	}
+
+	return s.makeSuggestionStr(altLocs)
 }
 
 // SetWithVal (called when a value follows the parameter) checks that the
@@ -41,8 +119,8 @@ func (s TimeLocation) SetWithVal(_ string, paramVal string) error {
 		var e2 error
 		v, e2 = time.LoadLocation(convertedVal)
 		if e2 != nil {
-			return fmt.Errorf("could not find %q as a time location: %s",
-				paramVal, err)
+			return fmt.Errorf("bad timezone %q%s: %w",
+				paramVal, s.suggestAltTimeLocation(paramVal), err)
 		}
 	}
 

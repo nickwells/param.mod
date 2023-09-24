@@ -474,7 +474,7 @@ func TestSetWithVal(t *testing.T) {
 		{
 			ID: testhelper.MkID("TimeLocation - bad"),
 			ExpErr: testhelper.MkExpErr(
-				"could not find \"nonesuch\" as a time location"),
+				`bad timezone "nonesuch"`),
 			s:     setterTimeLocationWithChecks,
 			value: "nonesuch",
 		},
