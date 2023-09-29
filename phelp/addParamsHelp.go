@@ -228,12 +228,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 	)
 
 	ps.Add(helpWidthArgName,
-		psetter.Int[int]{
-			Value: &h.helpLineLen,
-			Checks: []check.ValCk[int]{
-				check.ValGT[int](0),
-			},
-		},
+		getHelpWidthSetter(&h.helpLineLen, check.ValGT[int](0)),
 		"when showing help wrap the output to the width given here."+
 			"\n\n"+
 			"Note that some shells will set the COLUMNS variable"+

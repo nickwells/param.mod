@@ -170,14 +170,18 @@ stdParams-help   [ 12 parameters ]
             descriptions are not shown.
 
             The program will exit after the help message is shown.
-      [-help-width=int]
+      [-help-width=...]
             when showing help wrap the output to the width given here.
 
             Note that some shells will set the COLUMNS variable to the width of
             the current terminal. You can pass this as the value to get a
             full-width help message.
-            Allowed values: any value that can be read as a whole number subject
-                            to checks
+            Allowed values: Either some value that can be read as a whole
+                            number, or
+                            The value must be:
+                               auto: use the terminal width as the help width.
+                                  If the help output is not to a terminal, the
+                                  default width is used.
             Initial value: 80
 ---------------
 stdParams-params [ 7 parameters ]

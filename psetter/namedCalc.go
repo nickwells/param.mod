@@ -95,7 +95,7 @@ func Env2UintCalc[T constraints.Unsigned](name, envName string) NamedCalc[T] {
 // appropriate signed integer type
 func Val2IntCalc[T constraints.Signed]() NamedCalc[T] {
 	return NamedCalc[T]{
-		Name: "a parameter that can be converted to an integer",
+		Name: "some value that can be read as a whole number",
 		Calc: func(_, paramVal string) (T, error) {
 			v, err := strconv.ParseInt(paramVal, 0, mathutil.BitsInType(T(0)))
 			if err != nil {

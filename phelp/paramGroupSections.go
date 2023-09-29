@@ -220,7 +220,12 @@ func (h StdHelp) showAllowedVals(
 	var valueList string
 	if sAVM, ok := s.(psetter.AllowedValuesMapper); ok {
 		avm := sAVM.AllowedValuesMap()
-		valueList = "The value must be one of the following:\n" + avm.String()
+		if len(avm) == 1 {
+			valueList = "The value must be:\n" + avm.String()
+		} else if len(avm) > 1 {
+			valueList = "The value must be one of the following:\n" +
+				avm.String()
+		}
 	}
 
 	var aliases string
