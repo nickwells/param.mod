@@ -192,7 +192,7 @@ func TestPSet_SetGroupDescription(t *testing.T) {
 			},
 			panicExpected: true,
 			panicMsgContains: []string{
-				"description for param group b is already set to:",
+				"description for group \"b\" was set to:",
 				"group B desc",
 			},
 			expectedDescs: []groupNameAndDesc{

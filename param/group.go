@@ -86,12 +86,10 @@ func (g Group) ConfigFiles() []ConfigFileDetails {
 	return slices.Clone(g.configFiles)
 }
 
-// AddGroup will add a new param group to the PSet and set the
-// descriptive text. It will panic if the description has already been set -
-// this is to ensure that the group name is distinct. This description is
-// shown when the usage message is printed. If the short-form description is
-// chosen then the group name is shown instead so it's worth making it a
-// useful value.
+// AddGroup will add a new param group to the PSet and set the descriptive
+// text. This description is shown when the usage message is printed. If the
+// short-form description is chosen then just the group name is shown so it's
+// worth making it a useful value.
 //
 // A suggested standard for group names is to have parameters specific to a
 // command in a group called 'cmd'. This is the default group name if none is
@@ -116,24 +114,33 @@ func (ps *PSet) AddGroup(name, desc string) {
 		panic("Invalid group name: " + err.Error())
 	}
 
-	g, exists := ps.groups[name]
-	if exists && g.setFrom != "" {
-		msg := fmt.Sprintf(
-			"The description for param group %s is already set to:\n%s\nat: %s",
-			name, g.desc, g.setFrom)
-		panic(msg)
-	}
-
 	stk := make([]byte, 10000)
 	stkSize := runtime.Stack(stk, false)
+	setFrom := string(stk[:stkSize])
 
-	g = &Group{
-		name:    name,
-		desc:    desc,
-		setFrom: string(stk[:stkSize]),
+	g, exists := ps.groups[name]
+	// if it's a new group
+	if !exists {
+		ps.groups[name] = &Group{
+			name:    name,
+			desc:    desc,
+			setFrom: setFrom,
+		}
+		return
 	}
 
-	ps.groups[name] = g
+	// the group exists. If the description is not empty and this new
+	// description differs from the previous description then panic
+	if g.desc != desc &&
+		g.desc != "" {
+		panic(fmt.Sprintf(
+			"The description for group %q was set to:\n%s\nat: %s",
+			name, g.desc, g.setFrom))
+	}
+
+	// all's well - just set the description and where it was set from
+	g.desc = desc
+	g.setFrom = setFrom
 }
 
 // GetGroup returns a group pointer and a bool indicating whether the PSet
