@@ -80,10 +80,30 @@ func showNotesFmtStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 // showNotesRefsFmtStd adds a section to the Notes section of the help
 // message showing the named references (if any)
 func showNotesRefsFmtStd(twc *twrap.TWConf, refs []string, name string) {
-	if len(refs) > 0 {
-		twc.WrapPrefixed("See "+english.Plural(name, len(refs))+": ",
-			strings.Join(refs, ", "), descriptionIndent)
+	if len(refs) == 0 {
+		return
 	}
+
+	prefix := "See " + english.Plural(name, len(refs)) + ": "
+
+	targetSpace := twc.TargetLineLen - descriptionIndent - len(prefix)
+	refStr := refs[0]
+	spaceUsed := len(refs[0])
+
+	for i := 1; i < len(refs); i++ {
+		refStr += ","
+		spaceUsed++
+		if spaceUsed+1+len(refs[i]) > targetSpace {
+			refStr += "\n"
+			spaceUsed = 0
+		} else {
+			refStr += " "
+			spaceUsed++
+		}
+		refStr += refs[i]
+		spaceUsed += len(refs[i])
+	}
+	twc.WrapPrefixed(prefix, refStr, descriptionIndent)
 }
 
 // showNotesFmtMD produces the Notes section of the help message in Markdown
