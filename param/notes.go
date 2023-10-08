@@ -119,6 +119,9 @@ func NoteSeeNote(notes ...string) NoteOptFunc {
 	return func(n *Note) error {
 		for _, note := range notes {
 			note = strings.TrimSpace(note)
+			if note == n.headline {
+				continue
+			}
 
 			if whereAdded, exists := n.seeAlsoNote[note]; exists {
 				return fmt.Errorf(
