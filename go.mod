@@ -13,8 +13,8 @@ require (
 	github.com/nickwells/testhelper.mod/v2 v2.3.0
 	github.com/nickwells/twrap.mod v1.5.4
 	github.com/nickwells/xdg.mod v1.0.9
-	golang.org/x/exp v0.0.0-20230905200255-921286631fa9
-	golang.org/x/sys v0.12.0
+	golang.org/x/exp v0.0.0-20231006140011-7918f672742d
+	golang.org/x/sys v0.13.0
 )
 
 require (
@@ -22,6 +22,6 @@ require (
 	github.com/nickwells/tempus.mod v1.1.0 // indirect
 )
 
-require golang.org/x/term v0.12.0 // indirect
+require golang.org/x/term v0.13.0 // indirect
 
 go 1.21
