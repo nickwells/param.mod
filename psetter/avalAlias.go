@@ -1,10 +1,11 @@
 package psetter
 
 import (
-	"errors"
 	"fmt"
 	"sort"
 	"strings"
+
+	"github.com/nickwells/english.mod/english"
 )
 
 // Aliases - this maps strings to lists of strings. It is expected that the
@@ -80,36 +81,141 @@ func (a Aliases[T]) String() string {
 // entry in the associated list is in the AllowedVals. Also, an empty alias
 // is not allowed.
 func (a Aliases[T]) Check(av AllowedVals[T]) error {
-	for ak, v := range a {
-		pfx := fmt.Sprintf("Bad alias: %q: %q - ", ak, v)
-		if len(v) == 0 {
-			return errors.New(pfx + "it has an empty value")
-		}
+	aliasKeys := []T{}
+	for ak := range a {
+		aliasKeys = append(aliasKeys, ak)
+	}
+	sort.Slice(aliasKeys,
+		func(i, j int) bool { return aliasKeys[i] < aliasKeys[j] })
 
-		if _, ok := av[ak]; ok {
-			return errors.New(pfx + "an allowed value has the same name")
-		}
-
-		if ak == "" {
-			return errors.New(pfx + "the alias name may not be blank")
-		}
-		if strings.ContainsRune(string(ak), '=') {
-			return errors.New(pfx + "the alias name may not contain '=': ")
-		}
-
-		seenBefore := map[T]bool{}
-		for _, avk := range v {
-			if seenBefore[avk] {
-				return fmt.Errorf("%s%q appears more than once", pfx, avk)
+	allProblems := []string{}
+	for _, name := range aliasKeys {
+		aliasProblems := a.aliasNameProblems(name, av)
+		aliasProblems = append(aliasProblems, a.aliasValueProblems(name, av)...)
+		if len(aliasProblems) > 0 {
+			sep := " - "
+			if len(aliasProblems) > 1 {
+				sep = "\n    - "
 			}
-			seenBefore[avk] = true
-			if _, ok := av[avk]; !ok {
-				return fmt.Errorf("%s%q is not an allowed value",
-					pfx, avk)
-			}
+			sort.Strings(aliasProblems)
+			allProblems = append(allProblems,
+				fmt.Sprintf("%q: %#v%s%s",
+					name, a[name],
+					sep,
+					strings.Join(aliasProblems, sep)))
 		}
 	}
+
+	if len(allProblems) > 0 {
+		sep := " "
+		if len(allProblems) > 1 {
+			sep = fmt.Sprintf(" (%d)\n", len(allProblems))
+		}
+		return fmt.Errorf("bad %s:%s%s",
+			english.Plural("alias", len(allProblems)),
+			sep,
+			strings.Join(allProblems, "\n"))
+	}
+
 	return nil
+}
+
+// aliasValueProblems checks the alias value for validity. It must
+//   - not be empty
+//   - not contain  duplicates
+//   - not contain invalid values
+//
+// It returns all the problems found as a slice of strings
+func (a Aliases[T]) aliasValueProblems(name T, av AllowedVals[T]) []string {
+	if len(a[name]) == 0 {
+		return []string{"the alias maps to no values"}
+	}
+
+	indexes := map[T][]int{}
+	badValues := map[T][]int{}
+
+	for i, avk := range a[name] {
+		indexes[avk] = append(indexes[avk], i)
+		if _, ok := av[avk]; !ok {
+			badValues[avk] = append(badValues[avk], i)
+		}
+	}
+
+	valueProblems := a.reportBadAliases(badValues)
+	valueProblems = append(valueProblems, a.reportDuplicateVals(indexes)...)
+
+	return valueProblems
+}
+
+// aliasNameProblems checks the alias name for validity. It must
+//   - not be in the set of allowed values
+//   - not be blank
+//   - not contain  '='
+//
+// It returns all the problems found as a slice of strings
+func (a Aliases[T]) aliasNameProblems(name T, av AllowedVals[T]) []string {
+	if name == "" {
+		return []string{"the alias name must not be blank"}
+	}
+
+	if strings.ContainsRune(string(name), '=') {
+		return []string{"the alias name must not contain '='"}
+	}
+
+	if _, ok := av[name]; ok {
+		return []string{"an allowed value has the same name as the alias"}
+	}
+
+	return nil
+}
+
+// reportBadAliases generates a string listing all the invalid alias values.
+func (a Aliases[T]) reportBadAliases(badVals map[T][]int) []string {
+	bvKeys := []T{}
+	for k := range badVals {
+		bvKeys = append(bvKeys, k)
+	}
+
+	sort.Slice(bvKeys,
+		func(i, j int) bool { return bvKeys[i] < bvKeys[j] })
+
+	problems := []string{}
+	for _, k := range bvKeys {
+		iVals := []string{}
+		for _, i := range badVals[k] {
+			iVals = append(iVals, fmt.Sprintf("%d", i))
+		}
+		problems = append(problems,
+			fmt.Sprintf("%q (at index %s) is unknown",
+				k, english.Join(iVals, ", ", " and ")))
+	}
+	return problems
+}
+
+// reportDuplicateVals generates a string listing all the duplicate alias
+// values.
+func (a Aliases[T]) reportDuplicateVals(indexes map[T][]int) []string {
+	iKeys := []T{}
+	for k := range indexes {
+		iKeys = append(iKeys, k)
+	}
+
+	sort.Slice(iKeys,
+		func(i, j int) bool { return iKeys[i] < iKeys[j] })
+
+	problems := []string{}
+	for _, k := range iKeys {
+		if len(indexes[k]) > 1 {
+			iVals := []string{}
+			for _, i := range indexes[k] {
+				iVals = append(iVals, fmt.Sprintf("%d", i))
+			}
+			problems = append(problems,
+				fmt.Sprintf("%q appears more than once (at index %s)",
+					k, english.Join(iVals, ", ", " and ")))
+		}
+	}
+	return problems
 }
 
 // AllowedValuesAliasMap returns a copy of the map of aliases. This will be
