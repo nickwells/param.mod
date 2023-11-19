@@ -409,7 +409,8 @@ func TestSetWithVal(t *testing.T) {
 		{
 			ID: testhelper.MkID("pathname with expectation - bad"),
 			ExpErr: testhelper.MkExpErr(
-				"should exist but doesn't"),
+				"should exist but does not",
+				`"testdata/pathname" exists but "nonesuch" does not`),
 			s:     setterPathnameWithExpectation,
 			value: "testdata//pathname/nonesuch",
 		},

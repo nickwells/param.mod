@@ -10,7 +10,7 @@ PROGRAM NAME UNKNOWN: 4 errors were found in 3 categories
       param2:
             this parameter must be set somewhere
       params-file:
-            path: "testdata/nonesuch" should exist but doesn't
+            path: "testdata/nonesuch": should exist but does not
             At: [command line]: Supplied Parameter:1:
             "-params-file=testdata/nonesuch"
 
