@@ -92,10 +92,10 @@ func (av AllowedVals[T]) Check() error {
 	for k, v := range av {
 		pfx := fmt.Sprintf("Bad allowed value: %q: %q - ", k, v)
 		if k == "" {
-			return errors.New(pfx + "the allowed value may not be blank")
+			return errors.New(pfx + "the allowed value must not be blank")
 		}
 		if strings.ContainsRune(string(k), '=') {
-			return errors.New(pfx + "the allowed value may not contain '=': ")
+			return errors.New(pfx + "the allowed value must not contain '='")
 		}
 	}
 	return nil
