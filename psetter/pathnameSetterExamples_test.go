@@ -64,14 +64,16 @@ func ExamplePathname_withFailingExpectation() {
 
 	fmt.Printf("Before parsing    pathname: %q\n", pathname)
 	errMap := ps.Parse([]string{"-my-pathname", "testdata/noSuchFile.go"})
-	// We expect to see an error reported.
+	// We expect to see an error reported. Note that the Pathname setter
+	// suggests an alternative file from the same directory in the error
+	// message.
 	logErrs(errMap)
 	// There was an error with the parameter so the value will be unchanged
 	fmt.Printf("After  parsing    pathname: %q\n", pathname)
 	// Output:
 	// Before parsing    pathname: ""
 	// Errors for: my-pathname
-	//	: path: "testdata/noSuchFile.go" should exist but doesn't
+	//	: path: "testdata/noSuchFile.go": should exist but does not; "testdata" exists but "noSuchFile.go" does not, did you mean "testdata/SuchFile.go"
 	// At: [command line]: Supplied Parameter:2: "-my-pathname" "testdata/noSuchFile.go"
 	// After  parsing    pathname: ""
 }
@@ -101,9 +103,9 @@ func ExamplePathname_withPassingChecks() {
 	// After  parsing    pathname: "testdata/noSuchFile.go"
 }
 
-// ExamplePathname_withNilValue demonstrates the behaviour of the package when an
-// invalid setter is provided. In this case the Value to be set has not been
-// initialised. Note that in production code you should not recover
+// ExamplePathname_withNilValue demonstrates the behaviour of the package
+// when an invalid setter is provided. In this case the Value to be set has
+// not been initialised. Note that in production code you should not recover
 // from the panic, instead you should fix the code that caused it.
 func ExamplePathname_withNilValue() {
 	defer func() { // For test purposes only - do not recover in live code
