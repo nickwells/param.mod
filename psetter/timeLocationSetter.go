@@ -7,7 +7,7 @@ import (
 
 	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/english.mod/english"
-	"github.com/nickwells/strdist.mod/strdist"
+	"github.com/nickwells/strdist.mod/v2/strdist"
 )
 
 // TimeLocation allows you to give a parameter that can be used to set a
@@ -56,12 +56,13 @@ func (s TimeLocation) suggestAltTimeLocation(badLoc string) string {
 	if len(s.Locations) == 0 {
 		return ""
 	}
+	finder := strdist.DefaultFinders[strdist.CaseBlindAlgoNameCosine]
 
 	var altLocs []string
 	for _, f := range []func(string, []string) []string{
 		// This finds matches against the locations
 		func(s string, locs []string) []string {
-			return strdist.CaseBlindCosineFinder.FindNStrLike(3, s, locs...)
+			return finder.FindNStrLike(3, s, locs...)
 		},
 		// This finds those entries in Locations which have a name with parts
 		// separated by a '/'. This is how geographical timezone locations
@@ -81,8 +82,7 @@ func (s TimeLocation) suggestAltTimeLocation(badLoc string) string {
 					backMap[city] = append(backMap[city], l)
 				}
 			}
-			matches := strdist.CaseBlindCosineFinder.FindNStrLike(
-				3, s, justCities...)
+			matches := finder.FindNStrLike(3, s, justCities...)
 			if len(matches) == 0 {
 				return matches
 			}

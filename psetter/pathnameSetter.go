@@ -12,7 +12,7 @@ import (
 	"github.com/nickwells/english.mod/english"
 	"github.com/nickwells/filecheck.mod/filecheck"
 	"github.com/nickwells/fileparse.mod/fileparse"
-	"github.com/nickwells/strdist.mod/strdist"
+	"github.com/nickwells/strdist.mod/v2/strdist"
 )
 
 // Pathname allows you to give a parameter that can be used to set a pathname
@@ -53,7 +53,8 @@ func (s Pathname) findAlternatives(base, badName, tail string) string {
 	if err != nil && !errors.Is(err, io.EOF) {
 		return fmt.Sprintf(", cannot read the directory: %s", err)
 	}
-	alts := strdist.CaseBlindCosineFinder.FindNStrLike(3, badName, names...)
+	finder := strdist.DefaultFinders[strdist.CaseBlindAlgoNameCosine]
+	alts := finder.FindNStrLike(3, badName, names...)
 	var altStrs []string
 	for _, alt := range alts {
 		altStr := filepath.Join(base, alt, tail)

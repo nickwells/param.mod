@@ -9,7 +9,7 @@ require (
 	github.com/nickwells/fileparse.mod v1.1.31
 	github.com/nickwells/location.mod v1.2.27
 	github.com/nickwells/pager.mod v1.0.11
-	github.com/nickwells/strdist.mod v1.1.14
+	github.com/nickwells/strdist.mod/v2 v2.0.0
 	github.com/nickwells/testhelper.mod/v2 v2.3.0
 	github.com/nickwells/twrap.mod v1.5.4
 	github.com/nickwells/xdg.mod v1.0.9

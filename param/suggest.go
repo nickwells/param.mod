@@ -1,6 +1,6 @@
 package param
 
-import "github.com/nickwells/strdist.mod/strdist"
+import "github.com/nickwells/strdist.mod/v2/strdist"
 
 // SuggestionFunc is the type of a function that returns a slice of suggested
 // alternative names for the given string.
@@ -14,7 +14,8 @@ func SuggestParams(ps *PSet, s string) []string {
 		names = append(names, n)
 	}
 
-	return strdist.CaseBlindCosineFinder.FindNStrLike(3, s, names...)
+	finder := strdist.DefaultFinders[strdist.CaseBlindAlgoNameCosine]
+	return finder.FindNStrLike(3, s, names...)
 }
 
 // SuggestGroups finds those group names the shortest distance from the
@@ -25,7 +26,8 @@ func SuggestGroups(ps *PSet, s string) []string {
 		names = append(names, n)
 	}
 
-	return strdist.CaseBlindCosineFinder.FindNStrLike(3, s, names...)
+	finder := strdist.DefaultFinders[strdist.CaseBlindAlgoNameCosine]
+	return finder.FindNStrLike(3, s, names...)
 }
 
 // SuggestNotes finds those note names the shortest distance from the
@@ -36,5 +38,6 @@ func SuggestNotes(ps *PSet, s string) []string {
 		names = append(names, n)
 	}
 
-	return strdist.CaseBlindCosineFinder.FindNStrLike(3, s, names...)
+	finder := strdist.DefaultFinders[strdist.CaseBlindAlgoNameCosine]
+	return finder.FindNStrLike(3, s, names...)
 }

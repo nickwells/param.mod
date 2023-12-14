@@ -16,8 +16,8 @@ github.com/nickwells/mathutil.mod/v2 v2.3.0 h1:DwjCd05iqtXo62s0w20fOKRIfrzpa32Lx
 github.com/nickwells/mathutil.mod/v2 v2.3.0/go.mod h1:iMemGHs0c19VuPxoe2lu86p06BXBJAPGpUFQ2QABHDM=
 github.com/nickwells/pager.mod v1.0.11 h1:actfWhNh1TPtRpMPwJcRvYeuL2iRd+JQ44l+4KKsoJg=
 github.com/nickwells/pager.mod v1.0.11/go.mod h1:rRmwJHKd/xaSpi/xqJv7P7IJUtFeoJ9s/8yoJ+mh+tM=
-github.com/nickwells/strdist.mod v1.1.14 h1:miGKJ0y2XSCMtB3Bnk+WHf220BjOo6JrBaIueQxzstI=
-github.com/nickwells/strdist.mod v1.1.14/go.mod h1:LvWHapgiqnIutGkwlGZTZ74c1avDfQN1IF4gPQUZXkg=
+github.com/nickwells/strdist.mod/v2 v2.0.0 h1:zZTlvWdml+Ahn6Pmvz7vsbE8q5f4WqjBgz+48Ur34ws=
+github.com/nickwells/strdist.mod/v2 v2.0.0/go.mod h1:Z6tS2iEaC4w9mFxhg3CZwMebvICs+eQ2PrmPXeuCkyk=
 github.com/nickwells/tempus.mod v1.2.0 h1:74zhY4r8JieOP+1Bzh1J4+JjRkINanfeuZMUyp32gJ0=
 github.com/nickwells/tempus.mod v1.2.0/go.mod h1:k6QfE9lG7ZzsQMn5rY1eaBEljPuBwoysvxSaUqlhzYQ=
 github.com/nickwells/testhelper.mod/v2 v2.3.0 h1:b/EpnHiYr8dnr6C0a6zW2KAyHgfQ72pVw3cNklSzwxs=
