@@ -50,7 +50,7 @@ func (s Pathname) findAlternatives(base, badName, tail string) string {
 	defer f.Close()
 
 	names, err := f.Readdirnames(1000)
-	if err != nil && errors.Is(err, io.EOF) {
+	if err != nil && !errors.Is(err, io.EOF) {
 		return fmt.Sprintf(", cannot read the directory: %s", err)
 	}
 	alts := strdist.CaseBlindCosineFinder.FindNStrLike(3, badName, names...)
