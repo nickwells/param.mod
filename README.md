@@ -44,7 +44,7 @@ func main() {
 and here's a slightly bigger example using some of the common features
 
 ```go
-var param1 int64
+var param1 int
 var param2 bool
 
 func main() {
@@ -59,9 +59,9 @@ The work is done mostly in the addParam function which should take a pointer to 
 ```go
 func addParams(ps *param.PSet) error {
 	ps.Add("param-1",
-		psetter.Int64{
+		psetter.Int[int]{
 			Value:  &param1,
-			Checks: []check.Int64{check.Int64LT(42)},
+			Checks: []check.ValCk[int]{check.ValLT[int](42)},
 		},
 		"this sets the value of param1",
 		param.AltNames("p1", "p-1"))
