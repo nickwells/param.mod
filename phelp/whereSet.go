@@ -1,8 +1,8 @@
 package phelp
 
 import (
-	"github.com/nickwells/col.mod/v3/col"
-	"github.com/nickwells/col.mod/v3/col/colfmt"
+	"github.com/nickwells/col.mod/v4/col"
+	"github.com/nickwells/col.mod/v4/colfmt"
 	"github.com/nickwells/english.mod/english"
 	"github.com/nickwells/param.mod/v6/param"
 	"github.com/nickwells/twrap.mod/twrap"
@@ -135,7 +135,7 @@ func skipWhereSetReport(p *param.ByName) (bool, int) {
 // calcColumnWidths calculates the maximum parameter group name and parameter
 // name lengths. It only gives the values for those which have been set or
 // where an error was detected.
-func calcColumnWidths(groups []*param.Group) (int, int) {
+func calcColumnWidths(groups []*param.Group) (uint, uint) {
 	maxGNLen, maxPNLen := 0, 0
 
 	groupUsed := false
@@ -159,7 +159,7 @@ func calcColumnWidths(groups []*param.Group) (int, int) {
 		}
 		groupUsed = false
 	}
-	return maxGNLen, maxPNLen
+	return uint(maxGNLen), uint(maxPNLen)
 }
 
 func showWhereSetTable(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) {
@@ -172,7 +172,7 @@ func showWhereSetTable(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) {
 	groups := ps.GetGroups()
 	maxGroupNameLen, maxParamNameLen := calcColumnWidths(groups)
 
-	rpt := col.NewReport(hdr, twc.W,
+	rpt := col.NewReportOrPanic(hdr, twc.W,
 		col.New(&colfmt.Int{HandleZeroes: true}, "errs"),
 		col.New(&colfmt.String{W: maxGroupNameLen}, "parameter", "group"),
 		col.New(&colfmt.WrappedString{W: maxParamNameLen},

@@ -1,7 +1,7 @@
 github.com/nickwells/check.mod/v2 v2.1.14 h1:BU6hC9Z85SCpdtUtwjgBNxVvYhVC4DCbIZUyDTEyVN8=
 github.com/nickwells/check.mod/v2 v2.1.14/go.mod h1:nmx10D0I6AZ031gEgHy+NK4Mn9fiivB21U+aHUKDfIs=
-github.com/nickwells/col.mod/v3 v3.0.17 h1:q7dFXV5Wpo6zkRptuefRZr5g7Hiv5VU9wWBJRYVbw5k=
-github.com/nickwells/col.mod/v3 v3.0.17/go.mod h1:AJ2Ss/nXMiKYAqvZSAGRHSoBuVH9UV6r0udiflMJxLo=
+github.com/nickwells/col.mod/v4 v4.0.0 h1:hgjyrIiqa5OA7uzQ3QrkAhYFD6x2lRiyGZ+K+y9DSfw=
+github.com/nickwells/col.mod/v4 v4.0.0/go.mod h1:wzCEVPmgooU739tr67czVcHAvCdnvu6TSr16VVA9koo=
 github.com/nickwells/english.mod v1.1.5 h1:OFmYaQ83fguWAJs3mFUcUYKILKYE4qJRiNDNnuXwp4s=
 github.com/nickwells/english.mod v1.1.5/go.mod h1:CEoMsqNbwx3J9NpMm94O1x1OW266Tj7osHmwJkQ4y/4=
 github.com/nickwells/errutil.mod v1.2.14 h1:wcPCKjFN8o75h3d1wT2tZ1MEzuxXRQBoybcUzzHh7rI=
