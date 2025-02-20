@@ -12,7 +12,7 @@ import (
 // writer of the PSet (as given by the StdWriter method).
 func Report(msg string) param.ActionFunc {
 	return func(_ location.L, p *param.ByName, _ []string) error {
-		fmt.Fprint(p.StdWriter(), msg) // nolint: errcheck
+		fmt.Fprint(p.StdWriter(), msg)
 
 		return nil
 	}
@@ -22,7 +22,7 @@ func Report(msg string) param.ActionFunc {
 // writer of the PSet (as given by the ErrWriter method).
 func ErrReport(msg string) param.ActionFunc {
 	return func(_ location.L, p *param.ByName, _ []string) error {
-		fmt.Fprint(p.ErrWriter(), msg) // nolint: errcheck
+		fmt.Fprint(p.ErrWriter(), msg)
 
 		return nil
 	}
@@ -33,7 +33,7 @@ func ErrReport(msg string) param.ActionFunc {
 // printed the message it will exit with status 0.
 func ReportAndExit(msg string) param.ActionFunc {
 	return func(_ location.L, p *param.ByName, _ []string) error {
-		fmt.Fprint(p.StdWriter(), msg) // nolint: errcheck
+		fmt.Fprint(p.StdWriter(), msg)
 		os.Exit(0)
 
 		return nil
@@ -45,7 +45,7 @@ func ReportAndExit(msg string) param.ActionFunc {
 // printed the message it will exit with status 1.
 func ErrReportAndExit(msg string) param.ActionFunc {
 	return func(_ location.L, p *param.ByName, _ []string) error {
-		fmt.Fprint(p.ErrWriter(), msg) // nolint: errcheck
+		fmt.Fprint(p.ErrWriter(), msg)
 		os.Exit(1)
 
 		return nil
