@@ -24,4 +24,4 @@ require (
 
 require golang.org/x/term v0.14.0 // indirect
 
-go 1.21
+go 1.24
