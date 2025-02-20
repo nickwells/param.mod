@@ -14,7 +14,7 @@ import (
 // want to see what has been ignored in order to detect mistakes.
 func showUnusedParams(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) int {
 	up := ps.UnusedParams()
-	twc.Println("Unused Parameters: ", len(up)) //nolint: errcheck
+	twc.Println("Unused Parameters: ", len(up))
 
 	paramsByName := make([]string, 0, len(up))
 	for name := range up {

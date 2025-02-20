@@ -33,7 +33,7 @@ func showConfigFiles(h StdHelp, twc *twrap.TWConf, cf []param.ConfigFileDetails)
 		twc.Printf("    %s %s\n", prefix, f.String())
 	}
 	if hasNonStrictFiles {
-		twc.Println() //nolint: errcheck
+		twc.Println()
 		twc.WrapPrefixed("Note: ",
 			"the files marked with a '*' are allowed to contain"+
 				" parameters not valid for this program. Any such"+
@@ -58,7 +58,7 @@ func showGroupConfigFiles(h StdHelp, twc *twrap.TWConf, gf []groupCF) {
 	if h.showSummary {
 		for _, f := range gf {
 			twc.Println("group-config-file:" + f.groupName +
-				":" + f.cf.String()) //nolint: errcheck
+				":" + f.cf.String())
 		}
 		return
 	}
@@ -66,18 +66,18 @@ func showGroupConfigFiles(h StdHelp, twc *twrap.TWConf, gf []groupCF) {
 	twc.Print("\n  Group Configuration Files\n\n")
 
 	for _, f := range gf {
-		twc.Println("    "+f.groupName+": ", f.cf.String()) //nolint: errcheck
+		twc.Println("    "+f.groupName+": ", f.cf.String())
 	}
 
 	if len(gf) > 1 {
-		twc.Println() //nolint: errcheck
+		twc.Println()
 		twc.WrapPrefixed("Note: ",
 			"the order in which groups are processed is indeterminate"+
 				" but within each group the files are processed in the"+
 				" order listed above.", textIndent)
 	}
 
-	twc.Println() //nolint: errcheck
+	twc.Println()
 	twc.WrapPrefixed("Note: ",
 		"parameters given in group config files must be valid"+
 			" parameters of the program and members"+
