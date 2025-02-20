@@ -48,13 +48,18 @@ func (ps *PSet) AddNote(headline, text string, opts ...NoteOptFunc) *Note {
 			headline, existingNote.addedAt))
 	}
 
-	stk := make([]byte, 10000)
+	const stackDumpBufSz = 10_000
+	stk := make([]byte, stackDumpBufSz)
 	stkSize := runtime.Stack(stk, false)
+	addedAt := string(stk[:stkSize])
+	if stkSize == stackDumpBufSz {
+		addedAt += " ..."
+	}
 
 	n := &Note{
 		headline:     headline,
 		text:         text,
-		addedAt:      string(stk[:stkSize]),
+		addedAt:      addedAt,
 		seeAlsoNote:  make(map[string]string),
 		seeAlsoParam: make(map[string]string),
 	}

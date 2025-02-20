@@ -114,9 +114,13 @@ func (ps *PSet) AddGroup(name, desc string) {
 		panic("Invalid group name: " + err.Error())
 	}
 
-	stk := make([]byte, 10000)
+	const stackDumpBufSz = 10_000
+	stk := make([]byte, stackDumpBufSz)
 	stkSize := runtime.Stack(stk, false)
 	setFrom := string(stk[:stkSize])
+	if stkSize == stackDumpBufSz {
+		setFrom += " ..."
+	}
 
 	g, exists := ps.groups[name]
 	// if it's a new group
