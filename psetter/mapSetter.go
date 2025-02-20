@@ -92,7 +92,9 @@ func (s Map[T]) SetWithVal(paramName string, paramVal string) error {
 // AllowedValues returns a string listing the allowed values
 func (s Map[T]) AllowedValues() string {
 	return "a list of string values separated by '" +
-		s.GetSeparator() + "'" + HasChecks(s)
+		s.GetSeparator() + "'" + HasChecks(s) +
+		". The names can optionally be followed by '=' and" +
+		" a string representing true or false"
 }
 
 // CurrentValue returns the current setting of the parameter value
@@ -134,4 +136,9 @@ func (s Map[T]) CheckSetter(name string) {
 	if *s.Value == nil {
 		*s.Value = make(map[T]bool)
 	}
+}
+
+// ValDescribe returns a short string describing the allowed values
+func (s Map[T]) ValDescribe() string {
+	return "s[=Bool]" + s.GetSeparator() + "..."
 }

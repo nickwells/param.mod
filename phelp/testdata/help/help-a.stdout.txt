@@ -99,7 +99,8 @@ stdParams-help   [ 12 parameters ]
 
             The program will exit after the help message is shown.
             Allowed values: a list of string values separated by ',' subject to
-                            checks
+                            checks. The names can optionally be followed by '='
+                            and a string representing true or false
       [-help-no-page[=Bool] , -help-dont-page[=Bool] , -help-no-pager[=Bool] ]
             show help but don't page the output. Without this parameter the help
             message will be paged using the standard pager (as given by the
