@@ -25,10 +25,12 @@ func (c Counter) Total() int {
 	if c.ParamCount == nil {
 		return 0
 	}
+
 	var tot int
 	for _, v := range c.ParamCount {
 		tot += v
 	}
+
 	return tot
 }
 
@@ -43,6 +45,7 @@ func (c *Counter) MakeActionFunc() param.ActionFunc {
 		if c.ParamCount == nil {
 			c.ParamCount = make(map[string]int)
 		}
+
 		c.ParamCount[p.Name()]++
 
 		c.ParamsSetAt = append(c.ParamsSetAt,
@@ -52,6 +55,7 @@ func (c *Counter) MakeActionFunc() param.ActionFunc {
 				ParamVals: paramValues,
 				Param:     p,
 			})
+
 		return nil
 	}
 }

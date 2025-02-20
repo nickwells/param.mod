@@ -59,6 +59,7 @@ func (so *SetOnce) MakeActionFunc(action SetOnceErrAction) param.ActionFunc {
 					ParamVals: paramVals,
 					Param:     p,
 				})
+
 			return nil
 		}
 

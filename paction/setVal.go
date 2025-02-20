@@ -15,6 +15,7 @@ import (
 func SetVal[T any](val *T, setTo T) param.ActionFunc {
 	return func(_ location.L, _ *param.ByName, _ []string) error {
 		*val = setTo
+
 		return nil
 	}
 }
@@ -32,6 +33,7 @@ func SetValIf[T any](val *T, setTo T, test ParamTestFunc) param.ActionFunc {
 		if test(loc, p, s) {
 			*val = setTo
 		}
+
 		return nil
 	}
 }
@@ -69,6 +71,7 @@ func SetMapValIf[K comparable, V any](m map[K]V, k K, b V, test ParamTestFunc,
 		if test(loc, p, s) {
 			m[k] = b
 		}
+
 		return nil
 	}
 }

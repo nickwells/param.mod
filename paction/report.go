@@ -13,6 +13,7 @@ import (
 func Report(msg string) param.ActionFunc {
 	return func(_ location.L, p *param.ByName, _ []string) error {
 		fmt.Fprint(p.StdWriter(), msg) // nolint: errcheck
+
 		return nil
 	}
 }
@@ -22,6 +23,7 @@ func Report(msg string) param.ActionFunc {
 func ErrReport(msg string) param.ActionFunc {
 	return func(_ location.L, p *param.ByName, _ []string) error {
 		fmt.Fprint(p.ErrWriter(), msg) // nolint: errcheck
+
 		return nil
 	}
 }
@@ -33,6 +35,7 @@ func ReportAndExit(msg string) param.ActionFunc {
 	return func(_ location.L, p *param.ByName, _ []string) error {
 		fmt.Fprint(p.StdWriter(), msg) // nolint: errcheck
 		os.Exit(0)
+
 		return nil
 	}
 }
@@ -44,6 +47,7 @@ func ErrReportAndExit(msg string) param.ActionFunc {
 	return func(_ location.L, p *param.ByName, _ []string) error {
 		fmt.Fprint(p.ErrWriter(), msg) // nolint: errcheck
 		os.Exit(1)
+
 		return nil
 	}
 }
