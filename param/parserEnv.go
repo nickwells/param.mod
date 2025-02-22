@@ -79,13 +79,17 @@ func (ps *PSet) getParamsFromEnvironment() {
 	loc.SetNote(SrcEnvironment)
 
 	for _, param := range os.Environ() {
-		paramParts := strings.SplitN(param, "=", 2)
+		paramName, paramVal, hasParamVal := strings.Cut(param, "=")
 		for _, envPrefix := range ps.envPrefixes {
-			trimmedParam := strings.TrimPrefix(paramParts[0], envPrefix)
+			trimmedParam := strings.TrimPrefix(paramName, envPrefix)
 			// We only process those env vars that start with the
 			// envPrefix (so trimming the prefix will change the name)
-			if trimmedParam != paramParts[0] {
-				paramParts[0] = ConvertEnvVarNameToParamName(trimmedParam)
+			if trimmedParam != paramName {
+				paramParts := append([]string{},
+					ConvertEnvVarNameToParamName(trimmedParam))
+				if hasParamVal {
+					paramParts = append(paramParts, paramVal)
+				}
 				loc.SetContent(param)
 				ps.setValue(paramParts, loc, paramNeedNotExist, "")
 				break // we've found a match so stop looking
