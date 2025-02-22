@@ -111,7 +111,8 @@ func (ps *PSet) Parse(args ...[]string) ErrMap {
 // of the call to caller() but we want to see where the parent function was
 // called so we pass 2
 func caller() string {
-	if pc, file, line, ok := runtime.Caller(2); ok {
+	const grandParentIdx = 2
+	if pc, file, line, ok := runtime.Caller(grandParentIdx); ok {
 		f := runtime.FuncForPC(pc)
 		funcName := "unknown"
 		if f != nil {
