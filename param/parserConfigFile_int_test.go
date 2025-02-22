@@ -92,6 +92,16 @@ func TestSplitParamName(t *testing.T) {
 			expParamName: "param",
 		},
 		{
+			ID:           testhelper.MkID("param only (with leading dash)"),
+			pName:        "-param",
+			expParamName: "param",
+		},
+		{
+			ID:           testhelper.MkID("param only (with whitespace and leading dash)"),
+			pName:        "   -param   ",
+			expParamName: "param",
+		},
+		{
 			ID:           testhelper.MkID("param only (with embedded whitespace)"),
 			pName:        "   param missing-equals   ",
 			expParamName: "param missing-equals",
@@ -142,10 +152,23 @@ func TestSplitParamName(t *testing.T) {
 			expProgNames: []string{"progname1", "progname2"},
 			expParamName: "param",
 		},
+		{
+			ID:           testhelper.MkID("progname and param (with leading dash)"),
+			pName:        "progname1,progname2/-param",
+			expProgNames: []string{"progname1", "progname2"},
+			expParamName: "param",
+		},
+		{
+			ID: testhelper.MkID(
+				"progname and param (with whitespace and leading dash)"),
+			pName:        "  progname1 , progname2  /  -param  ",
+			expProgNames: []string{"progname1", "progname2"},
+			expParamName: "param",
+		},
 	}
 
 	for _, tc := range testCases {
-		progNames, paramName := splitParamName(tc.pName)
+		progNames, paramName := splitParamSpec(tc.pName)
 		if testhelper.StringSliceDiff(progNames, tc.expProgNames) {
 			t.Log(tc.IDStr())
 			t.Logf("\t: expected: %v\n", tc.expProgNames)

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"github.com/nickwells/filecheck.mod/filecheck"
@@ -51,45 +52,92 @@ type paramLineParser struct {
 	eRule existenceRule
 }
 
-// cmdLineParamLineParser is a type which satisfies the LineParser interface
+// cmdLineFileLineParser is a type which satisfies the LineParser interface
 // and is used to parse command-line supplied parameter files for the
 // paramSet member
-type cmdLineParamLineParser struct {
+type cmdLineFileLineParser struct {
 	ps *PSet
 }
 
-// splitParamName splits the parameter name into two parts around a
+// configFileEntry holds the parts of a config file line parsed out from
+// the string of a line
+type configFileEntry struct {
+	programs    []string
+	paramName   string
+	paramVal    string
+	hasParamVal bool
+}
+
+// hasSpecificPrograms returns true if the entry is only to be used for a
+// specific list of programs.
+func (cfe configFileEntry) hasSpecificPrograms() bool {
+	return len(cfe.programs) > 0
+}
+
+// ignoreForThisProgram returns true if the config file entry should be
+// ignored because the program name doesn't match an entry in the list of
+// programs. If the list of programs is empty no program will be ignored.
+func (cfe configFileEntry) ignoreForThisProgram(programName string) bool {
+	if cfe.hasSpecificPrograms() {
+		if !slices.Contains(cfe.programs, programName) {
+			return true
+		}
+	}
+
+	return false
+}
+
+// paramParts returns a slice of parameter parts - the name / value pair
+func (cfe configFileEntry) paramParts() []string {
+	paramParts := append([]string{}, cfe.paramName)
+
+	if cfe.hasParamVal {
+		paramParts = append(paramParts, cfe.paramVal)
+	}
+
+	return paramParts
+}
+
+// splitLine parses a line from a config file and returns the parts. A config
+// file line should be of the following form:
+//
+// [ program , ... / ] [-]paramName [ = paramVal ]
+func splitLine(line string) configFileEntry {
+	spec, pv, hasParamVal := strings.Cut(line, "=")
+	programs, pn := splitParamSpec(spec)
+
+	return configFileEntry{
+		programs:    programs,
+		paramName:   pn,
+		paramVal:    strings.TrimSpace(pv),
+		hasParamVal: hasParamVal,
+	}
+}
+
+// splitParamSpec splits the parameter name into two parts around a
 // slash. The intention is that the part before the slash is a program name,
 // or a comma-separated list of program names and the part after the slash is
 // a parameter name.  If there is no slash then the program names list will
 // be empty and the paramName will be the whole string. In either case the
 // names are stripped of any surrounding whitespace
-func splitParamName(pName string) (progNames []string, paramName string) {
-	parts := strings.Split(pName, "/")
+func splitParamSpec(spec string) ([]string, string) {
+	var progNames []string
+	programs, paramName, hasPrograms := strings.Cut(spec, "/")
 
-	if len(parts) == 2 {
-		progNames = strings.Split(parts[0], ",")
+	if hasPrograms {
+		progNames = strings.Split(programs, ",")
+
 		for i, pn := range progNames {
 			progNames[i] = strings.TrimSpace(pn)
 		}
-		paramName = strings.TrimSpace(parts[1])
 	} else {
-		paramName = strings.TrimSpace(parts[0])
+		paramName = programs
 	}
+
+	paramName = strings.TrimSpace(paramName)
 	paramName = strings.TrimLeft(paramName, "-")
 
-	return
-}
-
-// sliceContains returns true if the slice contains the passed string, false
-// otherwise
-func sliceContains(slc []string, s string) bool {
-	for _, e := range slc {
-		if e == s {
-			return true
-		}
-	}
-	return false
+	return progNames, paramName
 }
 
 // ParseLine processes the line for a command-line supplied config file.
@@ -99,27 +147,22 @@ func sliceContains(slc []string, s string) bool {
 // checks that if the parameter specification has a program part then the
 // program name matches the current program name. Finally it attempts to set
 // the parameter value from the parameter name and the value string which has
-// been stripped of any surrounding whitespace
-func (lp cmdLineParamLineParser) ParseLine(line string, loc *location.L) error {
-	paramParts := strings.SplitN(line, "=", 2)
+// been stripped of any surrounding whitespace.
+//
+// Note that no error is ever returned, the return type is there purely to
+// satisfy the fileparse package interface.
+func (cllp cmdLineFileLineParser) ParseLine(line string, loc *location.L) error {
+	cfe := splitLine(line)
 
-	progNames, paramName := splitParamName(paramParts[0])
-	if len(progNames) != 0 {
-		if !sliceContains(progNames, lp.ps.progBaseName) {
-			return nil
-		}
+	if cfe.ignoreForThisProgram(cllp.ps.progBaseName) {
+		return nil
 	}
 
-	paramParts[0] = paramName
-
-	if len(paramParts) == 2 {
-		paramParts[1] = strings.TrimSpace(paramParts[1])
-	}
-
-	if p, ok := lp.ps.nameToParam[paramName]; ok {
-		p.processParam(loc, paramParts)
+	loc.SetContent(line)
+	if p, ok := cllp.ps.nameToParam[cfe.paramName]; ok {
+		p.processParam(loc, cfe.paramParts())
 	} else {
-		lp.ps.recordUnexpectedParam(paramName, loc)
+		cllp.ps.recordUnexpectedParam(cfe.paramName, loc)
 	}
 
 	return nil
@@ -132,26 +175,24 @@ func (lp cmdLineParamLineParser) ParseLine(line string, loc *location.L) error {
 // checks that if the parameter specification has a program part then the
 // program name matches the current program name. Finally it attempts to set
 // the parameter value from the parameter name and the value string which has
-// been stripped of any surrounding whitespace
+// been stripped of any surrounding whitespace.
+//
+// Note that no error is ever returned, the return type is there purely to
+// satisfy the fileparse package interface.
 func (pflp paramLineParser) ParseLine(line string, loc *location.L) error {
-	paramParts := strings.SplitN(line, "=", 2)
+	cfe := splitLine(line)
+
+	if cfe.ignoreForThisProgram(pflp.ps.progBaseName) {
+		return nil
+	}
 
 	eRule := pflp.eRule
-	progNames, paramName := splitParamName(paramParts[0])
-	if len(progNames) != 0 {
-		if !sliceContains(progNames, pflp.ps.progBaseName) {
-			return nil
-		}
+	if cfe.hasSpecificPrograms() {
 		eRule = paramMustExist
 	}
 
-	paramParts[0] = paramName
-
-	if len(paramParts) == 2 {
-		paramParts[1] = strings.TrimSpace(paramParts[1])
-	}
-
-	pflp.ps.setValue(paramParts, loc, eRule, "")
+	loc.SetContent(line)
+	pflp.ps.setValue(cfe.paramParts(), loc, eRule, "")
 
 	return nil
 }
@@ -163,24 +204,19 @@ func (pflp paramLineParser) ParseLine(line string, loc *location.L) error {
 // checks that if the parameter specification has a program part then the
 // program name matches the current program name. Finally it attempts to set
 // the parameter value from the parameter name and the value string which has
-// been stripped of any surrounding whitespace
-func (gpflp groupParamLineParser) ParseLine(line string, loc *location.L) error {
-	paramParts := strings.SplitN(line, "=", 2)
+// been stripped of any surrounding whitespace.
+//
+// Note that no error is ever returned, the return type is there purely to
+// satisfy the fileparse package interface.
+func (gflp groupParamLineParser) ParseLine(line string, loc *location.L) error {
+	cfe := splitLine(line)
 
-	progNames, paramName := splitParamName(paramParts[0])
-	if len(progNames) != 0 {
-		if !sliceContains(progNames, gpflp.ps.progBaseName) {
-			return nil
-		}
+	if cfe.ignoreForThisProgram(gflp.ps.progBaseName) {
+		return nil
 	}
 
-	paramParts[0] = paramName
-
-	if len(paramParts) == 2 {
-		paramParts[1] = strings.TrimSpace(paramParts[1])
-	}
-
-	gpflp.ps.setValue(paramParts, loc, paramMustExist, gpflp.gName)
+	loc.SetContent(line)
+	gflp.ps.setValue(cfe.paramParts(), loc, paramMustExist, gflp.gName)
 
 	return nil
 }
@@ -409,14 +445,15 @@ func (ps *PSet) getParamsFromConfigFiles() {
 // second entry in the paramVals (which is expected to exist) as the name of
 // a config file from which to take parameters.
 func ConfigFileActionFunc(_ location.L, p *ByName, paramVals []string) error {
-	if len(paramVals) != 2 {
+	const expectedParamCount = 2
+	if len(paramVals) != expectedParamCount {
 		return errors.New("no config file name parameter has been given")
 	}
 	name := paramVals[1]
 	desc := "supplied config file"
 
 	cf := ConfigFileDetails{Name: name, CfConstraint: filecheck.MustExist}
-	fp := fileparse.New(desc, cmdLineParamLineParser{ps: p.ps})
+	fp := fileparse.New(desc, cmdLineFileLineParser{ps: p.ps})
 	errs := fp.Parse(cf.Name)
 	checkCFErrs(p.ps, errs, cf, desc)
 

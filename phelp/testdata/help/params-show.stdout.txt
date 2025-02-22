@@ -43,7 +43,8 @@ test-group1      [ 6 parameters, 1 hidden ]
 ---    : param1 or param1-alt1
 Errs 1 : param2 or param2-alt2
 Set    : param3 or p3
-             at : [config file]: testdata/configFiles/cfg-with-param:2
+             at : [config file]: testdata/configFiles/cfg-with-param:2: param3 =
+                  99.9
 ---    : param4
 ---    : param5
 ---    : param6
@@ -52,7 +53,8 @@ Set    : param3 or p3
 
 Unused Parameters:  1
       not-a-param
-            at: [config file]: testdata/configFiles/cfg-with-param:1
+            at: [config file]: testdata/configFiles/cfg-with-param:1:
+                not-a-param = 99
 
 ===============
 
