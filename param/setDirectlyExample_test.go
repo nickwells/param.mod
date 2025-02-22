@@ -19,6 +19,7 @@ import (
 // files or environment variables where the leading dash is not used.
 func Example_setDirectly() {
 	var example1 bool
+
 	var example2 int64
 
 	ps := paramset.NewOrPanic(

@@ -35,5 +35,6 @@ func (ps *PSet) HasReferences() bool {
 func (ps *PSet) References() []Reference {
 	sa := make([]Reference, len(ps.references))
 	copy(sa, ps.references)
+
 	return sa
 }

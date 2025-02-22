@@ -45,10 +45,13 @@ func (rh dfltRemHandler) HandleRemainder(ps *PSet, loc *location.L) {
 	if remCount == 0 {
 		return
 	}
+
 	args := ""
 	sep := "'"
 	end := "'"
+
 	const maxLen = 20
+
 	for i, r := range ps.Remainder() {
 		charsToTake := int(math.Min(
 			float64(len(r)),
@@ -56,19 +59,25 @@ func (rh dfltRemHandler) HandleRemainder(ps *PSet, loc *location.L) {
 		if charsToTake <= 0 {
 			args += "' ..."
 			end = ""
+
 			break
 		}
+
 		args += sep + r[:charsToTake]
 		sep = "' '"
+
 		if charsToTake < len(r) {
 			args += "...'"
 			if i < remCount-1 {
 				args += " ..."
 			}
+
 			end = ""
+
 			break
 		}
 	}
+
 	args += end
 
 	var err error
@@ -78,6 +87,7 @@ func (rh dfltRemHandler) HandleRemainder(ps *PSet, loc *location.L) {
 		err = loc.Errorf("there were %d unexpected extra parameters: %s",
 			remCount, args)
 	}
+
 	ps.helper.ErrorHandler(ps,
 		ErrMap{
 			"": []error{err},

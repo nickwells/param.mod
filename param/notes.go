@@ -49,9 +49,11 @@ func (ps *PSet) AddNote(headline, text string, opts ...NoteOptFunc) *Note {
 	}
 
 	const stackDumpBufSz = 10_000
+
 	stk := make([]byte, stackDumpBufSz)
 	stkSize := runtime.Stack(stk, false)
 	addedAt := string(stk[:stkSize])
+
 	if stkSize == stackDumpBufSz {
 		addedAt += " ..."
 	}
@@ -63,6 +65,7 @@ func (ps *PSet) AddNote(headline, text string, opts ...NoteOptFunc) *Note {
 		seeAlsoNote:  make(map[string]string),
 		seeAlsoParam: make(map[string]string),
 	}
+
 	for _, o := range opts {
 		err := o(n)
 		if err != nil {
@@ -71,6 +74,7 @@ func (ps *PSet) AddNote(headline, text string, opts ...NoteOptFunc) *Note {
 	}
 
 	ps.notes[n.headline] = n
+
 	return n
 }
 
@@ -86,17 +90,21 @@ func (ps *PSet) GetNote(headline string) (*Note, error) {
 	if !ok {
 		return nil, fmt.Errorf("There is no note with headline: %q", headline)
 	}
+
 	copyVal := *n
+
 	return &copyVal, nil
 }
 
 // Notes returns a copy of the current set of notes.
 func (ps *PSet) Notes() map[string]*Note {
 	n := make(map[string]*Note, len(ps.notes))
+
 	for k, v := range ps.notes {
 		copyVal := *v
 		n[k] = &copyVal
 	}
+
 	return n
 }
 
@@ -109,6 +117,7 @@ type NoteOptFunc func(n *Note) error
 func NoteAttrs(attrs NoteAttributes) NoteOptFunc {
 	return func(n *Note) error {
 		n.attributes = attrs
+
 		return nil
 	}
 }
@@ -121,6 +130,7 @@ func NoteAttrs(attrs NoteAttributes) NoteOptFunc {
 // the referenced name has already been used.
 func NoteSeeNote(notes ...string) NoteOptFunc {
 	source := caller()
+
 	return func(n *Note) error {
 		for _, note := range notes {
 			note = strings.TrimSpace(note)
@@ -149,6 +159,7 @@ func NoteSeeNote(notes ...string) NoteOptFunc {
 // the referenced name has already been used.
 func NoteSeeParam(params ...string) NoteOptFunc {
 	source := caller()
+
 	return func(n *Note) error {
 		for _, param := range params {
 			param = strings.TrimSpace(param)
@@ -179,7 +190,9 @@ func (n Note) SeeNotes() []string {
 	for note := range n.seeAlsoNote {
 		notes = append(notes, note)
 	}
+
 	slices.Sort(notes)
+
 	return notes
 }
 
@@ -189,6 +202,8 @@ func (n Note) SeeParams() []string {
 	for param := range n.seeAlsoParam {
 		params = append(params, param)
 	}
+
 	slices.Sort(params)
+
 	return params
 }

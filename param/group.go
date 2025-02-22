@@ -30,6 +30,7 @@ func GroupNameCheck(name string) error {
 			"the group name %q is invalid. It must match: %q",
 			name, groupNameCheckRE.String())
 	}
+
 	return nil
 }
 
@@ -61,11 +62,13 @@ func (g Group) Params() []*ByName {
 // DontShowInStdUsage attribute set.
 func (g Group) HiddenCount() int {
 	hiddenCount := 0
+
 	for _, p := range g.params {
 		if p.AttrIsSet(DontShowInStdUsage) {
 			hiddenCount++
 		}
 	}
+
 	return hiddenCount
 }
 
@@ -77,6 +80,7 @@ func (g Group) AllParamsHidden() bool {
 			return false
 		}
 	}
+
 	return true
 }
 
@@ -115,9 +119,11 @@ func (ps *PSet) AddGroup(name, desc string) {
 	}
 
 	const stackDumpBufSz = 10_000
+
 	stk := make([]byte, stackDumpBufSz)
 	stkSize := runtime.Stack(stk, false)
 	setFrom := string(stk[:stkSize])
+
 	if stkSize == stackDumpBufSz {
 		setFrom += " ..."
 	}
@@ -130,6 +136,7 @@ func (ps *PSet) AddGroup(name, desc string) {
 			desc:    desc,
 			setFrom: setFrom,
 		}
+
 		return
 	}
 

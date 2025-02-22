@@ -69,7 +69,9 @@ func (p ByName) Name() string { return p.name }
 // AltNames returns a copy of the alternative names of the ByName parameter
 func (p ByName) AltNames() []string {
 	an := make([]string, len(p.altNames))
+
 	copy(an, p.altNames)
+
 	return an
 }
 
@@ -82,7 +84,9 @@ func (p ByName) HasBeenSet() bool {
 // has been set
 func (p ByName) WhereSet() []string {
 	ws := make([]string, len(p.whereIsParamSet))
+
 	copy(ws, p.whereIsParamSet)
+
 	return ws
 }
 
@@ -104,7 +108,9 @@ func (p ByName) SeeAlso() []string {
 	for ref := range p.seeAlso {
 		refs = append(refs, ref)
 	}
+
 	sort.Strings(refs)
+
 	return refs
 }
 
@@ -114,7 +120,9 @@ func (p ByName) SeeNotes() []string {
 	for note := range p.seeNote {
 		notes = append(notes, note)
 	}
+
 	sort.Strings(notes)
+
 	return notes
 }
 
@@ -241,7 +249,9 @@ func (ps *PSet) Add(name string, setter Setter, desc string, opts ...OptFunc,
 				name, err))
 		}
 	}
+
 	ps.addByNameToGroup(p)
+
 	return p
 }
 
@@ -253,6 +263,7 @@ func (ps *PSet) addByNameToGroup(p *ByName) {
 		g = &Group{name: p.groupName}
 		ps.groups[p.groupName] = g
 	}
+
 	g.params = append(g.params, p)
 }
 
@@ -264,7 +275,9 @@ func Attrs(attrs Attributes) OptFunc {
 		if attrs&IsTerminalParam == IsTerminalParam {
 			attrs |= CommandLineOnly
 		}
+
 		p.attributes = attrs
+
 		return nil
 	}
 }
@@ -283,6 +296,7 @@ func AltNames(altNames ...string) OptFunc {
 			p.ps.nameToParam[altName] = p
 			p.altNames = append(p.altNames, altName)
 		}
+
 		return nil
 	}
 }
@@ -298,6 +312,7 @@ func ValueName(vName string) OptFunc {
 		if vName == "" {
 			return errors.New("some non-empty value name must be given")
 		}
+
 		p.valueName = vName
 
 		return nil
@@ -314,6 +329,7 @@ func ValueName(vName string) OptFunc {
 // be passed to each parameter in the group wihout self-reference.
 func SeeAlso(refs ...string) OptFunc {
 	source := caller()
+
 	return func(p *ByName) error {
 		for _, ref := range refs {
 			ref = strings.TrimSpace(ref)
@@ -342,6 +358,7 @@ func SeeAlso(refs ...string) OptFunc {
 // error if the referenced name has already been used.
 func SeeNote(notes ...string) OptFunc {
 	source := caller()
+
 	return func(p *ByName) error {
 		for _, note := range notes {
 			note = strings.TrimSpace(note)
@@ -367,11 +384,13 @@ func SeeNote(notes ...string) OptFunc {
 func GroupName(name string) OptFunc {
 	return func(p *ByName) error {
 		name = strings.TrimSpace(name)
-		err := GroupNameCheck(name)
-		if err != nil {
+
+		if err := GroupNameCheck(name); err != nil {
 			return err
 		}
+
 		p.groupName = name
+
 		return nil
 	}
 }
@@ -384,6 +403,7 @@ func (p *ByName) processParam(loc *location.L, paramParts []string) {
 			loc.Error(fmt.Sprintf(
 				"This may only be set once but has already been set at %s",
 				p.whereIsParamSet[0])))
+
 		return
 	}
 
@@ -393,10 +413,15 @@ func (p *ByName) processParam(loc *location.L, paramParts []string) {
 
 	var err error
 
+	const (
+		nameOnly = 1
+		hasValue = 2
+	)
+
 	switch len(paramParts) {
-	case 1:
+	case nameOnly:
 		err = p.setter.Set(paramParts[0])
-	case 2:
+	case hasValue:
 		err = p.setter.SetWithVal(paramParts[0], paramParts[1])
 	default:
 		err = fmt.Errorf("bad parameter: %q", paramParts)

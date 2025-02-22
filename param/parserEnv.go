@@ -38,11 +38,13 @@ func (ps *PSet) AddEnvPrefix(prefix string) {
 			panic(fmt.Sprintf("%s It's a prefix of the already added: %q",
 				panicMsgIntro, ep))
 		}
+
 		if strings.HasPrefix(prefix, ep) {
 			panic(fmt.Sprintf("%s The already added: %q is a prefix of it",
 				panicMsgIntro, ep))
 		}
 	}
+
 	ps.envPrefixes = append(ps.envPrefixes, prefix)
 }
 
@@ -50,6 +52,7 @@ func (ps *PSet) AddEnvPrefix(prefix string) {
 func (ps *PSet) EnvPrefixes() []string {
 	ep := make([]string, len(ps.envPrefixes))
 	copy(ep, ps.envPrefixes)
+
 	return ep
 }
 
@@ -90,8 +93,10 @@ func (ps *PSet) getParamsFromEnvironment() {
 				if hasParamVal {
 					paramParts = append(paramParts, paramVal)
 				}
+
 				loc.SetContent(param)
 				ps.setValue(paramParts, loc, paramNeedNotExist, "")
+
 				break // we've found a match so stop looking
 			}
 		}

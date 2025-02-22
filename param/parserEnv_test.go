@@ -132,6 +132,7 @@ func TestSetEnv(t *testing.T) {
 		if err != nil {
 			t.Fatal(tc.IDStr(), " : couldn't construct the PSet: ", err)
 		}
+
 		panicked, panicVal := panicEnvPrefix(t, tc.seq, ps)
 
 		testhelper.PanicCheckString(t, tc.IDStr(),
@@ -143,14 +144,17 @@ func TestSetEnv(t *testing.T) {
 func panicEnvPrefix(t *testing.T, seq []pfxFunc, ps *param.PSet,
 ) (panicked bool, panicVal any) {
 	t.Helper()
+
 	defer func() {
 		if r := recover(); r != nil {
 			panicked = true
 			panicVal = r
 		}
 	}()
+
 	for _, pf := range seq {
 		pf.f(ps, pf.pfx)
 	}
+
 	return panicked, panicVal
 }

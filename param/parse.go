@@ -77,10 +77,13 @@ func (ps *PSet) Parse(args ...[]string) ErrMap {
 	} else {
 		loc = location.New("Supplied Parameter")
 		loc.SetNote(SrcCommandLine)
+
 		var suppliedParams []string
+
 		for _, sp := range args {
 			suppliedParams = append(suppliedParams, sp...)
 		}
+
 		ps.getParamsFromStringSlice(loc, suppliedParams)
 	}
 
@@ -97,6 +100,7 @@ func (ps *PSet) Parse(args ...[]string) ErrMap {
 
 	errCount := ps.errorCount
 	ps.remHandler.HandleRemainder(ps, loc)
+
 	if errCount != ps.errorCount {
 		ps.helper.ErrorHandler(ps, ps.errors)
 	}
@@ -113,13 +117,15 @@ func (ps *PSet) Parse(args ...[]string) ErrMap {
 func caller() string {
 	const grandParentIdx = 2
 	if pc, file, line, ok := runtime.Caller(grandParentIdx); ok {
-		f := runtime.FuncForPC(pc)
 		funcName := "unknown"
-		if f != nil {
+
+		if f := runtime.FuncForPC(pc); f != nil {
 			funcName = f.Name()
 		}
+
 		return fmt.Sprintf("%s:%d [%s]", file, line, funcName)
 	}
+
 	return "unknown-file:0 [unknown]"
 }
 
@@ -163,6 +169,7 @@ func (ps *PSet) checkSeeRefs() {
 		for _, ref := range refs {
 			ps.checkRefParamExists(p.Name(), ref, p.seeAlsoSource(ref))
 		}
+
 		for _, ref := range p.SeeNotes() {
 			ps.checkRefNoteExists(p.Name(), ref, p.seeNoteSource(ref))
 		}
@@ -172,12 +179,15 @@ func (ps *PSet) checkSeeRefs() {
 	for n := range ps.notes {
 		notes = append(notes, n)
 	}
+
 	sort.Strings(notes) // so we get repeatable ordering for tests
+
 	for _, n := range notes {
 		note := ps.notes[n]
 		for _, ref := range note.SeeParams() {
 			ps.checkRefParamExists(n, ref, note.seeAlsoParam[ref])
 		}
+
 		for _, ref := range note.SeeNotes() {
 			ps.checkRefNoteExists(n, ref, note.seeAlsoNote[ref])
 		}

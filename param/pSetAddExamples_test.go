@@ -30,6 +30,7 @@ func ExamplePSet_Add_withExtras() {
 	ps := paramset.NewOrPanic()
 
 	var f float64
+
 	var fHasBeenSet bool
 
 	// We only capture the return value so that we can report the settings

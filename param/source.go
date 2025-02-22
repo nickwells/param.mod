@@ -28,6 +28,7 @@ func (pSrc Source) Desc() string {
 		s += sep + p
 		sep = "="
 	}
+
 	s += "]"
 
 	return s
@@ -39,6 +40,7 @@ type Sources []Source
 // String formats a slice of Sources into a String
 func (pSrcs Sources) String() string {
 	var s string
+
 	sep := ""
 
 	for _, ps := range pSrcs {

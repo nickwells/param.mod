@@ -11,10 +11,13 @@ import (
 
 func TestSource(t *testing.T) {
 	var b bool
+
 	ps, _ := paramset.NewNoHelpNoExitNoErrRpt()
 	p := ps.Add("p", psetter.Bool{Value: &b}, "desc")
 	loc := location.New("loc")
+
 	loc.Incr()
+
 	testCases := []struct {
 		name    string
 		from    string
@@ -57,6 +60,7 @@ func TestSource(t *testing.T) {
 			t.Logf("\t: expected: %s\n", tc.expStr)
 			t.Errorf("\t: bad string\n")
 		}
+
 		if s.Desc() != tc.expDesc {
 			t.Logf("test %d: %s :\n", i, tc.name)
 			t.Logf("\t:     desc: %s\n", s.Desc())
@@ -68,10 +72,13 @@ func TestSource(t *testing.T) {
 
 func TestSources(t *testing.T) {
 	var b bool
+
 	ps, _ := paramset.NewNoHelpNoExitNoErrRpt()
 	p := ps.Add("p", psetter.Bool{Value: &b}, "desc")
 	loc := location.New("loc")
+
 	loc.Incr()
+
 	expStr := "Param: p (at loc:1), Param: p (at loc:1)"
 
 	s := param.Source{
@@ -80,6 +87,7 @@ func TestSources(t *testing.T) {
 		ParamVals: []string{"p", "true"},
 		Param:     p,
 	}
+
 	sources := param.Sources{s, s}
 	if sources.String() != expStr {
 		t.Logf("\t:   string: %s\n", sources.String())

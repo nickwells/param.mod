@@ -23,11 +23,14 @@ func (ps *PSet) reportMissingParams(missingCount int) {
 		byPosMiniHelp += fmt.Sprintf(
 			" %d parameters should be: ",
 			len(ps.byPos))
+
 		sep := "<"
+
 		for _, bp := range ps.byPos {
 			byPosMiniHelp += sep + bp.name
 			sep = ">, <"
 		}
+
 		byPosMiniHelp += ">"
 	}
 
@@ -61,6 +64,7 @@ func (ps *PSet) handleParamsByPos(loc *location.L, params []string,
 
 		for i, pp := range ps.byPos {
 			pStr := params[i]
+
 			loc.Incr()
 			loc.SetContent(pStr)
 
@@ -72,6 +76,7 @@ func (ps *PSet) handleParamsByPos(loc *location.L, params []string,
 			}
 		}
 	}
+
 	return parsingIncomplete
 }
 
@@ -79,6 +84,7 @@ func (ps *PSet) handleParamsByName(loc *location.L, params []string) {
 	var i int
 	for i = len(ps.byPos); i < len(params); i++ {
 		pStr := params[i]
+
 		loc.Incr()
 		loc.SetContent(fmt.Sprintf("%q", pStr))
 
@@ -88,11 +94,13 @@ func (ps *PSet) handleParamsByName(loc *location.L, params []string) {
 		}
 
 		paramName, paramVal, hasParamVal := strings.Cut(pStr, "=")
+
 		trimmedParam, err := trimParam(paramName)
 		if err != nil {
 			ps.AddErr(trimmedParam, loc.Error(err.Error()))
 			continue
 		}
+
 		paramParts := append([]string{}, trimmedParam)
 
 		p, ok := ps.nameToParam[trimmedParam]
@@ -106,12 +114,16 @@ func (ps *PSet) handleParamsByName(loc *location.L, params []string) {
 		} else if p.setter.ValueReq() == Mandatory {
 			if i < (len(params) - 1) {
 				i++
+
 				loc.Incr()
+
 				paramParts = append(paramParts, params[i])
+
 				loc.SetContent(
 					fmt.Sprintf("%q %q", paramName, paramParts[1]))
 			}
 		}
+
 		p.processParam(loc, paramParts)
 
 		if ps.terminalParamSeen {
@@ -145,9 +157,11 @@ func trimParam(param string) (string, error) {
 			if trimmedParam == "" {
 				return param, errors.New("the parameter name is blank")
 			}
+
 			return trimmedParam, nil
 		}
 	}
+
 	return param, fmt.Errorf(
 		"parameter %q does not start with '%s'",
 		param,

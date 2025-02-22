@@ -22,7 +22,9 @@ func TestConfigFileStrict(t *testing.T) {
 	if err != nil {
 		t.Fatal("TestConfigFile : couldn't construct the PSet: ", err)
 	}
+
 	const fname = "./testdata/config-strict.test"
+
 	ps.SetConfigFileStrict(fname, filecheck.MustExist)
 
 	ps.Parse([]string{})
@@ -47,16 +49,17 @@ func TestConfigFile(t *testing.T) {
 	if err != nil {
 		t.Fatal("TestConfigFile : couldn't construct the PSet: ", err)
 	}
-	const mustExistDoes = "./testdata/config.test"
+
+	const (
+		mustExistDoes    = "./testdata/config.test"
+		mustExistDoesNot = "./testdata/config.nosuch"
+		mayExistDoes     = "./testdata/config.opt"
+		mayExistDoesNot  = "./testdata/config.opt.nosuch"
+	)
+
 	ps.SetConfigFile(mustExistDoes, filecheck.MustExist)
-
-	const mustExistDoesNot = "./testdata/config.nosuch"
 	ps.AddConfigFile(mustExistDoesNot, filecheck.MustExist)
-
-	const mayExistDoes = "./testdata/config.opt"
 	ps.AddConfigFile(mayExistDoes, filecheck.Optional)
-
-	const mayExistDoesNot = "./testdata/config.opt.nosuch"
 	ps.AddConfigFile(mayExistDoesNot, filecheck.Optional)
 
 	ps.Parse([]string{})
@@ -199,10 +202,12 @@ func TestGroupConfigFile(t *testing.T) {
 		if err != nil {
 			t.Fatal(tc.IDStr(), " : couldn't construct the PSet: ", err)
 		}
+
 		addParamsForGroupCF(ps)
 		ps.AddGroupConfigFile(tc.gName, tc.fileName, tc.check)
 
 		resetParamVals()
+
 		errMap := ps.Parse([]string{})
 
 		errMapCheck(t, tc.IDStr(), errMap, tc.errsExpected)

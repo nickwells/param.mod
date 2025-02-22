@@ -6,6 +6,8 @@ import "github.com/nickwells/strdist.mod/v2/strdist"
 // alternative names for the given string.
 type SuggestionFunc func(ps *PSet, s string) []string
 
+const alternativeCount = 3
+
 // SuggestParams finds those parameter names the shortest distance from the
 // passed value and returns them
 func SuggestParams(ps *PSet, s string) []string {
@@ -15,7 +17,8 @@ func SuggestParams(ps *PSet, s string) []string {
 	}
 
 	finder := strdist.DefaultFinders[strdist.CaseBlindAlgoNameCosine]
-	return finder.FindNStrLike(3, s, names...)
+
+	return finder.FindNStrLike(alternativeCount, s, names...)
 }
 
 // SuggestGroups finds those group names the shortest distance from the
@@ -27,7 +30,8 @@ func SuggestGroups(ps *PSet, s string) []string {
 	}
 
 	finder := strdist.DefaultFinders[strdist.CaseBlindAlgoNameCosine]
-	return finder.FindNStrLike(3, s, names...)
+
+	return finder.FindNStrLike(alternativeCount, s, names...)
 }
 
 // SuggestNotes finds those note names the shortest distance from the
@@ -39,5 +43,6 @@ func SuggestNotes(ps *PSet, s string) []string {
 	}
 
 	finder := strdist.DefaultFinders[strdist.CaseBlindAlgoNameCosine]
-	return finder.FindNStrLike(3, s, names...)
+
+	return finder.FindNStrLike(alternativeCount, s, names...)
 }

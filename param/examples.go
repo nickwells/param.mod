@@ -36,5 +36,6 @@ func (ps *PSet) HasExamples() bool {
 func (ps *PSet) Examples() []Example {
 	sa := make([]Example, len(ps.examples))
 	copy(sa, ps.examples)
+
 	return sa
 }

@@ -34,6 +34,7 @@ func (cfd ConfigFileDetails) String() string {
 	if cfd.CfConstraint == filecheck.MustExist {
 		s += " (must exist)"
 	}
+
 	return s
 }
 
@@ -122,6 +123,7 @@ func splitLine(line string) configFileEntry {
 // names are stripped of any surrounding whitespace
 func splitParamSpec(spec string) ([]string, string) {
 	var progNames []string
+
 	programs, paramName, hasPrograms := strings.Cut(spec, "/")
 
 	if hasPrograms {
@@ -159,6 +161,7 @@ func (cllp cmdLineFileLineParser) ParseLine(line string, loc *location.L) error 
 	}
 
 	loc.SetContent(line)
+
 	if p, ok := cllp.ps.nameToParam[cfe.paramName]; ok {
 		p.processParam(loc, cfe.paramParts())
 	} else {
@@ -385,6 +388,7 @@ func (ps *PSet) AddGroupConfigFile(gName, fName string, c filecheck.Exists) {
 func (ps *PSet) ConfigFiles() []ConfigFileDetails {
 	cf := make([]ConfigFileDetails, len(ps.configFiles))
 	copy(cf, ps.configFiles)
+
 	return cf
 }
 
@@ -393,6 +397,7 @@ func (ps *PSet) ConfigFiles() []ConfigFileDetails {
 func (ps *PSet) ConfigFilesForGroup(gName string) []ConfigFileDetails {
 	cf := make([]ConfigFileDetails, len(ps.groups[gName].configFiles))
 	copy(cf, ps.groups[gName].configFiles)
+
 	return cf
 }
 
@@ -407,7 +412,9 @@ func checkCFErrs(ps *PSet, errs []error, cf ConfigFileDetails, desc string) {
 
 	if len(errs) == 1 {
 		err := errs[0]
+
 		var perr *os.PathError
+
 		if errors.As(err, &perr) {
 			if errors.Is(err, os.ErrNotExist) &&
 				cf.CfConstraint == filecheck.Optional &&
@@ -416,6 +423,7 @@ func checkCFErrs(ps *PSet, errs []error, cf ConfigFileDetails, desc string) {
 			}
 		}
 	}
+
 	ps.AddErr(desc+": "+cf.Name, errs...)
 }
 
@@ -426,6 +434,7 @@ func (ps *PSet) getParamsFromConfigFiles() {
 	for gName, g := range ps.groups {
 		desc := SrcConfigFilePfx + " for " + gName
 		fp := fileparse.New(desc, groupParamLineParser{ps: ps, gName: gName})
+
 		for _, cf := range g.configFiles {
 			errs := fp.Parse(cf.Name)
 
@@ -449,6 +458,7 @@ func ConfigFileActionFunc(_ location.L, p *ByName, paramVals []string) error {
 	if len(paramVals) != expectedParamCount {
 		return errors.New("no config file name parameter has been given")
 	}
+
 	name := paramVals[1]
 	desc := "supplied config file"
 

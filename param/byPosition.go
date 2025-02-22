@@ -97,6 +97,7 @@ func (ps *PSet) AddByPos(name string, setter Setter,
 	}
 
 	ps.byPos = append(ps.byPos, bp)
+
 	return bp
 }
 
@@ -118,7 +119,9 @@ func SetAsTerminal(bp *ByPos) error {
 				" positional parameters are wanted.",
 			len(bp.ps.byName))
 	}
+
 	bp.isTerminal = true
+
 	return nil
 }
 

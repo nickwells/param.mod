@@ -95,8 +95,10 @@ func SetHelper(h Helper) PSetOptFunc {
 		if ps.helper != nil {
 			return errors.New("The helper has already been set")
 		}
+
 		ps.helper = h
 		h.AddParams(ps)
+
 		return nil
 	}
 }
@@ -117,12 +119,15 @@ func (ps *PSet) SetRemHandler(rh RemHandler) error {
 	if rh == nil {
 		return errors.New("The remainder handler must not be nil")
 	}
+
 	if ps.parsed {
 		return errors.New("Parsing is already complete" +
 			" - you must set the RemHandler before calling Parse")
 	}
+
 	ps.remHandler = rh
 	ps.trailingParamsExpected = true
+
 	return nil
 }
 
@@ -134,7 +139,9 @@ func (ps *PSet) SetNamedRemHandler(rh RemHandler, name string) error {
 	if err != nil {
 		return err
 	}
+
 	ps.trailingParamsName = name
+
 	return nil
 }
 
@@ -161,7 +168,9 @@ func SetErrWriter(w io.Writer) PSetOptFunc {
 		if w == nil {
 			return fmt.Errorf("param.SetErrWriter cannot take a nil value")
 		}
+
 		ps.SetErrW(w)
+
 		return nil
 	}
 }
@@ -173,7 +182,9 @@ func SetStdWriter(w io.Writer) PSetOptFunc {
 		if w == nil {
 			return fmt.Errorf("param.SetStdWriter cannot take a nil value")
 		}
+
 		ps.SetStdW(w)
+
 		return nil
 	}
 }
@@ -228,6 +239,7 @@ func NewSet(psof ...PSetOptFunc) (*PSet, error) {
 			fmt.Fprintf(ps.ErrW(),
 				"An error was detected while creating the PSet: %s\n",
 				err)
+
 			if ps.exitOnParamSetupErr {
 				os.Exit(1)
 			}
@@ -235,6 +247,7 @@ func NewSet(psof ...PSetOptFunc) (*PSet, error) {
 			return nil, err
 		}
 	}
+
 	if ps.remHandler == nil {
 		ps.remHandler = dfltRemHandler{}
 		ps.trailingParamsExpected = false
@@ -243,6 +256,7 @@ func NewSet(psof ...PSetOptFunc) (*PSet, error) {
 	if ps.helper == nil {
 		err := errors.New("A helper must be passed when creating a PSet")
 		fmt.Fprintln(ps.ErrW(), err)
+
 		if ps.exitOnParamSetupErr {
 			os.Exit(1)
 		}
@@ -303,6 +317,7 @@ func (ps *PSet) UnusedParams() map[string][]string {
 		up[pName] = make([]string, len(ps.unusedParams[pName]))
 		copy(up[pName], ps.unusedParams[pName])
 	}
+
 	return up
 }
 
@@ -325,6 +340,7 @@ func cleanParamParts(p *ByName, paramParts []string) []string {
 		paramParts[1] == "" {
 		paramParts = paramParts[:1]
 	}
+
 	return paramParts
 }
 
@@ -361,17 +377,20 @@ func (ps *PSet) setValue(
 		} else {
 			ps.markAsUnused(paramName, loc)
 		}
+
 		return
 	}
 
 	if gName != "" && p.groupName != gName {
 		ps.errors[paramName] = append(ps.errors[paramName],
 			loc.Error("this parameter is not a member of group: "+gName))
+
 		return
 	}
 
 	if p.AttrIsSet(CommandLineOnly) {
 		ps.recordCmdLineOnlyErr(paramName, loc)
+
 		return
 	}
 
@@ -441,6 +460,7 @@ func (ps *PSet) TerminalParam() string { return ps.terminalParam }
 func (ps *PSet) fixGroups() {
 	for name, g := range ps.groups {
 		var badGroup bool
+
 		for _, p := range g.params {
 			if p.groupName != name {
 				badGroup = true
@@ -450,6 +470,7 @@ func (ps *PSet) fixGroups() {
 		if badGroup {
 			params := g.params
 			g.params = nil
+
 			for _, p := range params {
 				ps.addByNameToGroup(p)
 			}
@@ -479,6 +500,7 @@ func (ps *PSet) GetGroups() []*Group {
 	for _, g := range ps.groups {
 		groups = append(groups, g)
 	}
+
 	sort.Slice(groups, func(i, j int) bool {
 		return groups[i].name < groups[j].name
 	})
@@ -499,14 +521,17 @@ func (ps PSet) HasAltSources() bool {
 	if len(ps.configFiles) > 0 {
 		return true
 	}
+
 	if len(ps.envPrefixes) > 0 {
 		return true
 	}
+
 	for _, g := range ps.groups {
 		if len(g.configFiles) > 0 {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -533,6 +558,7 @@ func (ps PSet) FindMatchingNamedParams(pattern string) ([]string, error) {
 		if err != nil {
 			return []string{}, err
 		}
+
 		if ok {
 			matches = append(matches, name)
 		}
@@ -552,6 +578,7 @@ func (ps PSet) FindMatchingGroups(pattern string) ([]string, error) {
 		if err != nil {
 			return []string{}, err
 		}
+
 		if ok {
 			matches = append(matches, name)
 		}
@@ -571,6 +598,7 @@ func (ps PSet) FindMatchingNotes(pattern string) ([]string, error) {
 		if err != nil {
 			return []string{}, err
 		}
+
 		if ok {
 			matches = append(matches, name)
 		}

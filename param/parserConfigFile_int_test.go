@@ -35,6 +35,7 @@ func (s i64) SetWithVal(_ string, paramVal string) error {
 	}
 
 	*s.Value = v
+
 	return nil
 }
 
@@ -175,6 +176,7 @@ func TestSplitParamName(t *testing.T) {
 			t.Logf("\t:      got: %v\n", progNames)
 			t.Errorf("\t: Unexpected program names")
 		}
+
 		if paramName != tc.expParamName {
 			t.Log(tc.IDStr())
 			t.Logf("\t: expected: %s\n", tc.expParamName)
@@ -200,31 +202,39 @@ func TestParamLineParser(t *testing.T) {
 			pname: "ival 5",
 		},
 	}
+
 	var iVal int64
+
 	for _, tc := range testCases {
 		iVal = 0
+
 		ps, err := NewSet(SetHelper(nhnenr))
 		if err != nil {
 			t.Log(tc.IDStr())
 			t.Errorf("\t: could not construct the paramset\n")
 		}
+
 		ps.Add("ival", i64{Value: &iVal}, "help...", Attrs(MustBeSet))
 
 		pflp := paramLineParser{
 			ps:    ps,
 			eRule: paramMustExist,
 		}
+
 		loc := location.New("test case")
 		_ = pflp.ParseLine(tc.line, loc)
+
 		errs := ps.errors[tc.pname]
 		if len(errs) == 0 && tc.ErrExpected() {
 			t.Log(tc.IDStr())
 			t.Errorf("\t: an error was expected but not found\n")
 		} else if len(errs) != 1 {
 			t.Log(tc.IDStr())
+
 			for _, err := range errs {
 				t.Log("\t: ", err)
 			}
+
 			t.Errorf("\t: too many errors were seen\n")
 		} else {
 			testhelper.CheckExpErr(t, errs[0], tc)

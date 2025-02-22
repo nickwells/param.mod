@@ -136,6 +136,7 @@ func checkByNameVal(t *testing.T, tcID, paramName string,
 			t.Errorf("\t: the ByName param: %q should exist\n",
 				paramName)
 		}
+
 		if err != nil {
 			t.Log(tcID)
 			t.Errorf("\t: error seen when getting the ByName param: %q: %v\n",
@@ -147,6 +148,7 @@ func checkByNameVal(t *testing.T, tcID, paramName string,
 			t.Errorf("\t: the ByName param: %q should not exist\n",
 				paramName)
 		}
+
 		if err == nil {
 			t.Log(tcID)
 			t.Errorf("\t: no error seen when getting the ByName param: %q\n",
@@ -168,6 +170,7 @@ func checkByPosVal(t *testing.T, tcID string, paramIdx int,
 			t.Errorf("\t: the ByPos param: %d should exist\n",
 				paramIdx)
 		}
+
 		if err != nil {
 			t.Log(tcID)
 			t.Errorf("\t: error seen when getting the ByPos param: %d: %v\n",
@@ -179,6 +182,7 @@ func checkByPosVal(t *testing.T, tcID string, paramIdx int,
 			t.Errorf("\t: the ByPos param: %d should not exist\n",
 				paramIdx)
 		}
+
 		if err == nil {
 			t.Log(tcID)
 			t.Errorf("\t: missing error when getting the ByPos param: %d\n",
@@ -379,10 +383,13 @@ func TestParamAddPos(t *testing.T) {
 
 	for _, tc := range testCases {
 		ps := makePSetOrFatal(t, tc.IDStr())
+
 		var panicked bool
+
 		var panicVal any
 
 		var posIdx int
+
 		for _, pi := range tc.pi {
 			if pi.npi != nil {
 				_, panicked, panicVal = panicSafeTestAddByName(ps, pi.npi)
@@ -404,9 +411,11 @@ func TestParamAddPos(t *testing.T) {
 				if panicked {
 					break
 				}
+
 				posIdx++
 			}
 		}
+
 		testhelper.CheckExpPanic(t, panicked, panicVal, tc)
 
 		if !panicked {
@@ -478,6 +487,7 @@ func TestParamAddParamAfterParse(t *testing.T) {
 	if logErrMap(t, errMap) {
 		t.Errorf("\t: unexpected errors were detected while parsing")
 	}
+
 	_, panicked, panicVal := panicSafeTestAddByName(ps,
 		&namedParamInitialiser{
 			name:   "test99",
@@ -508,6 +518,7 @@ func TestParamAddParamAfterParse(t *testing.T) {
 
 func TestParamParse1(t *testing.T) {
 	var p1 int64
+
 	var p2 int64
 
 	ps := makePSetOrFatal(t, t.Name())
@@ -544,6 +555,7 @@ func TestParamParse1(t *testing.T) {
 	if logErrMap(t, errMap) {
 		t.Errorf("\t: unexpected errors were detected while parsing")
 	}
+
 	for _, tc := range testCases {
 		if *tc.setter.Value != tc.expectedVal {
 			t.Log(tc.IDStr())
@@ -551,6 +563,7 @@ func TestParamParse1(t *testing.T) {
 				*tc.setter.Value, tc.expectedVal)
 		}
 	}
+
 	if ps.ProgName() != param.DfltProgName {
 		t.Log(t.Name())
 		t.Errorf("\t: ps.ProgName() (= %q) was expected to be == %q",
@@ -648,6 +661,7 @@ func TestParamParse(t *testing.T) {
 		for _, p := range tc.params {
 			panicSafeTestAddByName(ps, p)
 		}
+
 		errMap, panicked, panicVal, stackTrace := panicSafeTestParse(
 			ps, tc.paramsPassed)
 		if !testhelper.ReportUnexpectedPanic(t, tc.IDStr(),
@@ -684,6 +698,7 @@ func TestParamByName(t *testing.T) {
 				param1Name, " as a principal name: ",
 				" was ", altNames[0])
 		}
+
 		if altNames[1] != param1AltName {
 			t.Error("the parameter should have had as an alternative name: ",
 				param1AltName, " was ", altNames[1])
@@ -696,6 +711,7 @@ func TestParamByName(t *testing.T) {
 			"Parse has not been called but the parameter WhereSet list has: ",
 			len(ws), " entries")
 	}
+
 	if p.InitialValue() != val1InitialVal {
 		t.Error(
 			"the initial value of the parameter was expected to be: ",

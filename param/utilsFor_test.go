@@ -71,6 +71,7 @@ func (npi namedParamInitialiser) compare(
 			t.Log(tID)
 			t.Errorf("\t: the param should be set but it is nil\n")
 		}
+
 		return
 	}
 
@@ -78,14 +79,18 @@ func (npi namedParamInitialiser) compare(
 		t.Log(tID)
 		t.Errorf("\t: the name did not match: %q != %q\n",
 			p.Name(), npi.name)
+
 		return
 	}
+
 	if p.Description() != npi.desc {
 		t.Log(tID)
 		t.Errorf("\t: the description did not match: %q != %q\n",
 			p.Description(), npi.desc)
+
 		return
 	}
+
 	if p.HasBeenSet() {
 		if sbs == ShouldNotBeSet {
 			t.Log(tID)
@@ -131,7 +136,9 @@ func panicSafeTestAddByPos(ps *param.PSet, ppi *posParamInitialiser,
 			panicVal = r
 		}
 	}()
+
 	pp = ps.AddByPos(ppi.name, ppi.setter, ppi.desc, ppi.opts...)
+
 	return pp, panicked, panicVal
 }
 
@@ -152,7 +159,9 @@ func panicSafeTestAddByName(ps *param.PSet, npi *namedParamInitialiser,
 			panicVal = r
 		}
 	}()
+
 	p = ps.Add(npi.name, npi.setter, npi.desc, npi.opts...)
+
 	return p, panicked, panicVal
 }
 
@@ -169,8 +178,10 @@ func panicSafeTestParse(ps *param.PSet, params []string,
 			stackTrace = debug.Stack()
 		}
 	}()
+
 	stackTrace = []byte{}
 	errMap = ps.Parse(params)
+
 	return errMap, panicked, panicVal, stackTrace
 }
 
@@ -187,7 +198,9 @@ func panicSafeAddGroup(ps *param.PSet, groupName, desc string,
 			stackTrace = debug.Stack()
 		}
 	}()
+
 	ps.AddGroup(groupName, desc)
+
 	return panicked, panicVal, stackTrace
 }
 
@@ -198,6 +211,7 @@ func logErrs(t *testing.T, msg string, errs []error) {
 	t.Helper()
 
 	t.Log(msg)
+
 	for _, err := range errs {
 		t.Log("\t:\t", err, "\n")
 	}
@@ -214,6 +228,7 @@ func logErrMap(t *testing.T, errMap param.ErrMap) bool {
 	for k, errs := range errMap {
 		logErrs(t, "\t: Errors for: "+k+":\n", errs)
 	}
+
 	return true
 }
 
@@ -221,9 +236,11 @@ func logErrMap(t *testing.T, errMap param.ErrMap) bool {
 // set the nameLogged flag
 func logName(t *testing.T, nameLogged bool, name string) bool {
 	t.Helper()
+
 	if !nameLogged {
 		t.Log(name)
 	}
+
 	return true
 }
 
@@ -235,6 +252,7 @@ func errsContainStr(errs []error, s string) bool {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -251,13 +269,16 @@ func errMapCheck(t *testing.T, testID string, errMap param.ErrMap, expected map[
 			"\t: the error map had %d entries, it was expected to have %d\n",
 			len(errMap), len(expected))
 	}
+
 	for k, errs := range errMap {
 		expStrs, ok := expected[k]
 		if !ok {
 			nameLogged = logName(t, nameLogged, testID)
 			logErrs(t, "\t: there are unexpected errors for: "+k+":\n", errs)
+
 			continue
 		}
+
 		for _, s := range expStrs {
 			if !errsContainStr(errs, s) {
 				nameLogged = logName(t, nameLogged, testID)
