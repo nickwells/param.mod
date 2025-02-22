@@ -349,7 +349,9 @@ const (
 	paramNeedNotExist
 )
 
-func (ps *PSet) setValue(paramParts []string, loc *location.L, eRule existenceRule, gName string) {
+func (ps *PSet) setValue(
+	paramParts []string, loc *location.L, eRule existenceRule, gName string,
+) {
 	paramName := paramParts[0]
 	p, exists := ps.nameToParam[paramName]
 
