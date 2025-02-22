@@ -55,7 +55,7 @@ func TestPSet(t *testing.T) {
 			ID: testhelper.MkID("setopt error"),
 			psOpts: []param.PSetOptFunc{
 				param.SetErrWriter(&buff),
-				func(ps *param.PSet) error { return errors.New("whoops") },
+				func(_ *param.PSet) error { return errors.New("whoops") },
 			},
 			errExpected: true,
 			expEStr:     "whoops",
