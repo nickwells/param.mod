@@ -87,12 +87,13 @@ func (ps *PSet) handleParamsByName(loc *location.L, params []string) {
 			break
 		}
 
-		paramParts := strings.SplitN(pStr, "=", 2)
-		trimmedParam, err := trimParam(paramParts[0])
+		paramName, paramVal, hasParamVal := strings.Cut(pStr, "=")
+		trimmedParam, err := trimParam(paramName)
 		if err != nil {
 			ps.AddErr(trimmedParam, loc.Error(err.Error()))
 			continue
 		}
+		paramParts := append([]string{}, trimmedParam)
 
 		p, ok := ps.nameToParam[trimmedParam]
 		if !ok {
@@ -100,17 +101,17 @@ func (ps *PSet) handleParamsByName(loc *location.L, params []string) {
 			continue
 		}
 
-		if p.setter.ValueReq() == Mandatory &&
-			len(paramParts) == 1 {
+		if hasParamVal {
+			paramParts = append(paramParts, paramVal)
+		} else if p.setter.ValueReq() == Mandatory {
 			if i < (len(params) - 1) {
 				i++
 				loc.Incr()
 				paramParts = append(paramParts, params[i])
 				loc.SetContent(
-					fmt.Sprintf("%q %q", paramParts[0], paramParts[1]))
+					fmt.Sprintf("%q %q", paramName, paramParts[1]))
 			}
 		}
-		paramParts[0] = trimmedParam
 		p.processParam(loc, paramParts)
 
 		if ps.terminalParamSeen {
