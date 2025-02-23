@@ -103,6 +103,7 @@ func makeSectionAllowedVals() psetter.AllowedVals[string] {
 
 		rval[s.name] = s.desc
 	}
+
 	return rval
 }
 
@@ -165,6 +166,7 @@ func (c choices) hasNothingChosen() bool {
 			return false
 		}
 	}
+
 	return true
 }
 
@@ -257,6 +259,7 @@ func (h *StdHelp) setHelpSections(sections ...string) error {
 			return fmt.Errorf("%q is not a valid section", s)
 		}
 	}
+
 	return nil
 }
 
@@ -274,5 +277,6 @@ func (h *StdHelp) unsetHelpSections(sections ...string) error {
 			return fmt.Errorf("%q is not a valid section", s)
 		}
 	}
+
 	return nil
 }

@@ -50,6 +50,7 @@ func (s Uint[T]) SetWithVal(_ string, paramVal string) error {
 	}
 
 	*s.Value = v
+
 	return nil
 }
 

@@ -50,6 +50,7 @@ func (s StrList[T]) SetWithVal(paramName, paramVal string) error {
 			if err != nil {
 				return err
 			}
+
 			sv[i] = newVal
 		}
 	}

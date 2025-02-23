@@ -16,11 +16,14 @@ func ExampleStrListAppender_standard() {
 	ps.Add("next", psetter.StrListAppender[string]{Value: &ss}, "help text")
 
 	fmt.Println("Before parsing")
+
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}
+
 	ps.Parse([]string{"-next", "darkness", "-next", "my old friend"})
 	fmt.Println("After  parsing")
+
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}
@@ -50,11 +53,14 @@ func ExampleStrListAppender_withPassingChecks() {
 		"help text")
 
 	fmt.Println("Before parsing")
+
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}
+
 	ps.Parse([]string{"-next", "darkness", "-next", "my old friend"})
 	fmt.Println("After  parsing")
+
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}
@@ -86,14 +92,19 @@ func ExampleStrListAppender_withFailingChecks() {
 		"help text")
 
 	fmt.Println("Before parsing")
+
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}
+
 	errMap := ps.Parse([]string{"-next", "darkness", "-next", "my old friend"})
+
 	// We expect to see an error reported.
 	logErrs(errMap)
+
 	// The value does not include the second parameter due to the error.
 	fmt.Println("After  parsing")
+
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}

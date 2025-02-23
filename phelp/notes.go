@@ -15,11 +15,14 @@ func noteCanBeShown(h StdHelp, n *param.Note) bool {
 		if h.showHiddenItems {
 			return true
 		}
+
 		if n.AttrIsSet(param.DontShowNoteInStdUsage) {
 			return false
 		}
+
 		return true
 	}
+
 	return h.notesChosen[n.Headline()]
 }
 
@@ -29,6 +32,7 @@ func showNotes(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	if len(notes) == 0 {
 		return false
 	}
+
 	switch h.helpFormat {
 	case helpFmtTypeMarkdown:
 		return showNotesFmtMD(h, twc, ps)
@@ -41,15 +45,18 @@ func showNotes(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 func showNotesFmtStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	notes := ps.Notes()
 	hiddenCount := 0
-
 	keys := make([]string, 0, len(notes))
+
 	for k, n := range notes {
 		keys = append(keys, k)
+
 		if n.AttrIsSet(param.DontShowNoteInStdUsage) {
 			hiddenCount++
 		}
 	}
+
 	sort.Strings(keys)
+
 	if h.showHiddenItems {
 		twc.Printf("Notes [ %d notes ]\n", len(notes))
 	} else if hiddenCount == len(notes) {
@@ -63,7 +70,9 @@ func showNotesFmtStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 		if !noteCanBeShown(h, n) {
 			continue
 		}
+
 		twc.Wrap(n.Headline(), paramIndent)
+
 		if h.showSummary {
 			continue
 		}
@@ -93,6 +102,7 @@ func showNotesRefsFmtStd(twc *twrap.TWConf, refs []string, name string) {
 	for i := 1; i < len(refs); i++ {
 		refStr += ","
 		spaceUsed++
+
 		if spaceUsed+1+len(refs[i]) > targetSpace {
 			refStr += "\n"
 			spaceUsed = 0
@@ -100,9 +110,11 @@ func showNotesRefsFmtStd(twc *twrap.TWConf, refs []string, name string) {
 			refStr += " "
 			spaceUsed++
 		}
+
 		refStr += refs[i]
 		spaceUsed += len(refs[i])
 	}
+
 	twc.WrapPrefixed(prefix, refStr, descriptionIndent)
 }
 
@@ -112,22 +124,26 @@ func showNotesFmtMD(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	notes := ps.Notes()
 
 	keys := make([]string, 0, len(notes))
+
 	for k, n := range notes {
 		if !noteCanBeShown(h, n) {
 			continue
 		}
+
 		keys = append(keys, k)
 	}
 
 	if len(keys) == 0 {
 		return false
 	}
+
 	twc.Print("# Notes\n\n")
 
 	sort.Strings(keys)
 
 	for _, headline := range keys {
 		twc.Print("## " + makeTextMarkdownSafe(headline) + "\n")
+
 		if h.showSummary {
 			continue
 		}
@@ -152,9 +168,11 @@ func showNotesFmtMD(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 func showNotesRefsFmtMD(twc *twrap.TWConf, refs []string, name string) {
 	if len(refs) > 0 {
 		twc.Print("### See " + english.Plural(name, len(refs)) + "\n")
+
 		for _, ref := range refs {
 			twc.Print("* " + makeTextMarkdownSafe(ref) + "\n")
 		}
+
 		twc.Print("\n")
 	}
 }

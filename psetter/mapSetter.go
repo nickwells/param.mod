@@ -49,31 +49,35 @@ func (s Map[T]) CountChecks() int {
 // Note that the Value map is not replaced compmletely, just updated.
 func (s Map[T]) SetWithVal(paramName string, paramVal string) error {
 	var err error
+
 	sep := s.GetSeparator()
 	values := strings.Split(paramVal, sep)
 	m := map[T]bool{}
 
 	for i, v := range values {
-		parts := strings.SplitN(v, "=", 2)
-		key := parts[0]
+		namePart, boolPart, hasBoolPart := strings.Cut(v, "=")
+
 		if s.Editor != nil {
-			key, err = s.Editor.Edit(paramName, key)
+			namePart, err = s.Editor.Edit(paramName, namePart)
 			if err != nil {
 				return err
 			}
 		}
+
 		b := true
-		if len(parts) == 2 {
+
+		if hasBoolPart {
 			// check that the bool can be parsed
-			b, err = strconv.ParseBool(parts[1])
+			b, err = strconv.ParseBool(boolPart)
 			if err != nil {
 				return fmt.Errorf("bad value: %q: part: %d (%q) is invalid."+
 					" The value (%q) cannot be interpreted"+
 					" as true or false: %s",
-					paramVal, i+1, v, parts[1], err)
+					paramVal, i+1, v, boolPart, err)
 			}
 		}
-		m[T(key)] = b
+
+		m[T(namePart)] = b
 	}
 
 	for _, check := range s.Checks {
@@ -86,6 +90,7 @@ func (s Map[T]) SetWithVal(paramName string, paramVal string) error {
 	for k, b := range m {
 		(*s.Value)[T(k)] = b
 	}
+
 	return nil
 }
 
@@ -102,9 +107,11 @@ func (s Map[T]) CurrentValue() string {
 	cv := ""
 
 	keys := make([]string, 0, len(*s.Value))
+
 	for k := range *s.Value {
 		keys = append(keys, string(k))
 	}
+
 	sort.Strings(keys)
 
 	sep := ""

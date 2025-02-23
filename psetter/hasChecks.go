@@ -13,5 +13,6 @@ func HasChecks(cc CheckCounter) string {
 	if cc.CountChecks() != 0 {
 		return " subject to checks"
 	}
+
 	return ""
 }

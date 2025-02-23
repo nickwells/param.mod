@@ -23,6 +23,7 @@ func (h StdHelp) ErrorHandler(ps *param.PSet, errMap param.ErrMap) {
 	if !h.reportErrors {
 		return
 	}
+
 	twc := twrap.NewTWConfOrPanic(
 		twrap.SetWriter(ps.ErrW()),
 		twrap.SetTargetLineLen(h.helpLineLen))
@@ -50,6 +51,7 @@ func reportErrors(h StdHelp, _ *twrap.TWConf, ps *param.PSet) int {
 	if len(ps.Errors()) > 0 {
 		exitStatus = 1
 	}
+
 	return exitStatus
 }
 

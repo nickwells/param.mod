@@ -20,6 +20,7 @@ func (myEditorMult) Edit(paramName, paramVal string) (string, error) {
 	case "next3":
 		return paramVal + ", " + paramVal + ", " + paramVal, nil
 	}
+
 	return "", errors.New("Unexpected parameter: " + paramName)
 }
 
@@ -28,6 +29,7 @@ func ExampleStrListAppender_withEditor() {
 	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	ss := []string{"Hello"}
+
 	var myE myEditorMult
 
 	ps.Add("next",
@@ -39,11 +41,14 @@ func ExampleStrListAppender_withEditor() {
 	)
 
 	fmt.Println("Before parsing")
+
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}
+
 	ps.Parse([]string{"-next", "darkness", "-next3", "darkness"})
 	fmt.Println("After  parsing")
+
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}

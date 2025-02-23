@@ -15,6 +15,7 @@ func ExampleNil_standard() {
 	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	var flag1 bool
+
 	var flag2 bool
 
 	ps.Add("my-param", psetter.Nil{}, "help text",

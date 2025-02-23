@@ -23,32 +23,41 @@ func showReferences(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 // showReferencesFmtStd prints references in the standard help format
 func showReferencesFmtStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	refs := ps.References()
+
 	twc.Print("See Also\n")
 
 	for _, r := range refs {
 		twc.Wrap("\n"+r.Name()+"\n", paramIndent)
+
 		if h.showSummary {
 			continue
 		}
+
 		twc.Wrap(r.Desc(), descriptionIndent)
 	}
+
 	return true
 }
 
 // showReferencesFmtMD prints references in markdown format
 func showReferencesFmtMD(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	refs := ps.References()
+
 	twc.Print("# See Also\n\n")
 
 	for _, r := range refs {
 		twc.Print("```\n")
 		twc.Wrap(r.Name(), 0)
 		twc.Print("```\n")
+
 		if h.showSummary {
 			continue
 		}
+
 		desc := makeTextMarkdownSafe(r.Desc())
+
 		twc.Wrap(desc, 0)
 	}
+
 	return true
 }

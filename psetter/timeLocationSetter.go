@@ -53,16 +53,19 @@ func (s TimeLocation) makeSuggestionStr(altLocs []string) string {
 // suggestAltTimeLocation tries to find values in the list of available
 // locations which are similar to the badLoc value
 func (s TimeLocation) suggestAltTimeLocation(badLoc string) string {
+	const alternativeCount = 3
+
 	if len(s.Locations) == 0 {
 		return ""
 	}
+
 	finder := strdist.DefaultFinders[strdist.CaseBlindAlgoNameCosine]
 
 	var altLocs []string
 	for _, f := range []func(string, []string) []string{
 		// This finds matches against the locations
 		func(s string, locs []string) []string {
-			return finder.FindNStrLike(3, s, locs...)
+			return finder.FindNStrLike(alternativeCount, s, locs...)
 		},
 		// This finds those entries in Locations which have a name with parts
 		// separated by a '/'. This is how geographical timezone locations
@@ -74,6 +77,7 @@ func (s TimeLocation) suggestAltTimeLocation(badLoc string) string {
 		func(s string, locs []string) []string {
 			justCities := []string{} // a misnomer as they aren't all city names
 			backMap := map[string][]string{}
+
 			for _, l := range locs {
 				parts := strings.Split(l, "/")
 				if len(parts) > 1 {
@@ -82,14 +86,17 @@ func (s TimeLocation) suggestAltTimeLocation(badLoc string) string {
 					backMap[city] = append(backMap[city], l)
 				}
 			}
-			matches := finder.FindNStrLike(3, s, justCities...)
+
+			matches := finder.FindNStrLike(alternativeCount, s, justCities...)
 			if len(matches) == 0 {
 				return matches
 			}
+
 			rval := []string{}
 			for _, m := range matches {
 				rval = append(rval, backMap[m]...)
 			}
+
 			return rval
 		},
 	} {
@@ -97,6 +104,7 @@ func (s TimeLocation) suggestAltTimeLocation(badLoc string) string {
 		if len(altLocs) > 0 {
 			break
 		}
+
 		altLocs = f(strings.ReplaceAll(badLoc, " ", "_"), s.Locations)
 		if len(altLocs) > 0 {
 			break
@@ -116,7 +124,9 @@ func (s TimeLocation) SetWithVal(_ string, paramVal string) error {
 	v, err := time.LoadLocation(paramVal)
 	if err != nil {
 		convertedVal := strings.ReplaceAll(paramVal, " ", "_")
+
 		var e2 error
+
 		v, e2 = time.LoadLocation(convertedVal)
 		if e2 != nil {
 			return fmt.Errorf("bad timezone %q%s: %w",
@@ -132,6 +142,7 @@ func (s TimeLocation) SetWithVal(_ string, paramVal string) error {
 	}
 
 	*s.Value = v
+
 	return nil
 }
 

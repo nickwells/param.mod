@@ -25,9 +25,11 @@ func (tc NamedCalc[T]) Check() error {
 	if tc.Name == "" {
 		return errors.New("the Name must not be empty")
 	}
+
 	if tc.Calc == nil {
 		return errors.New("the Calc must not be nil")
 	}
+
 	return nil
 }
 

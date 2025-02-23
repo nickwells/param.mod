@@ -42,10 +42,12 @@ type AllowedValuesAliasMapper interface {
 // length of the longest key.
 func (a Aliases[T]) Keys() ([]string, int) {
 	keys := make([]string, 0, len(a))
+
 	var maxKeyLen int
 
 	for k := range a {
 		keys = append(keys, string(k))
+
 		if len(k) > maxKeyLen {
 			maxKeyLen = len(k)
 		}
@@ -60,17 +62,22 @@ func (a Aliases[T]) String() string {
 	if a == nil {
 		return ""
 	}
+
 	var avals string
+
 	keys, maxKeyLen := a.Keys()
+
 	sort.Strings(keys)
 
 	sep := ""
+
 	for _, k := range keys {
 		kav := convertToStringSlice(a[T(k)])
 		avals += sep + fmt.Sprintf("   %-*s: ", maxKeyLen, k) +
 			strings.Join(kav, ", ")
 		sep = "\n"
 	}
+
 	return avals
 }
 
@@ -85,18 +92,23 @@ func (a Aliases[T]) Check(av AllowedVals[T]) error {
 	for ak := range a {
 		aliasKeys = append(aliasKeys, ak)
 	}
+
 	sort.Slice(aliasKeys,
 		func(i, j int) bool { return aliasKeys[i] < aliasKeys[j] })
 
 	allProblems := []string{}
+
 	for _, name := range aliasKeys {
 		aliasProblems := a.aliasNameProblems(name, av)
 		aliasProblems = append(aliasProblems, a.aliasValueProblems(name, av)...)
+
 		if len(aliasProblems) > 0 {
 			sep := " - "
+
 			if len(aliasProblems) > 1 {
 				sep = "\n    - "
 			}
+
 			sort.Strings(aliasProblems)
 			allProblems = append(allProblems,
 				fmt.Sprintf("%q: %#v%s%s",
@@ -111,6 +123,7 @@ func (a Aliases[T]) Check(av AllowedVals[T]) error {
 		if len(allProblems) > 1 {
 			sep = fmt.Sprintf(" (%d)\n", len(allProblems))
 		}
+
 		return fmt.Errorf("bad %s:%s%s",
 			english.Plural("alias", len(allProblems)),
 			sep,
@@ -136,6 +149,7 @@ func (a Aliases[T]) aliasValueProblems(name T, av AllowedVals[T]) []string {
 
 	for i, avk := range a[name] {
 		indexes[avk] = append(indexes[avk], i)
+
 		if _, ok := av[avk]; !ok {
 			badValues[avk] = append(badValues[avk], i)
 		}
@@ -180,15 +194,18 @@ func (a Aliases[T]) reportBadAliases(badVals map[T][]int) []string {
 		func(i, j int) bool { return bvKeys[i] < bvKeys[j] })
 
 	problems := []string{}
+
 	for _, k := range bvKeys {
 		iVals := []string{}
 		for _, i := range badVals[k] {
 			iVals = append(iVals, fmt.Sprintf("%d", i))
 		}
+
 		problems = append(problems,
 			fmt.Sprintf("%q (at index %s) is unknown",
 				k, english.Join(iVals, ", ", " and ")))
 	}
+
 	return problems
 }
 
@@ -204,17 +221,21 @@ func (a Aliases[T]) reportDuplicateVals(indexes map[T][]int) []string {
 		func(i, j int) bool { return iKeys[i] < iKeys[j] })
 
 	problems := []string{}
+
 	for _, k := range iKeys {
 		if len(indexes[k]) > 1 {
 			iVals := []string{}
+
 			for _, i := range indexes[k] {
 				iVals = append(iVals, fmt.Sprintf("%d", i))
 			}
+
 			problems = append(problems,
 				fmt.Sprintf("%q appears more than once (at index %s)",
 					k, english.Join(iVals, ", ", " and ")))
 		}
 	}
+
 	return problems
 }
 
@@ -222,13 +243,16 @@ func (a Aliases[T]) reportDuplicateVals(indexes map[T][]int) []string {
 // used by the standard help package to generate a list of allowed values.
 func (a Aliases[T]) AllowedValuesAliasMap() Aliases[string] {
 	rval := make(map[string][]string)
+
 	for k, v := range a {
 		strVals := make([]string, 0, len(v))
 		for _, tv := range v {
 			strVals = append(strVals, string(tv))
 		}
+
 		rval[string(k)] = strVals
 	}
+
 	return rval
 }
 
@@ -242,6 +266,7 @@ func (a Aliases[T]) IsAnAlias(val string) bool {
 func (a Aliases[T]) AliasVal(name T) []T {
 	rval := make([]T, len(a[name]))
 	copy(rval, a[name])
+
 	return rval
 }
 
@@ -252,5 +277,6 @@ func convertToStringSlice[T ~string](ts []T) []string {
 	for _, v := range ts {
 		ss = append(ss, string(v))
 	}
+
 	return ss
 }

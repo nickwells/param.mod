@@ -16,8 +16,10 @@ func TestStrListSeparator(t *testing.T) {
 		{"", psetter.StrListDefaultSep},
 		{":", ":"},
 	}
+
 	for _, tc := range slsTestCases {
 		sls.Sep = tc.sep
+
 		val := sls.GetSeparator()
 		if val != tc.expectedSep {
 			t.Error("GetSeparator() returned: '" + val +

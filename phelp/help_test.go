@@ -159,11 +159,13 @@ func addConfigFiles(ps *param.PSet, configFiles []configFileDetails) {
 				ps.AddGroupConfigFile(cfd.groupName, cfd.name, fc)
 			} else {
 				groupConfigFile[cfd.groupName] = true
+
 				ps.SetGroupConfigFile(cfd.groupName, cfd.name, fc)
 			}
 		} else if cfd.strictCF {
 			if firstConfigFile {
 				firstConfigFile = false
+
 				ps.SetConfigFileStrict(cfd.name, fc)
 			} else {
 				ps.AddConfigFileStrict(cfd.name, fc)
@@ -171,6 +173,7 @@ func addConfigFiles(ps *param.PSet, configFiles []configFileDetails) {
 		} else {
 			if firstConfigFile {
 				firstConfigFile = false
+
 				ps.SetConfigFile(cfd.name, fc)
 			} else {
 				ps.AddConfigFile(cfd.name, fc)
@@ -433,12 +436,15 @@ func TestHelp(t *testing.T) {
 
 	for _, tc := range testCases {
 		idStr := tc.IDStr()
+
 		setInitialValues()
+
 		helper := phelp.NewStdHelp()
 		helper.SetExitAfterHelp(false)
 		helper.SetDontExitOnErrors(true)
 
 		var stdoutBuf bytes.Buffer
+
 		var stderrBuf bytes.Buffer
 
 		ps, err := param.NewSet(
@@ -450,6 +456,7 @@ func TestHelp(t *testing.T) {
 		if err != nil {
 			t.Log(idStr)
 		}
+
 		for _, psof := range tc.paramAdder {
 			err = psof(ps)
 			if err != nil {
@@ -458,7 +465,9 @@ func TestHelp(t *testing.T) {
 					err)
 			}
 		}
+
 		addConfigFiles(ps, tc.configFiles)
+
 		for _, ep := range tc.envPrefixes {
 			ps.AddEnvPrefix(ep)
 		}
@@ -485,6 +494,7 @@ func TestHelpWithMessage(t *testing.T) {
 	helper.SetDontExitOnErrors(true)
 
 	var stdoutBuf bytes.Buffer
+
 	var stderrBuf bytes.Buffer
 
 	ps, err := param.NewSet(

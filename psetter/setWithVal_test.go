@@ -38,7 +38,7 @@ func TestSetWithVal(t *testing.T) {
 			"bye":   "bye description",
 		},
 		Checks: []check.StringSlice{
-			check.SliceLength[[]string, string](check.ValEQ(2)),
+			check.SliceLength[[]string](check.ValEQ(2)),
 		},
 	}
 
@@ -83,6 +83,7 @@ func TestSetWithVal(t *testing.T) {
 	}
 
 	var vInt64 int64 = 42
+
 	setterInt64 := psetter.Int[int64]{Value: &vInt64}
 	setterInt64WithChecks := psetter.Int[int64]{
 		Value: &vInt64,
@@ -101,14 +102,17 @@ func TestSetWithVal(t *testing.T) {
 
 	setterNil := psetter.Nil{}
 
-	var vPathname string
+	var (
+		vPathname  string
+		vPathname2 string
+		vPathname3 string
+	)
+
 	setterPathname := psetter.Pathname{Value: &vPathname}
-	var vPathname2 string
 	setterPathnameWithExpectation := psetter.Pathname{
 		Value:       &vPathname2,
 		Expectation: filecheck.DirExists(),
 	}
-	var vPathname3 string
 	setterPathnameWithChecks := psetter.Pathname{
 		Value: &vPathname3,
 		Checks: []check.String{
@@ -117,9 +121,11 @@ func TestSetWithVal(t *testing.T) {
 	}
 
 	var vRegexp *regexp.Regexp
+
 	setterRegexp := psetter.Regexp{Value: &vRegexp}
 
 	var vString string
+
 	setterStringWithChecks := psetter.String[string]{
 		Value: &vString,
 		Checks: []check.String{
@@ -128,6 +134,7 @@ func TestSetWithVal(t *testing.T) {
 	}
 
 	var vStrList []string
+
 	setterStrListWithChecks := psetter.StrList[string]{
 		Value: &vStrList,
 		Checks: []check.StringSlice{
@@ -136,12 +143,14 @@ func TestSetWithVal(t *testing.T) {
 	}
 
 	var vTimeLocation *time.Location
+
 	setterTimeLocationWithChecks := psetter.TimeLocation{
 		Value:  &vTimeLocation,
 		Checks: []check.TimeLocation{},
 	}
 
 	var vCSInt int
+
 	calcSetterWithChecks := psetter.Calculated[int]{
 		Value: &vCSInt,
 		CalcMap: map[string]psetter.NamedCalc[int]{

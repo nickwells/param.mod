@@ -16,6 +16,7 @@ func ExampleEnumMap_standard() {
 	)
 
 	var m map[string]bool
+
 	keys := []string{XOption, YOption}
 
 	ps.Add("my-map",
@@ -28,6 +29,7 @@ func ExampleEnumMap_standard() {
 		}, "help text")
 
 	fmt.Println("Before parsing")
+
 	for _, k := range keys {
 		if v, ok := m[k]; ok {
 			fmt.Printf("\tm[%s] = %v\n", k, v)
@@ -35,8 +37,8 @@ func ExampleEnumMap_standard() {
 	}
 
 	ps.Parse([]string{"-my-map", "x"})
-
 	fmt.Println("After  parsing")
+
 	for _, k := range keys {
 		if v, ok := m[k]; ok {
 			fmt.Printf("\tm[%s] = %v\n", k, v)
@@ -72,6 +74,7 @@ func ExampleEnumMap_fixingInitialValue() {
 		}, "help text")
 
 	fmt.Println("Before parsing")
+
 	for _, k := range keys {
 		if v, ok := m[k]; ok {
 			fmt.Printf("\tm[%s] = %v\n", k, v)
@@ -79,8 +82,8 @@ func ExampleEnumMap_fixingInitialValue() {
 	}
 
 	ps.Parse([]string{"-my-map", "x=false,y"})
-
 	fmt.Println("After  parsing")
+
 	for _, k := range keys {
 		if v, ok := m[k]; ok {
 			fmt.Printf("\tm[%s] = %v\n", k, v)
@@ -124,6 +127,7 @@ func ExampleEnumMap_hiddenMapEntries() {
 		}, "help text")
 
 	fmt.Println("Before parsing")
+
 	for _, k := range keys {
 		if v, ok := m[k]; ok {
 			fmt.Printf("\tm[%s] = %v\n", k, v)
@@ -133,6 +137,7 @@ func ExampleEnumMap_hiddenMapEntries() {
 	ps.Parse([]string{"-my-map", "y"})
 
 	fmt.Println("After  parsing")
+
 	for _, k := range keys {
 		if v, ok := m[k]; ok {
 			fmt.Printf("\tm[%s] = %v\n", k, v)

@@ -76,7 +76,9 @@ func (s PathnameListAppender) SetWithVal(_, paramVal string) error {
 		*s.Value = append([]string{pathname}, *s.Value...)
 		return nil
 	}
+
 	*s.Value = append(*s.Value, pathname)
+
 	return nil
 }
 
@@ -87,10 +89,13 @@ func (s PathnameListAppender) AllowedValues() string {
 		intro = "a pathname that will be added to the"
 		outro = " existing list of values"
 	)
+
 	prepend := ""
+
 	if s.Prepend {
 		prepend = " start of the"
 	}
+
 	return intro + prepend + outro + HasChecks(s)
 }
 

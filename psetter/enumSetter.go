@@ -45,6 +45,7 @@ func (s Enum[T]) SetWithVal(_ string, paramVal string) error {
 		*s.Value = T(paramVal)
 		return nil
 	}
+
 	return fmt.Errorf("value not allowed: %q", paramVal)
 }
 
@@ -64,13 +65,17 @@ func (s Enum[T]) CheckSetter(name string) {
 	if s.Value == nil {
 		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
+
 	intro := fmt.Sprintf("%s: %T Check failed: ", name, s)
+
 	if err := s.AllowedVals.Check(); err != nil {
 		panic(intro + err.Error())
 	}
+
 	if s.AllowInvalidInitialValue {
 		return
 	}
+
 	if !s.ValueAllowed(string(*s.Value)) {
 		panic(fmt.Sprintf("%sthe initial value (%s) is not valid",
 			intro, *s.Value))
@@ -82,29 +87,38 @@ func (s Enum[T]) CheckSetter(name string) {
 // truncated if it gets too long.
 func (s Enum[T]) ValDescribe() string {
 	const maxValDescLen = 20
+
 	initialVal := string(*s.Value)
 
 	var desc string
+
 	if s.ValueAllowed(initialVal) {
 		desc = initialVal
 	}
+
 	avals := []string{}
+
 	for val := range s.AllowedVals {
 		avals = append(avals, string(val))
 	}
+
 	sort.Strings(avals)
 
 	for _, val := range avals {
 		if val == initialVal {
 			continue
 		}
+
 		if len(desc) > 0 {
 			desc += "|"
 		}
+
 		if len(desc)+len(val) > maxValDescLen {
 			return desc + "..."
 		}
+
 		desc += val
 	}
+
 	return desc
 }

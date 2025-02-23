@@ -15,24 +15,37 @@ func TestCheck(t *testing.T) {
 	goodStrAlt := "aval-alt"
 	badStr := "bad val"
 	anyStr := ""
+
 	var b bool
+
 	var dur time.Duration
+
 	var emptyStrList []string
+
 	goodStrList := []string{goodStr}
 	badStrList := []string{badStr}
 	strToBoolMap := make(map[string]bool)
+
 	var strToBoolMapNil1 map[string]bool
+
 	var strToBoolMapNil2 map[string]bool
+
 	strToBoolMapWithEntriesGood := map[string]bool{goodStr: true}
 	strToBoolMapWithEntriesBad := map[string]bool{
 		goodStr: true,
 		badStr:  true,
 	}
+
 	var f float64
+
 	var i int64
+
 	var intList []int64
+
 	var re *regexp.Regexp
+
 	var timeLoc *time.Location
+
 	avalMapEmpty := psetter.AllowedVals[string]{}
 	avalMapOneEntry := psetter.AllowedVals[string]{goodStr: "desc"}
 	avalMapGood := psetter.AllowedVals[string]{
@@ -390,7 +403,7 @@ func TestCheck(t *testing.T) {
 				"Calculated - bad, no default, len CalcMap < 2"),
 			ExpPanic: testhelper.MkExpPanic(
 				"with no default value the CalcMap must have" +
-					" at least 2 entries"),
+					" more than one entry"),
 			s: &psetter.Calculated[int64]{
 				Value: &i,
 				CalcMap: map[string]psetter.NamedCalc[int64]{
@@ -428,6 +441,7 @@ func TestCheck(t *testing.T) {
 
 	for _, tc := range testCases {
 		panicked, panicVal := panicSafeCheck(tc.s)
+
 		testhelper.CheckExpPanic(t, panicked, panicVal, tc)
 	}
 }

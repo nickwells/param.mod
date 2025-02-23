@@ -32,40 +32,44 @@ func TestDuration(t *testing.T) {
 		{
 			name:          "bad duration - 1 hour LT check",
 			val:           "1h",
-			check:         check.ValLT[time.Duration](time.Duration(1) * time.Hour),
+			check:         check.ValLT(time.Duration(1) * time.Hour),
 			errorExpected: true,
 		},
 		{
 			name:          "good duration - 1 hour LT check",
 			val:           "1m",
 			expDuration:   time.Duration(1) * time.Minute,
-			check:         check.ValLT[time.Duration](time.Duration(1) * time.Hour),
+			check:         check.ValLT(time.Duration(1) * time.Hour),
 			errorExpected: false,
 		},
 		{
 			name:          "good duration - 2 hour GT check",
 			val:           "2h",
 			expDuration:   time.Duration(2) * time.Hour,
-			check:         check.ValGT[time.Duration](time.Duration(1) * time.Hour),
+			check:         check.ValGT(time.Duration(1) * time.Hour),
 			errorExpected: false,
 		},
 		{
 			name:          "bad duration - 1 hour GT check",
 			val:           "1h",
-			check:         check.ValGT[time.Duration](time.Duration(1) * time.Hour),
+			check:         check.ValGT(time.Duration(1) * time.Hour),
 			errorExpected: true,
 		},
 	}
 
 	for i, tc := range testCases {
 		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
+
 		var d time.Duration
+
 		ds := psetter.Duration{Value: &d}
+
 		if tc.check != nil {
 			ds.Checks = []check.Duration{tc.check}
 		}
 
 		err := ds.SetWithVal("", tc.val)
+
 		ok := testhelper.CheckError(t, tcID, err, tc.errorExpected, []string{})
 		if ok && err == nil {
 			if d != tc.expDuration {
@@ -105,14 +109,14 @@ func TestDurationCountChecks(t *testing.T) {
 	}
 
 	for i, tc := range testCases {
-		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
 		var d time.Duration
+
 		ds := psetter.Duration{
 			Value:  &d,
 			Checks: tc.checks,
 		}
 		if ds.CountChecks() != tc.expCount {
-			t.Log(tcID)
+			t.Logf("test %d: %s", i, tc.name)
 			t.Logf("\t: check count expected: %d\n", tc.expCount)
 			t.Logf("\t:                  was: %d\n", ds.CountChecks())
 			t.Errorf("\t: unexpected check count\n")

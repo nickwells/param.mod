@@ -18,6 +18,7 @@ func showIntro(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	default:
 		showIntroFmtStd(h, twc, ps)
 	}
+
 	return true
 }
 
@@ -28,6 +29,7 @@ func showIntroFmtStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) {
 	if h.showSummary {
 		return
 	}
+
 	twc.Wrap(ps.ProgDesc(), 0)
 }
 
@@ -38,7 +40,9 @@ func showIntroFmtMD(h StdHelp, twc *twrap.TWConf, ps *param.PSet) {
 	if h.showSummary {
 		return
 	}
+
 	desc := makeTextMarkdownSafe(ps.ProgDesc())
+
 	twc.Wrap(desc, 0)
 	twc.Print("\n")
 }

@@ -12,27 +12,31 @@ func showUsageSummary(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	bppCount := ps.CountByPosParams()
 
 	var lastPosParamIsTerminal bool
-	for i := 0; i < bppCount; i++ {
+
+	for i := range bppCount {
 		bp, _ := ps.GetParamByPos(i)
+
 		twc.Print(" <", bp.Name(), ">")
+
 		if bp.IsTerminal() {
 			lastPosParamIsTerminal = true
 		}
 	}
 
 	if !lastPosParamIsTerminal {
-		groups := ps.GetGroups()
 		var hasOptionalParams bool
+
+		groups := ps.GetGroups()
 		for _, g := range groups {
 			for _, bn := range g.Params() {
 				if bn.AttrIsSet(param.MustBeSet) {
-					twc.Print(" -" + bn.Name() +
-						valueNeededStr(bn))
+					twc.Print(" -" + bn.Name() + valueNeededStr(bn))
 				} else {
 					hasOptionalParams = true
 				}
 			}
 		}
+
 		if hasOptionalParams {
 			twc.Print(" ...")
 		}
@@ -47,5 +51,6 @@ func showUsageSummary(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	}
 
 	twc.Print("\n")
+
 	return true
 }

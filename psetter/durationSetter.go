@@ -48,6 +48,7 @@ func (s Duration) SetWithVal(_ string, paramVal string) error {
 	}
 
 	*s.Value = v
+
 	return nil
 }
 

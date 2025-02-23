@@ -14,19 +14,23 @@ import (
 // want to see what has been ignored in order to detect mistakes.
 func showUnusedParams(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) int {
 	up := ps.UnusedParams()
+
 	twc.Println("Unused Parameters: ", len(up))
 
 	paramsByName := make([]string, 0, len(up))
 	for name := range up {
 		paramsByName = append(paramsByName, name)
 	}
+
 	sort.Strings(paramsByName)
 
 	for _, pn := range paramsByName {
 		twc.Wrap(pn, paramIndent)
+
 		for _, loc := range up[pn] {
 			twc.WrapPrefixed("at: ", loc, descriptionIndent)
 		}
 	}
+
 	return 0
 }

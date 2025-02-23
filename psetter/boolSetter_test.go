@@ -34,6 +34,7 @@ func TestBoolSet(t *testing.T) {
 				"Set(...) returned an unexpected error:",
 				err)
 		}
+
 		if b != tc.expectedVal {
 			t.Error(tc.name,
 				"Set(...) did not set the value to ",
@@ -106,6 +107,7 @@ func TestBoolSetVal(t *testing.T) {
 		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
 		b = !tc.expectedVal
 		err := tc.ps.SetWithVal("dummy", tc.paramVal)
+
 		ok := testhelper.CheckError(t, tcID,
 			err, tc.errExpected, tc.errShouldContain)
 		if ok {

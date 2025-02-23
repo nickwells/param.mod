@@ -256,16 +256,19 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 // makeForceChosenSection returns a FinalCheckFunction that checks to see if
 // any choices have been made and if so whether any of the altSections are in
 // the list of help sections. If not the forceSelection is applied.
-func makeForceChosenSection(h *StdHelp, c choices, dflt string, alts ...string) param.FinalCheckFunc {
+func makeForceChosenSection(h *StdHelp, c choices, dflt string, alts ...string,
+) param.FinalCheckFunc {
 	return func() error {
 		if c.hasNothingChosen() {
 			return nil
 		}
+
 		for _, s := range alts {
 			if h.sectionsChosen[s] {
 				return nil
 			}
 		}
+
 		return h.setHelpSections(dflt)
 	}
 }
@@ -278,9 +281,11 @@ func makeForceDefaultSectionsFunc(h *StdHelp) param.FinalCheckFunc {
 		if !h.helpRequested {
 			return nil
 		}
+
 		if h.sectionsChosen.hasNothingChosen() {
 			return h.setHelpSections(standardHelpSectionAlias)
 		}
+
 		return nil
 	}
 }
@@ -290,16 +295,21 @@ func makeForceDefaultSectionsFunc(h *StdHelp) param.FinalCheckFunc {
 func checkGroups(h *StdHelp, ps *param.PSet) param.ActionFunc {
 	return func(_ location.L, _ *param.ByName, _ []string) error {
 		var badNames []string
+
 		for gName := range h.groupsChosen {
 			if _, ok := ps.GetGroup(gName); !ok {
 				delete(h.groupsChosen, gName)
+
 				matches, _ := ps.FindMatchingGroups(gName)
+
 				if len(matches) > 0 {
 					for _, gn := range matches {
 						h.groupsChosen[gn] = true
 					}
+
 					continue
 				}
+
 				badNames = append(badNames, fmt.Sprintf("%q", gName))
 			}
 		}
@@ -307,6 +317,7 @@ func checkGroups(h *StdHelp, ps *param.PSet) param.ActionFunc {
 		if len(badNames) == 0 {
 			return nil
 		}
+
 		if len(h.groupsChosen) == 0 {
 			err := h.unsetHelpSections(
 				groupsHelpSectionName, groupedParamsHelpSectionName)
@@ -316,6 +327,7 @@ func checkGroups(h *StdHelp, ps *param.PSet) param.ActionFunc {
 		}
 
 		altNames := altNames(h, ps, badNames, param.SuggestGroups)
+
 		return makeBadNameError(badNames, altNames, "group",
 			"\nFor a list of available group names try '-"+
 				helpShowArgName+" "+groupsHelpSectionName+"'")
@@ -327,22 +339,29 @@ func checkGroups(h *StdHelp, ps *param.PSet) param.ActionFunc {
 func checkNotes(h *StdHelp, ps *param.PSet) param.ActionFunc {
 	return func(_ location.L, _ *param.ByName, _ []string) error {
 		var badNames []string
+
 		for nName := range h.notesChosen {
 			if _, err := ps.GetNote(nName); err != nil {
 				delete(h.notesChosen, nName)
+
 				matches, _ := ps.FindMatchingNotes(nName)
+
 				if len(matches) > 0 {
 					for _, nn := range matches {
 						h.notesChosen[nn] = true
 					}
+
 					continue
 				}
+
 				badNames = append(badNames, nName)
 			}
 		}
+
 		if len(badNames) == 0 {
 			return nil
 		}
+
 		if len(h.notesChosen) == 0 {
 			err := h.unsetHelpSections(notesHelpSectionName)
 			if err != nil {
@@ -351,6 +370,7 @@ func checkNotes(h *StdHelp, ps *param.PSet) param.ActionFunc {
 		}
 
 		altNames := altNames(h, ps, badNames, param.SuggestNotes)
+
 		return makeBadNameError(badNames, altNames, "note", "")
 	}
 }
@@ -360,17 +380,22 @@ func checkNotes(h *StdHelp, ps *param.PSet) param.ActionFunc {
 func checkParams(h *StdHelp, ps *param.PSet) param.ActionFunc {
 	return func(_ location.L, _ *param.ByName, _ []string) error {
 		var badNames []string
+
 		for pName := range h.paramsChosen {
 			trimmedName := strings.TrimLeft(pName, "-")
 			if _, err := ps.GetParamByName(trimmedName); err != nil {
 				delete(h.paramsChosen, pName)
+
 				matches, _ := ps.FindMatchingNamedParams(trimmedName)
+
 				if len(matches) > 0 {
 					for _, pn := range matches {
 						h.paramsChosen[pn] = true
 					}
+
 					continue
 				}
+
 				badNames = append(badNames, fmt.Sprintf("%q", pName))
 			}
 		}
@@ -378,6 +403,7 @@ func checkParams(h *StdHelp, ps *param.PSet) param.ActionFunc {
 		if len(badNames) == 0 {
 			return nil
 		}
+
 		if len(h.paramsChosen) == 0 {
 			err := h.unsetHelpSections(
 				namedParamsHelpSectionName, groupedParamsHelpSectionName)
@@ -387,6 +413,7 @@ func checkParams(h *StdHelp, ps *param.PSet) param.ActionFunc {
 		}
 
 		altNames := altNames(h, ps, badNames, param.SuggestParams)
+
 		return makeBadNameError(badNames, altNames, "parameter",
 			"\nTo see a list of parameter names try "+
 				"'-"+helpShowArgName+" "+namedParamsHelpSectionName+"'."+
@@ -406,10 +433,12 @@ func altNames(h *StdHelp, ps *param.PSet, badNames []string, sf param.Suggestion
 		for _, s := range suggestions {
 			if !h.paramsChosen[s] && !alreadyAdded[s] {
 				alreadyAdded[s] = true
+
 				altNames = append(altNames, fmt.Sprintf("%q", s))
 			}
 		}
 	}
+
 	return altNames
 }
 
@@ -418,16 +447,21 @@ func makeBadNameError(badNames, altNames []string, tName, extra string) error {
 	if len(badNames) == 0 {
 		return nil
 	}
+
 	badStrPrefix := fmt.Sprintf("Bad %s %s: ",
 		tName, english.Plural("name", len(badNames)))
 	badStrJoin := "\n" + strings.Repeat(" ", len(badStrPrefix))
+
 	sort.Strings(badNames)
+
 	badStr := badStrPrefix + strings.Join(badNames, badStrJoin)
 
 	alts := ""
+
 	if len(altNames) > 0 {
 		sort.Strings(altNames)
 		alts = "\nDid you mean " + strings.Join(altNames, " or ")
 	}
+
 	return errors.New(badStr + alts + extra)
 }

@@ -5,12 +5,20 @@ import (
 	"github.com/nickwells/twrap.mod/twrap"
 )
 
+type groupCF struct {
+	groupName string
+	cf        param.ConfigFileDetails
+}
+
 // showConfigFiles prints the config files that can be used to configure the
 // behaviour of the program
-func showConfigFiles(h StdHelp, twc *twrap.TWConf, cf []param.ConfigFileDetails) {
+func showConfigFiles(
+	h StdHelp, twc *twrap.TWConf, cf []param.ConfigFileDetails,
+) {
 	if len(cf) == 0 {
 		return
 	}
+
 	if h.showSummary {
 		for _, f := range cf {
 			if f.ParamsMustExist() {
@@ -19,19 +27,25 @@ func showConfigFiles(h StdHelp, twc *twrap.TWConf, cf []param.ConfigFileDetails)
 				twc.Println("multi-program-config-file::" + f.String())
 			}
 		}
+
 		return
 	}
 
 	twc.Print("\n  Common Configuration Files\n\n")
+
 	var hasNonStrictFiles bool
+
 	for _, f := range cf {
 		prefix := " "
+
 		if !f.ParamsMustExist() {
 			hasNonStrictFiles = true
 			prefix = "*"
 		}
+
 		twc.Printf("    %s %s\n", prefix, f.String())
 	}
+
 	if hasNonStrictFiles {
 		twc.Println()
 		twc.WrapPrefixed("Note: ",
@@ -44,22 +58,19 @@ func showConfigFiles(h StdHelp, twc *twrap.TWConf, cf []param.ConfigFileDetails)
 	}
 }
 
-type groupCF struct {
-	groupName string
-	cf        param.ConfigFileDetails
-}
-
 // showGroupConfigFiles prints the config files specific to particular groups
 // of parameters that can be used to configure the behaviour of the program
 func showGroupConfigFiles(h StdHelp, twc *twrap.TWConf, gf []groupCF) {
 	if len(gf) == 0 {
 		return
 	}
+
 	if h.showSummary {
 		for _, f := range gf {
 			twc.Println("group-config-file:" + f.groupName +
 				":" + f.cf.String())
 		}
+
 		return
 	}
 
@@ -92,14 +103,16 @@ func showEnvPrefixes(h StdHelp, twc *twrap.TWConf, ep []string) {
 	if len(ep) == 0 {
 		return
 	}
+
 	if h.showSummary {
 		for _, e := range ep {
 			twc.Println("env-var-prefix::" + e)
 		}
+
 		return
 	}
-	twc.Print("\n  Environment Variables\n\n")
 
+	twc.Print("\n  Environment Variables\n\n")
 	twc.Wrap(
 		"The program can also be configured through"+
 			" environment variables prefixed with:\n"+altSrcEnvVars(ep),
@@ -119,6 +132,7 @@ func getGroupConfigFiles(ps *param.PSet) []groupCF {
 			})
 		}
 	}
+
 	return gf
 }
 
@@ -139,6 +153,7 @@ func showAltSources(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 				" be set through the command line",
 				textIndent)
 		}
+
 		return true
 	}
 
@@ -154,5 +169,6 @@ func showAltSources(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	showEnvPrefixes(h, twc, ep)
 
 	twc.Print("\n")
+
 	return true
 }

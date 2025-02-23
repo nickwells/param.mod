@@ -29,8 +29,11 @@ func init() {
 
 func TestAllowedValues(t *testing.T) {
 	var b bool
+
 	var dur time.Duration
+
 	var emptyStrList []string
+
 	strToBoolMap := make(map[string]bool)
 
 	var (
@@ -39,10 +42,15 @@ func TestAllowedValues(t *testing.T) {
 	)
 
 	var f float64
+
 	var i int64
+
 	var ui uint64
+
 	var intList []int64
+
 	var re *regexp.Regexp
+
 	var timeLoc *time.Location
 
 	testCases := []struct {

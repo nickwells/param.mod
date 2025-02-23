@@ -23,6 +23,7 @@ func TestString(t *testing.T) {
 		t.Error("String should have returned an error" +
 			" when Set(...) was called")
 	}
+
 	if value != "initialValue" {
 		t.Error("String should not have changed the value" +
 			" when Set(...) was called. New value: '" + value + "'")
@@ -32,6 +33,7 @@ func TestString(t *testing.T) {
 		t.Error("String should not have returned an error"+
 			" when SetWithVal(...) was called, err: ", err)
 	}
+
 	if value != "test" {
 		t.Error("String should have set the value to 'test'" +
 			" when SetWithVal(...) was called." +
@@ -52,6 +54,7 @@ func TestStringList(t *testing.T) {
 		t.Error("StrList should have returned an error" +
 			" when Set(...) was called")
 	}
+
 	if len(value) != 0 {
 		t.Errorf("StrList should not have changed the value"+
 			" when Set(...) was called. New value: %v'", value)
@@ -69,6 +72,7 @@ func TestStringList(t *testing.T) {
 
 	for i, tc := range testCases {
 		value = value[:0]
+
 		err := ss.SetWithVal("", tc.val)
 		if tc.shouldReturnErr && err == nil {
 			t.Errorf("case %d: StrList should have returned an error"+

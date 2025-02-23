@@ -28,6 +28,7 @@ func ExampleEnumList_standard() {
 		}, "help text")
 
 	fmt.Println("Before parsing")
+
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}
@@ -35,6 +36,7 @@ func ExampleEnumList_standard() {
 	ps.Parse([]string{"-my-list", "x,y"})
 
 	fmt.Println("After  parsing")
+
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}
@@ -69,6 +71,7 @@ func ExampleEnumList_withBadVals() {
 		}, "help text")
 
 	fmt.Println("Before parsing")
+
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}
@@ -82,6 +85,7 @@ func ExampleEnumList_withBadVals() {
 
 	// The slice of strings is unchanged due to the error.
 	fmt.Println("After  parsing")
+
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}
@@ -119,6 +123,7 @@ func ExampleEnumList_withPassingChecks() {
 		}, "help text")
 
 	fmt.Println("Before parsing")
+
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}
@@ -126,6 +131,7 @@ func ExampleEnumList_withPassingChecks() {
 	ps.Parse([]string{"-my-list", "x,y"})
 
 	fmt.Println("After  parsing")
+
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}
@@ -165,6 +171,7 @@ func ExampleEnumList_withFailingChecks() {
 		}, "help text")
 
 	fmt.Println("Before parsing")
+
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}
@@ -178,6 +185,7 @@ func ExampleEnumList_withFailingChecks() {
 
 	// The slice of strings is unchanged due to the error.
 	fmt.Println("After  parsing")
+
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}

@@ -11,6 +11,7 @@ func showExamples(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	if len(ex) == 0 {
 		return false
 	}
+
 	switch h.helpFormat {
 	case helpFmtTypeMarkdown:
 		return showExamplesFmtMD(h, twc, ps)
@@ -22,33 +23,42 @@ func showExamples(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 // showExamplesFmtStd prints examples in the standard help format
 func showExamplesFmtStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	ex := ps.Examples()
+
 	twc.Print("Examples\n")
 
 	for _, e := range ex {
 		twc.Wrap("\n"+e.Ex()+"\n", paramIndent)
+
 		if h.showSummary {
 			continue
 		}
+
 		twc.Wrap(e.Desc(), descriptionIndent)
 	}
+
 	return true
 }
 
 // showExamplesFmtMD prints examples in markdown format
 func showExamplesFmtMD(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	ex := ps.Examples()
+
 	twc.Print("# Examples\n\n")
 
 	for _, e := range ex {
 		twc.Print("```sh\n")
 		twc.Print(e.Ex() + "\n")
 		twc.Print("```\n")
+
 		if h.showSummary {
 			continue
 		}
+
 		desc := makeTextMarkdownSafe(e.Desc())
+
 		twc.Wrap(desc, 0)
 		twc.Print("\n")
 	}
+
 	return true
 }

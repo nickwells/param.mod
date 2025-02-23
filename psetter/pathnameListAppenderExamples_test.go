@@ -25,11 +25,14 @@ func ExamplePathnameListAppender_standard() {
 		"help text")
 
 	fmt.Println("Before parsing")
+
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}
+
 	ps.Parse([]string{"-next", "testdata/pathname/nonesuch2.go"})
 	fmt.Println("After  parsing")
+
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}

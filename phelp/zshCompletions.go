@@ -22,6 +22,10 @@ const (
 	zshCompActionShow = "show"
 )
 
+const (
+	completionFilePerms = 0o555 // r-x r-x r-x
+)
+
 // zshCompHasAction returns true if the StdHelp zsh Completion Action is not
 // None, false otherwise.
 func zshCompHasAction(h StdHelp) bool {
@@ -41,8 +45,10 @@ func zshSafeStr(s string) string {
 			r == ')' {
 			return ' '
 		}
+
 		return r
 	}, s)
+
 	return s
 }
 
@@ -51,15 +57,18 @@ func zshSafeStr(s string) string {
 func zshMakeAltNames(name string, names []string) string {
 	altNames := ""
 	prefix := "-"
+
 	for _, altName := range names {
 		if altName != name {
 			altNames += prefix + altName
 			prefix = " -"
 		}
 	}
+
 	if altNames == "" {
 		return altNames
 	}
+
 	return "(" + altNames + ")"
 }
 
@@ -73,6 +82,7 @@ func zshNameSuffix(p *param.ByName) string {
 	case param.Optional:
 		return "=-"
 	}
+
 	return ""
 }
 
@@ -93,6 +103,7 @@ func zshMsgAction(p *param.ByName) string {
 
 	sType := fmt.Sprintf("%T", p.Setter())
 	msgAction += sType + ":"
+
 	switch sType {
 	case "psetter.Bool":
 		msgAction += "(true false)"
@@ -101,6 +112,7 @@ func zshMsgAction(p *param.ByName) string {
 	default:
 		msgAction += zshMsgActionGetAllowedVals(p)
 	}
+
 	return msgAction
 }
 
@@ -136,15 +148,11 @@ func zshMsgActionGetAllowedVals(p *param.ByName) string {
 // zshOptSpec returns a string suitable to appear as an option spec for a zsh
 // option completion function
 func zshOptSpec(p *param.ByName) []string {
-	names := p.AltNames()
-	specCount := len(names)
-	if p.Setter().ValueReq() == param.Optional {
-		specCount *= 2
-	}
-
-	specs := make([]string, 0, specCount)
+	var specs []string
 
 	explanation := "[" + zshSafeStr(p.Description()) + "]"
+
+	names := p.AltNames()
 	for _, name := range names {
 		altNames := zshMakeAltNames(name, names)
 		specs = append(specs,
@@ -163,20 +171,18 @@ func zshOptSpec(p *param.ByName) []string {
 // zshWriteCompFunc writes a zsh completion function for the current executable
 func zshWriteCompFunc(ps *param.PSet, w io.Writer) {
 	fmt.Fprintf(w, "#compdef %s\n\n", ps.ProgBaseName())
-
 	fmt.Fprintf(w, "function _%s {\n", ps.ProgBaseName())
 	fmt.Fprintln(w, "\t_arguments -S : \\")
+
+	var args []string
+
 	groups := ps.GetGroups()
-	totArgs := len(groups)
-	for _, g := range groups {
-		totArgs += len(g.Params())
-	}
-	args := make([]string, 0, totArgs)
 	for _, g := range groups {
 		for _, p := range g.Params() {
 			args = append(args, zshOptSpec(p)...)
 		}
 	}
+
 	fmt.Fprintf(w, "\t\t%s", strings.Join(args, " \\\n\t\t"))
 	fmt.Fprintln(w, "}")
 }
@@ -193,17 +199,21 @@ func zshCompletionHandler(h StdHelp, twc *twrap.TWConf, ps *param.PSet) int {
 		return 0
 	case zshCompActionNew:
 		filename := zshCompFileName(h, ps)
+
 		err := zshMakeNewCompFile(filename, ps)
 		if err == nil {
 			zshCompFileNotify(h, twc, filename)
 		}
+
 		return zshHandleErr(err, ps)
 	case zshCompActionRepl:
 		filename := zshCompFileName(h, ps)
+
 		err := zshReplaceCompFile(filename, ps)
 		if err == nil {
 			zshCompFileNotify(h, twc, filename)
 		}
+
 		return zshHandleErr(err, ps)
 	}
 
@@ -219,7 +229,9 @@ func zshHandleErr(err error, ps *param.PSet) int {
 	if err == nil {
 		return 0
 	}
+
 	ps.AddErr("zsh completions", err)
+
 	return 1
 }
 
@@ -236,7 +248,10 @@ func zshMakeNewCompFile(filename string, ps *param.PSet) error {
 		return err
 	}
 
-	w, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE, 0o555)
+	w, err := os.OpenFile(
+		filename,
+		os.O_WRONLY|os.O_CREATE,
+		completionFilePerms)
 	if err != nil {
 		return err
 	}
@@ -250,12 +265,18 @@ func zshMakeNewCompFile(filename string, ps *param.PSet) error {
 // zshReplaceCompFile will construct the named file (which may already
 // exist). It will return any errors found.
 func zshReplaceCompFile(filename string, ps *param.PSet) error {
-	_ = os.Chmod(filename, 0o755)
-	w, err := os.OpenFile(filename, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0o555)
+	const userWritePerm = 0o200
+	_ = os.Chmod(filename, completionFilePerms|userWritePerm)
+
+	w, err := os.OpenFile(
+		filename,
+		os.O_WRONLY|os.O_TRUNC|os.O_CREATE,
+		completionFilePerms)
 	if err != nil {
 		return err
 	}
-	_ = os.Chmod(filename, 0o555)
+
+	_ = os.Chmod(filename, completionFilePerms)
 
 	defer w.Close()
 	zshWriteCompFunc(ps, w)
@@ -269,6 +290,7 @@ func zshCompFileNotify(h StdHelp, twc *twrap.TWConf, filename string) {
 	if h.completionsQuiet {
 		return
 	}
+
 	twc.Wrap(
 		"the zsh completion function has been written to "+filename+"."+
 			" You will need to run compinit and possibly restart your"+

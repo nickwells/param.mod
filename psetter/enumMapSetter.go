@@ -61,13 +61,16 @@ func (s EnumMap[T]) SetWithVal(_ string, paramVal string) error {
 	if paramVal == "" {
 		return errors.New("empty value. Some value must be given")
 	}
+
 	values := strings.Split(paramVal, s.GetSeparator())
 
 	err := s.checkValues(paramVal, values)
 	if err != nil {
 		return err
 	}
+
 	s.setValues(values)
+
 	return nil
 }
 
@@ -75,26 +78,27 @@ func (s EnumMap[T]) SetWithVal(_ string, paramVal string) error {
 // for any bad value
 func (s EnumMap[T]) checkValues(paramVal string, values []string) error {
 	for i, v := range values {
-		parts := strings.SplitN(v, "=", 2)
+		namePart, boolPart, hasBoolPart := strings.Cut(v, "=")
 		// check the name is an allowed value
-		if !s.ValueAllowed(parts[0]) && !s.Aliases.IsAnAlias(parts[0]) {
+		if !s.ValueAllowed(namePart) && !s.Aliases.IsAnAlias(namePart) {
 			return fmt.Errorf("bad value: %q: part: %d (%q) is invalid."+
 				" The name (%q) is not allowed",
-				paramVal, i+1, v, parts[0])
+				paramVal, i+1, v, namePart)
 		}
 
-		if len(parts) == 2 {
+		if hasBoolPart {
 			// check that the bool can be parsed
-			_, err := strconv.ParseBool(parts[1])
+			_, err := strconv.ParseBool(boolPart)
 			if err != nil {
 				return fmt.Errorf("bad value: %q:"+
 					" part: %d (%q) is invalid."+
 					" The value (%q) cannot be interpreted"+
 					" as true or false: %w",
-					paramVal, i+1, v, parts[1], err)
+					paramVal, i+1, v, boolPart, err)
 			}
 		}
 	}
+
 	return nil
 }
 
@@ -102,17 +106,18 @@ func (s EnumMap[T]) checkValues(paramVal string, values []string) error {
 // which have already been checked for validity.
 func (s EnumMap[T]) setValues(values []string) {
 	for _, v := range values {
-		parts := strings.SplitN(v, "=", 2)
+		namePart, boolPart, hasBoolPart := strings.Cut(v, "=")
 
-		name := T(parts[0])
+		name := T(namePart)
 		keys := []T{name}
-		if s.Aliases.IsAnAlias(parts[0]) {
+
+		if s.Aliases.IsAnAlias(namePart) {
 			keys = s.AliasVal(name)
 		}
 
 		b := true
-		if len(parts) == 2 {
-			b, _ = strconv.ParseBool(parts[1])
+		if hasBoolPart {
+			b, _ = strconv.ParseBool(boolPart)
 		}
 
 		for _, k := range keys {
@@ -136,6 +141,7 @@ func (s EnumMap[T]) CurrentValue() string {
 	for k := range *s.Value {
 		keys = append(keys, string(k))
 	}
+
 	sort.Strings(keys)
 
 	sep := ""
@@ -154,14 +160,17 @@ func (s EnumMap[T]) CheckSetter(name string) {
 	if s.Value == nil {
 		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
+
 	if *s.Value == nil {
 		*s.Value = make(map[T]bool)
 	}
 
 	intro := fmt.Sprintf("%s: %T Check failed: ", name, s)
+
 	if err := s.AllowedVals.Check(); err != nil {
 		panic(intro + err.Error())
 	}
+
 	if err := s.Aliases.Check(s.AllowedVals); err != nil {
 		panic(intro + err.Error())
 	}
@@ -169,6 +178,7 @@ func (s EnumMap[T]) CheckSetter(name string) {
 	if s.AllowHiddenMapEntries {
 		return
 	}
+
 	for k := range *s.Value {
 		if _, ok := s.AllowedVals[k]; !ok {
 			panic(fmt.Sprintf("%sthe map entry with key %q is invalid"+
@@ -191,20 +201,28 @@ func (s EnumMap[T]) ValDescribe() string {
 	avals = append(avals, aliasKeys...)
 
 	sort.Strings(avals)
+
 	sep := ""
+
 	var incomplete bool
+
 	optEqVal := [...]string{"", "=false", "=true"}
+
 	for i, val := range avals {
 		eqVal := optEqVal[i%len(optEqVal)]
+
 		if len(desc)+len(val)+len(eqVal)+len(sep) > maxValDescLen {
 			incomplete = true
 			continue
 		}
+
 		desc += sep + val + eqVal
 		sep = s.GetSeparator()
 	}
+
 	if incomplete {
 		desc += "..."
 	}
+
 	return desc
 }

@@ -43,29 +43,37 @@ func (s Pathname) CountChecks() int {
 // satisfies the Expectation. If so it will add it to the list of
 // alternatives.
 func (s Pathname) findAlternatives(base, badName, tail string) string {
+	const alternativeCount = 3
+
 	f, err := os.Open(base)
 	if err != nil {
 		return fmt.Sprintf(", cannot open the directory for reading: %s", err)
 	}
+
 	defer f.Close()
 
-	names, err := f.Readdirnames(1000)
+	names, err := f.Readdirnames(0)
 	if err != nil && !errors.Is(err, io.EOF) {
 		return fmt.Sprintf(", cannot read the directory: %s", err)
 	}
+
 	finder := strdist.DefaultFinders[strdist.CaseBlindAlgoNameCosine]
-	alts := finder.FindNStrLike(3, badName, names...)
+	alts := finder.FindNStrLike(alternativeCount, badName, names...)
+
 	var altStrs []string
+
 	for _, alt := range alts {
 		altStr := filepath.Join(base, alt, tail)
 		if s.Expectation.StatusCheck(altStr) == nil {
 			altStrs = append(altStrs, altStr)
 		}
 	}
+
 	if len(altStrs) > 0 {
 		return fmt.Sprintf(`, did you mean "%s"`,
 			english.Join(altStrs, `", "`, `" or "`))
 	}
+
 	return ""
 }
 
@@ -86,11 +94,15 @@ func (s Pathname) expandError(pathname string, err error) error {
 					"; %q exists but is not a directory", pathname)
 				break
 			}
+
 			suggestions = fmt.Sprintf("; %q exists but %q does not",
 				pathname, tailName)
-			slices.Reverse[[]string, string](tailPath)
+
+			slices.Reverse(tailPath)
+
 			tail := filepath.Join(tailPath...)
 			suggestions += s.findAlternatives(pathname, tailName, tail)
+
 			break
 		}
 
@@ -128,6 +140,7 @@ func (s Pathname) SetWithVal(_ string, paramVal string) error {
 		if errors.Is(err, filecheck.ErrShouldExistButDoesNot) {
 			err = s.expandError(pathname, err)
 		}
+
 		return err
 	}
 
@@ -139,6 +152,7 @@ func (s Pathname) SetWithVal(_ string, paramVal string) error {
 	}
 
 	*s.Value = pathname
+
 	return nil
 }
 

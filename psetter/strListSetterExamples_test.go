@@ -19,11 +19,14 @@ func ExampleStrList_standard() {
 		}, "help text")
 
 	fmt.Println("Before parsing")
+
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}
+
 	ps.Parse([]string{"-my-list", "x,y"})
 	fmt.Println("After  parsing")
+
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}
@@ -46,16 +49,19 @@ func ExampleStrList_withPassingChecks() {
 		psetter.StrList[string]{
 			Value: &ss,
 			Checks: []check.StringSlice{
-				check.SliceLength[[]string, string](check.ValEQ(2)),
+				check.SliceLength[[]string](check.ValEQ(2)),
 			},
 		}, "help text")
 
 	fmt.Println("Before parsing")
+
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}
+
 	ps.Parse([]string{"-my-list", "x,y"})
 	fmt.Println("After  parsing")
+
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}
@@ -86,16 +92,21 @@ func ExampleStrList_withFailingChecks() {
 		}, "help text")
 
 	fmt.Println("Before parsing")
+
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}
+
 	// Parse the arguments. We supply a list of strings, each of which is
 	// allowed. The resulting slice is of the wrong length.
 	errMap := ps.Parse([]string{"-my-list", "x"})
+
 	// We expect to see an error reported.
 	logErrs(errMap)
+
 	// The slice of strings is unchanged due to the error.
 	fmt.Println("After  parsing")
+
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}

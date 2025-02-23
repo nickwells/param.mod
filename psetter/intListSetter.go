@@ -38,8 +38,8 @@ func (s IntList[T]) CountChecks() int {
 func (s IntList[T]) SetWithVal(_ string, paramVal string) error {
 	sep := s.GetSeparator()
 	sv := strings.Split(paramVal, sep)
-
 	v := make([]T, 0, len(sv))
+
 	for i, strVal := range sv {
 		i64, err := strconv.ParseInt(strVal, 0, mathutil.BitsInType(T(0)))
 		if err != nil {

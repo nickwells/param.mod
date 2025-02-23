@@ -34,6 +34,7 @@ func (s String[T]) CountChecks() int {
 func (s String[T]) SetWithVal(paramName, paramVal string) error {
 	if s.Editor != nil {
 		var err error
+
 		paramVal, err = s.Editor.Edit(paramName, paramVal)
 		if err != nil {
 			return err
@@ -48,6 +49,7 @@ func (s String[T]) SetWithVal(paramName, paramVal string) error {
 	}
 
 	*s.Value = T(paramVal)
+
 	return nil
 }
 

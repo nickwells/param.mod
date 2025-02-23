@@ -17,7 +17,7 @@ import (
 setConfigFileForGroupStdParamsCmpl adds a config file to the set which the param
 parser will process before checking the command line parameters.
 */
-func setConfigFileForGroupStdParamsCmpl(ps *param.PSet) error {
+func setConfigFileForGroupStdParamsCmpl(ps *param.PSet)  {
 	baseDir := xdg.ConfigHome()
 
 	ps.AddGroupConfigFile("stdParams-cmpl",
@@ -29,5 +29,4 @@ func setConfigFileForGroupStdParamsCmpl(ps *param.PSet) error {
 			"phelp",
 			"group-stdParams-cmpl.cfg"),
 		filecheck.Optional)
-	return nil
 }

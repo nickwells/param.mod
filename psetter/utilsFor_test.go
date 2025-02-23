@@ -16,7 +16,9 @@ func panicSafeCheck(s param.Setter) (panicked bool, panicVal any) {
 			panicVal = r
 		}
 	}()
+
 	s.CheckSetter("test")
+
 	return
 }
 
@@ -36,6 +38,7 @@ func newPSetForTesting() *param.PSet {
 func logErrs(errMap param.ErrMap) {
 	for k, errs := range errMap {
 		fmt.Println("Errors for:", k)
+
 		for _, err := range errs {
 			fmt.Println("\t:", err)
 		}

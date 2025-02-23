@@ -27,5 +27,6 @@ func makeTextMarkdownSafe(s string) string {
 		`]`, `\]`,
 		`\`, `\\`,
 	)
+
 	return r.Replace(s)
 }

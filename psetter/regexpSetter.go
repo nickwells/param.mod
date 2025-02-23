@@ -27,6 +27,7 @@ func (s Regexp) SetWithVal(_ string, paramVal string) error {
 	}
 
 	*s.Value = v
+
 	return nil
 }
 
@@ -41,9 +42,11 @@ func (s Regexp) CurrentValue() string {
 	if s.Value == nil {
 		return "Illegal value"
 	}
+
 	if *s.Value == nil {
 		return ""
 	}
+
 	return (*s.Value).String()
 }
 

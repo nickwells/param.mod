@@ -19,11 +19,14 @@ func ExampleIntList_standard() {
 		}, "help text")
 
 	fmt.Println("Before parsing")
+
 	for i, v := range il {
 		fmt.Printf("\til[%d] = %d\n", i, v)
 	}
+
 	ps.Parse([]string{"-my-ints", "1,23"})
 	fmt.Println("After  parsing")
+
 	for i, v := range il {
 		fmt.Printf("\til[%d] = %d\n", i, v)
 	}
@@ -51,11 +54,14 @@ func ExampleIntList_withPassingChecks() {
 		}, "help text")
 
 	fmt.Println("Before parsing")
+
 	for i, v := range il {
 		fmt.Printf("\til[%d] = %d\n", i, v)
 	}
+
 	ps.Parse([]string{"-my-ints", "6,23"})
 	fmt.Println("After  parsing")
+
 	for i, v := range il {
 		fmt.Printf("\til[%d] = %d\n", i, v)
 	}
@@ -85,16 +91,21 @@ func ExampleIntList_withFailingChecks() {
 		}, "help text")
 
 	fmt.Println("Before parsing")
+
 	for i, v := range il {
 		fmt.Printf("\til[%d] = %d\n", i, v)
 	}
+
 	// Parse the arguments. We supply a float value but note that it does not
 	// satisfy the check for this parameter.
 	errMap := ps.Parse([]string{"-my-ints", "1,23"})
+
 	// We expect to see an error reported.
 	logErrs(errMap)
+
 	// The float value is unchanged due to the error.
 	fmt.Println("After  parsing")
+
 	for i, v := range il {
 		fmt.Printf("\til[%d] = %d\n", i, v)
 	}

@@ -24,6 +24,7 @@ func (myEditor) Edit(paramName, paramVal string) (string, error) {
 	case "de":
 		return "Guten Tag, " + paramVal, nil
 	}
+
 	return "", errors.New("Unknown language: " + paramName)
 }
 
@@ -32,6 +33,7 @@ func ExampleString_withEditor() {
 	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	var s string
+
 	var myE myEditor
 
 	ps.Add("hello",

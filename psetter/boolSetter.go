@@ -42,6 +42,7 @@ func (s Bool) Set(_ string) error {
 	} else {
 		*s.Value = true
 	}
+
 	return nil
 }
 
@@ -54,11 +55,13 @@ func (s Bool) SetWithVal(_, val string) error {
 				val +
 				"' as either true or false")
 	}
+
 	if s.Invert {
 		*s.Value = !b
 	} else {
 		*s.Value = b
 	}
+
 	return nil
 }
 
@@ -75,6 +78,7 @@ func (s Bool) CurrentValue() string {
 	if s.Invert {
 		return fmt.Sprintf("%v", !*s.Value)
 	}
+
 	return fmt.Sprintf("%v", *s.Value)
 }
 

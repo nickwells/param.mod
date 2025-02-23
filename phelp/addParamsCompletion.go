@@ -88,6 +88,7 @@ func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
 		if h.zshCompAction == zshCompActionShow {
 			return nil
 		}
+
 		if h.zshCompAction == zshCompActionNone {
 			return nil
 		}
@@ -104,6 +105,7 @@ func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
 				strings.Join(zshMakeCompletionsParam.WhereSet(), " and at "),
 				zshDirParam.Name())
 		}
+
 		return nil
 	})
 }

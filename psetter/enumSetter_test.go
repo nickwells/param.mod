@@ -43,6 +43,7 @@ func TestEnum(t *testing.T) {
 
 	for _, tc := range testCases {
 		value = ""
+
 		err := es.SetWithVal("", tc.val)
 		if err == nil && tc.errExpected {
 			t.Error("processing value: '" + tc.val + "'" +
@@ -51,6 +52,7 @@ func TestEnum(t *testing.T) {
 			t.Error("processing value: '"+tc.val+"'"+
 				" should not have raised an error but did: ", err)
 		}
+
 		if value != tc.expectedVal {
 			t.Error("processing value: '" + tc.val +
 				"' should have set value to '" + tc.expectedVal +
@@ -96,6 +98,7 @@ func TestEnumList(t *testing.T) {
 
 	for _, tc := range testCases {
 		value = value[:0]
+
 		err := els.SetWithVal("", tc.val)
 		if err == nil && tc.errExpected {
 			t.Error("processing value: '" + tc.val + "'" +
@@ -104,6 +107,7 @@ func TestEnumList(t *testing.T) {
 			t.Error("processing value: '"+tc.val+"'"+
 				" should not have raised an error but did: ", err)
 		}
+
 		for i, v := range value {
 			if v != tc.expectedVal[i] {
 				t.Error("processing value: '"+tc.val+
@@ -114,7 +118,7 @@ func TestEnumList(t *testing.T) {
 	}
 }
 
-func TestEnumMap(t *testing.T) { // nolint: gocyclo
+func TestEnumMap(t *testing.T) { //nolint:cyclop
 	var value map[string]bool
 	ems := psetter.EnumMap[string]{
 		Value: &value,
@@ -152,6 +156,7 @@ func TestEnumMap(t *testing.T) { // nolint: gocyclo
 
 	for _, tc := range testCases {
 		value = map[string]bool{}
+
 		err := ems.SetWithVal("", tc.val)
 		if err == nil && tc.errExpected {
 			t.Error("processing value: '" + tc.val + "'" +
@@ -160,6 +165,7 @@ func TestEnumMap(t *testing.T) { // nolint: gocyclo
 			t.Error("processing value: '"+tc.val+"'"+
 				" should not have raised an error but did: ", err)
 		}
+
 		for k := range value {
 			if !tc.expectedVal[k] {
 				t.Error("processing value: '" + tc.val +
@@ -167,10 +173,12 @@ func TestEnumMap(t *testing.T) { // nolint: gocyclo
 					" was set and should not have been")
 			}
 		}
+
 		for k := range tc.expectedVal {
 			if !value[k] {
 				t.Error("processing value: '" + tc.val +
-					"' the map entry for '" + k + "' was not set and should have been")
+					"' the map entry for '" + k +
+					"' was not set and should have been")
 			}
 		}
 	}

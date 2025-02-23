@@ -37,6 +37,7 @@ func TestHasChecks(t *testing.T) {
 	for i, tc := range testCases {
 		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
 		hct := hasChecksTester{count: tc.count}
+
 		if got := psetter.HasChecks(hct); got != tc.expVal {
 			t.Log(tcID)
 			t.Logf("\t:    count: %d\n", tc.count)

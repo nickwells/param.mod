@@ -40,10 +40,12 @@ type AllowedValuesMapper interface {
 // length of the longest key.
 func (av AllowedVals[T]) Keys() ([]string, int) {
 	keys := make([]string, 0, len(av))
+
 	var maxKeyLen int
 
 	for k := range av {
 		keys = append(keys, string(k))
+
 		if len(k) > maxKeyLen {
 			maxKeyLen = len(k)
 		}
@@ -58,15 +60,20 @@ func (av AllowedVals[T]) String() string {
 	if av == nil {
 		return ""
 	}
+
 	var avals string
+
 	keys, maxKeyLen := av.Keys()
+
 	sort.Strings(keys)
 
 	sep := ""
+
 	for _, k := range keys {
 		avals += sep + fmt.Sprintf("   %-*s: ", maxKeyLen, k) + av[T(k)]
 		sep = "\n"
 	}
+
 	return avals
 }
 
@@ -80,6 +87,7 @@ func (av AllowedVals[T]) String() string {
 // there is no need for a parameter as no alternative can ever be allowed.
 func (av AllowedVals[T]) Check() error {
 	minEntries := "It should have at least 2"
+
 	switch len(av) {
 	case 0:
 		return errors.New("the map of allowed values has no entries. " +
@@ -91,13 +99,16 @@ func (av AllowedVals[T]) Check() error {
 
 	for k, v := range av {
 		pfx := fmt.Sprintf("Bad allowed value: %q: %q - ", k, v)
+
 		if k == "" {
 			return errors.New(pfx + "the allowed value must not be blank")
 		}
+
 		if strings.ContainsRune(string(k), '=') {
 			return errors.New(pfx + "the allowed value must not contain '='")
 		}
 	}
+
 	return nil
 }
 
@@ -105,9 +116,11 @@ func (av AllowedVals[T]) Check() error {
 // used by the standard help package to generate a list of allowed values.
 func (av AllowedVals[T]) AllowedValuesMap() AllowedVals[string] {
 	rval := make(map[string]string)
+
 	for k, v := range av {
 		rval[string(k)] = v
 	}
+
 	return rval
 }
 

@@ -58,19 +58,24 @@ func (s EnumList[T]) CountChecks() int {
 // to the slice of strings pointed to by the Value. It returns a error for
 // the first invalid value or if a check is breached.
 func (s EnumList[T]) SetWithVal(_ string, paramVal string) error {
-	sep := s.GetSeparator()
-	vals := strings.Split(paramVal, sep)
 	aliasedVals := []T{}
+
+	sep := s.GetSeparator()
+
+	vals := strings.Split(paramVal, sep)
 	for _, v := range vals {
 		if !s.ValueAllowed(v) {
 			if !s.Aliases.IsAnAlias(v) {
 				return fmt.Errorf("value is not allowed: %q", v)
 			}
+
 			for _, av := range s.Aliases.AliasVal(T(v)) {
 				aliasedVals = append(aliasedVals, T(av))
 			}
+
 			continue
 		}
+
 		aliasedVals = append(aliasedVals, T(v))
 	}
 
@@ -80,6 +85,7 @@ func (s EnumList[T]) SetWithVal(_ string, paramVal string) error {
 			return err
 		}
 	}
+
 	*s.Value = aliasedVals
 
 	return nil

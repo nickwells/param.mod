@@ -59,6 +59,7 @@ func (s Time) SetWithVal(_ string, paramVal string) error {
 	}
 
 	*s.Value = v
+
 	return nil
 }
 
@@ -67,6 +68,7 @@ func (s Time) format() string {
 	if s.Format != "" {
 		return s.Format
 	}
+
 	return TimeFmtDefault
 }
 

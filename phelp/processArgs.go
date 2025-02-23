@@ -13,6 +13,7 @@ func printSepIf(twc *twrap.TWConf, printSep bool, sep string) bool {
 	if printSep {
 		twc.Print(sep)
 	}
+
 	return true
 }
 
@@ -59,9 +60,10 @@ func (h StdHelp) ProcessArgs(ps *param.PSet) {
 	}
 
 	var twc *twrap.TWConf
-	printSep := false
+
 	var pgr *pager.Pager
 
+	printSep := false
 	shouldExit := h.exitAfterParsing
 	exitStatus := 0
 
@@ -74,6 +76,7 @@ func (h StdHelp) ProcessArgs(ps *param.PSet) {
 			if h.pageOutput {
 				pgr = pager.Start(ps)
 			}
+
 			twc = twrap.NewTWConfOrPanic(
 				twrap.SetWriter(ps.StdW()),
 				twrap.SetTargetLineLen(h.helpLineLen))
@@ -82,8 +85,8 @@ func (h StdHelp) ProcessArgs(ps *param.PSet) {
 		if h.helpFormat != helpFmtTypeMarkdown {
 			printSep = printSepIf(twc, printSep, majorSectionSeparator)
 		}
-		es := a.action(h, twc, ps)
 
+		es := a.action(h, twc, ps)
 		if es > exitStatus && a.shouldExit {
 			exitStatus = es
 		}

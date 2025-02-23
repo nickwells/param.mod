@@ -13,11 +13,13 @@ type Composite struct {
 // returned.
 func (c Composite) Edit(paramName, paramVal string) (string, error) {
 	var err error
+
 	for _, e := range c.Editors {
 		paramVal, err = e.Edit(paramName, paramVal)
 		if err != nil {
 			break
 		}
 	}
+
 	return paramVal, err
 }

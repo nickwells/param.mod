@@ -54,6 +54,7 @@ func (s Calculated[T]) SetWithVal(paramName string, paramVal string) error {
 		if s.NoDefault {
 			return fmt.Errorf("bad value: %q is invalid", paramVal)
 		}
+
 		nc = s.Default
 	}
 
@@ -70,6 +71,7 @@ func (s Calculated[T]) SetWithVal(paramName string, paramVal string) error {
 	}
 
 	*s.Value = v
+
 	return nil
 }
 
@@ -78,6 +80,7 @@ func (s Calculated[T]) AllowedValues() string {
 	if s.NoDefault {
 		return ""
 	}
+
 	return "Either " + s.Default.Name + ", or"
 }
 
@@ -87,6 +90,7 @@ func (s Calculated[T]) AllowedValuesMap() AllowedVals[string] {
 	for k, nc := range s.CalcMap {
 		avm[k] = nc.Name
 	}
+
 	return avm
 }
 
@@ -110,10 +114,11 @@ func (s Calculated[T]) CheckSetter(name string) {
 	if len(s.CalcMap) < 1 {
 		panic("the CalcMap cannot be empty")
 	}
+
 	if s.NoDefault {
-		if len(s.CalcMap) < 2 {
+		if len(s.CalcMap) <= 1 {
 			panic("with no default value the CalcMap must have" +
-				" at least 2 entries")
+				" more than one entry")
 		}
 	} else {
 		err := s.Default.Check()

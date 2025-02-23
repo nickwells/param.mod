@@ -36,6 +36,7 @@ func (s configFileSetter) SetWithVal(_ string, paramVal string) error {
 	}
 
 	s.seenBefore[paramVal] = true
+
 	return nil
 }
 

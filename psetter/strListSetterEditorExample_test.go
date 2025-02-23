@@ -24,6 +24,7 @@ func (myEditorStrList) Edit(paramName, paramVal string) (string, error) {
 	case "de":
 		return "Guten Tag, " + paramVal, nil
 	}
+
 	return "", errors.New("Unknown language: " + paramName)
 }
 
@@ -32,6 +33,7 @@ func ExampleStrList_withEditor() {
 	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	var ss []string
+
 	var myE myEditorStrList
 
 	ps.Add("hello",
@@ -43,11 +45,14 @@ func ExampleStrList_withEditor() {
 	)
 
 	fmt.Println("Before parsing")
+
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}
+
 	ps.Parse([]string{"-fr", "Nick,Pascal,Amelie"})
 	fmt.Println("After  parsing")
+
 	for i, v := range ss {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}

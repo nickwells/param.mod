@@ -60,6 +60,7 @@ func TestAliasesAllowedValuesAliasMap(t *testing.T) {
 
 	for _, tc := range testCases {
 		actVal := tc.a.AllowedValuesAliasMap()
+
 		err := testhelper.DiffVals(actVal, tc.expVal)
 		if err != nil {
 			t.Log(tc.IDStr())

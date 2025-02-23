@@ -16,13 +16,16 @@ func ExampleRegexp_standard() {
 	ps.Add("my-re", psetter.Regexp{Value: &re}, "help text")
 
 	fmt.Printf("Before parsing    re: ")
+
 	if re == nil {
 		fmt.Printf(" nil\n")
 	} else {
 		fmt.Printf(" non-nil [%s]\n", re.String())
 	}
+
 	ps.Parse([]string{"-my-re", `.*\.go`})
 	fmt.Printf("After  parsing    re: ")
+
 	if re == nil {
 		fmt.Printf(" nil\n")
 	} else {

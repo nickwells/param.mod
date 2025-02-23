@@ -11,18 +11,22 @@ func ExampleMap_standard() {
 	ps := newPSetForTesting() // use paramset.NewOrPanic()
 
 	var m map[string]bool
+
 	keys := []string{"x", "y"}
 
 	ps.Add("my-map", psetter.Map[string]{Value: &m}, "help text")
 
 	fmt.Println("Before parsing")
+
 	for _, k := range keys {
 		if v, ok := m[k]; ok {
 			fmt.Printf("\tm[%s] = %v\n", k, v)
 		}
 	}
+
 	ps.Parse([]string{"-my-map", "x"})
 	fmt.Println("After  parsing")
+
 	for _, k := range keys {
 		if v, ok := m[k]; ok {
 			fmt.Printf("\tm[%s] = %v\n", k, v)
@@ -46,13 +50,16 @@ func ExampleMap_fixingInitialValue() {
 	ps.Add("my-map", psetter.Map[string]{Value: &m}, "help text")
 
 	fmt.Println("Before parsing")
+
 	for _, k := range keys {
 		if v, ok := m[k]; ok {
 			fmt.Printf("\tm[%s] = %v\n", k, v)
 		}
 	}
+
 	ps.Parse([]string{"-my-map", "x=false,y"})
 	fmt.Println("After  parsing")
+
 	for _, k := range keys {
 		if v, ok := m[k]; ok {
 			fmt.Printf("\tm[%s] = %v\n", k, v)

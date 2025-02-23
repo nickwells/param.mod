@@ -17,12 +17,12 @@ func TestTaggedCalc_Check(t *testing.T) {
 		{
 			ID:   testhelper.MkID("good"),
 			tag:  "good",
-			calc: func(n string, v string) (int, error) { return 42, nil },
+			calc: func(_ string, _ string) (int, error) { return 42, nil },
 		},
 		{
 			ID:     testhelper.MkID("bad name"),
 			ExpErr: testhelper.MkExpErr("the Name must not be empty"),
-			calc:   func(n string, v string) (int, error) { return 42, nil },
+			calc:   func(_ string, _ string) (int, error) { return 42, nil },
 		},
 		{
 			ID:     testhelper.MkID("bad calc"),

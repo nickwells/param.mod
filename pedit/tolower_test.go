@@ -18,6 +18,7 @@ import (
 // program (os.Args).
 func ExampleToLower_Edit() {
 	ps, _ := paramset.NewNoHelpNoExitNoErrRpt()
+
 	var s string
 
 	ps.Add("param",

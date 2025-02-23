@@ -18,6 +18,7 @@ func (sls StrListSeparator) GetSeparator() string {
 	if sep == "" {
 		sep = StrListDefaultSep
 	}
+
 	return sep
 }
 

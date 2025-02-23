@@ -39,8 +39,10 @@ func (h StdHelp) Help(ps *param.PSet, messages ...string) {
 		if err := h.setHelpSections(standardHelpSectionAlias); err != nil {
 			panic(fmt.Sprint("Couldn't set the default help sections:", err))
 		}
+
 		w = ps.ErrW()
 	}
+
 	twc := twrap.NewTWConfOrPanic(
 		twrap.SetWriter(w),
 		twrap.SetTargetLineLen(h.helpLineLen))
@@ -48,6 +50,7 @@ func (h StdHelp) Help(ps *param.PSet, messages ...string) {
 	printSep := false
 	if len(messages) > 0 {
 		printSep = true
+
 		h.printHelpMessages(twc, messages...)
 	}
 

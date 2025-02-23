@@ -14,9 +14,20 @@ const (
 	paramSetFmtTable = "table"
 )
 
+const (
+	setIntro      = "Set    : "
+	notSetIntro   = "---    : "
+	manyErrsIntro = "Errs 9+: "
+)
+
+const (
+	atIndent = 4
+)
+
 // paramErrorCnt returns the number of errors that have been seen
 func paramErrorCnt(ps *param.PSet, p *param.ByName) int {
 	emap := ps.Errors()
+
 	var errCount int
 
 	for _, name := range p.AltNames() {
@@ -26,17 +37,12 @@ func paramErrorCnt(ps *param.PSet, p *param.ByName) int {
 	return errCount
 }
 
-const (
-	setIntro      = "Set    : "
-	notSetIntro   = "---    : "
-	manyErrsIntro = "Errs 9+: "
-)
-
 // printWhereSetIntro prints the introduction to the parameter name
 // indicating whether or not it has been set and if there are any errors
 func printWhereSetIntro(twc *twrap.TWConf, p *param.ByName, errCount int) {
+	const tooManyErrs = 10
 	if errCount > 0 {
-		if errCount < 10 {
+		if errCount < tooManyErrs {
 			twc.Printf("Errs %d : ", errCount)
 		} else {
 			twc.Print(manyErrsIntro)
@@ -59,6 +65,7 @@ func showWhereParamsAreSet(h StdHelp, twc *twrap.TWConf, ps *param.PSet) int {
 	default:
 		panic("the Format of the report on where params are set is unknown")
 	}
+
 	return 0
 }
 
@@ -74,24 +81,27 @@ func showWhereSetStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) {
 
 	maxNameLen := getMaxGroupNameLen(groups)
 	printSep := false
+
 	for _, g := range groups {
 		if printSep {
 			twc.Print("\n")
 			twc.Print(minorSectionSeparator)
 		}
+
 		printSep = true
+
 		h.printGroup(twc, g, maxNameLen)
+
 		for _, p := range g.Params() {
 			printWhereSetIntro(twc, p, paramErrorCnt(ps, p))
 			twc.Println(english.Join(p.AltNames(), ", ", " or "))
 
 			intro := "at : "
+
 			whereSet := p.WhereSet()
-			if len(whereSet) != 0 {
-				for _, loc := range whereSet {
-					twc.WrapPrefixed(intro, loc, len(notSetIntro)+4)
-					intro = "and: "
-				}
+			for _, loc := range whereSet {
+				twc.WrapPrefixed(intro, loc, len(notSetIntro)+atIndent)
+				intro = "and: "
 			}
 		}
 	}
@@ -107,17 +117,16 @@ func showWhereSetShort(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) {
 			if errCount == 0 && !p.HasBeenSet() {
 				continue
 			}
-			printWhereSetIntro(twc, p, errCount)
 
+			printWhereSetIntro(twc, p, errCount)
 			twc.Println(english.Join(p.AltNames(), ", ", " or "))
 
 			intro := "at : "
+
 			whereSet := p.WhereSet()
-			if len(whereSet) != 0 {
-				for _, loc := range whereSet {
-					twc.WrapPrefixed(intro, loc, len(notSetIntro)+4)
-					intro = "and: "
-				}
+			for _, loc := range whereSet {
+				twc.WrapPrefixed(intro, loc, len(notSetIntro)+atIndent)
+				intro = "and: "
 			}
 		}
 	}
@@ -139,27 +148,33 @@ func calcColumnWidths(groups []*param.Group) (uint, uint) {
 	maxGNLen, maxPNLen := 0, 0
 
 	groupUsed := false
+
 	for _, g := range groups {
 		for _, p := range g.Params() {
 			skip, _ := skipWhereSetReport(p)
 			if skip {
 				continue
 			}
+
 			groupUsed = true
+
 			for _, pName := range p.AltNames() {
 				if len(pName) > maxPNLen {
 					maxPNLen = len(pName)
 				}
 			}
 		}
+
 		if groupUsed {
 			if len(g.Name()) > maxGNLen {
 				maxGNLen = len(g.Name())
 			}
 		}
+
 		groupUsed = false
 	}
-	return uint(maxGNLen), uint(maxPNLen)
+
+	return uint(maxGNLen), uint(maxPNLen) //nolint:gosec
 }
 
 func showWhereSetTable(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) {
@@ -179,6 +194,7 @@ func showWhereSetTable(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) {
 			"parameter", "name"),
 		col.New(&colfmt.String{}, "set at"),
 	)
+
 	for _, g := range groups {
 		for _, p := range g.Params() {
 			skip, errCount := skipWhereSetReport(p)
@@ -186,16 +202,20 @@ func showWhereSetTable(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) {
 			if skip {
 				continue
 			}
+
 			at := "-"
 			sep := ""
+
 			whereSet := p.WhereSet()
 			if len(whereSet) != 0 {
 				at = ""
+
 				for _, loc := range whereSet {
 					at += sep + loc
 					sep = "\n"
 				}
 			}
+
 			_ = rpt.PrintRow(errCount,
 				g.Name(), english.Join(p.AltNames(), ", ", " or "),
 				at)

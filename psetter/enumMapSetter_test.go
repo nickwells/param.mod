@@ -29,6 +29,7 @@ func init() {
 
 func TestSetterEnumMap(t *testing.T) {
 	var nilMap map[string]bool
+
 	emptyMap := map[string]bool{}
 	zvalMap := map[string]bool{
 		"z": true,
@@ -244,9 +245,11 @@ func TestSetterEnumMap(t *testing.T) {
 	for _, tc := range testCases {
 		tc.GFC = commonEnumMapGFC
 		tc.ValDescriber = true
+
 		if tc.ParamName == "" {
 			tc.ParamName = "set-enum-map"
 		}
+
 		tc.SetVR(param.Mandatory)
 
 		nilMap = nil

@@ -48,6 +48,7 @@ func (s StrListAppender[T]) CountChecks() int {
 func (s StrListAppender[T]) SetWithVal(paramName, paramVal string) error {
 	if s.Editor != nil {
 		var err error
+
 		paramVal, err = s.Editor.Edit(paramName, paramVal)
 		if err != nil {
 			return err
@@ -66,7 +67,9 @@ func (s StrListAppender[T]) SetWithVal(paramName, paramVal string) error {
 		*s.Value = append([]T{v}, *s.Value...)
 		return nil
 	}
+
 	*s.Value = append(*s.Value, v)
+
 	return nil
 }
 
@@ -77,10 +80,13 @@ func (s StrListAppender[T]) AllowedValues() string {
 		intro = "a string that will be added to the"
 		outro = " existing list of values"
 	)
+
 	prepend := ""
+
 	if s.Prepend {
 		prepend = " start of the"
 	}
+
 	return intro + prepend + outro + HasChecks(s)
 }
 

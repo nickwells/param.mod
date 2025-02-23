@@ -68,6 +68,7 @@ func TestAllowedValuesMap(t *testing.T) {
 
 	for _, tc := range testCases {
 		actVal := tc.av.AllowedValuesMap()
+
 		err := testhelper.DiffVals(actVal, tc.expVal)
 		if err != nil {
 			t.Log(tc.IDStr())
