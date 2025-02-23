@@ -66,9 +66,11 @@ func (p Parser) Test(t *testing.T) (err error) {
 			t.Log(p.IDStr())
 			t.Logf("\t: Unexpected test-setup error: %s\n", err)
 			t.Error("\t: error returned by the test 'Pre' func")
+
 			return err
 		}
 	}
+
 	if p.Post != nil {
 		defer func() {
 			postErr := p.Post()
@@ -76,6 +78,7 @@ func (p Parser) Test(t *testing.T) (err error) {
 				t.Log(p.IDStr())
 				t.Logf("\t: Unexpected test-cleanup error: %s\n", postErr)
 				t.Error("\t: error returned by the test 'Post' func")
+
 				err = errors.Join(err, postErr)
 			}
 		}()
@@ -89,6 +92,7 @@ func (p Parser) Test(t *testing.T) (err error) {
 		t.Logf("\t: Actual:\n%s\n", errMap)
 		t.Logf("\t: Expected:\n%s\n", p.ExpParseErrors)
 		t.Error("\t: Parsing failed in an unexpected way\n")
+
 		return err
 	}
 
@@ -96,7 +100,9 @@ func (p Parser) Test(t *testing.T) (err error) {
 		t.Log(p.IDStr())
 		t.Logf("\t: Unexpected error: %s\n", err)
 		t.Error("\t: The resultant value is not as expected\n")
+
 		return err
 	}
+
 	return nil
 }

@@ -63,6 +63,7 @@ func (s Setter) Test(t *testing.T) {
 			s.PSetter.CheckSetter(s.ParamName)
 		})
 	testhelper.CheckExpPanic(t, panicked, panicVal, s)
+
 	if panicked || s.PanicExpected() {
 		return
 	}
@@ -88,9 +89,11 @@ func (s Setter) Test(t *testing.T) {
 		setStr        = `Set("` + s.ParamName + `")`
 		setWithValStr = `SetWithVal("` + s.ParamName + `", "` + s.ParamVal + `")`
 	)
+
 	err := s.PSetter.Set(s.ParamName)
 	testhelper.CheckExpErrWithID(t,
 		s.IDStr()+" - "+setStr, err, s.SetErr)
+
 	cv = s.PSetter.CurrentValue()
 	s.GFC.Check(t,
 		s.IDStr()+` - Value after `+setStr,
@@ -99,6 +102,7 @@ func (s Setter) Test(t *testing.T) {
 	err = s.PSetter.SetWithVal(s.ParamName, s.ParamVal)
 	testhelper.CheckExpErrWithID(t,
 		s.IDStr()+" - "+setWithValStr, err, s.SetWithValErr)
+
 	cv = s.PSetter.CurrentValue()
 	s.GFC.Check(t,
 		s.IDStr()+` - Value after `+setWithValStr,
@@ -115,6 +119,7 @@ func (s Setter) Test(t *testing.T) {
 				s.Name+".val-description", []byte(desc))
 		}
 	}
+
 	if s.ExtraTest != nil {
 		s.ExtraTest(t, s)
 	}

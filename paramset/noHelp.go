@@ -19,6 +19,7 @@ func (nh noHelp) ErrorHandler(ps *param.PSet, errs param.ErrMap) {
 	if len(errs) == 0 {
 		return
 	}
+
 	twc := twrap.NewTWConfOrPanic(twrap.SetWriter(ps.ErrW()))
 
 	phelp.ReportErrors(twc, ps.ProgName(), errs)

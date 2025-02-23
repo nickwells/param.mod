@@ -12,9 +12,11 @@ import (
 // it reports a Fatal testing error
 func MakeParamSetOrFatal(t *testing.T, id string) *param.PSet {
 	t.Helper()
+
 	ps, err := paramset.NewNoHelpNoExitNoErrRpt()
 	if err != nil {
 		t.Fatal(id, " : couldn't construct the PSet: ", err)
 	}
+
 	return ps
 }

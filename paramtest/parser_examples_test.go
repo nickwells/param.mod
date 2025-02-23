@@ -30,6 +30,7 @@ func cmpMyConfigStruct(iVal, iExpVal any) error {
 	if !ok {
 		return errors.New("Bad value: not a pointer to MyConfig")
 	}
+
 	expVal, ok := iExpVal.(*MyConfig)
 	if !ok {
 		return errors.New("Bad expected value: not a pointer to MyConfig")
@@ -84,6 +85,7 @@ func AddMCParams(mc *MyConfig) func(ps *param.PSet) error {
 // don't get changes from previous tests confusing the results.
 func ExampleParser() {
 	var mc1 MyConfig
+
 	var mc2 MyConfig
 
 	testCases := []paramtest.Parser{

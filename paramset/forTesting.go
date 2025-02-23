@@ -18,6 +18,7 @@ func (nh noHelpNoExit) ErrorHandler(ps *param.PSet, errs param.ErrMap) {
 	if err != nil {
 		panic(fmt.Sprint("Couldn't build the text wrapper:", err))
 	}
+
 	phelp.ReportErrors(twc, ps.ProgName(), errs)
 }
 
@@ -41,6 +42,7 @@ func NewNoHelpNoExitOrPanic(psof ...param.PSetOptFunc) *param.PSet {
 	if err != nil {
 		panic(err)
 	}
+
 	return ps
 }
 
@@ -71,5 +73,6 @@ func NewNoHelpNoExitNoErrRptOrPanic(psof ...param.PSetOptFunc) *param.PSet {
 	if err != nil {
 		panic(err)
 	}
+
 	return ps
 }

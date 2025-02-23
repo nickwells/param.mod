@@ -14,6 +14,7 @@ func addHelperToOpts(psof []param.PSetOptFunc) []param.PSetOptFunc {
 	opts := make([]param.PSetOptFunc, 0, len(psof)+1)
 	opts = append(opts, param.SetHelper(phelp.NewStdHelp()))
 	opts = append(opts, psof...)
+
 	return opts
 }
 
@@ -35,6 +36,7 @@ func NewOrDie(psof ...param.PSetOptFunc) *param.PSet {
 			"The program parameter set can't be made: %s", err)
 		os.Exit(1)
 	}
+
 	return ps
 }
 
@@ -48,5 +50,6 @@ func NewOrPanic(psof ...param.PSetOptFunc) *param.PSet {
 	if err != nil {
 		panic(fmt.Errorf("The program parameter set can't be made: %w", err))
 	}
+
 	return ps
 }
