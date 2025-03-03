@@ -124,7 +124,7 @@ func (s Map[T]) CurrentValue() string {
 }
 
 // CheckSetter panics if the setter has not been properly created - if the
-// Value is nil or or if it has nil Checks. If the the map has not been
+// Value is nil or if it has nil Checks. If the map has not been
 // created yet it will be created here.
 func (s Map[T]) CheckSetter(name string) {
 	// Check the value is not nil
