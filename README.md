@@ -209,6 +209,6 @@ allowing you to identify any misspelled entries.
 ## Environment variables
 You can specify that a program can initialise the parameters from environment
 variables as well. You must specify the prefix to be used and then the
-environment will be checked for varaibles having that prefix and with the
+environment will be checked for variables having that prefix and with the
 remainder of the variable matching the parameter name. The parameter name is
 modified to change dashes to underscores when checking environment variables.
