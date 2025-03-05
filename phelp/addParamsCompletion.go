@@ -11,7 +11,7 @@ import (
 
 const (
 	paramNameCompletionsQuiet   = "completions-quiet"
-	paranNameCompletionsZshDir  = "completions-zsh-dir"
+	paramNameCompletionsZshDir  = "completions-zsh-dir"
 	paramNameCompletionsZshMake = "completions-zsh-make"
 )
 
@@ -28,9 +28,9 @@ func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
 			" trigger the generation of the files and"+
 			" control whether they should be overwritten.")
 
-	setConfigFileForGroupStdParamsCmpl(ps)
+	_ = setConfigFileForGroupStdParamsCmpl(ps)
 
-	zshDirParam := ps.Add(paranNameCompletionsZshDir,
+	zshDirParam := ps.Add(paramNameCompletionsZshDir,
 		psetter.Pathname{
 			Value:       &h.zshCompDir,
 			Expectation: filecheck.DirExists(),
@@ -77,7 +77,7 @@ func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
 			" This specifies whether or if the file should be created."+
 			" If it is set to any value other than '"+zshCompActionNone+
 			"' then the program will exit after the parameters are processed.",
-		param.SeeAlso(paranNameCompletionsZshDir),
+		param.SeeAlso(paramNameCompletionsZshDir),
 		param.GroupName(groupName),
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 	)
