@@ -47,7 +47,7 @@ func (s TimeLocation) makeSuggestionStr(altLocs []string) string {
 		preamble += "one of "
 	}
 
-	return preamble + `"` + english.Join(altLocs, `", "`, `" or "`) + `"`
+	return preamble + english.JoinQuoted(altLocs, ", ", " or ", `"`, `"`)
 }
 
 // suggestAltTimeLocation tries to find values in the list of available

@@ -70,8 +70,8 @@ func (s Pathname) findAlternatives(base, badName, tail string) string {
 	}
 
 	if len(altStrs) > 0 {
-		return fmt.Sprintf(`, did you mean "%s"`,
-			english.Join(altStrs, `", "`, `" or "`))
+		return ", did you mean " +
+			english.JoinQuoted(altStrs, ", ", " or ", `"`, `"`)
 	}
 
 	return ""
