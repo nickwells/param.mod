@@ -436,7 +436,6 @@ func (p *ByName) processParam(loc *location.L, paramParts []string) {
 
 	for _, action := range p.postAction {
 		err = action(*loc, p, paramParts)
-
 		if err != nil {
 			p.ps.AddErr(p.name, loc.Error(err.Error()))
 		}
