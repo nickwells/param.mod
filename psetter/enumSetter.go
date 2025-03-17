@@ -2,7 +2,8 @@ package psetter
 
 import (
 	"fmt"
-	"sort"
+	"maps"
+	"slices"
 )
 
 // Enum allows you to give a parameter that will only allow one of an
@@ -96,16 +97,10 @@ func (s Enum[T]) ValDescribe() string {
 		desc = initialVal
 	}
 
-	avals := []string{}
-
-	for val := range s.AllowedVals {
-		avals = append(avals, string(val))
-	}
-
-	sort.Strings(avals)
+	avals := slices.Sorted(maps.Keys(s.AllowedVals))
 
 	for _, val := range avals {
-		if val == initialVal {
+		if string(val) == initialVal {
 			continue
 		}
 
@@ -117,7 +112,7 @@ func (s Enum[T]) ValDescribe() string {
 			return desc + "..."
 		}
 
-		desc += val
+		desc += string(val)
 	}
 
 	return desc

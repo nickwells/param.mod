@@ -2,6 +2,8 @@ package psetter
 
 import (
 	"fmt"
+	"maps"
+	"slices"
 	"sort"
 	"strings"
 
@@ -88,13 +90,7 @@ func (a Aliases[T]) String() string {
 // entry in the associated list is in the AllowedVals. Also, an empty alias
 // is not allowed.
 func (a Aliases[T]) Check(av AllowedVals[T]) error {
-	aliasKeys := []T{}
-	for ak := range a {
-		aliasKeys = append(aliasKeys, ak)
-	}
-
-	sort.Slice(aliasKeys,
-		func(i, j int) bool { return aliasKeys[i] < aliasKeys[j] })
+	aliasKeys := slices.Sorted(maps.Keys(a))
 
 	allProblems := []string{}
 

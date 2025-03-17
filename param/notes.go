@@ -2,10 +2,10 @@ package param
 
 import (
 	"fmt"
+	"maps"
 	"runtime"
+	"slices"
 	"strings"
-
-	"golang.org/x/exp/slices"
 )
 
 // NoteAttributes records various flags that can be set on a Note
@@ -186,24 +186,10 @@ func (n Note) AttrIsSet(attr NoteAttributes) bool {
 
 // SeeNotes returns a sorted list of the notes referenced by this note
 func (n Note) SeeNotes() []string {
-	notes := make([]string, 0, len(n.seeAlsoNote))
-	for note := range n.seeAlsoNote {
-		notes = append(notes, note)
-	}
-
-	slices.Sort(notes)
-
-	return notes
+	return slices.Sorted(maps.Keys(n.seeAlsoNote))
 }
 
 // SeeParams returns a sorted list of the params referenced by this note
 func (n Note) SeeParams() []string {
-	params := make([]string, 0, len(n.seeAlsoParam))
-	for param := range n.seeAlsoParam {
-		params = append(params, param)
-	}
-
-	slices.Sort(params)
-
-	return params
+	return slices.Sorted(maps.Keys(n.seeAlsoParam))
 }

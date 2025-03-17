@@ -2,7 +2,8 @@ package psetter
 
 import (
 	"fmt"
-	"sort"
+	"maps"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -106,13 +107,7 @@ func (s Map[T]) AllowedValues() string {
 func (s Map[T]) CurrentValue() string {
 	cv := ""
 
-	keys := make([]string, 0, len(*s.Value))
-
-	for k := range *s.Value {
-		keys = append(keys, string(k))
-	}
-
-	sort.Strings(keys)
+	keys := slices.Sorted(maps.Keys(*s.Value))
 
 	sep := ""
 	for _, k := range keys {

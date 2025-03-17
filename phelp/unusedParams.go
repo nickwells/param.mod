@@ -1,7 +1,8 @@
 package phelp
 
 import (
-	"sort"
+	"maps"
+	"slices"
 
 	"github.com/nickwells/param.mod/v6/param"
 	"github.com/nickwells/twrap.mod/twrap"
@@ -17,12 +18,7 @@ func showUnusedParams(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) int {
 
 	twc.Println("Unused Parameters: ", len(up))
 
-	paramsByName := make([]string, 0, len(up))
-	for name := range up {
-		paramsByName = append(paramsByName, name)
-	}
-
-	sort.Strings(paramsByName)
+	paramsByName := slices.Sorted(maps.Keys(up))
 
 	for _, pn := range paramsByName {
 		twc.Wrap(pn, paramIndent)

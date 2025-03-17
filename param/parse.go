@@ -3,10 +3,11 @@ package param
 import (
 	"errors"
 	"fmt"
+	"maps"
 	"os"
 	"path/filepath"
 	"runtime"
-	"sort"
+	"slices"
 
 	"github.com/nickwells/location.mod/location"
 )
@@ -175,12 +176,7 @@ func (ps *PSet) checkSeeRefs() {
 		}
 	}
 
-	var notes []string
-	for n := range ps.notes {
-		notes = append(notes, n)
-	}
-
-	sort.Strings(notes) // so we get repeatable ordering for tests
+	notes := slices.Sorted(maps.Keys(ps.notes)) // repeatable ordering for tests
 
 	for _, n := range notes {
 		note := ps.notes[n]

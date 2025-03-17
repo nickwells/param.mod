@@ -4,7 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"sort"
+	"maps"
+	"slices"
 	"strings"
 
 	"github.com/nickwells/location.mod/location"
@@ -104,26 +105,12 @@ func (p ByName) Setter() Setter { return p.setter }
 
 // SeeAlso returns a sorted list of references to other parameters
 func (p ByName) SeeAlso() []string {
-	refs := make([]string, 0, len(p.seeAlso))
-	for ref := range p.seeAlso {
-		refs = append(refs, ref)
-	}
-
-	sort.Strings(refs)
-
-	return refs
+	return slices.Sorted(maps.Keys(p.seeAlso))
 }
 
 // SeeNotes returns a sorted list of references to notes
 func (p ByName) SeeNotes() []string {
-	notes := make([]string, 0, len(p.seeNote))
-	for note := range p.seeNote {
-		notes = append(notes, note)
-	}
-
-	sort.Strings(notes)
-
-	return notes
+	return slices.Sorted(maps.Keys(p.seeNote))
 }
 
 // ValueName returns the parameter's bespoke value name
