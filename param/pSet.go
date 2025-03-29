@@ -93,7 +93,7 @@ type PSetOptFunc func(ps *PSet) error
 func SetHelper(h Helper) PSetOptFunc {
 	return func(ps *PSet) error {
 		if ps.helper != nil {
-			return errors.New("The helper has already been set")
+			return errors.New("the helper has already been set")
 		}
 
 		ps.helper = h
@@ -117,11 +117,11 @@ func SetHelper(h Helper) PSetOptFunc {
 // after the TerminalParam as errors
 func (ps *PSet) SetRemHandler(rh RemHandler) error {
 	if rh == nil {
-		return errors.New("The remainder handler must not be nil")
+		return errors.New("the remainder handler must not be nil")
 	}
 
 	if ps.parsed {
-		return errors.New("Parsing is already complete" +
+		return errors.New("parsing is already complete" +
 			" - you must set the RemHandler before calling Parse")
 	}
 
@@ -254,7 +254,7 @@ func NewSet(psof ...PSetOptFunc) (*PSet, error) {
 	}
 
 	if ps.helper == nil {
-		err := errors.New("A helper must be passed when creating a PSet")
+		err := errors.New("a helper must be passed when creating a PSet")
 		fmt.Fprintln(ps.ErrW(), err)
 
 		if ps.exitOnParamSetupErr {

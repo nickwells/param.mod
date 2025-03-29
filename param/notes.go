@@ -88,7 +88,7 @@ func (ps *PSet) HasNotes() bool {
 func (ps *PSet) GetNote(headline string) (*Note, error) {
 	n, ok := ps.notes[headline]
 	if !ok {
-		return nil, fmt.Errorf("There is no note with headline: %q", headline)
+		return nil, fmt.Errorf("there is no note with headline: %q", headline)
 	}
 
 	copyVal := *n
@@ -140,7 +140,7 @@ func NoteSeeNote(notes ...string) NoteOptFunc {
 
 			if whereAdded, exists := n.seeAlsoNote[note]; exists {
 				return fmt.Errorf(
-					"The NoteSeeAlso note %q has already been added, at %s",
+					"the NoteSeeAlso note %q has already been added, at %s",
 					note, whereAdded)
 			}
 
@@ -166,7 +166,7 @@ func NoteSeeParam(params ...string) NoteOptFunc {
 
 			if whereAdded, exists := n.seeAlsoParam[param]; exists {
 				return fmt.Errorf(
-					"The NoteSeeParam parameter %q has already"+
+					"the NoteSeeParam parameter %q has already"+
 						" been added, at %s",
 					param, whereAdded)
 			}

@@ -111,12 +111,12 @@ func (bp ByPos) IsTerminal() bool { return bp.isTerminal }
 func SetAsTerminal(bp *ByPos) error {
 	if len(bp.ps.byName) > 0 {
 		return fmt.Errorf(
-			"The param set has %d non-positional parameters."+
+			"the param set has %d non-positional parameters."+
 				" It cannot also have a terminal positional parameter as"+
 				" the non-positional parameters will never be used."+
 				" The addition of the standard parameters should be"+
 				" turned off when the PSet is created if"+
-				" positional parameters are wanted.",
+				" positional parameters are wanted",
 			len(bp.ps.byName))
 	}
 

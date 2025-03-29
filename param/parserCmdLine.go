@@ -35,12 +35,12 @@ func (ps *PSet) reportMissingParams(missingCount int) {
 	}
 
 	if missingCount == 1 {
-		ps.AddErr("", errors.New("A parameter is missing,"+
+		ps.AddErr("", errors.New("a parameter is missing,"+
 			" one more positional parameter is needed. "+
 			byPosMiniHelp))
 	} else {
 		ps.AddErr("", fmt.Errorf(
-			"Some parameters are missing,"+
+			"some parameters are missing,"+
 				" %d more positional parameters are needed. %s",
 			missingCount, byPosMiniHelp))
 	}

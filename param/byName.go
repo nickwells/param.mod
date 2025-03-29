@@ -326,7 +326,7 @@ func SeeAlso(refs ...string) OptFunc {
 
 			if whereAdded, exists := p.seeAlso[ref]; exists {
 				return fmt.Errorf(
-					"The SeeAlso reference %q has already been added, at %s",
+					"the SeeAlso reference %q has already been added, at %s",
 					ref, whereAdded)
 			}
 
@@ -352,7 +352,7 @@ func SeeNote(notes ...string) OptFunc {
 
 			if whereAdded, exists := p.seeNote[note]; exists {
 				return fmt.Errorf(
-					"The SeeNote reference %q has already been added, at %s",
+					"the SeeNote reference %q has already been added, at %s",
 					note, whereAdded)
 			}
 

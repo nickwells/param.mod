@@ -48,7 +48,7 @@ func NewOrDie(psof ...param.PSetOptFunc) *param.PSet {
 func NewOrPanic(psof ...param.PSetOptFunc) *param.PSet {
 	ps, err := New(psof...)
 	if err != nil {
-		panic(fmt.Errorf("The program parameter set can't be made: %w", err))
+		panic(fmt.Errorf("the program parameter set can't be made: %w", err))
 	}
 
 	return ps
