@@ -7,9 +7,9 @@ import (
 	"github.com/nickwells/param.mod/v6/paramset"
 )
 
-// MakeParamSet constructs and returns a param set with a minimal Helper, no
-// error reporting and no exit on failure. If the PSet cannot be constructed
-// it reports a Fatal testing error
+// MakeParamSetOrFatal constructs and returns a param set with a minimal
+// Helper, no error reporting and no exit on failure. If the PSet cannot be
+// constructed it reports a Fatal testing error
 func MakeParamSetOrFatal(t *testing.T, id string) *param.PSet {
 	t.Helper()
 

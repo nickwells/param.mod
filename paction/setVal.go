@@ -55,7 +55,7 @@ func SetMapVal[K comparable, V any](m map[K]V, k K, b V) param.ActionFunc {
 	}
 }
 
-// SetMapValIF returns an ActionFunc that sets the keyed entry in the map to
+// SetMapValIf returns an ActionFunc that sets the keyed entry in the map to
 // the given setTo value if the supplied test function returns true.
 //
 // It is advised that the key be supplied as a named const value to avoid
