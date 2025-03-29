@@ -167,6 +167,6 @@ func TestAllowedValues(t *testing.T) {
 
 	for _, tc := range testCases {
 		val := []byte(tc.s.AllowedValues())
-		gfc.Check(t, tc.IDStr(), tc.ID.Name, val)
+		gfc.Check(t, tc.IDStr(), tc.Name, val)
 	}
 }

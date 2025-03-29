@@ -82,7 +82,7 @@ func (s EnumMap[T]) checkValues(paramVal string, values []string) error {
 	for i, v := range values {
 		namePart, boolPart, hasBoolPart := strings.Cut(v, "=")
 		// check the name is an allowed value
-		if !s.ValueAllowed(namePart) && !s.Aliases.IsAnAlias(namePart) {
+		if !s.ValueAllowed(namePart) && !s.IsAnAlias(namePart) {
 			return fmt.Errorf("bad value: %q: part: %d (%q) is invalid."+
 				" The name (%q) is not allowed",
 				paramVal, i+1, v, namePart)
@@ -113,7 +113,7 @@ func (s EnumMap[T]) setValues(values []string) {
 		name := T(namePart)
 		keys := []T{name}
 
-		if s.Aliases.IsAnAlias(namePart) {
+		if s.IsAnAlias(namePart) {
 			keys = s.AliasVal(name)
 		}
 

@@ -24,7 +24,7 @@ func showExamples(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 func showExamplesFmtStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	ex := ps.Examples()
 
-	twc.Print("Examples\n")
+	_, _ = twc.Print("Examples\n")
 
 	for _, e := range ex {
 		twc.Wrap("\n"+e.Ex()+"\n", paramIndent)

@@ -483,8 +483,8 @@ func TestHelp(t *testing.T) {
 			t.Errorf("\t: Errors expected but not seen")
 		}
 
-		gfc.Check(t, idStr+" [stdout]", tc.ID.Name+".stdout", stdoutBuf.Bytes())
-		gfc.Check(t, idStr+" [stderr]", tc.ID.Name+".stderr", stderrBuf.Bytes())
+		gfc.Check(t, idStr+" [stdout]", tc.Name+".stdout", stdoutBuf.Bytes())
+		gfc.Check(t, idStr+" [stderr]", tc.Name+".stderr", stderrBuf.Bytes())
 	}
 }
 

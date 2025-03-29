@@ -248,7 +248,7 @@ func zshMakeNewCompFile(filename string, ps *param.PSet) error {
 		return err
 	}
 
-	w, err := os.OpenFile(
+	w, err := os.OpenFile( //nolint:gosec
 		filename,
 		os.O_WRONLY|os.O_CREATE,
 		completionFilePerms)
@@ -268,7 +268,7 @@ func zshReplaceCompFile(filename string, ps *param.PSet) error {
 	const userWritePerm = 0o200
 	_ = os.Chmod(filename, completionFilePerms|userWritePerm)
 
-	w, err := os.OpenFile(
+	w, err := os.OpenFile( //nolint:gosec
 		filename,
 		os.O_WRONLY|os.O_TRUNC|os.O_CREATE,
 		completionFilePerms)

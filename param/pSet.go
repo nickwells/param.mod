@@ -147,7 +147,9 @@ func (ps *PSet) SetNamedRemHandler(rh RemHandler, name string) error {
 
 // TrailingParamsExpected returns true if a remainder handler has been set
 // successfully and false otherwise
-func (ps *PSet) TrailingParamsExpected() bool { return ps.trailingParamsExpected }
+func (ps *PSet) TrailingParamsExpected() bool {
+	return ps.trailingParamsExpected
+}
 
 // TrailingParamsName returns the name that has been given to the trailing
 // parameters (if any)

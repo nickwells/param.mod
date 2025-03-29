@@ -29,5 +29,6 @@ func setConfigFileForGroupStdParamsCmpl(ps *param.PSet) error {
 			"phelp",
 			"group-stdParams-cmpl.cfg"),
 		filecheck.Optional)
+
 	return nil
 }

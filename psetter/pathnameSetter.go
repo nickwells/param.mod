@@ -45,7 +45,7 @@ func (s Pathname) CountChecks() int {
 func (s Pathname) findAlternatives(base, badName, tail string) string {
 	const alternativeCount = 3
 
-	f, err := os.Open(base)
+	f, err := os.Open(base) //nolint:gosec
 	if err != nil {
 		return fmt.Sprintf(", cannot open the directory for reading: %s", err)
 	}

@@ -69,7 +69,7 @@ func (s Enum[T]) CheckSetter(name string) {
 
 	intro := fmt.Sprintf("%s: %T Check failed: ", name, s)
 
-	if err := s.AllowedVals.Check(); err != nil {
+	if err := s.Check(); err != nil {
 		panic(intro + err.Error())
 	}
 

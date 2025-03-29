@@ -65,11 +65,11 @@ func (s EnumList[T]) SetWithVal(_ string, paramVal string) error {
 	vals := strings.Split(paramVal, sep)
 	for _, v := range vals {
 		if !s.ValueAllowed(v) {
-			if !s.Aliases.IsAnAlias(v) {
+			if !s.IsAnAlias(v) {
 				return fmt.Errorf("value is not allowed: %q", v)
 			}
 
-			for _, av := range s.Aliases.AliasVal(T(v)) {
+			for _, av := range s.AliasVal(T(v)) {
 				aliasedVals = append(aliasedVals, T(av))
 			}
 

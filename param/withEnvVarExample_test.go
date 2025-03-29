@@ -22,8 +22,8 @@ func Example_withEnvVar() {
 	ps.SetEnvPrefix("GOLEM_PARAM_TEST_")
 	ps.AddEnvPrefix("golem_param_test2_")
 
-	os.Setenv("GOLEM_PARAM_TEST_"+"example1", "")
-	os.Setenv("golem_param_test2_"+"example2", "3")
+	_ = os.Setenv("GOLEM_PARAM_TEST_"+"example1", "")
+	_ = os.Setenv("golem_param_test2_"+"example2", "3")
 
 	fmt.Println("example1:", wevExample1)
 	fmt.Println("example2:", wevExample2)
