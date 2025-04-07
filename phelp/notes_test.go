@@ -49,8 +49,7 @@ func TestShowNotesRefsFmtStd(t *testing.T) {
 			twrap.SetWriter(buf),
 			twrap.SetTargetLineLen(60))
 		showNotesRefsFmtStd(twc, tc.refs, tc.name)
-		testhelper.DiffString[string](t,
-			tc.IDStr(), "notes reference",
+		testhelper.DiffString(t, tc.IDStr(), "notes reference",
 			buf.String(), tc.expOutput)
 	}
 }

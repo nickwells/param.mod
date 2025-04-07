@@ -31,8 +31,7 @@ func TestAliasesString(t *testing.T) {
 
 	for _, tc := range testCases {
 		actStr := tc.a.String()
-		testhelper.DiffString[string](t, tc.IDStr(), "String()",
-			actStr, tc.expStr)
+		testhelper.DiffString(t, tc.IDStr(), "String()", actStr, tc.expStr)
 	}
 }
 
