@@ -186,8 +186,7 @@ func (a Aliases[T]) reportBadAliases(badVals map[T][]int) []string {
 		bvKeys = append(bvKeys, k)
 	}
 
-	sort.Slice(bvKeys,
-		func(i, j int) bool { return bvKeys[i] < bvKeys[j] })
+	slices.Sort(bvKeys)
 
 	problems := []string{}
 
@@ -213,8 +212,7 @@ func (a Aliases[T]) reportDuplicateVals(indexes map[T][]int) []string {
 		iKeys = append(iKeys, k)
 	}
 
-	sort.Slice(iKeys,
-		func(i, j int) bool { return iKeys[i] < iKeys[j] })
+	slices.Sort(iKeys)
 
 	problems := []string{}
 

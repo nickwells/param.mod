@@ -62,8 +62,8 @@ func (s EnumList[T]) SetWithVal(_ string, paramVal string) error {
 
 	sep := s.GetSeparator()
 
-	vals := strings.Split(paramVal, sep)
-	for _, v := range vals {
+	vals := strings.SplitSeq(paramVal, sep)
+	for v := range vals {
 		if !s.ValueAllowed(v) {
 			if !s.IsAnAlias(v) {
 				return fmt.Errorf("value is not allowed: %q", v)
