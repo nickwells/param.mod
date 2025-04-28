@@ -6,8 +6,6 @@ import (
 	"time"
 
 	"github.com/nickwells/check.mod/v2/check"
-	"github.com/nickwells/english.mod/english"
-	"github.com/nickwells/strdist.mod/v2/strdist"
 )
 
 // TimeLocation allows you to give a parameter that can be used to set a
@@ -35,38 +33,17 @@ func (s TimeLocation) CountChecks() int {
 	return len(s.Checks)
 }
 
-// makeSuggestionStr formats the alternate locations into a message suitable
-// for presentation to the user.
-func (s TimeLocation) makeSuggestionStr(altLocs []string) string {
-	if len(altLocs) == 0 {
-		return ""
-	}
-
-	preamble := ", did you mean "
-	if len(altLocs) > 1 {
-		preamble += "one of "
-	}
-
-	return preamble + english.JoinQuoted(altLocs, ", ", " or ", `"`, `"`)
-}
-
 // suggestAltTimeLocation tries to find values in the list of available
 // locations which are similar to the badLoc value
 func (s TimeLocation) suggestAltTimeLocation(badLoc string) string {
-	const alternativeCount = 3
-
 	if len(s.Locations) == 0 {
 		return ""
 	}
 
-	finder := strdist.DefaultFinders[strdist.CaseBlindAlgoNameCosine]
-
 	var altLocs []string
 	for _, f := range []func(string, []string) []string{
 		// This finds matches against the locations
-		func(s string, locs []string) []string {
-			return finder.FindNStrLike(alternativeCount, s, locs...)
-		},
+		SuggestedVals,
 		// This finds those entries in Locations which have a name with parts
 		// separated by a '/'. This is how geographical timezone locations
 		// are represented, for instance Europe/London, Asia/Jerusalem or
@@ -79,15 +56,14 @@ func (s TimeLocation) suggestAltTimeLocation(badLoc string) string {
 			backMap := map[string][]string{}
 
 			for _, l := range locs {
-				parts := strings.Split(l, "/")
-				if len(parts) > 1 {
-					city := parts[len(parts)-1]
+				_, city, ok := strings.Cut(l, "/")
+				if ok {
 					justCities = append(justCities, city)
 					backMap[city] = append(backMap[city], l)
 				}
 			}
 
-			matches := finder.FindNStrLike(alternativeCount, s, justCities...)
+			matches := SuggestedVals(s, justCities)
 			if len(matches) == 0 {
 				return matches
 			}
@@ -100,18 +76,20 @@ func (s TimeLocation) suggestAltTimeLocation(badLoc string) string {
 			return rval
 		},
 	} {
+		// firstly try matching the name directly ...
 		altLocs = f(badLoc, s.Locations)
 		if len(altLocs) > 0 {
 			break
 		}
 
+		// ... then try with blanks in the name replaced with underscores
 		altLocs = f(strings.ReplaceAll(badLoc, " ", "_"), s.Locations)
 		if len(altLocs) > 0 {
 			break
 		}
 	}
 
-	return s.makeSuggestionStr(altLocs)
+	return SuggestionString(altLocs)
 }
 
 // SetWithVal (called when a value follows the parameter) checks that the

@@ -9,10 +9,8 @@ import (
 	"slices"
 
 	"github.com/nickwells/check.mod/v2/check"
-	"github.com/nickwells/english.mod/english"
 	"github.com/nickwells/filecheck.mod/filecheck"
 	"github.com/nickwells/fileparse.mod/fileparse"
-	"github.com/nickwells/strdist.mod/v2/strdist"
 )
 
 // Pathname allows you to give a parameter that can be used to set a pathname
@@ -43,8 +41,6 @@ func (s Pathname) CountChecks() int {
 // satisfies the Expectation. If so it will add it to the list of
 // alternatives.
 func (s Pathname) findAlternatives(base, badName, tail string) string {
-	const alternativeCount = 3
-
 	f, err := os.Open(base) //nolint:gosec
 	if err != nil {
 		return fmt.Sprintf(", cannot open the directory for reading: %s", err)
@@ -57,24 +53,16 @@ func (s Pathname) findAlternatives(base, badName, tail string) string {
 		return fmt.Sprintf(", cannot read the directory: %s", err)
 	}
 
-	finder := strdist.DefaultFinders[strdist.CaseBlindAlgoNameCosine]
-	alts := finder.FindNStrLike(alternativeCount, badName, names...)
-
 	var altStrs []string
 
-	for _, alt := range alts {
+	for _, alt := range SuggestedVals(badName, names) {
 		altStr := filepath.Join(base, alt, tail)
 		if s.Expectation.StatusCheck(altStr) == nil {
 			altStrs = append(altStrs, altStr)
 		}
 	}
 
-	if len(altStrs) > 0 {
-		return ", did you mean " +
-			english.JoinQuoted(altStrs, ", ", " or ", `"`, `"`)
-	}
-
-	return ""
+	return SuggestionString(altStrs)
 }
 
 // expandError expands on the error, it tries to find the component of the
