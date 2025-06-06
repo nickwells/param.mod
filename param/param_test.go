@@ -10,6 +10,9 @@ import (
 	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
+const badParamErrorValue = "is invalid. It must start with a letter and" +
+	" be followed by zero or more letters, digits or dashes"
+
 func TestParamAdd(t *testing.T) {
 	var p1 int64
 	testCases := []struct {
@@ -23,7 +26,7 @@ func TestParamAdd(t *testing.T) {
 			npi: &namedParamInitialiser{setter: psetter.Int[int64]{Value: &p1}},
 			ExpPanic: testhelper.MkExpPanic(
 				"the parameter name",
-				"is invalid. It must match"),
+				badParamErrorValue),
 		},
 		{
 			ID: testhelper.MkID("bad name - bad char"),
@@ -33,7 +36,7 @@ func TestParamAdd(t *testing.T) {
 			},
 			ExpPanic: testhelper.MkExpPanic(
 				"the parameter name",
-				"is invalid. It must match"),
+				badParamErrorValue),
 		},
 		{
 			ID: testhelper.MkID("bad name - bad first char"),
@@ -43,7 +46,7 @@ func TestParamAdd(t *testing.T) {
 			},
 			ExpPanic: testhelper.MkExpPanic(
 				"the parameter name",
-				"is invalid. It must match"),
+				badParamErrorValue),
 		},
 		{
 			ID: testhelper.MkID("good name"),
@@ -89,7 +92,7 @@ func TestParamAdd(t *testing.T) {
 			},
 			ExpPanic: testhelper.MkExpPanic(
 				"parameter name",
-				"is invalid. It must match"),
+				badParamErrorValue),
 			paramShouldExist: true,
 		},
 		{
@@ -253,7 +256,7 @@ func TestParamAddPos(t *testing.T) {
 			},
 			ExpPanic: testhelper.MkExpPanic(
 				"the parameter name",
-				"is invalid. It must match"),
+				badParamErrorValue),
 		},
 		{
 			ID: testhelper.MkID(

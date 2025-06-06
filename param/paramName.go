@@ -16,14 +16,27 @@ func init() {
 	nameCheckRE = regexp.MustCompile("^[a-zA-Z][-a-zA-Z0-9]*$")
 }
 
-// nameCheck returns an error if the name is invalid or if it has already
-// been used.
-func (ps *PSet) nameCheck(name, whereAdded string) error {
+// ParameterNameCheck checks that the given parameter name is valid and returns
+// an error if not. A parameter name must start with a letter and be followed
+// by zero or more letters, digits or dashes
+func ParameterNameCheck(name string) error {
 	if !nameCheckRE.MatchString(name) {
 		return fmt.Errorf(
 			"the parameter name %q is invalid."+
-				" It must match: %q.\nFix this at: %s",
-			name, nameCheckRE.String(), whereAdded)
+				" It must start with a letter and be followed by"+
+				" zero or more letters, digits or dashes",
+			name)
+	}
+
+	return nil
+}
+
+// nameCheck returns an error if the name is invalid or if it has already
+// been used.
+func (ps *PSet) nameCheck(name, whereAdded string) error {
+	if err := ParameterNameCheck(name); err != nil {
+		return fmt.Errorf("bad parameter name added at: %s. %w",
+			whereAdded, err)
 	}
 
 	altP, exists := ps.nameToParam[name]
