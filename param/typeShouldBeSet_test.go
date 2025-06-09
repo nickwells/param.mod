@@ -8,9 +8,13 @@ package param_test
 //	[command line]: Argument:7: "-v" "ShouldNotBeSet"
 //	[command line]: Argument:9: "-v" "ShouldBeSet"
 
-// ShouldBeSetType - this determines whether or not a ByName or ByPos param is expected to be set
+/*
+ShouldBeSetType - this determines whether or not a ByName or ByPos param is
+expected to be set
+*/
 type ShouldBeSetType int
 
+// These constants are the allowed values of ShouldBeSetType
 const (
 	ShouldNotBeSet ShouldBeSetType = iota
 	ShouldBeSet

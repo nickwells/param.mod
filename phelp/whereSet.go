@@ -1,8 +1,8 @@
 package phelp
 
 import (
-	"github.com/nickwells/col.mod/v4/col"
-	"github.com/nickwells/col.mod/v4/colfmt"
+	"github.com/nickwells/col.mod/v5/col"
+	"github.com/nickwells/col.mod/v5/colfmt"
 	"github.com/nickwells/english.mod/english"
 	"github.com/nickwells/param.mod/v6/param"
 	"github.com/nickwells/twrap.mod/twrap"
