@@ -366,7 +366,7 @@ func valTypeName(p *param.ByName) string {
 
 	parts := strings.Split(valType, ".")
 	valType = parts[len(parts)-1]
-	valType = strings.TrimRight(valType, "0123456789")
+	valType = strings.TrimRight(valType, "]0123456789")
 
 	return valType
 }
