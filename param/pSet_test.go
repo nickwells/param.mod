@@ -373,6 +373,7 @@ func checkParamGroup(t *testing.T, tc paramGroupTC, ps *param.PSet) {
 
 func TestGetParamGroups(t *testing.T) {
 	var boolVar bool
+
 	testCases := []paramGroupTC{
 		{
 			ID: testhelper.MkID("no params"),

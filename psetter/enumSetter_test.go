@@ -8,7 +8,7 @@ import (
 )
 
 func TestEnum(t *testing.T) {
-	var value string
+	value := ""
 	es := psetter.Enum[string]{
 		Value: &value,
 		AllowedVals: psetter.AllowedVals[string]{
@@ -62,7 +62,7 @@ func TestEnum(t *testing.T) {
 }
 
 func TestEnumList(t *testing.T) {
-	var value []string
+	value := []string{}
 	els := psetter.EnumList[string]{
 		Value: &value,
 		AllowedVals: psetter.AllowedVals[string]{
@@ -120,6 +120,7 @@ func TestEnumList(t *testing.T) {
 
 func TestEnumMap(t *testing.T) { //nolint:cyclop
 	var value map[string]bool
+
 	ems := psetter.EnumMap[string]{
 		Value: &value,
 		AllowedVals: psetter.AllowedVals[string]{

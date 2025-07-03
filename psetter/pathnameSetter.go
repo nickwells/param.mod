@@ -80,6 +80,7 @@ func (s Pathname) expandError(pathname string, err error) error {
 			if !info.IsDir() {
 				suggestions = fmt.Sprintf(
 					"; %q exists but is not a directory", pathname)
+
 				break
 			}
 

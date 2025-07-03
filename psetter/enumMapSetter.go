@@ -34,6 +34,7 @@ import (
 // actually mean.
 type EnumMap[T ~string] struct {
 	ValueReqMandatory
+
 	// The AllowedVals must be set, the program will panic if not. These are
 	// the allowed keys in the Values map
 	AllowedVals[T]
@@ -46,9 +47,11 @@ type EnumMap[T ~string] struct {
 	// Value must be set, the program will panic if not. This is the map of
 	// values that this setter is setting
 	Value *map[T]bool
+
 	// AllowHiddenMapEntries can be set to relax the checks on the initial
 	// entries in the Values map
 	AllowHiddenMapEntries bool
+
 	// The StrListSeparator allows you to override the default separator
 	// between list elements.
 	StrListSeparator

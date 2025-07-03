@@ -11,6 +11,7 @@ import (
 
 func TestBoolSet(t *testing.T) {
 	var b bool
+
 	bs := psetter.Bool{Value: &b}
 	bsInv := psetter.Bool{
 		Value:  &b,
@@ -45,6 +46,7 @@ func TestBoolSet(t *testing.T) {
 
 func TestBoolSetVal(t *testing.T) {
 	var b bool
+
 	bs := psetter.Bool{Value: &b}
 	bsInv := psetter.Bool{
 		Value:  &b,

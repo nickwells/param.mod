@@ -45,10 +45,12 @@ func (s *Setter) SetVR(vr param.ValueReq) {
 	switch vr {
 	case param.Mandatory:
 		var vrm psetter.ValueReqMandatory
+
 		err := vrm.Set(s.ParamName)
 		s.SetErr = testhelper.MkExpErr(err.Error())
 	case param.None:
 		var vrm psetter.ValueReqNone
+
 		err := vrm.SetWithVal(s.ParamName, "")
 		s.SetWithValErr = testhelper.MkExpErr(err.Error())
 	}

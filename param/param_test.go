@@ -15,6 +15,7 @@ const badParamErrorValue = "is invalid. It must start with a letter and" +
 
 func TestParamAdd(t *testing.T) {
 	var p1 int64
+
 	testCases := []struct {
 		testhelper.ID
 		testhelper.ExpPanic
@@ -196,6 +197,7 @@ func checkByPosVal(t *testing.T, tcID string, paramIdx int,
 
 func TestParamAddPos(t *testing.T) {
 	var p1 int64
+
 	testCases := []struct {
 		testhelper.ID
 		testhelper.ExpPanic
@@ -576,6 +578,7 @@ func TestParamParse1(t *testing.T) {
 
 func TestParamParse(t *testing.T) {
 	var p1 int64
+
 	testCases := []struct {
 		testhelper.ID
 		expectedEMap map[string][]string
@@ -676,6 +679,7 @@ func TestParamParse(t *testing.T) {
 
 func TestParamByName(t *testing.T) {
 	var val1 int64 = 123
+
 	val1InitialVal := fmt.Sprint(val1)
 	ps := makePSetOrFatal(t, t.Name())
 

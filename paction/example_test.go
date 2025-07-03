@@ -24,7 +24,7 @@ func Example_count() {
 	// Declare the counter and make the associated action function. These two
 	// lines and the extra arguments to the parameter creation are the core
 	// of what you have to do
-	var paramCounter paction.Counter
+	paramCounter := paction.Counter{}
 	af := (&paramCounter).MakeActionFunc()
 
 	// Create the parameter set ...

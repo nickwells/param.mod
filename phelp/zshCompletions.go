@@ -257,6 +257,7 @@ func zshMakeNewCompFile(filename string, ps *param.PSet) error {
 	}
 
 	defer w.Close()
+
 	zshWriteCompFunc(ps, w)
 
 	return nil
@@ -266,6 +267,7 @@ func zshMakeNewCompFile(filename string, ps *param.PSet) error {
 // exist). It will return any errors found.
 func zshReplaceCompFile(filename string, ps *param.PSet) error {
 	const userWritePerm = 0o200
+
 	_ = os.Chmod(filename, completionFilePerms|userWritePerm)
 
 	w, err := os.OpenFile( //nolint:gosec
@@ -279,6 +281,7 @@ func zshReplaceCompFile(filename string, ps *param.PSet) error {
 	_ = os.Chmod(filename, completionFilePerms)
 
 	defer w.Close()
+
 	zshWriteCompFunc(ps, w)
 
 	return nil
