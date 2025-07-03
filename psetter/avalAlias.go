@@ -129,6 +129,56 @@ func (a Aliases[T]) Check(av AllowedVals[T]) error {
 	return nil
 }
 
+// CheckMapLengths returns a non-nil error if any of the alias entries has an
+// associated entry with a length less then minLen or greater than maxLen. It
+// returns nil if all the entries are in the right length range. It will
+// panic unless 0 < minLen <= maxLen.
+func (a Aliases[T]) CheckMapLengths(minLen, maxLen int) error {
+	if minLen <= 0 {
+		panic(fmt.Errorf("Aliases.CheckMapLengths: minLen (%d) <= 0",
+			minLen))
+	}
+
+	if maxLen <= 0 {
+		panic(fmt.Errorf("Aliases.CheckMapLengths: maxLen (%d) <= 0",
+			maxLen))
+	}
+
+	if minLen > maxLen {
+		panic(fmt.Errorf("Aliases.CheckMapLengths: minLen (%d) > maxLen (%d)",
+			minLen, maxLen))
+	}
+
+	allProblems := []string{}
+
+	for aName, aVal := range a {
+		if len(aVal) < minLen {
+			allProblems = append(allProblems,
+				fmt.Sprintf("alias %q maps to too few values (%d < %d)",
+					aName, len(aVal), minLen))
+		}
+		if len(aVal) > maxLen {
+			allProblems = append(allProblems,
+				fmt.Sprintf("alias %q maps to too many values (%d > %d)",
+					aName, len(aVal), maxLen))
+		}
+	}
+
+	if len(allProblems) > 0 {
+		sep := " "
+		if len(allProblems) > 1 {
+			sep = fmt.Sprintf(" (%d)\n", len(allProblems))
+		}
+
+		return fmt.Errorf("bad %s:%s%s",
+			english.Plural("alias", len(allProblems)),
+			sep,
+			strings.Join(allProblems, "\n"))
+	}
+
+	return nil
+}
+
 // aliasValueProblems checks the alias value for validity. It must
 //   - not be empty
 //   - not contain  duplicates

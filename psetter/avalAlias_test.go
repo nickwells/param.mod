@@ -207,3 +207,129 @@ func TestAliasesCheck(t *testing.T) {
 		testhelper.CheckExpErr(t, err, tc)
 	}
 }
+
+func TestAliasValueLengths(t *testing.T) {
+	testCases := []struct {
+		testhelper.ID
+		testhelper.ExpPanic
+		testhelper.ExpErr
+		a      psetter.Aliases[string]
+		minLen int
+		maxLen int
+	}{
+		{
+			ID: testhelper.MkID("all ok, min: 1, max: 1"),
+			a: psetter.Aliases[string]{
+				"a": []string{"aa"},
+				"b": []string{"bb"},
+			},
+			minLen: 1,
+			maxLen: 1,
+		},
+		{
+			ID: testhelper.MkID("all ok, min: 1, max: 2"),
+			a: psetter.Aliases[string]{
+				"a": []string{"aa"},
+				"b": []string{"bb", "cc"},
+			},
+			minLen: 1,
+			maxLen: 2,
+		},
+		{
+			ID: testhelper.MkID("panic bad (min > max), min: 2, max: 1"),
+			ExpPanic: testhelper.MkExpPanic(
+				"Aliases.CheckMapLengths: minLen (2) > maxLen (1)"),
+			a: psetter.Aliases[string]{
+				"a": []string{"aa"},
+				"b": []string{"bb"},
+			},
+			minLen: 2,
+			maxLen: 1,
+		},
+		{
+			ID: testhelper.MkID("panic bad (min <0), min: -1, max: 1"),
+			ExpPanic: testhelper.MkExpPanic(
+				"Aliases.CheckMapLengths: minLen (-1) <= 0"),
+			a: psetter.Aliases[string]{
+				"a": []string{"aa"},
+				"b": []string{"bb"},
+			},
+			minLen: -1,
+			maxLen: 1,
+		},
+		{
+			ID: testhelper.MkID("panic bad (min ==0), min: 0, max: 1"),
+			ExpPanic: testhelper.MkExpPanic(
+				"Aliases.CheckMapLengths: minLen (0) <= 0"),
+			a: psetter.Aliases[string]{
+				"a": []string{"aa"},
+				"b": []string{"bb"},
+			},
+			minLen: 0,
+			maxLen: 1,
+		},
+		{
+			ID: testhelper.MkID("panic bad (max <0), min: 1, max: -1"),
+			ExpPanic: testhelper.MkExpPanic(
+				"Aliases.CheckMapLengths: maxLen (-1) <= 0"),
+			a: psetter.Aliases[string]{
+				"a": []string{"aa"},
+				"b": []string{"bb"},
+			},
+			minLen: 1,
+			maxLen: -1,
+		},
+		{
+			ID: testhelper.MkID("panic bad (max ==0), min: 1, max: 0"),
+			ExpPanic: testhelper.MkExpPanic(
+				"Aliases.CheckMapLengths: maxLen (0) <= 0"),
+			a: psetter.Aliases[string]{
+				"a": []string{"aa"},
+				"b": []string{"bb"},
+			},
+			minLen: 1,
+			maxLen: 0,
+		},
+		{
+			ID: testhelper.MkID("err bad, min: 1, max: 1"),
+			ExpErr: testhelper.MkExpErr(
+				`bad alias: alias "b" maps to too many values (2 > 1)`),
+			a: psetter.Aliases[string]{
+				"a": []string{"aa"},
+				"b": []string{"bb", "cc"},
+			},
+			minLen: 1,
+			maxLen: 1,
+		},
+		{
+			ID: testhelper.MkID("err bad, min: 1, max: 2"),
+			ExpErr: testhelper.MkExpErr(
+				"bad aliases: (2)",
+				`alias "b" maps to too many values (3 > 2)`,
+				`alias "c" maps to too many values (4 > 2)`),
+			a: psetter.Aliases[string]{
+				"a": []string{"aa"},
+				"b": []string{"bb", "cc", "dd"},
+				"c": []string{"cc", "dd", "ee", "ff"},
+			},
+			minLen: 1,
+			maxLen: 2,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.Name, func(t *testing.T) {
+			var err error
+			f := func() {
+				err = tc.a.CheckMapLengths(tc.minLen, tc.maxLen)
+			}
+
+			panicked, panicVal := testhelper.PanicSafe(f)
+			if testhelper.CheckExpPanicError(t, panicked, panicVal, tc) {
+				return
+			}
+
+			testhelper.CheckExpErr(t, err, tc)
+		})
+	}
+}
