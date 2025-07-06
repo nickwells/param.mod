@@ -119,9 +119,15 @@ func (s EnumList[T]) CheckSetter(name string) {
 		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
 
-	// Check that the AllowedVals map is well formed
 	intro := fmt.Sprintf("%s: %T Check failed: ", name, s)
+
+	// Check that the AllowedVals map is well formed
 	if err := s.AllowedVals.Check(); err != nil {
+		panic(intro + err.Error())
+	}
+
+	// Check the alias values
+	if err := s.Aliases.Check(s.AllowedVals); err != nil {
 		panic(intro + err.Error())
 	}
 
