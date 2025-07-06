@@ -84,7 +84,7 @@ func TestSetterEnumMap(t *testing.T) {
 			ExpPanic: testhelper.MkExpPanic(
 				"psetter.EnumMap[string] Check failed: ",
 				`the map entry with key "z" is invalid`,
-				" - it is not in the allowed values map"),
+				" - the key is not in the allowed values map"),
 		},
 		{
 			ID: testhelper.MkID("bad-alias-equals-aval"),

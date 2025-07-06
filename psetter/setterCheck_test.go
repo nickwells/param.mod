@@ -192,7 +192,8 @@ func TestCheck(t *testing.T) {
 			ExpPanic: testhelper.MkExpPanic(
 				append([]string{"test: psetter.EnumMap[string]"},
 					"the map entry with key",
-					"is invalid - it is not in the allowed values map")...),
+					"is invalid - the key"+
+						" is not in the allowed values map")...),
 		},
 		{
 			ID: testhelper.MkID("EnumMap - bad - no value"),

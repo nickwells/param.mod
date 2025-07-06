@@ -157,20 +157,24 @@ func (s EnumMap[T]) CurrentValue() string {
 // Value is nil or the map has not been created yet or if there are no
 // allowed values.
 func (s EnumMap[T]) CheckSetter(name string) {
+	// Check the value is not nil
 	if s.Value == nil {
 		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
 
+	// make the pointed-to map if it is nil
 	if *s.Value == nil {
 		*s.Value = make(map[T]bool)
 	}
 
 	intro := fmt.Sprintf("%s: %T Check failed: ", name, s)
 
+	// Check that the AllowedVals map is well formed
 	if err := s.AllowedVals.Check(); err != nil {
 		panic(intro + err.Error())
 	}
 
+	// Check the alias values
 	if err := s.Aliases.Check(s.AllowedVals); err != nil {
 		panic(intro + err.Error())
 	}
@@ -179,10 +183,11 @@ func (s EnumMap[T]) CheckSetter(name string) {
 		return
 	}
 
+	// Check that the current values are all allowed
 	for k := range *s.Value {
 		if _, ok := s.AllowedVals[k]; !ok {
 			panic(fmt.Sprintf("%sthe map entry with key %q is invalid"+
-				" - it is not in the allowed values map",
+				" - the key is not in the allowed values map",
 				intro, k))
 		}
 	}
