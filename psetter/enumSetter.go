@@ -2,8 +2,7 @@ package psetter
 
 import (
 	"fmt"
-	"maps"
-	"slices"
+	"sort"
 )
 
 // Enum allows you to give a parameter that will only allow one of an
@@ -26,12 +25,20 @@ import (
 // actually mean.
 type Enum[T ~string] struct {
 	ValueReqMandatory
+
 	// The AllowedVals must be set, the program will panic if not. The Value
 	// is guaranteed to take one of these values.
 	AllowedVals[T]
+
+	// The Aliases need not be given but if they are then each alias must not
+	// be in AllowedVals and all of the resulting values must be in
+	// AllowedVals.
+	Aliases[T]
+
 	// Value must be set, the program will panic if not. This is the value
 	// being set
 	Value *T
+
 	// AllowInvalidInitialValue can be set to relax the checks on the initial
 	// Value. It can be set to allow, for instance, an empty initial value to
 	// signify that no choice has yet been made.
@@ -47,7 +54,14 @@ func (s Enum[T]) SetWithVal(_ string, paramVal string) error {
 		return nil
 	}
 
-	return fmt.Errorf("value not allowed: %q", paramVal)
+	if s.IsAnAlias(paramVal) {
+		val := s.AliasVal(T(paramVal))
+		*s.Value = val[0]
+
+		return nil
+	}
+
+	return fmt.Errorf("value is not allowed: %q", paramVal)
 }
 
 // AllowedValues returns a string listing the allowed values
@@ -61,7 +75,7 @@ func (s Enum[T]) CurrentValue() string {
 }
 
 // CheckSetter panics if the setter has not been properly created - if the
-// Value is nil or there are no allowed values.
+// Value is nil or there are no allowed values or the aliases are invalid.
 func (s Enum[T]) CheckSetter(name string) {
 	if s.Value == nil {
 		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
@@ -69,7 +83,15 @@ func (s Enum[T]) CheckSetter(name string) {
 
 	intro := fmt.Sprintf("%s: %T Check failed: ", name, s)
 
-	if err := s.Check(); err != nil {
+	if err := s.AllowedVals.Check(); err != nil {
+		panic(intro + err.Error())
+	}
+
+	if err := s.Aliases.Check(s.AllowedVals); err != nil {
+		panic(intro + err.Error())
+	}
+
+	if err := s.CheckMapLengths(1, 1); err != nil {
 		panic(intro + err.Error())
 	}
 
@@ -97,7 +119,11 @@ func (s Enum[T]) ValDescribe() string {
 		desc = initialVal
 	}
 
-	avals := slices.Sorted(maps.Keys(s.AllowedVals))
+	avals, _ := s.AllowedVals.Keys()
+	aliasKeys, _ := s.Aliases.Keys()
+	avals = append(avals, aliasKeys...)
+
+	sort.Strings(avals)
 
 	for _, val := range avals {
 		if string(val) == initialVal {

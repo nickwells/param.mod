@@ -4,59 +4,164 @@ import (
 	"testing"
 
 	"github.com/nickwells/param.mod/v6/param"
+	"github.com/nickwells/param.mod/v6/paramtest"
 	"github.com/nickwells/param.mod/v6/psetter"
+	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
-func TestEnum(t *testing.T) {
-	value := ""
-	es := psetter.Enum[string]{
-		Value: &value,
-		AllowedVals: psetter.AllowedVals[string]{
-			"e1": "E1 explained",
-			"e2": "E2 explained",
-			"e3": "E3 explained",
+const (
+	updFlagNameEnum     = "upd-gf-Enum"
+	keepBadFlagNameEnum = "keep-bad-Enum"
+)
+
+var commonGFCEnum = testhelper.GoldenFileCfg{
+	DirNames:               []string{"testdata", "Enum"},
+	Pfx:                    "gf",
+	Sfx:                    "txt",
+	UpdFlagName:            updFlagNameEnum,
+	KeepBadResultsFlagName: keepBadFlagNameEnum,
+}
+
+func init() {
+	commonGFCEnum.AddUpdateFlag()
+	commonGFCEnum.AddKeepBadResultsFlag()
+}
+
+func TestSetterEnum(t *testing.T) {
+	const dfltParamName = "param-name"
+
+	const (
+		allowedVal1 = "av1"
+		allowedVal2 = "av2"
+		allowedVal3 = "av3"
+
+		badVal = "bad-value"
+
+		goodAlias = "good-alias"
+		badAlias  = "noCorrespondingValue"
+	)
+
+	allowedVals := psetter.AllowedVals[string]{
+		allowedVal1: "notes for av1",
+		allowedVal2: "notes for av2",
+		allowedVal3: "notes for av3",
+	}
+	badAdValsOneEntry := psetter.AllowedVals[string]{
+		allowedVal1: "notes for av1",
+	}
+
+	badAliases := psetter.Aliases[string]{
+		badAlias: []string{badVal},
+	}
+
+	goodAliases := psetter.Aliases[string]{
+		goodAlias: []string{allowedVal2},
+	}
+
+	var (
+		v1 = allowedVal1
+		v2 = allowedVal1
+		v3 = allowedVal1
+		v4 = allowedVal1
+	)
+
+	testCases := []paramtest.Setter{
+		{
+			ID: testhelper.MkID("good-setter"),
+			PSetter: psetter.Enum[string]{
+				Value:       &v1,
+				AllowedVals: allowedVals,
+			},
+			ParamVal: allowedVal3,
+		},
+		{
+			ID: testhelper.MkID("good-setter-bad-val"),
+			PSetter: psetter.Enum[string]{
+				Value:       &v2,
+				AllowedVals: allowedVals,
+			},
+			ParamVal: badVal,
+			SetWithValErr: testhelper.MkExpErr(
+				`value is not allowed: "` + badVal + `"`),
+		},
+		{
+			ID: testhelper.MkID("good-setter-empty-val"),
+			PSetter: psetter.Enum[string]{
+				Value:       &v2,
+				AllowedVals: allowedVals,
+			},
+			ParamVal: "",
+			SetWithValErr: testhelper.MkExpErr(
+				`value is not allowed: ""`),
+		},
+		{
+			ID: testhelper.MkID("good-setter-alias-val"),
+			PSetter: psetter.Enum[string]{
+				Value:       &v3,
+				AllowedVals: allowedVals,
+				Aliases:     goodAliases,
+			},
+			ParamVal: goodAlias,
+		},
+		{
+			ID: testhelper.MkID("bad-setter-nil-value"),
+			ExpPanic: testhelper.MkExpPanic(dfltParamName +
+				": psetter.Enum[string]" +
+				" Check failed: the Value to be set is nil"),
+			PSetter: psetter.Enum[string]{
+				AllowedVals: allowedVals,
+			},
+		},
+		{
+			ID: testhelper.MkID("bad-setter-no-avals"),
+			ExpPanic: testhelper.MkExpPanic(dfltParamName +
+				": psetter.Enum[string]" +
+				" Check failed: the map of allowed values has no entries." +
+				" It should have at least 2"),
+			PSetter: psetter.Enum[string]{
+				Value: &v4,
+			},
+		},
+		{
+			ID: testhelper.MkID("bad-setter-one-aval"),
+			ExpPanic: testhelper.MkExpPanic(dfltParamName +
+				": psetter.Enum[string]" +
+				" Check failed: the map of allowed values has only 1 entry." +
+				" It should have at least 2"),
+			PSetter: psetter.Enum[string]{
+				AllowedVals: badAdValsOneEntry,
+				Value:       &v4,
+			},
+		},
+		{
+			ID: testhelper.MkID("bad-setter-bad-aliases"),
+			ExpPanic: testhelper.MkExpPanic(dfltParamName +
+				": psetter.Enum[string]" +
+				" Check failed: " +
+				`bad alias: "` + badAlias + `":` +
+				` []string{"bad-value"} - ` +
+				`"bad-value" (at index 0) is unknown`),
+			PSetter: psetter.Enum[string]{
+				AllowedVals: allowedVals,
+				Value:       &v4,
+				Aliases:     badAliases,
+			},
 		},
 	}
 
-	if pvr := es.ValueReq(); pvr != param.Mandatory {
-		t.Error(
-			"Enum should need a value. ValueReq() returned ",
-			pvr.String())
-	}
-
-	if err := es.Set(""); err == nil {
-		t.Error("Enum should have returned an error" +
-			" when Set(...) was called")
-	}
-
-	testCases := []struct {
-		val         string
-		expectedVal string
-		errExpected bool
-	}{
-		{"e1", "e1", false},
-		{"e2", "e2", false},
-		{"e3", "e3", false},
-		{"e4", "", true},
-		{"", "", true},
-	}
-
 	for _, tc := range testCases {
-		value = ""
+		f := func(t *testing.T) {
+			tc.GFC = commonGFCEnum
 
-		err := es.SetWithVal("", tc.val)
-		if err == nil && tc.errExpected {
-			t.Error("processing value: '" + tc.val + "'" +
-				" should have raised an error but didn't")
-		} else if err != nil && !tc.errExpected {
-			t.Error("processing value: '"+tc.val+"'"+
-				" should not have raised an error but did: ", err)
+			if tc.ParamName == "" {
+				tc.ParamName = dfltParamName
+			}
+
+			tc.SetVR(param.Mandatory)
+
+			tc.Test(t)
 		}
 
-		if value != tc.expectedVal {
-			t.Error("processing value: '" + tc.val +
-				"' should have set value to '" + tc.expectedVal +
-				"' but instead set it to : '" + value + "'")
-		}
+		t.Run(tc.IDStr(), f)
 	}
 }

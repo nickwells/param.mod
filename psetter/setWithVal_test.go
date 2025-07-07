@@ -275,7 +275,7 @@ func TestSetWithVal(t *testing.T) {
 		{
 			ID: testhelper.MkID("enum - bad"),
 			ExpErr: testhelper.MkExpErr(
-				`value not allowed: "whoops"`),
+				`value is not allowed: "whoops"`),
 			s:     setterEnum,
 			value: "whoops",
 		},
