@@ -320,6 +320,7 @@ func TestAliasValueLengths(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.Name, func(t *testing.T) {
 			var err error
+
 			f := func() {
 				err = tc.a.CheckMapLengths(tc.minLen, tc.maxLen)
 			}

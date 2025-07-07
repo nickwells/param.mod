@@ -157,6 +157,7 @@ func (a Aliases[T]) CheckMapLengths(minLen, maxLen int) error {
 				fmt.Sprintf("alias %q maps to too few values (%d < %d)",
 					aName, len(aVal), minLen))
 		}
+
 		if len(aVal) > maxLen {
 			allProblems = append(allProblems,
 				fmt.Sprintf("alias %q maps to too many values (%d > %d)",
