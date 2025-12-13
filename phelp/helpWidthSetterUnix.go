@@ -31,6 +31,7 @@ func getHelpWidthSetter(helpWidth *int, chks ...check.ValCk[int]) param.Setter {
 					if err == nil {
 						return int(ws.Col), nil
 					}
+
 					return twrap.DfltTargetLineLen, nil
 				},
 			},

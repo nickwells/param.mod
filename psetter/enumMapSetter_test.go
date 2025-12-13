@@ -174,6 +174,7 @@ func TestSetterEnumMap(t *testing.T) {
 			ParamVal: "z",
 			ExtraTest: func(t *testing.T, s paramtest.Setter) {
 				t.Helper()
+
 				if nilMap == nil {
 					t.Log(s.IDStr())
 					t.Error("\t: The map should have been initialised\n")

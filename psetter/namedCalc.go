@@ -57,12 +57,14 @@ func Env2IntCalc[T constraints.Signed](name, envName string) NamedCalc[T] {
 					"the %s environment variable is not set",
 					envName)
 			}
+
 			v, err := strconv.ParseInt(evVal, 0, mathutil.BitsInType(T(0)))
 			if err != nil {
 				return 0, fmt.Errorf(
 					"bad %s environment variable value: %q: %w",
 					envName, evVal, err)
 			}
+
 			return T(v), nil
 		},
 	}
@@ -81,12 +83,14 @@ func Env2UintCalc[T constraints.Unsigned](name, envName string) NamedCalc[T] {
 					"the %s environment variable is not set",
 					envName)
 			}
+
 			v, err := strconv.ParseUint(evVal, 0, mathutil.BitsInType(T(0)))
 			if err != nil {
 				return 0, fmt.Errorf(
 					"bad %s environment variable value: %q: %w",
 					envName, evVal, err)
 			}
+
 			return T(v), nil
 		},
 	}
@@ -103,6 +107,7 @@ func Val2IntCalc[T constraints.Signed]() NamedCalc[T] {
 			if err != nil {
 				return 0, fmt.Errorf("bad parameter: %q: %w", paramVal, err)
 			}
+
 			return T(v), nil
 		},
 	}
@@ -118,6 +123,7 @@ func Val2UintCalc[T constraints.Unsigned]() NamedCalc[T] {
 			if err != nil {
 				return 0, fmt.Errorf("bad parameter: %q: %w", paramVal, err)
 			}
+
 			return T(v), nil
 		},
 	}
