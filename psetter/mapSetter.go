@@ -105,17 +105,19 @@ func (s Map[T]) AllowedValues() string {
 
 // CurrentValue returns the current setting of the parameter value
 func (s Map[T]) CurrentValue() string {
-	cv := ""
+	var cv strings.Builder
 
 	keys := slices.Sorted(maps.Keys(*s.Value))
 
 	sep := ""
 	for _, k := range keys {
-		cv += sep + fmt.Sprintf("%s=%v", k, (*s.Value)[T(k)])
+		cv.WriteString(sep)
+		fmt.Fprintf(&cv, "%s=%v", k, (*s.Value)[T(k)])
+
 		sep = "\n"
 	}
 
-	return cv
+	return cv.String()
 }
 
 // CheckSetter panics if the setter has not been properly created - if the

@@ -95,27 +95,35 @@ func showNotesRefsFmtStd(twc *twrap.TWConf, refs []string, name string) {
 
 	prefix := "See " + english.Plural(name, len(refs)) + ": "
 
+	var refStr strings.Builder
+
 	targetSpace := twc.TargetLineLen - descriptionIndent - len(prefix)
-	refStr := refs[0]
+
+	refStr.WriteString(refs[0])
+
 	spaceUsed := len(refs[0])
 
 	for i := 1; i < len(refs); i++ {
-		refStr += ","
+		refStr.WriteString(",")
+
 		spaceUsed++
 
 		if spaceUsed+1+len(refs[i]) > targetSpace {
-			refStr += "\n"
+			refStr.WriteString("\n")
+
 			spaceUsed = 0
 		} else {
-			refStr += " "
+			refStr.WriteString(" ")
+
 			spaceUsed++
 		}
 
-		refStr += refs[i]
+		refStr.WriteString(refs[i])
+
 		spaceUsed += len(refs[i])
 	}
 
-	twc.WrapPrefixed(prefix, refStr, descriptionIndent)
+	twc.WrapPrefixed(prefix, refStr.String(), descriptionIndent)
 }
 
 // showNotesFmtMD produces the Notes section of the help message in Markdown

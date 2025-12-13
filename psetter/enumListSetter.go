@@ -99,15 +99,18 @@ func (s EnumList[T]) AllowedValues() string {
 
 // CurrentValue returns the current setting of the parameter value
 func (s EnumList[T]) CurrentValue() string {
-	str := ""
+	var str strings.Builder
+
 	sep := ""
 
 	for _, v := range *s.Value {
-		str += sep + fmt.Sprintf("%v", v)
+		str.WriteString(sep)
+		fmt.Fprintf(&str, "%v", v)
+
 		sep = s.GetSeparator()
 	}
 
-	return str
+	return str.String()
 }
 
 // CheckSetter panics if the setter has not been properly created - if the

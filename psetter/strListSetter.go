@@ -80,15 +80,18 @@ func (s StrList[T]) AllowedValues() string {
 
 // CurrentValue returns the current setting of the parameter value
 func (s StrList[T]) CurrentValue() string {
-	cv := ""
+	var cv strings.Builder
+
 	sep := ""
 
 	for _, v := range *s.Value {
-		cv += sep + string(v)
+		cv.WriteString(sep)
+		cv.WriteString(string(v))
+
 		sep = s.GetSeparator()
 	}
 
-	return cv
+	return cv.String()
 }
 
 // CheckSetter panics if the setter has not been properly created - if the

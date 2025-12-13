@@ -2,6 +2,7 @@ package param
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/nickwells/location.mod/location"
 )
@@ -21,17 +22,24 @@ func (pSrc Source) String() string {
 
 // Desc describes where the param was set
 func (pSrc Source) Desc() string {
-	s := pSrc.From + " (at " + pSrc.Loc.String() + ")"
+	var s strings.Builder
+
+	s.WriteString(pSrc.From)
+	s.WriteString(" (at ")
+	s.WriteString(pSrc.Loc.String())
+	s.WriteString(")")
 
 	sep := " ["
 	for _, p := range pSrc.ParamVals {
-		s += sep + p
+		s.WriteString(sep)
+		s.WriteString(p)
+
 		sep = "="
 	}
 
-	s += "]"
+	s.WriteString("]")
 
-	return s
+	return s.String()
 }
 
 // Sources is a slice of Source
@@ -39,14 +47,16 @@ type Sources []Source
 
 // String formats a slice of Sources into a String
 func (pSrcs Sources) String() string {
-	var s string
+	var s strings.Builder
 
 	sep := ""
 
 	for _, ps := range pSrcs {
-		s += sep + ps.String()
+		s.WriteString(sep)
+		s.WriteString(ps.String())
+
 		sep = ", "
 	}
 
-	return s
+	return s.String()
 }

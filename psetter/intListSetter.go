@@ -73,15 +73,18 @@ func (s IntList[T]) AllowedValues() string {
 
 // CurrentValue returns the current setting of the parameter value
 func (s IntList[T]) CurrentValue() string {
-	cv := ""
+	var cv strings.Builder
+
 	sep := ""
 
 	for _, v := range *s.Value {
-		cv += sep + fmt.Sprintf("%v", v)
+		cv.WriteString(sep)
+		fmt.Fprintf(&cv, "%v", v)
+
 		sep = s.GetSeparator()
 	}
 
-	return cv
+	return cv.String()
 }
 
 // CheckSetter panics if the setter has not been properly created - if the

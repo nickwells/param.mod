@@ -65,7 +65,7 @@ func (a Aliases[T]) String() string {
 		return ""
 	}
 
-	var avals string
+	var avals strings.Builder
 
 	keys, maxKeyLen := a.Keys()
 
@@ -75,12 +75,15 @@ func (a Aliases[T]) String() string {
 
 	for _, k := range keys {
 		kav := convertToStringSlice(a[T(k)])
-		avals += sep + fmt.Sprintf("   %-*s: ", maxKeyLen, k) +
-			strings.Join(kav, ", ")
+
+		avals.WriteString(sep)
+		fmt.Fprintf(&avals, "   %-*s: ", maxKeyLen, k)
+		avals.WriteString(strings.Join(kav, ", "))
+
 		sep = "\n"
 	}
 
-	return avals
+	return avals.String()
 }
 
 // Check returns a nil error if the map is "good" or an error with an

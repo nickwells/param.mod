@@ -61,7 +61,7 @@ func (av AllowedVals[T]) String() string {
 		return ""
 	}
 
-	var avals string
+	var avals strings.Builder
 
 	keys, maxKeyLen := av.Keys()
 
@@ -70,11 +70,14 @@ func (av AllowedVals[T]) String() string {
 	sep := ""
 
 	for _, k := range keys {
-		avals += sep + fmt.Sprintf("   %-*s: ", maxKeyLen, k) + av[T(k)]
+		avals.WriteString(sep)
+		fmt.Fprintf(&avals, "   %-*s: ", maxKeyLen, k)
+		avals.WriteString(av[T(k)])
+
 		sep = "\n"
 	}
 
-	return avals
+	return avals.String()
 }
 
 // Check returns a nil error if the map is "good" or an error with an
