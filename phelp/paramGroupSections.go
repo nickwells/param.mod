@@ -50,9 +50,7 @@ func printByPosParam(h StdHelp, twc *twrap.TWConf, ps *param.PSet, i int) {
 func getMaxGroupNameLen(groups []*param.Group) int {
 	maxNameLen := 0
 	for _, g := range groups {
-		if len(g.Name()) > maxNameLen {
-			maxNameLen = len(g.Name())
-		}
+		maxNameLen = max(len(g.Name()), maxNameLen)
 	}
 
 	return maxNameLen

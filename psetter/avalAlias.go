@@ -49,10 +49,7 @@ func (a Aliases[T]) Keys() ([]string, int) {
 
 	for k := range a {
 		keys = append(keys, string(k))
-
-		if len(k) > maxKeyLen {
-			maxKeyLen = len(k)
-		}
+		maxKeyLen = max(len(k), maxKeyLen)
 	}
 
 	return keys, maxKeyLen

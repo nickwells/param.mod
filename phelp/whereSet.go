@@ -159,16 +159,12 @@ func calcColumnWidths(groups []*param.Group) (uint, uint) {
 			groupUsed = true
 
 			for _, pName := range p.AltNames() {
-				if len(pName) > maxPNLen {
-					maxPNLen = len(pName)
-				}
+				maxPNLen = max(len(pName), maxPNLen)
 			}
 		}
 
 		if groupUsed {
-			if len(g.Name()) > maxGNLen {
-				maxGNLen = len(g.Name())
-			}
+			maxGNLen = max(len(g.Name()), maxGNLen)
 		}
 
 		groupUsed = false
