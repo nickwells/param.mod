@@ -53,7 +53,7 @@ func main() {
 	ps.Parse()
 ```
 
-The work is done mostly in the addParam function which should take a pointer to a
+The work is done mostly in the addParams function which should take a pointer to a
 `param.PSet` and return an error if anything goes wrong.
 
 ```go
@@ -99,15 +99,16 @@ is to report the additional arguments as an error.
 
 ## Setters
 Each parameter is associated with a `Setter` which sets the parameter value
-either from the associated value or directly if the parameter expects no
-values. There are numerous setters predefined and many of these allow you to
-specify additional checks on the parameter value. See the `psetter` package
-for a full list. Additionally you can write your own setter which you can use
-to populate some bespoke structure. The setters and associated checks provide
-much of the power and flexibility of the `param` package. Various types and
-functions are available to help you write your own setter but you should only
-need to do this if there is not already an existing setter so check the
-pre-existing setters first.
+either from the associated value (the next program argument) or directly if
+the parameter expects no following value. There are numerous setters
+predefined and many of these allow you to specify additional checks on the
+parameter value. See the `psetter` package for a full list. Additionally
+you can write your own setter which you can use to populate some bespoke
+structure. The setters and associated checks provide much of the power and
+flexibility of the `param` package. Various types and functions are
+available to help you write your own setter but you should only need to do
+this if there is not already an existing setter so check the pre-existing
+setters first.
 
 ## Actions
 Each parameter can have a list of associated action functions which will be
