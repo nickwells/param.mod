@@ -2,7 +2,7 @@ module github.com/nickwells/param.mod/v6
 
 require (
 	github.com/nickwells/check.mod/v2 v2.1.26
-	github.com/nickwells/col.mod/v5 v5.0.3
+	github.com/nickwells/col.mod/v6 v6.0.0
 	github.com/nickwells/english.mod v1.2.6
 	github.com/nickwells/errutil.mod v1.2.22
 	github.com/nickwells/filecheck.mod v1.2.10

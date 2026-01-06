@@ -1,8 +1,8 @@
 package phelp
 
 import (
-	"github.com/nickwells/col.mod/v5/col"
-	"github.com/nickwells/col.mod/v5/colfmt"
+	"github.com/nickwells/col.mod/v6/col"
+	"github.com/nickwells/col.mod/v6/colfmt"
 	"github.com/nickwells/english.mod/english"
 	"github.com/nickwells/param.mod/v6/param"
 	"github.com/nickwells/twrap.mod/twrap"
@@ -144,7 +144,7 @@ func skipWhereSetReport(p *param.ByName) (bool, int) {
 // calcColumnWidths calculates the maximum parameter group name and parameter
 // name lengths. It only gives the values for those which have been set or
 // where an error was detected.
-func calcColumnWidths(groups []*param.Group) (uint, uint) {
+func calcColumnWidths(groups []*param.Group) (int, int) {
 	maxGNLen, maxPNLen := 0, 0
 
 	groupUsed := false
@@ -170,7 +170,7 @@ func calcColumnWidths(groups []*param.Group) (uint, uint) {
 		groupUsed = false
 	}
 
-	return uint(maxGNLen), uint(maxPNLen) //nolint:gosec
+	return maxGNLen, maxPNLen
 }
 
 func showWhereSetTable(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) {
