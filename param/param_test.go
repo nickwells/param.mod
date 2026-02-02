@@ -240,8 +240,14 @@ func TestParamAddPos(t *testing.T) {
 					ppiSBS: ShouldBeSet,
 				},
 			},
-			paramsToParse:     []string{"1", "--", "another param"},
-			remainderExpected: []string{"another param"},
+			paramsToParse: []string{"1", "--", "extra1", "extra2"},
+			errsExpected: map[string][]string{
+				"": []string{
+					`there were 2 unexpected extra parameters:` +
+						` "extra1" "extra2"`,
+				},
+			},
+			remainderExpected: []string{"extra1", "extra2"},
 		},
 		{
 			ID: testhelper.MkID("bad params - name empty"),

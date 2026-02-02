@@ -1,8 +1,7 @@
 package param
 
 import (
-	"math"
-
+	"github.com/nickwells/english.mod/english"
 	"github.com/nickwells/location.mod/location"
 )
 
@@ -46,52 +45,23 @@ func (rh dfltRemHandler) HandleRemainder(ps *PSet, loc *location.L) {
 		return
 	}
 
-	args := ""
-	sep := "'"
-	end := "'"
+	remStr := english.JoinQuoted(ps.Remainder(), " ", " ")
+	etc := "..."
 
 	const maxLen = 20
 
-	for i, r := range ps.Remainder() {
-		charsToTake := int(math.Min(
-			float64(len(r)),
-			float64(maxLen-len(args)-len(sep))))
-		if charsToTake <= 0 {
-			args += "' ..."
-			end = ""
-
-			break
-		}
-
-		args += sep + r[:charsToTake]
-		sep = "' '"
-
-		if charsToTake < len(r) {
-			args += "...'"
-			if i < remCount-1 {
-				args += " ..."
-			}
-
-			end = ""
-
-			break
-		}
+	if len(remStr) > maxLen {
+		remStr = remStr[0:maxLen-len(etc)] + etc
 	}
 
-	args += end
-
-	var err error
 	if remCount == 1 {
-		err = loc.Error("there was an unexpected extra parameter: " + args)
+		ps.AddErr("",
+			loc.Error("there was an unexpected extra parameter: "+remStr))
 	} else {
-		err = loc.Errorf("there were %d unexpected extra parameters: %s",
-			remCount, args)
+		ps.AddErr("",
+			loc.Errorf("there were %d unexpected extra parameters: %s",
+				remCount, remStr))
 	}
-
-	ps.helper.ErrorHandler(ps,
-		ErrMap{
-			"": []error{err},
-		})
 }
 
 // NullRemHandler is a type which can be set as a remainder handler if you
