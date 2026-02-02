@@ -96,7 +96,12 @@ type PSetOptFunc func(ps *PSet) error
 func SetHelper(h Helper) PSetOptFunc {
 	return func(ps *PSet) error {
 		if ps.helper != nil {
-			return errors.New("the helper has already been set")
+			return errors.New("the Helper has already been set")
+		}
+
+		if ps.parsed {
+			return errors.New("parsing is already complete" +
+				" - you must set the Helper before calling Parse")
 		}
 
 		ps.helper = h
