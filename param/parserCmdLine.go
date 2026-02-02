@@ -95,7 +95,7 @@ func (ps *PSet) handleParamsByName(loc *location.L, params []string) {
 
 		paramName, paramVal, hasParamVal := strings.Cut(pStr, "=")
 
-		trimmedParam, err := trimParam(paramName)
+		trimmedParam, err := ps.trimParam(paramName)
 		if err != nil {
 			ps.AddErr(trimmedParam, loc.Error(err.Error()))
 			continue
@@ -149,9 +149,12 @@ func (ps *PSet) getParamsFromStringSlice(loc *location.L, params []string) {
 // trimParam trims the parameter of one or two leading dashes. It returns an
 // error if the parameter does not start with '-' or '--' or if the trimmed
 // parameter name is empty
-func trimParam(param string) (string, error) {
-	prefixes := []string{"--", "-"}
-	for _, pfx := range prefixes {
+func (ps *PSet) trimParam(param string) (string, error) {
+	if len(ps.paramPrefixes) == 0 {
+		return param, nil
+	}
+
+	for _, pfx := range ps.paramPrefixes {
 		trimmedParam := strings.TrimPrefix(param, pfx)
 		if trimmedParam != param {
 			if trimmedParam == "" {
@@ -163,7 +166,6 @@ func trimParam(param string) (string, error) {
 	}
 
 	return param, fmt.Errorf(
-		"parameter %q does not start with '%s'",
-		param,
-		english.Join(prefixes, "', '", "' or '"))
+		"parameter %q does not start with %s",
+		param, english.JoinQuoted(ps.paramPrefixes, ", ", " or "))
 }

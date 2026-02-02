@@ -53,6 +53,7 @@ func (trimDashes) Edit(_, val string) (string, error) {
 // addUsageParams will add the usage parameters into the parameter set
 func (h *StdHelp) addUsageParams(ps *param.PSet) {
 	groupName := groupNamePfx + "-help"
+	paramPfx := ps.ShortestPrefix()
 
 	ps.AddGroup(groupName,
 		"These are parameters for printing a help message.")
@@ -60,14 +61,20 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 	ps.Add(helpArgName, psetter.Nil{},
 		"print this help message and exit."+
 			"\n\n"+
-			"To see hidden parameters use the -"+helpShowHiddenArgName+
-			" parameter."+
+			"Seldom used parameters may be hidden;"+
+			" to see all the parameters use the parameter:"+
+			"\n  "+
+			paramPfx+helpShowHiddenArgName+
 			"\n"+
-			"For a brief help message use the -"+helpSummaryArgName+
-			" parameter"+
+			"To just see a summary of each parameter"+
+			" (suppressing the full description)"+
+			" use the parameter:"+
+			"\n  "+
+			paramPfx+helpSummaryArgName+
 			"\n"+
-			"For the full help message use the -"+helpFullArgName+
-			" parameter",
+			"For the full help message use the parameter:"+
+			"\n  "+
+			paramPfx+helpFullArgName,
 		param.Attrs(param.CommandLineOnly),
 		param.AltNames("usage"),
 		param.PostAction(setHelpSections(h, standardHelpSectionAlias)),

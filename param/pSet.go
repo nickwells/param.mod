@@ -64,6 +64,9 @@ type PSet struct {
 	references   []Reference
 	notes        map[string]*Note
 
+	paramPrefixes  []string
+	shortestPrefix string
+
 	remainingParams        []string
 	terminalParam          string
 	terminalParamSeen      bool
@@ -210,7 +213,46 @@ func (ps *PSet) ProgDesc() string {
 	return ps.progDesc
 }
 
-// NewSet creates a new PSet with the various maps and slices
+// SetParamPrefixes returns a PSetOptFunc which can be passed to NewSet. It
+// will set the list of allowed parameter prefixes that are to be removed
+// before parameter processing.
+func SetParamPrefixes(pp []string) PSetOptFunc {
+	return func(ps *PSet) error {
+		ps.SetParamPrefixes(pp)
+		return nil
+	}
+}
+
+// SetParamPrefixes sets the list of allowed parameter prefixes that are to
+// be removed before parameter processing. The prefixes are sorted into
+// longest-first order (preserving the order of equal length prefixes). Note
+// that the prefixes used do not participate in the parameter processing but
+// are discarded unseen.
+func (ps *PSet) SetParamPrefixes(pp []string) {
+	slices.SortStableFunc(pp, func(a, b string) int { return len(b) - len(a) })
+
+	ps.paramPrefixes = pp
+	ps.shortestPrefix = ""
+
+	if len(pp) > 0 {
+		ps.shortestPrefix = pp[len(pp)-1]
+	}
+}
+
+// ParamPrefixes returns the allowed parameter prefixes for this parameter
+// set.
+func (ps *PSet) ParamPrefixes() []string {
+	return ps.paramPrefixes
+}
+
+// ShortestPrefix returns the shortest parameter prefix for this parameter
+// set. This will be used as the parameter name prefix in the standard help
+// message.
+func (ps *PSet) ShortestPrefix() string {
+	return ps.shortestPrefix
+}
+
+// NewSet creates a new PSet with the various internal maps and slices
 // initialised. Generally you would be better off creating a PSet through the
 // paramset.New function which will automatically set the default helper
 func NewSet(psof ...PSetOptFunc) (*PSet, error) {
@@ -228,7 +270,9 @@ func NewSet(psof ...PSetOptFunc) (*PSet, error) {
 		envPrefixes: make([]string, 0, 1),
 		configFiles: make([]ConfigFileDetails, 0, 1),
 
-		terminalParam: DfltTerminalParam,
+		terminalParam:  DfltTerminalParam,
+		paramPrefixes:  []string{"--", "-"},
+		shortestPrefix: "-",
 
 		Writers: pager.W(),
 
