@@ -349,39 +349,6 @@ func (h StdHelp) printGroup(twc *twrap.TWConf, g *param.Group, maxLen int) {
 	twc.Print("\n")
 }
 
-// valTypeName returns a descriptive string for the type of the Setter
-func valTypeName(p *param.ByName) string {
-	if name := p.ValueName(); name != "" {
-		return name
-	}
-
-	s := p.Setter()
-	if sVD, ok := s.(psetter.ValDescriber); ok {
-		return sVD.ValDescribe()
-	}
-
-	valType := fmt.Sprintf("%T", s)
-
-	parts := strings.Split(valType, ".")
-	valType = parts[len(parts)-1]
-	valType = strings.TrimRight(valType, "]0123456789")
-
-	return valType
-}
-
-// valueNeededStr returns a descriptive string indicating whether a trailing
-// argument is needed and if so of what type it should be.
-func valueNeededStr(p *param.ByName) string {
-	switch p.Setter().ValueReq() {
-	case param.Mandatory:
-		return "=" + valTypeName(p)
-	case param.Optional:
-		return "[=" + valTypeName(p) + "] "
-	default:
-		return ""
-	}
-}
-
 // printParamAttributes prints additional text according to the settings of
 // the parameter's attributes
 func printParamAttributes(twc *twrap.TWConf, p *param.ByName) {
