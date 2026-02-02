@@ -122,7 +122,11 @@ func SetHelper(h Helper) PSetOptFunc {
 // a RemHandler that will handle the remainder in the Parse method.
 //
 // If this is not set the default behaviour is to report any extra parameters
-// after the TerminalParam as errors
+// after the TerminalParam as errors.
+//
+// Any errors detected by the supplied RemHandler must be added to the PSet's
+// error map usiong the AddErr method. These will be reported automatically
+// along with any other parsing errors.
 func (ps *PSet) SetRemHandler(rh RemHandler) error {
 	if rh == nil {
 		return errors.New("the remainder handler must not be nil")
@@ -569,11 +573,11 @@ func (ps PSet) GetGroupByName(name string) *Group {
 // (configuration files, either general or group-specific, or environment
 // variable prefixes) false otherwise
 func (ps PSet) HasAltSources() bool {
-	if len(ps.configFiles) > 0 {
+	if ps.HasGlobalConfigFiles() {
 		return true
 	}
 
-	if len(ps.envPrefixes) > 0 {
+	if ps.HasEnvPrefixes() {
 		return true
 	}
 
