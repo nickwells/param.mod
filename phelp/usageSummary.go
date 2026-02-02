@@ -5,7 +5,8 @@ import (
 	"github.com/nickwells/twrap.mod/twrap"
 )
 
-// showUsageSummary prints the program name and a parameter summary
+// showUsageSummary prints the program name and a parameter summary. Only
+// mandatory parameters are shown.
 func showUsageSummary(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	twc.Print("Usage: ", ps.ProgName())
 
@@ -30,7 +31,7 @@ func showUsageSummary(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 		for _, g := range groups {
 			for _, bn := range g.Params() {
 				if bn.AttrIsSet(param.MustBeSet) {
-					twc.Print(" -" + bn.Name() + valueNeededStr(bn))
+					twc.Print(" " + ParamShortSummary(*bn))
 				} else {
 					hasOptionalParams = true
 				}
