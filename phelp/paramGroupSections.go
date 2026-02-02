@@ -147,24 +147,8 @@ func showParamsByGroupName(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 
 // printParamUsage prints the named parameter help text
 func (h StdHelp) printParamUsage(twc *twrap.TWConf, p *param.ByName) {
-	valNeededSuffix := valueNeededStr(p)
-	paramNames := ""
-	optSuffix := ""
-
-	if !p.AttrIsSet(param.MustBeSet) {
-		paramNames = "["
-		optSuffix += "]"
-	}
-
-	sep := ""
-
-	for _, altParamName := range p.AltNames() {
-		paramNames += sep + "-" + altParamName + valNeededSuffix
-		sep = ", "
-	}
-
-	paramNames += optSuffix
-	twc.Wrap2Indent(paramNames, paramIndent, paramLine2Indent)
+	smy := ParamSummary(*p)
+	twc.Wrap2Indent(smy, paramIndent, paramLine2Indent)
 
 	if h.showSummary {
 		return
