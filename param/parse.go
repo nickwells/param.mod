@@ -72,22 +72,37 @@ func (ps *PSet) Parse(args ...[]string) {
 	ps.getParamsFromEnvironment()
 
 	var loc *location.L
+	var suppliedParams []string
+
 	if len(args) == 0 {
 		loc = location.New("Argument")
 		loc.SetNote(SrcCommandLine)
-		ps.getParamsFromStringSlice(loc, os.Args[1:])
+		suppliedParams = os.Args[1:]
 	} else {
 		loc = location.New("Supplied Parameter")
 		loc.SetNote(SrcCommandLine)
 
-		var suppliedParams []string
-
 		for _, sp := range args {
 			suppliedParams = append(suppliedParams, sp...)
 		}
-
-		ps.getParamsFromStringSlice(loc, suppliedParams)
 	}
+
+	ps.ParamParse(loc, suppliedParams)
+	ps.helper.ProcessArgs(ps)
+
+	errCount := ps.errorCount
+	ps.remHandler.HandleRemainder(ps, loc)
+
+	if errCount != ps.errorCount {
+		ps.helper.ErrorHandler(ps)
+	}
+}
+
+// ParamParse will perform just the processing of the parameters passed and
+// any final checks. It is not expected that most users would want to use
+// this method.
+func (ps *PSet) ParamParse(loc *location.L, params []string) {
+	ps.getParamsFromStringSlice(loc, params)
 
 	ps.detectMandatoryParamsNotSet()
 
@@ -96,15 +111,6 @@ func (ps *PSet) Parse(args ...[]string) {
 		if err != nil {
 			ps.AddErr("Final Checks", err)
 		}
-	}
-
-	ps.helper.ProcessArgs(ps)
-
-	errCount := ps.errorCount
-	ps.remHandler.HandleRemainder(ps, loc)
-
-	if errCount != ps.errorCount {
-		ps.helper.ErrorHandler(ps, ps.errors)
 	}
 }
 

@@ -7,7 +7,7 @@ package param
 // for reporting a help message and an error handler for reporting errors.
 type Helper interface {
 	ProcessArgs(ps *PSet)
-	ErrorHandler(ps *PSet, errors ErrMap)
+	ErrorHandler(ps *PSet)
 	Help(ps *PSet, messages ...string)
 	AddParams(ps *PSet)
 }

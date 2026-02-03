@@ -15,54 +15,38 @@ import (
 // message for details. It is typically called from the Parse(...) method
 // being passed the PSet error writer, the program name and the PSet
 // error map
-func (h StdHelp) ErrorHandler(ps *param.PSet, errMap param.ErrMap) {
-	if len(errMap) == 0 {
-		return
+func (h StdHelp) ErrorHandler(ps *param.PSet) {
+	exitStatus := reportErrors(h, nil, ps)
+
+	if exitStatus != 0 && h.exitOnErrors {
+		os.Exit(exitStatus)
 	}
-
-	if !h.reportErrors {
-		return
-	}
-
-	twc := twrap.NewTWConfOrPanic(
-		twrap.SetWriter(ps.ErrW()),
-		twrap.SetTargetLineLen(h.helpLineLen))
-
-	ReportErrors(twc, ps.ProgName(), errMap)
-
-	if !h.exitOnErrors {
-		return
-	}
-
-	os.Exit(1)
 }
 
-// reportErrors will report that errors have been detected and then call
-// ReportErrors but writing to the error writer
+// reportErrors reports the errors (if any) and returns a non-zero exit
+// status if any errors were detected.
 func reportErrors(h StdHelp, _ *twrap.TWConf, ps *param.PSet) int {
+	errMap := ps.Errors()
+
+	if len(errMap) == 0 {
+		return 0
+	}
+
 	if h.reportErrors {
+		errutil.ErrMap(errMap).Report(ps.ErrW(), ps.ProgName())
+
 		twc := twrap.NewTWConfOrPanic(
 			twrap.SetWriter(ps.ErrW()),
 			twrap.SetTargetLineLen(h.helpLineLen))
-		ReportErrors(twc, ps.ProgName(), ps.Errors())
+		twc.Wrap("\n"+suggestHelpParam(ps), 0)
 	}
 
-	var exitStatus int
-	if len(ps.Errors()) > 0 {
-		exitStatus = 1
-	}
-
-	return exitStatus
+	return 1
 }
 
-// ReportErrors reports the errors (if any) to the writer. It can be
-// used by any Helper and is used by the StdHelp instance.
-func ReportErrors(twc *twrap.TWConf, name string, errMap param.ErrMap) {
-	if len(errMap) == 0 {
-		return
-	}
-
-	errutil.ErrMap(errMap).Report(twc.W, name)
-
-	twc.Wrap("\nTry the '-"+helpArgName+"' parameter for more information.", 0)
+// suggestHelpParam returns a string suggesting the standard help parameter
+func suggestHelpParam(ps *param.PSet) string {
+	return "For more information use the '" +
+		ps.ShortestPrefix() + helpArgName +
+		"' parameter."
 }

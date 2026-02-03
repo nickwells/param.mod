@@ -11,12 +11,21 @@ import (
 
 type noHelpNoExitNoErrRpt struct{}
 
-func (nh noHelpNoExitNoErrRpt) ProcessArgs(_ *PSet)            {}
-func (nh noHelpNoExitNoErrRpt) Help(_ *PSet, _ ...string)      {}
-func (nh noHelpNoExitNoErrRpt) AddParams(_ *PSet)              {}
-func (nh noHelpNoExitNoErrRpt) ErrorHandler(_ *PSet, _ ErrMap) {}
+func (nh noHelpNoExitNoErrRpt) ProcessArgs(*PSet)     {}
+func (nh noHelpNoExitNoErrRpt) Help(*PSet, ...string) {}
+func (nh noHelpNoExitNoErrRpt) AddParams(*PSet)       {}
+func (nh noHelpNoExitNoErrRpt) ErrorHandler(*PSet)    {}
 
 var nhnenr noHelpNoExitNoErrRpt
+
+// NewNoHelpNoExitNoErrRpt returns a paramset and any errors encountered while
+// creating it. It adds no parameters and doesn't provide a Usage message. It
+// doesn't report errors and doesn't exit if Parse errors are seen.
+//
+// This is only likely to be of any use for testing purposes
+func NewNoHelpNoExitNoErrRpt(psof ...PSetOptFunc) (*PSet, error) {
+	return NewSet(append(psof, SetHelper(nhnenr))...)
+}
 
 type i64 struct {
 	Value *int64
