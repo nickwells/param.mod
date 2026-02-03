@@ -1,11 +1,8 @@
 package paramset
 
 import (
-	"fmt"
-
+	"github.com/nickwells/errutil.mod/errutil"
 	"github.com/nickwells/param.mod/v6/param"
-	"github.com/nickwells/param.mod/v6/phelp"
-	"github.com/nickwells/twrap.mod/twrap"
 )
 
 type noHelpNoExit struct{}
@@ -13,13 +10,11 @@ type noHelpNoExit struct{}
 func (nh noHelpNoExit) ProcessArgs(_ *param.PSet)       {}
 func (nh noHelpNoExit) Help(_ *param.PSet, _ ...string) {}
 func (nh noHelpNoExit) AddParams(_ *param.PSet)         {}
-func (nh noHelpNoExit) ErrorHandler(ps *param.PSet, errs param.ErrMap) {
-	twc, err := twrap.NewTWConf(twrap.SetWriter(ps.ErrW()))
-	if err != nil {
-		panic(fmt.Sprint("Couldn't build the text wrapper:", err))
+func (nh noHelpNoExit) ErrorHandler(ps *param.PSet) {
+	errMap := ps.Errors()
+	if len(errMap) != 0 {
+		errutil.ErrMap(errMap).Report(ps.ErrW(), ps.ProgName())
 	}
-
-	phelp.ReportErrors(twc, ps.ProgName(), errs)
 }
 
 var nhne noHelpNoExit
@@ -48,10 +43,10 @@ func NewNoHelpNoExitOrPanic(psof ...param.PSetOptFunc) *param.PSet {
 
 type noHelpNoExitNoErrRpt struct{}
 
-func (nh noHelpNoExitNoErrRpt) ProcessArgs(*param.PSet)                {}
-func (nh noHelpNoExitNoErrRpt) Help(*param.PSet, ...string)            {}
-func (nh noHelpNoExitNoErrRpt) AddParams(*param.PSet)                  {}
-func (nh noHelpNoExitNoErrRpt) ErrorHandler(*param.PSet, param.ErrMap) {}
+func (nh noHelpNoExitNoErrRpt) ProcessArgs(*param.PSet)     {}
+func (nh noHelpNoExitNoErrRpt) Help(*param.PSet, ...string) {}
+func (nh noHelpNoExitNoErrRpt) AddParams(*param.PSet)       {}
+func (nh noHelpNoExitNoErrRpt) ErrorHandler(*param.PSet)    {}
 
 var nhnenr noHelpNoExitNoErrRpt
 

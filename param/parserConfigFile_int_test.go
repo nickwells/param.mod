@@ -224,7 +224,7 @@ func TestParamLineParser(t *testing.T) {
 		loc := location.New("test case")
 		_ = pflp.ParseLine(tc.line, loc)
 
-		errs := ps.errors[tc.pname]
+		errs := ps.errMap[tc.pname]
 		if len(errs) == 0 && tc.ErrExpected() {
 			t.Log(tc.IDStr())
 			t.Errorf("\t: an error was expected but not found\n")

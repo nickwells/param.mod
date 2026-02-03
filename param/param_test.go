@@ -5,6 +5,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/nickwells/errutil.mod/errutil"
 	"github.com/nickwells/param.mod/v6/param"
 	"github.com/nickwells/param.mod/v6/psetter"
 	"github.com/nickwells/testhelper.mod/v2/testhelper"
@@ -450,7 +451,7 @@ func TestParamAddPos(t *testing.T) {
 
 // parsePSet will check that parsing hasn't happened yet and then parse the
 // args with the pset and afterwards check that parsing has happened
-func parsePSet(t *testing.T, ps *param.PSet, args []string) param.ErrMap {
+func parsePSet(t *testing.T, ps *param.PSet, args []string) errutil.ErrMap {
 	t.Helper()
 
 	if ps.AreSet() {

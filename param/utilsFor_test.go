@@ -7,6 +7,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/nickwells/errutil.mod/errutil"
 	"github.com/nickwells/param.mod/v6/param"
 	"github.com/nickwells/param.mod/v6/paramset"
 )
@@ -168,8 +169,13 @@ func panicSafeTestAddByName(ps *param.PSet, npi *namedParamInitialiser,
 // panicSafeTestParse parses the supplied parameters and catches any
 // panics. Then it returns a map of the errors (if any), a boolean indicating
 // if a panic occurred and the value recovered from the panic
-func panicSafeTestParse(ps *param.PSet, params []string,
-) (errMap param.ErrMap, panicked bool, panicVal any, stackTrace []byte,
+func panicSafeTestParse(
+	ps *param.PSet,
+	params []string,
+) (
+	errMap errutil.ErrMap,
+	panicked bool, panicVal any,
+	stackTrace []byte,
 ) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -218,7 +224,7 @@ func logErrs(t *testing.T, msg string, errs []error) {
 }
 
 // logErrMap reports the contents of the error map returned by param.Parse(...)
-func logErrMap(t *testing.T, errMap param.ErrMap) bool {
+func logErrMap(t *testing.T, errMap errutil.ErrMap) bool {
 	if len(errMap) == 0 {
 		return false
 	}
@@ -258,7 +264,9 @@ func errsContainStr(errs []error, s string) bool {
 
 // errMapCheck checks the error map and reports any discrepancies with the
 // expected values
-func errMapCheck(t *testing.T, testID string, errMap param.ErrMap, expected map[string][]string) {
+func errMapCheck(t *testing.T, testID string,
+	errMap errutil.ErrMap, expected map[string][]string,
+) {
 	t.Helper()
 
 	var nameLogged bool

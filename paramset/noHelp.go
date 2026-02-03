@@ -3,9 +3,8 @@ package paramset
 import (
 	"os"
 
+	"github.com/nickwells/errutil.mod/errutil"
 	"github.com/nickwells/param.mod/v6/param"
-	"github.com/nickwells/param.mod/v6/phelp"
-	"github.com/nickwells/twrap.mod/twrap"
 )
 
 // noHelp is a minimal implementation of the param.Helper interface. In
@@ -15,16 +14,12 @@ type noHelp struct{}
 func (nh noHelp) ProcessArgs(_ *param.PSet)       {}
 func (nh noHelp) Help(_ *param.PSet, _ ...string) {}
 func (nh noHelp) AddParams(_ *param.PSet)         {}
-func (nh noHelp) ErrorHandler(ps *param.PSet, errs param.ErrMap) {
-	if len(errs) == 0 {
-		return
+func (nh noHelp) ErrorHandler(ps *param.PSet) {
+	errMap := ps.Errors()
+	if len(errMap) != 0 {
+		errutil.ErrMap(errMap).Report(ps.ErrW(), ps.ProgName())
+		os.Exit(1)
 	}
-
-	twc := twrap.NewTWConfOrPanic(twrap.SetWriter(ps.ErrW()))
-
-	phelp.ReportErrors(twc, ps.ProgName(), errs)
-
-	os.Exit(1)
 }
 
 var nh noHelp

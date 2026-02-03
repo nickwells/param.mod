@@ -25,13 +25,6 @@ const DfltTerminalParam = "--"
 // yet been called
 const DfltProgName = "PROGRAM NAME UNKNOWN"
 
-// ErrMap is the type used to store the errors recorded when parsing the
-// parameters. Each map entry represents a parameter for which errors were
-// detected; all the errors for that parameter are stored in a slice. Errors
-// not related to any individual parameter are stored in the map entry with a
-// key of an empty string.
-type ErrMap errutil.ErrMap
-
 // FinalCheckFunc is the type of a function to be called after all the
 // parameters have been set
 type FinalCheckFunc func() error
@@ -55,7 +48,7 @@ type PSet struct {
 	nameToParam  map[string]*ByName
 	groups       map[string]*Group
 	unusedParams map[string][]string
-	errors       ErrMap
+	errMap       errutil.ErrMap
 	errorCount   int
 	finalChecks  []FinalCheckFunc
 	envPrefixes  []string
@@ -273,7 +266,7 @@ func NewSet(psof ...PSetOptFunc) (*PSet, error) {
 		groups:          make(map[string]*Group),
 		notes:           make(map[string]*Note),
 		unusedParams:    make(map[string][]string),
-		errors:          ErrMap(*(errutil.NewErrMap())),
+		errMap:          *(errutil.NewErrMap()),
 		finalChecks:     make([]FinalCheckFunc, 0),
 
 		envPrefixes: make([]string, 0, 1),
@@ -326,7 +319,7 @@ func NewSet(psof ...PSetOptFunc) (*PSet, error) {
 func (ps *PSet) Remainder() []string { return ps.remainingParams }
 
 // Errors returns the map of errors for the param set
-func (ps PSet) Errors() ErrMap { return ps.errors }
+func (ps PSet) Errors() errutil.ErrMap { return ps.errMap }
 
 // AddErr adds the errors to the named entry in the Error Map. Any nil errors
 // are filtered out of the slice and if the slice is empty no change is made
@@ -339,7 +332,7 @@ func (ps *PSet) AddErr(name string, errs ...error) {
 	}
 
 	ps.errorCount += len(errs)
-	ps.errors[name] = append(ps.errors[name], errs...)
+	ps.errMap[name] = append(ps.errMap[name], errs...)
 }
 
 // Help will call the helper's Help function
@@ -437,7 +430,7 @@ func (ps *PSet) setValue(
 	}
 
 	if gName != "" && p.groupName != gName {
-		ps.errors[paramName] = append(ps.errors[paramName],
+		ps.errMap[paramName] = append(ps.errMap[paramName],
 			loc.Error("this parameter is not a member of group: "+gName))
 
 		return
