@@ -128,10 +128,7 @@ func TestSetEnv(t *testing.T) {
 		},
 	}
 	for _, tc := range testCases {
-		ps, err := paramset.NewNoHelpNoExitNoErrRpt()
-		if err != nil {
-			t.Fatal(tc.IDStr(), " : couldn't construct the PSet: ", err)
-		}
+		ps := paramset.NewNoHelpNoExitNoErrRpt()
 
 		panicked, panicVal := panicEnvPrefix(t, tc.seq, ps)
 

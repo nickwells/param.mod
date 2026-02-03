@@ -22,9 +22,7 @@ func Example_setDirectly() {
 
 	var example2 int64
 
-	ps := paramset.NewOrPanic(
-		param.SetProgramDescription("what this program does"),
-	)
+	ps := paramset.New(param.SetProgramDescription("what this program does"))
 
 	ps.Add("example1",
 		psetter.Bool{Value: &example1},

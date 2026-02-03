@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
 	"path"
 	"slices"
 	"sort"
@@ -69,8 +68,7 @@ type PSet struct {
 
 	helper Helper
 
-	exitOnParamSetupErr bool
-	parsed              bool
+	parsed bool
 }
 
 // PSetOptFunc is the type of a function that can be passed to
@@ -160,14 +158,6 @@ func (ps *PSet) TrailingParamsExpected() bool {
 // parameters (if any)
 func (ps *PSet) TrailingParamsName() string { return ps.trailingParamsName }
 
-// DontExitOnParamSetupErr turns off the standard behaviour of exiting if an
-// error is detected while initialising the param set. The error is reported
-// in either case
-func DontExitOnParamSetupErr(ps *PSet) error {
-	ps.exitOnParamSetupErr = false
-	return nil
-}
-
 // SetErrWriter returns a PSetOptFunc which can be passed to NewSet. It
 // sets the Writer to which error messages are written
 func SetErrWriter(w io.Writer) PSetOptFunc {
@@ -256,8 +246,10 @@ func (ps *PSet) ShortestPrefix() string {
 
 // NewSet creates a new PSet with the various internal maps and slices
 // initialised. Generally you would be better off creating a PSet through the
-// paramset.New function which will automatically set the default helper
-func NewSet(psof ...PSetOptFunc) (*PSet, error) {
+// paramset.New function which will automatically set the default helper. If
+// there are any problems constructing the PSet then the function will panic
+// with the error.
+func NewSet(psof ...PSetOptFunc) *PSet {
 	ps := &PSet{
 		parseCalledFrom: "Parse() not yet called",
 		progName:        DfltProgName,
@@ -277,22 +269,12 @@ func NewSet(psof ...PSetOptFunc) (*PSet, error) {
 		shortestPrefix: "-",
 
 		Writers: pager.W(),
-
-		exitOnParamSetupErr: true,
 	}
 
 	for _, f := range psof {
 		err := f(ps)
 		if err != nil {
-			fmt.Fprintf(ps.ErrW(),
-				"An error was detected while creating the PSet: %s\n",
-				err)
-
-			if ps.exitOnParamSetupErr {
-				os.Exit(1)
-			}
-
-			return nil, err
+			panic(fmt.Errorf("while creating the PSet: %w", err))
 		}
 	}
 
@@ -302,17 +284,10 @@ func NewSet(psof ...PSetOptFunc) (*PSet, error) {
 	}
 
 	if ps.helper == nil {
-		err := errors.New("a helper must be passed when creating a PSet")
-		fmt.Fprintln(ps.ErrW(), err)
-
-		if ps.exitOnParamSetupErr {
-			os.Exit(1)
-		}
-
-		return nil, err
+		panic(errors.New("a helper must be passed when creating a PSet"))
 	}
 
-	return ps, nil
+	return ps
 }
 
 // Remainder returns any arguments that come after the terminal parameter.

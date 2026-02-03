@@ -15,7 +15,7 @@ func Example_withEnvVar() {
 	wevExample1 = false
 	wevExample2 = 0
 
-	ps := paramset.NewOrPanic(
+	ps := paramset.New(
 		wevAddParams1,
 		wevAddParams2,
 		param.SetProgramDescription("what this program does"))

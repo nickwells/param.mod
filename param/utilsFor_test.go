@@ -9,7 +9,6 @@ import (
 
 	"github.com/nickwells/errutil.mod/errutil"
 	"github.com/nickwells/param.mod/v6/param"
-	"github.com/nickwells/param.mod/v6/paramset"
 )
 
 // =======================================================
@@ -306,15 +305,4 @@ func errMapCheck(t *testing.T, testID string,
 	if nameLogged {
 		logErrMap(t, errMap)
 	}
-}
-
-// makePSetOrFatal creates the PSet and if any error is detected it reports a
-// fatal error
-func makePSetOrFatal(t *testing.T, testID string) *param.PSet {
-	ps, err := paramset.NewNoHelpNoExitNoErrRpt()
-	if err != nil {
-		t.Fatal(testID, " : couldn't construct the PSet: ", err)
-	}
-
-	return ps
 }

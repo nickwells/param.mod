@@ -24,21 +24,8 @@ var nhne noHelpNoExit
 // does report errors but doesn't exit if Parse errors are seen.
 //
 // This is only likely to be of any use for testing purposes
-func NewNoHelpNoExit(psof ...param.PSetOptFunc) (*param.PSet, error) {
+func NewNoHelpNoExit(psof ...param.PSetOptFunc) *param.PSet {
 	return param.NewSet(append(psof, param.SetHelper(nhne))...)
-}
-
-// NewNoHelpNoExitOrPanic returns a paramset as per NewNoHelpNoExit but any
-// error will cause the program to panic.
-//
-// This is only likely to be of any use for testing purposes
-func NewNoHelpNoExitOrPanic(psof ...param.PSetOptFunc) *param.PSet {
-	ps, err := param.NewSet(append(psof, param.SetHelper(nhne))...)
-	if err != nil {
-		panic(err)
-	}
-
-	return ps
 }
 
 type noHelpNoExitNoErrRpt struct{}
@@ -55,19 +42,6 @@ var nhnenr noHelpNoExitNoErrRpt
 // doesn't report errors and doesn't exit if Parse errors are seen.
 //
 // This is only likely to be of any use for testing purposes
-func NewNoHelpNoExitNoErrRpt(psof ...param.PSetOptFunc) (*param.PSet, error) {
+func NewNoHelpNoExitNoErrRpt(psof ...param.PSetOptFunc) *param.PSet {
 	return param.NewSet(append(psof, param.SetHelper(nhnenr))...)
-}
-
-// NewNoHelpNoExitNoErrRptOrPanic returns a paramset as per
-// NewNoHelpNoExitNoErrRpt but any error will cause the program to panic.
-//
-// This is only likely to be of any use for testing purposes
-func NewNoHelpNoExitNoErrRptOrPanic(psof ...param.PSetOptFunc) *param.PSet {
-	ps, err := param.NewSet(append(psof, param.SetHelper(nhnenr))...)
-	if err != nil {
-		panic(err)
-	}
-
-	return ps
 }

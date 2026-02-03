@@ -7,6 +7,7 @@ import (
 
 	"github.com/nickwells/errutil.mod/errutil"
 	"github.com/nickwells/param.mod/v6/param"
+	"github.com/nickwells/param.mod/v6/paramset"
 	"github.com/nickwells/param.mod/v6/psetter"
 	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
@@ -112,7 +113,7 @@ func TestParamAdd(t *testing.T) {
 		},
 	}
 
-	ps := makePSetOrFatal(t, t.Name())
+	ps := paramset.NewNoHelpNoExitNoErrRpt()
 	for _, tc := range testCases {
 		p, panicked, panicVal := panicSafeTestAddByName(ps, tc.npi)
 		testhelper.CheckExpPanic(t, panicked, panicVal, tc)
@@ -394,7 +395,7 @@ func TestParamAddPos(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		ps := makePSetOrFatal(t, tc.IDStr())
+		ps := paramset.NewNoHelpNoExitNoErrRpt()
 
 		var panicked bool
 
@@ -475,7 +476,7 @@ func parsePSet(t *testing.T, ps *param.PSet, args []string) errutil.ErrMap {
 }
 
 func TestParamParseTwice(t *testing.T) {
-	ps := makePSetOrFatal(t, t.Name())
+	ps := paramset.NewNoHelpNoExitNoErrRpt()
 	errMap := parsePSet(t, ps, []string{})
 
 	if logErrMap(t, errMap) {
@@ -493,7 +494,7 @@ func TestParamParseTwice(t *testing.T) {
 func TestParamAddParamAfterParse(t *testing.T) {
 	var p1 int64
 
-	ps := makePSetOrFatal(t, t.Name())
+	ps := paramset.NewNoHelpNoExitNoErrRpt()
 	errMap := parsePSet(t, ps, []string{})
 
 	if logErrMap(t, errMap) {
@@ -533,7 +534,7 @@ func TestParamParse1(t *testing.T) {
 
 	var p2 int64
 
-	ps := makePSetOrFatal(t, t.Name())
+	ps := paramset.NewNoHelpNoExitNoErrRpt()
 
 	testCases := []struct {
 		testhelper.ID
@@ -669,7 +670,7 @@ func TestParamParse(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		ps := makePSetOrFatal(t, tc.IDStr())
+		ps := paramset.NewNoHelpNoExitNoErrRpt()
 
 		for _, p := range tc.params {
 			panicSafeTestAddByName(ps, p)
@@ -688,7 +689,7 @@ func TestParamByName(t *testing.T) {
 	var val1 int64 = 123
 
 	val1InitialVal := fmt.Sprint(val1)
-	ps := makePSetOrFatal(t, t.Name())
+	ps := paramset.NewNoHelpNoExitNoErrRpt()
 
 	const (
 		param1Name    = "param1"

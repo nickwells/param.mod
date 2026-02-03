@@ -75,7 +75,7 @@ func tuAddParams2(prog *progExampleTypicalUse) param.PSetOptFunc {
 // parameters so that it will use the command line parameters
 func Example_typicalUse() {
 	prog := &progExampleTypicalUse{}
-	ps := paramset.NewOrPanic(
+	ps := paramset.New(
 		tuAddParams1(prog),
 		tuAddParams2(prog),
 		param.SetProgramDescription("what this program does"))

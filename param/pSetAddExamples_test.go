@@ -15,7 +15,7 @@ import (
 // with no alternative names that can be used and the parameter will appear
 // in the standard usage message.
 func ExamplePSet_Add() {
-	ps := paramset.NewOrPanic()
+	ps := paramset.New()
 
 	var f float64
 
@@ -27,7 +27,7 @@ func ExamplePSet_Add() {
 // PSet. This is used to add new parameters into the set. This example shows
 // the use of the additional options that can be passed to the Add call.
 func ExamplePSet_Add_withExtras() {
-	ps := paramset.NewOrPanic()
+	ps := paramset.New()
 
 	var f float64
 

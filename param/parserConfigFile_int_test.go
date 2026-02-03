@@ -23,7 +23,7 @@ var nhnenr noHelpNoExitNoErrRpt
 // doesn't report errors and doesn't exit if Parse errors are seen.
 //
 // This is only likely to be of any use for testing purposes
-func NewNoHelpNoExitNoErrRpt(psof ...PSetOptFunc) (*PSet, error) {
+func NewNoHelpNoExitNoErrRpt(psof ...PSetOptFunc) *PSet {
 	return NewSet(append(psof, SetHelper(nhnenr))...)
 }
 
@@ -217,11 +217,7 @@ func TestParamLineParser(t *testing.T) {
 	for _, tc := range testCases {
 		iVal = 0
 
-		ps, err := NewSet(SetHelper(nhnenr))
-		if err != nil {
-			t.Log(tc.IDStr())
-			t.Errorf("\t: could not construct the paramset\n")
-		}
+		ps := NewSet(SetHelper(nhnenr))
 
 		ps.Add("ival", i64{Value: &iVal}, "help...", Attrs(MustBeSet))
 

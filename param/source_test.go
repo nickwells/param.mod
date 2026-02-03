@@ -12,7 +12,7 @@ import (
 func TestSource(t *testing.T) {
 	var b bool
 
-	ps, _ := paramset.NewNoHelpNoExitNoErrRpt()
+	ps := paramset.NewNoHelpNoExitNoErrRpt()
 	p := ps.Add("p", psetter.Bool{Value: &b}, "desc")
 	loc := location.New("loc")
 
@@ -73,7 +73,7 @@ func TestSource(t *testing.T) {
 func TestSources(t *testing.T) {
 	var b bool
 
-	ps, _ := paramset.NewNoHelpNoExitNoErrRpt()
+	ps := paramset.NewNoHelpNoExitNoErrRpt()
 	p := ps.Add("p", psetter.Bool{Value: &b}, "desc")
 	loc := location.New("loc")
 

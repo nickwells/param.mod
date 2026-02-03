@@ -8,7 +8,6 @@ import (
 
 	"github.com/nickwells/param.mod/v6/param"
 	"github.com/nickwells/param.mod/v6/paramset"
-	"github.com/nickwells/param.mod/v6/paramtest"
 	"github.com/nickwells/param.mod/v6/psetter"
 	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
@@ -19,9 +18,8 @@ func TestPSet(t *testing.T) {
 
 	testCases := []struct {
 		testhelper.ID
-		psOpts      []param.PSetOptFunc
-		errExpected bool
-		expEStr     string
+		testhelper.ExpPanic
+		psOpts []param.PSetOptFunc
 	}{
 		{
 			ID: testhelper.MkID("nil"),
@@ -34,56 +32,31 @@ func TestPSet(t *testing.T) {
 			},
 		},
 		{
-			ID: testhelper.MkID("bad error writer"),
-			psOpts: []param.PSetOptFunc{
-				param.SetErrWriter(&buff),
-				param.SetErrWriter(nil),
-			},
-			errExpected: true,
-			expEStr:     "param.SetErrWriter cannot take a nil value",
-		},
-		{
 			ID: testhelper.MkID("bad std writer"),
+			ExpPanic: testhelper.MkExpPanic(
+				"param.SetStdWriter cannot take a nil value"),
 			psOpts: []param.PSetOptFunc{
-				param.SetErrWriter(&buff),
 				param.SetStdWriter(nil),
+				param.SetErrWriter(&buff),
 			},
-			errExpected: true,
-			expEStr:     "param.SetStdWriter cannot take a nil value",
 		},
 		{
-			ID: testhelper.MkID("setopt error"),
+			ID:       testhelper.MkID("setopt error"),
+			ExpPanic: testhelper.MkExpPanic("whoops"),
 			psOpts: []param.PSetOptFunc{
 				param.SetErrWriter(&buff),
 				func(_ *param.PSet) error { return errors.New("whoops") },
 			},
-			errExpected: true,
-			expEStr:     "whoops",
 		},
 	}
 
 	for _, tc := range testCases {
-		opts := make([]param.PSetOptFunc, 1, 1+len(tc.psOpts))
-		opts[0] = param.DontExitOnParamSetupErr
-		opts = append(opts, tc.psOpts...)
-
-		ps, err := paramset.NewNoHelpNoExitNoErrRpt(opts...)
-		if err != nil {
-			if !tc.errExpected {
-				t.Log(tc.IDStr())
-				t.Errorf("\t: returned an unexpected error: %s", err)
-			} else if err.Error() != tc.expEStr {
-				t.Log(tc.IDStr())
-				t.Logf("\t: err was expected to be: %s", tc.expEStr)
-				t.Logf("\t:                but was: %s", err)
-				t.Errorf("\t: bad error")
-			}
-		} else {
-			if tc.errExpected {
-				t.Log(tc.IDStr())
-				t.Errorf("\t: didn't return an expected error")
-			}
-
+		var ps *param.PSet
+		panicked, panicVal := testhelper.PanicSafe(func() {
+			ps = paramset.NewNoHelpNoExitNoErrRpt(tc.psOpts...)
+		})
+		if !testhelper.CheckExpPanicError(t, panicked, panicVal, tc) &&
+			!panicked {
 			if ps.AreSet() {
 				t.Log(tc.IDStr())
 				t.Errorf("\t: the parsed flag is unexpectedly set")
@@ -229,7 +202,7 @@ func TestPSet_SetGroupDescription(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		ps := paramtest.MakeParamSetOrFatal(t, tc.IDStr())
+		ps := paramset.NewNoHelpNoExitNoErrRpt()
 
 		var panicked bool
 
@@ -274,10 +247,7 @@ func TestPSet_SetTerminalParam(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		ps, err := paramset.NewNoHelpNoExitNoErrRpt()
-		if err != nil {
-			t.Fatal(tc.IDStr(), " : couldn't construct the PSet: ", err)
-		}
+		ps := paramset.NewNoHelpNoExitNoErrRpt()
 
 		if tc.setTP {
 			ps.SetTerminalParam(tc.tpVal)
@@ -500,7 +470,8 @@ func TestGetParamGroups(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		ps := paramtest.MakeParamSetOrFatal(t, tc.IDStr())
+		ps := paramset.NewNoHelpNoExitNoErrRpt()
+
 		for _, npi := range tc.npi {
 			ps.Add(npi.name, npi.setter, npi.desc, npi.opts...)
 		}

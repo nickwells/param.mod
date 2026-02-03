@@ -36,6 +36,6 @@ var nh noHelp
 //
 // If errors are detected then they will be reported and the program will
 // exit.
-func NewNoHelp(psof ...param.PSetOptFunc) (*param.PSet, error) {
+func NewNoHelp(psof ...param.PSetOptFunc) *param.PSet {
 	return param.NewSet(append(psof, param.SetHelper(nh))...)
 }

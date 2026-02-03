@@ -18,10 +18,7 @@ func TestConfigFileStrict(t *testing.T) {
 	CFValExample1 = false
 	CFValExample2 = 0
 
-	ps, err := paramset.NewNoHelpNoExitNoErrRpt(CFAddParams1, CFAddParams2)
-	if err != nil {
-		t.Fatal("TestConfigFile : couldn't construct the PSet: ", err)
-	}
+	ps := paramset.NewNoHelpNoExitNoErrRpt(CFAddParams1, CFAddParams2)
 
 	const fname = "./testdata/config-strict.test"
 
@@ -45,10 +42,7 @@ func TestConfigFile(t *testing.T) {
 	CFValExample1 = false
 	CFValExample2 = 0
 
-	ps, err := paramset.NewNoHelpNoExitNoErrRpt(CFAddParams1, CFAddParams2)
-	if err != nil {
-		t.Fatal("TestConfigFile : couldn't construct the PSet: ", err)
-	}
+	ps := paramset.NewNoHelpNoExitNoErrRpt(CFAddParams1, CFAddParams2)
 
 	const (
 		mustExistDoes    = "./testdata/config.test"
@@ -198,10 +192,7 @@ func TestGroupConfigFile(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		ps, err := paramset.NewNoHelpNoExitNoErrRpt()
-		if err != nil {
-			t.Fatal(tc.IDStr(), " : couldn't construct the PSet: ", err)
-		}
+		ps := paramset.NewNoHelpNoExitNoErrRpt()
 
 		addParamsForGroupCF(ps)
 		ps.AddGroupConfigFile(tc.gName, tc.fileName, tc.check)
