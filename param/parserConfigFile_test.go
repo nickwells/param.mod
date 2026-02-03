@@ -208,7 +208,8 @@ func TestGroupConfigFile(t *testing.T) {
 
 		resetParamVals()
 
-		errMap := ps.Parse([]string{})
+		ps.Parse([]string{})
+		errMap := ps.Errors()
 
 		errMapCheck(t, tc.IDStr(), errMap, tc.errsExpected)
 		valsCheck(t, tc.IDStr(), tc.valsExpected)

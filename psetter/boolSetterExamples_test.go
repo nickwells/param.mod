@@ -76,9 +76,9 @@ func ExampleBool_withBadValue() {
 	fmt.Printf("Before parsing    p1: %v\n", p1)
 	// Parse the arguments. Note that the value after the '=' cannot be
 	// translated into a bool value.
-	errMap := ps.Parse([]string{"-do-this=blah"})
+	ps.Parse([]string{"-do-this=blah"})
 	// We expect to see an error reported.
-	logErrs(errMap)
+	logErrs(ps.Errors())
 	// There was an error with the parameter so the value will be unchanged
 	fmt.Printf("After  parsing    p1: %v\n", p1)
 	// Output:

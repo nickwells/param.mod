@@ -64,11 +64,11 @@ func ExamplePathname_withFailingExpectation() {
 
 	fmt.Printf("Before parsing    pathname: %q\n", pathname)
 
-	errMap := ps.Parse([]string{"-my-pathname", "testdata/noSuchFile.go"})
+	ps.Parse([]string{"-my-pathname", "testdata/noSuchFile.go"})
 	// We expect to see an error reported. Note that the Pathname setter
 	// suggests an alternative file from the same directory in the error
 	// message.
-	logErrs(errMap)
+	logErrs(ps.Errors())
 	// There was an error with the parameter so the value will be unchanged
 	fmt.Printf("After  parsing    pathname: %q\n", pathname)
 	// Output:

@@ -23,9 +23,10 @@ import (
 // Lastly it will process the command line arguments.
 //
 // It takes zero or more arguments each of which is a slice of strings. If no
-// arguments are given then it uses the command line parameters (excluding the
+// arguments are given then it uses the command line arguments (excluding the
 // first which is used to set the program name). If any argument is passed
-// then all the slices are concatenated together and that is parsed.
+// then all the slices are concatenated together and the result is parsed in
+// place of the command line arguments.
 //
 // Before any further processing the helper's ProcessArgs method is
 // called. This is expected to act on any helper parameters and to report any
@@ -36,19 +37,19 @@ import (
 // terminal or any parameters following the terminal parameter (which is "--"
 // by default). If no trailing arguments are expected and no handler has been
 // set for handling them then the default handler is called which will record
-// an error and call the helper.ErrorHandler method.
+// an error.
 //
-// It will return a map of errors: mapping parameter name to a slice of all
-// the errors seen for that parameter. In order to make sensible use of this
-// the report-errors and exit-on-errors flags should be turned off - there
-// are functions which allow the caller to do this (or they can be set
-// through the StdHelp command-line flags) but they should be called before
-// Parse is called. The default behaviour is to report any errors and
-// exit. This means that you can sensibly ignore the return value unless you
-// want to handle the errors yourself.
+// No errors are returned, instead errors are collected in the PSet's error
+// map which maps parameter names to a slice of all the errors seen for that
+// parameter. In order to make sensible use of this the Helper should not
+// report errors and should not exit on error. There are functions which
+// allow the caller to do this for the StdHelp Helper or they can be set
+// through the StdHelp command-line flags but they should be called before
+// Parse is called. The default behaviour for the StdHelp Helper is to report
+// any errors and exit.
 //
 // It will panic if it is called twice.
-func (ps *PSet) Parse(args ...[]string) ErrMap {
+func (ps *PSet) Parse(args ...[]string) {
 	if ps.parsed {
 		panic(
 			fmt.Sprintf("param.Parse has already been called,"+
@@ -105,8 +106,6 @@ func (ps *PSet) Parse(args ...[]string) ErrMap {
 	if errCount != ps.errorCount {
 		ps.helper.ErrorHandler(ps, ps.errors)
 	}
-
-	return ps.errors
 }
 
 // caller returns a string giving the filename and line number of the caller

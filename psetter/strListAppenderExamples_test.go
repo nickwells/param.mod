@@ -97,10 +97,10 @@ func ExampleStrListAppender_withFailingChecks() {
 		fmt.Printf("\tss[%d] = %q\n", i, v)
 	}
 
-	errMap := ps.Parse([]string{"-next", "darkness", "-next", "my old friend"})
+	ps.Parse([]string{"-next", "darkness", "-next", "my old friend"})
 
 	// We expect to see an error reported.
-	logErrs(errMap)
+	logErrs(ps.Errors())
 
 	// The value does not include the second parameter due to the error.
 	fmt.Println("After  parsing")

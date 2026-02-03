@@ -68,10 +68,10 @@ func ExampleEnum_withBadVal() {
 
 	// Parse the arguments. We supply a value but note that it is not in the
 	// list of allowed values.
-	errMap := ps.Parse([]string{"-my-string", "z"})
+	ps.Parse([]string{"-my-string", "z"})
 
 	// We expect to see an error reported.
-	logErrs(errMap)
+	logErrs(ps.Errors())
 
 	// The value is unchanged due to the error.
 	fmt.Println("After  parsing")

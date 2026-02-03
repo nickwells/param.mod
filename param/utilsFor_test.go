@@ -186,9 +186,9 @@ func panicSafeTestParse(
 	}()
 
 	stackTrace = []byte{}
-	errMap = ps.Parse(params)
+	ps.Parse(params)
 
-	return errMap, panicked, panicVal, stackTrace
+	return ps.Errors(), panicked, panicVal, stackTrace
 }
 
 // panicSafeAddGroup sets the group description and catches any

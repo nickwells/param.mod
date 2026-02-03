@@ -90,9 +90,9 @@ func ExampleTime_withFailingChecks() {
 
 	fmt.Printf("Before parsing: time = %s\n", t.Weekday())
 	// Parse the arguments. Note that the time given is not on a Friday.
-	errMap := ps.Parse([]string{"-my-time", "2020/Apr/25T12:00:00"})
+	ps.Parse([]string{"-my-time", "2020/Apr/25T12:00:00"})
 	// We expect to see an error reported.
-	logErrs(errMap)
+	logErrs(ps.Errors())
 	// The value is unchanged due to the error.
 	fmt.Printf("After  parsing: time = %s\n", t.Weekday())
 	// Output:

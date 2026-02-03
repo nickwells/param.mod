@@ -78,9 +78,9 @@ func ExampleFloat64_withFailingChecks() {
 	fmt.Printf("\tf = %5.3f\n", f)
 	// Parse the arguments. We supply a float value but note that it does not
 	// satisfy the check for this parameter.
-	errMap := ps.Parse([]string{"-my-float", "1.23"})
+	ps.Parse([]string{"-my-float", "1.23"})
 	// We expect to see an error reported.
-	logErrs(errMap)
+	logErrs(ps.Errors())
 	// The float value is unchanged due to the error.
 	fmt.Println("After  parsing")
 	fmt.Printf("\tf = %5.3f\n", f)

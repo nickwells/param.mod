@@ -99,10 +99,10 @@ func ExampleStrList_withFailingChecks() {
 
 	// Parse the arguments. We supply a list of strings, each of which is
 	// allowed. The resulting slice is of the wrong length.
-	errMap := ps.Parse([]string{"-my-list", "x"})
+	ps.Parse([]string{"-my-list", "x"})
 
 	// We expect to see an error reported.
-	logErrs(errMap)
+	logErrs(ps.Errors())
 
 	// The slice of strings is unchanged due to the error.
 	fmt.Println("After  parsing")

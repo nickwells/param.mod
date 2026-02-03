@@ -472,8 +472,9 @@ func TestHelp(t *testing.T) {
 			ps.AddEnvPrefix(ep)
 		}
 
-		errMap := ps.Parse(tc.params)
-		if len(errMap) != 0 {
+		ps.Parse(tc.params)
+
+		if len(ps.Errors()) != 0 {
 			if !tc.errsExpected {
 				t.Log(idStr)
 				t.Errorf("\t: Unexpected errors: %s", stderrBuf.String())
@@ -506,8 +507,9 @@ func TestHelpWithMessage(t *testing.T) {
 		t.Fatal("Unexpected failure to build the parameter set:", err)
 	}
 
-	errMap := ps.Parse([]string{})
-	if len(errMap) != 0 {
+	ps.Parse([]string{})
+
+	if len(ps.Errors()) != 0 {
 		t.Fatal("Unexpected errors")
 	}
 

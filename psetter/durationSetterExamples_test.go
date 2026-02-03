@@ -70,9 +70,9 @@ func ExampleDuration_withFailingChecks() {
 	fmt.Printf("Before parsing    v: %v\n", v)
 	// Parse the arguments. Note that the duration given (1 hour) is less
 	// than the minimum value given by the check function.
-	errMap := ps.Parse([]string{"-how-long", "1h"})
+	ps.Parse([]string{"-how-long", "1h"})
 	// The check will fail so we expect to see errors reported
-	logErrs(errMap)
+	logErrs(ps.Errors())
 	// There was an error with the parameter so the value will be unchanged
 	fmt.Printf("After  parsing    v: %v\n", v)
 	// Output:

@@ -66,9 +66,9 @@ func ExampleString_withFailingChecks() {
 	fmt.Printf("Before parsing: s = %q\n", s)
 	// Parse the arguments. Note that the string supplied is too short to
 	// satisfy the check for this parameter.
-	errMap := ps.Parse([]string{"-my-string", "Hi!"})
+	ps.Parse([]string{"-my-string", "Hi!"})
 	// We expect to see an error reported.
-	logErrs(errMap)
+	logErrs(ps.Errors())
 	// The value is unchanged due to the error.
 	fmt.Printf("After  parsing: s = %q\n", s)
 	// Output:

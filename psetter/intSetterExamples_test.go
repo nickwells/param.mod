@@ -78,9 +78,9 @@ func ExampleInt64_withFailingChecks() {
 	fmt.Printf("\ti = %d\n", i)
 	// Parse the arguments. We supply a int value but note that it does not
 	// satisfy the check for this parameter.
-	errMap := ps.Parse([]string{"-my-int", "1"})
+	ps.Parse([]string{"-my-int", "1"})
 	// We expect to see an error reported.
-	logErrs(errMap)
+	logErrs(ps.Errors())
 	// The int value is unchanged due to the error.
 	fmt.Println("After  parsing")
 	fmt.Printf("\ti = %d\n", i)

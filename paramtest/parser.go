@@ -84,7 +84,9 @@ func (p Parser) Test(t *testing.T) (err error) {
 		}()
 	}
 
-	errMap := errutil.ErrMap(p.Ps.Parse(p.Args))
+	p.Ps.Parse(p.Args)
+
+	errMap := p.Ps.Errors()
 
 	if err = errMap.Matches(p.ExpParseErrors); err != nil {
 		t.Log(p.IDStr())

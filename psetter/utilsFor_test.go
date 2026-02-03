@@ -3,6 +3,7 @@ package psetter_test
 import (
 	"fmt"
 
+	"github.com/nickwells/errutil.mod/errutil"
 	"github.com/nickwells/param.mod/v6/param"
 	"github.com/nickwells/param.mod/v6/paramset"
 )
@@ -35,7 +36,7 @@ func newPSetForTesting() *param.PSet {
 }
 
 // logErrs will report the errors (if any) to stdout
-func logErrs(errMap param.ErrMap) {
+func logErrs(errMap errutil.ErrMap) {
 	for k, errs := range errMap {
 		fmt.Println("Errors for:", k)
 
