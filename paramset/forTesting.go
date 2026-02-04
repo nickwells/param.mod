@@ -25,7 +25,7 @@ var nhne noHelpNoExit
 //
 // This is only likely to be of any use for testing purposes
 func NewNoHelpNoExit(psof ...param.PSetOptFunc) *param.PSet {
-	return param.NewSet(append(psof, param.SetHelper(nhne))...)
+	return param.NewSet(nhne, psof...)
 }
 
 type noHelpNoExitNoErrRpt struct{}
@@ -43,5 +43,5 @@ var nhnenr noHelpNoExitNoErrRpt
 //
 // This is only likely to be of any use for testing purposes
 func NewNoHelpNoExitNoErrRpt(psof ...param.PSetOptFunc) *param.PSet {
-	return param.NewSet(append(psof, param.SetHelper(nhnenr))...)
+	return param.NewSet(nhnenr, psof...)
 }

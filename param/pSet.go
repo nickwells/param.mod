@@ -28,12 +28,10 @@ const DfltProgName = "PROGRAM NAME UNKNOWN"
 // parameters have been set
 type FinalCheckFunc func() error
 
-// PSet represents a collection of parameters to be parsed together. A
-// program will typically only have one PSet but having this makes it
-// easier to retain control. You would create the PSet in main using the
-// paramset.New func which will automatically set the standard help
-// member. This lets you know precisely which parameters have been enabled
-// before calling Parse
+// PSet holds the collection of parameters to be parsed together. Typical
+// usage would involve creating a PSet (usually by calling paramset.New) and
+// then adding the parameters to the PSet before calling Parse to set the
+// parameter values.
 type PSet struct {
 	pager.Writers
 	parseCalledFrom string
@@ -75,32 +73,6 @@ type PSet struct {
 // NewSet. These functions can be used to set optional behaviour on the
 // parameter set.
 type PSetOptFunc func(ps *PSet) error
-
-// SetHelper returns a PSetOptFunc which can be passed to NewSet. This
-// sets the value of the helper to be used by the parameter set and adds the
-// parameters that the helper needs. Note that the helper must be set and so
-// you must pass some such function. To avoid lots of duplicate code there
-// are sensible defaults which can be used in the param/paramset package.
-//
-// This can only be set once and this will return an error if the helper has
-// already been set
-func SetHelper(h Helper) PSetOptFunc {
-	return func(ps *PSet) error {
-		if ps.helper != nil {
-			return errors.New("the Helper has already been set")
-		}
-
-		if ps.parsed {
-			return errors.New("parsing is already complete" +
-				" - you must set the Helper before calling Parse")
-		}
-
-		ps.helper = h
-		h.AddParams(ps)
-
-		return nil
-	}
-}
 
 // SetRemHandler sets the value of the remainder handler to be used by the
 // parameter set. Note that the handler must be set and so you cannot pass
@@ -249,7 +221,7 @@ func (ps *PSet) ShortestPrefix() string {
 // paramset.New function which will automatically set the default helper. If
 // there are any problems constructing the PSet then the function will panic
 // with the error.
-func NewSet(psof ...PSetOptFunc) *PSet {
+func NewSet(h Helper, psof ...PSetOptFunc) *PSet {
 	ps := &PSet{
 		parseCalledFrom: "Parse() not yet called",
 		progName:        DfltProgName,
@@ -269,7 +241,11 @@ func NewSet(psof ...PSetOptFunc) *PSet {
 		shortestPrefix: "-",
 
 		Writers: pager.W(),
+
+		helper: h,
 	}
+
+	h.AddParams(ps)
 
 	for _, f := range psof {
 		err := f(ps)
@@ -281,10 +257,6 @@ func NewSet(psof ...PSetOptFunc) *PSet {
 	if ps.remHandler == nil {
 		ps.remHandler = dfltRemHandler{}
 		ps.trailingParamsExpected = false
-	}
-
-	if ps.helper == nil {
-		panic(errors.New("a helper must be passed when creating a PSet"))
 	}
 
 	return ps

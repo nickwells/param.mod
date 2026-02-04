@@ -24,7 +24,7 @@ var nhnenr noHelpNoExitNoErrRpt
 //
 // This is only likely to be of any use for testing purposes
 func NewNoHelpNoExitNoErrRpt(psof ...PSetOptFunc) *PSet {
-	return NewSet(append(psof, SetHelper(nhnenr))...)
+	return NewSet(nhnenr, psof...)
 }
 
 type i64 struct {
@@ -217,7 +217,7 @@ func TestParamLineParser(t *testing.T) {
 	for _, tc := range testCases {
 		iVal = 0
 
-		ps := NewSet(SetHelper(nhnenr))
+		ps := NewSet(nhnenr)
 
 		ps.Add("ival", i64{Value: &iVal}, "help...", Attrs(MustBeSet))
 

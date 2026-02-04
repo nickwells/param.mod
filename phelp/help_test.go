@@ -447,15 +447,12 @@ func TestHelp(t *testing.T) {
 
 		var stderrBuf bytes.Buffer
 
-		ps, err := param.NewSet(
-			param.SetHelper(helper),
+		ps := param.NewSet(
+			helper,
 			param.SetStdWriter(&stdoutBuf),
 			param.SetErrWriter(&stderrBuf),
 			param.SetProgramDescription(tc.progDesc),
 		)
-		if err != nil {
-			t.Log(idStr)
-		}
 
 		for _, psof := range tc.paramAdder {
 			err = psof(ps)
@@ -498,14 +495,11 @@ func TestHelpWithMessage(t *testing.T) {
 
 	var stderrBuf bytes.Buffer
 
-	ps, err := param.NewSet(
-		param.SetHelper(helper),
+	ps := param.NewSet(
+		helper,
 		param.SetStdWriter(&stdoutBuf),
 		param.SetErrWriter(&stderrBuf),
 		param.SetProgramDescription("program description"))
-	if err != nil {
-		t.Fatal("Unexpected failure to build the parameter set:", err)
-	}
 
 	ps.Parse([]string{})
 
