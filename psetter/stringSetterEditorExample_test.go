@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/nickwells/param.mod/v6/param"
+	"github.com/nickwells/param.mod/v6/paramset"
 	"github.com/nickwells/param.mod/v6/psetter"
 )
 
@@ -30,7 +31,7 @@ func (myEditor) Edit(paramName, paramVal string) (string, error) {
 
 // ExampleString_withEditor demonstrates the behaviour of the Editor.
 func ExampleString_withEditor() {
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	var s string
 

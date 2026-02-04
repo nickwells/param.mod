@@ -3,12 +3,13 @@ package psetter_test
 import (
 	"fmt"
 
+	"github.com/nickwells/param.mod/v6/paramset"
 	"github.com/nickwells/param.mod/v6/psetter"
 )
 
 // ExampleEnum_standard demonstrates the use of an Enum setter.
 func ExampleEnum_standard() {
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	const (
 		XOption = "x"
@@ -45,7 +46,7 @@ func ExampleEnum_standard() {
 // no need to examine the return from ps.Parse as the standard Helper will
 // report any errors and abort the program.
 func ExampleEnum_withBadVal() {
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	const (
 		XOption = "x"
@@ -98,7 +99,7 @@ func ExampleEnum_withNilValue() {
 		}
 	}()
 
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	const (
 		XOption = "x"
@@ -130,7 +131,7 @@ func ExampleEnum_withBadInitialValue() {
 		}
 	}()
 
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	const (
 		XOption = "x"

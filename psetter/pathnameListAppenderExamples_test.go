@@ -5,12 +5,13 @@ import (
 
 	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/filecheck.mod/filecheck"
+	"github.com/nickwells/param.mod/v6/paramset"
 	"github.com/nickwells/param.mod/v6/psetter"
 )
 
 // ExamplePathnameListAppender_standard demonstrates the use of a PathnameListAppender
 func ExamplePathnameListAppender_standard() {
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	ss := []string{"testdata/pathname/nonesuch.go"}
 
@@ -56,7 +57,7 @@ func ExamplePathnameListAppender_withNilValue() {
 		}
 	}()
 
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	// we expect this to panic because the list Value has not been initialised
 	ps.Add("my-list", psetter.PathnameListAppender{}, "help text")

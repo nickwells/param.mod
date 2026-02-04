@@ -90,18 +90,16 @@ func ExampleParser() {
 
 	testCases := []paramtest.Parser{
 		{
-			ID: testhelper.MkID("set I64 option"),
-			Ps: paramset.NewNoHelpNoExitNoErrRptOrPanic(
-				AddMCParams(&mc1)),
+			ID:        testhelper.MkID("set I64 option"),
+			Ps:        paramset.NewNoHelpNoExitNoErrRpt(AddMCParams(&mc1)),
 			Val:       &mc1,
 			ExpVal:    &MyConfig{I64: 42},
 			CheckFunc: cmpMyConfigStruct,
 			Args:      []string{"-i", "42"},
 		},
 		{
-			ID: testhelper.MkID("set B option"),
-			Ps: paramset.NewNoHelpNoExitNoErrRptOrPanic(
-				AddMCParams(&mc2)),
+			ID:        testhelper.MkID("set B option"),
+			Ps:        paramset.NewNoHelpNoExitNoErrRpt(AddMCParams(&mc2)),
 			Val:       &mc2,
 			ExpVal:    &MyConfig{B: true},
 			CheckFunc: cmpMyConfigStruct,

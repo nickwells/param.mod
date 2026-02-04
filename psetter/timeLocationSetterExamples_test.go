@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/nickwells/param.mod/v6/paramset"
 	"github.com/nickwells/param.mod/v6/psetter"
 )
 
 // ExampleTimeLocation_standard demonstrates the use of a TimeLocation setter
 func ExampleTimeLocation_standard() {
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	var loc *time.Location
 
@@ -35,7 +36,7 @@ func ExampleTimeLocation_withNilValue() {
 		}
 	}()
 
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	ps.Add("location", psetter.TimeLocation{}, "help text")
 

@@ -5,12 +5,13 @@ import (
 
 	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/filecheck.mod/filecheck"
+	"github.com/nickwells/param.mod/v6/paramset"
 	"github.com/nickwells/param.mod/v6/psetter"
 )
 
 // ExamplePathname_standard demonstrates the use of a Pathname setter.
 func ExamplePathname_standard() {
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	var pathname string
 
@@ -27,7 +28,7 @@ func ExamplePathname_standard() {
 // ExamplePathname_withPassingExpectation demonstrates the use of a Pathname
 // setter which has the Expectation set.
 func ExamplePathname_withPassingExpectation() {
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	var pathname string
 
@@ -51,7 +52,7 @@ func ExamplePathname_withPassingExpectation() {
 // to examine the return from ps.Parse as the standard Helper will report any
 // errors and abort the program.
 func ExamplePathname_withFailingExpectation() {
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	var pathname string
 
@@ -82,7 +83,7 @@ func ExamplePathname_withFailingExpectation() {
 // ExamplePathname_withPassingChecks demonstrates the use of a Pathname
 // setter which has Checks. Note that it also has the Expectation set.
 func ExamplePathname_withPassingChecks() {
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	var pathname string
 
@@ -116,7 +117,7 @@ func ExamplePathname_withNilValue() {
 		}
 	}()
 
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	// we expect this to panic because the bool Value has not been initialised
 	ps.Add("do-this", psetter.Pathname{}, "help text")

@@ -4,12 +4,13 @@ import (
 	"fmt"
 
 	"github.com/nickwells/check.mod/v2/check"
+	"github.com/nickwells/param.mod/v6/paramset"
 	"github.com/nickwells/param.mod/v6/psetter"
 )
 
 // ExampleUint_standard demonstrates the use of a Uint setter.
 func ExampleUint_standard() {
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	var i uint64
 
@@ -33,7 +34,7 @@ func ExampleUint_standard() {
 // ExampleUint_withPassingChecks demonstrates how to add checks to be
 // applied to the value.
 func ExampleUint_withPassingChecks() {
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	var i uint64
 
@@ -62,7 +63,7 @@ func ExampleUint_withPassingChecks() {
 // return from ps.Parse as the standard Helper will report any errors and
 // abort the program.
 func ExampleUint_withFailingChecks() {
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	var i uint64
 
@@ -106,7 +107,7 @@ func ExampleUint_withNilValue() {
 		}
 	}()
 
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	// we expect this to panic because the map Value has not been initialised
 	ps.Add("my-uint", psetter.Uint[uint64]{}, "help text")

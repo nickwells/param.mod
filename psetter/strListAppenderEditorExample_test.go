@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/nickwells/param.mod/v6/param"
+	"github.com/nickwells/param.mod/v6/paramset"
 	"github.com/nickwells/param.mod/v6/psetter"
 )
 
@@ -26,7 +27,7 @@ func (myEditorMult) Edit(paramName, paramVal string) (string, error) {
 
 // ExampleStrListAppender_withEditor demonstrates the behaviour of the Editor.
 func ExampleStrListAppender_withEditor() {
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	ss := []string{"Hello"}
 

@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"regexp"
 
+	"github.com/nickwells/param.mod/v6/paramset"
 	"github.com/nickwells/param.mod/v6/psetter"
 )
 
 // ExampleRegexp_standard demonstrates the use of a Regexp setter.
 func ExampleRegexp_standard() {
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	var re *regexp.Regexp
 
@@ -48,7 +49,7 @@ func ExampleRegexp_withNilValue() {
 		}
 	}()
 
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	// we expect this to panic because the regexp pointer Value has not been
 	// initialised

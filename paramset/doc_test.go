@@ -47,10 +47,10 @@ func addParams(ps *param.PSet) error {
 	return nil
 }
 
-func ExampleNewOrPanic_simple() {
-	ps := paramset.NewOrPanic(addParams,
-		param.SetProgramDescription(
-			"a description of the purpose of the program"))
+func ExampleNew_simple() {
+	ps := paramset.New(
+		addParams,
+		param.SetProgramDescription("a description of the program"))
 	ps.Parse()
 
 	// the rest of your program goes here

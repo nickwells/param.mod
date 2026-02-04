@@ -4,12 +4,13 @@ import (
 	"fmt"
 
 	"github.com/nickwells/check.mod/v2/check"
+	"github.com/nickwells/param.mod/v6/paramset"
 	"github.com/nickwells/param.mod/v6/psetter"
 )
 
 // ExampleStrListAppender_standard demonstrates the use of a StrListAppender
 func ExampleStrListAppender_standard() {
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	ss := []string{"Hello"}
 
@@ -39,7 +40,7 @@ func ExampleStrListAppender_standard() {
 // ExampleStrListAppender_withPassingChecks demonstrates how to add checks to be
 // applied to the value.
 func ExampleStrListAppender_withPassingChecks() {
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	ss := []string{"Hello"}
 
@@ -78,7 +79,7 @@ func ExampleStrListAppender_withPassingChecks() {
 // return from ps.Parse as the standard Helper will report any errors and
 // abort the program.
 func ExampleStrListAppender_withFailingChecks() {
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	ss := []string{"Hello"}
 
@@ -131,7 +132,7 @@ func ExampleStrListAppender_withNilValue() {
 		}
 	}()
 
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	// we expect this to panic because the list Value has not been initialised
 	ps.Add("my-list", psetter.StrListAppender[string]{}, "help text")

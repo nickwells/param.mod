@@ -5,6 +5,7 @@ import (
 
 	"github.com/nickwells/param.mod/v6/paction"
 	"github.com/nickwells/param.mod/v6/param"
+	"github.com/nickwells/param.mod/v6/paramset"
 	"github.com/nickwells/param.mod/v6/psetter"
 )
 
@@ -12,7 +13,7 @@ import (
 // the Nil setter does nothing itself; any effect takes place through
 // associated action functions
 func ExampleNil_standard() {
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	var flag1 bool
 

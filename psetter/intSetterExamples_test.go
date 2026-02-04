@@ -4,12 +4,13 @@ import (
 	"fmt"
 
 	"github.com/nickwells/check.mod/v2/check"
+	"github.com/nickwells/param.mod/v6/paramset"
 	"github.com/nickwells/param.mod/v6/psetter"
 )
 
 // ExampleInt64_standard demonstrates the use of a Int64 setter.
 func ExampleInt64_standard() {
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	var i int64
 
@@ -33,7 +34,7 @@ func ExampleInt64_standard() {
 // ExampleInt64_withPassingChecks demonstrates how to add checks to be
 // applied to the value.
 func ExampleInt64_withPassingChecks() {
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	var i int64
 
@@ -62,7 +63,7 @@ func ExampleInt64_withPassingChecks() {
 // return from ps.Parse as the standard Helper will report any errors and
 // abort the program.
 func ExampleInt64_withFailingChecks() {
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	var i int64
 
@@ -106,7 +107,7 @@ func ExampleInt64_withNilValue() {
 		}
 	}()
 
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	// we expect this to panic because the map Value has not been initialised
 	ps.Add("my-int", psetter.Int[int64]{}, "help text")

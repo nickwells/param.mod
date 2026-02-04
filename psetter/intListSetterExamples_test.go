@@ -4,12 +4,13 @@ import (
 	"fmt"
 
 	"github.com/nickwells/check.mod/v2/check"
+	"github.com/nickwells/param.mod/v6/paramset"
 	"github.com/nickwells/param.mod/v6/psetter"
 )
 
 // ExampleIntList_standard demonstrates the use of a IntList setter.
 func ExampleIntList_standard() {
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	il := []int64{42}
 
@@ -41,7 +42,7 @@ func ExampleIntList_standard() {
 // ExampleIntList_withPassingChecks demonstrates how to add checks to be
 // applied to the value.
 func ExampleIntList_withPassingChecks() {
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	il := []int64{42}
 
@@ -78,7 +79,7 @@ func ExampleIntList_withPassingChecks() {
 // to examine the return from ps.Parse as the standard Helper will report any
 // errors and abort the program.
 func ExampleIntList_withFailingChecks() {
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	il := []int64{42}
 
@@ -131,7 +132,7 @@ func ExampleIntList_withNilValue() {
 		}
 	}()
 
-	ps := newPSetForTesting() // use paramset.NewOrPanic()
+	ps := paramset.NewNoHelpNoExitNoErrRpt() // use paramset.New()
 
 	// we expect this to panic because the map Value has not been initialised
 	ps.Add("my-ints", psetter.IntList[int64]{}, "help text")
