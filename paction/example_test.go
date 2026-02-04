@@ -28,7 +28,7 @@ func Example_count() {
 	af := (&paramCounter).MakeActionFunc()
 
 	// Create the parameter set ...
-	ps, _ := paramset.New()
+	ps := paramset.New()
 
 	// ... and add the parameters. For each parameter we set the function to
 	// be called after they have been set to the action function created

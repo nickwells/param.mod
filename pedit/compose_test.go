@@ -17,7 +17,7 @@ import (
 // with no arguments in which case it will use the arguments given to the
 // program (os.Args).
 func ExampleComposite_Edit() {
-	ps, _ := paramset.NewNoHelpNoExitNoErrRpt()
+	ps := paramset.NewNoHelpNoExitNoErrRpt()
 
 	var s string
 

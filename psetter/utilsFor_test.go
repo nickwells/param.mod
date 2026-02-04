@@ -5,7 +5,6 @@ import (
 
 	"github.com/nickwells/errutil.mod/errutil"
 	"github.com/nickwells/param.mod/v6/param"
-	"github.com/nickwells/param.mod/v6/paramset"
 )
 
 // panicSafeCheck runs the CheckSetter and catches any panic, returning true
@@ -21,18 +20,6 @@ func panicSafeCheck(s param.Setter) (panicked bool, panicVal any) {
 	s.CheckSetter("test")
 
 	return
-}
-
-// newPSetForTesting returns a PSet suitable for use in a test (without all
-// the standard parameters and help functions)
-//
-// Note that the paramset function used here is just to make the example more
-// reliable. In production code you would be best to use
-// paramset.NewOrPanic(...) which will set the standard helper and panic if
-// there's any error.
-func newPSetForTesting() *param.PSet {
-	ps, _ := paramset.NewNoHelpNoExitNoErrRpt()
-	return ps
 }
 
 // logErrs will report the errors (if any) to stdout
