@@ -351,26 +351,28 @@ func printParamAttributes(twc *twrap.TWConf, p *param.ByName) {
 	}
 
 	if p.AttrIsSet(param.CommandLineOnly) && p.PSet().HasAltSources() {
-		var sources []string
+		var sourcesNotAllowed []string
 
 		if p.PSet().HasGlobalConfigFiles() {
-			sources = append(sources, "in the configuration files")
+			sourcesNotAllowed = append(sourcesNotAllowed,
+				"in the configuration files")
 		} else {
 			grpCF := p.PSet().ConfigFilesForGroup(p.GroupName())
 			if len(grpCF) > 0 {
-				sources = append(sources,
+				sourcesNotAllowed = append(sourcesNotAllowed,
 					"in the configuration files for this group")
 			}
 		}
 
 		if p.PSet().HasEnvPrefixes() {
-			sources = append(sources, "as an environment variable")
+			sourcesNotAllowed = append(sourcesNotAllowed,
+				"as an environment variable")
 		}
 
-		if len(sources) > 0 {
+		if len(sourcesNotAllowed) > 0 {
 			twc.Wrap(
 				"\nThis parameter may only be given on the command line, not "+
-					strings.Join(sources, " or "), descriptionIndent)
+					strings.Join(sourcesNotAllowed, " or "), descriptionIndent)
 		}
 	}
 }
