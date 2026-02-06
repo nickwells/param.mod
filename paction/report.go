@@ -2,52 +2,54 @@ package paction
 
 import (
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/nickwells/location.mod/location"
 	"github.com/nickwells/param.mod/v6/param"
 )
 
-// Report returns an ActionFunc that will print its argument to the standard
-// writer of the PSet (as given by the StdWriter method).
+// ReportTo returns an ActionFunc that will print its msg argument to the
+// given writer.
+func ReportTo(w io.Writer, msg string) param.ActionFunc {
+	return func(_ location.L, p *param.ByName, _ []string) error {
+		fmt.Fprint(w, msg)
+
+		return nil
+	}
+}
+
+// Report returns an ActionFunc that will print its argument to standard out.
 func Report(msg string) param.ActionFunc {
-	return func(_ location.L, p *param.ByName, _ []string) error {
-		fmt.Fprint(p.StdWriter(), msg)
-
-		return nil
-	}
+	return ReportTo(os.Stdout, msg)
 }
 
-// ErrReport returns an ActionFunc that will print its argument to the error
-// writer of the PSet (as given by the ErrWriter method).
+// ErrReport returns an ActionFunc that will print its argument to standard
+// error.
 func ErrReport(msg string) param.ActionFunc {
+	return ReportTo(os.Stderr, msg)
+}
+
+// ReportToAndExit returns an ActionFunc that will print its argument to the
+// given Writer. Having printed the message it will exit with the given
+// status.
+func ReportToAndExit(w io.Writer, exitStatus int, msg string) param.ActionFunc {
 	return func(_ location.L, p *param.ByName, _ []string) error {
-		fmt.Fprint(p.ErrWriter(), msg)
+		fmt.Fprint(w, msg)
+		os.Exit(exitStatus)
 
 		return nil
 	}
 }
 
-// ReportAndExit returns an ActionFunc that will print its argument to the
-// standard writer of the PSet (as given by the StdWriter method). Having
-// printed the message it will exit with status 0.
+// ReportAndExit returns an ActionFunc that will print its argument to
+// standard out. Having printed the message it will exit with status 0.
 func ReportAndExit(msg string) param.ActionFunc {
-	return func(_ location.L, p *param.ByName, _ []string) error {
-		fmt.Fprint(p.StdWriter(), msg)
-		os.Exit(0)
-
-		return nil
-	}
+	return ReportToAndExit(os.Stdout, 0, msg)
 }
 
-// ErrReportAndExit returns an ActionFunc that will print its argument to the
-// error writer of the PSet (as given by the ErrWriter method). Having
-// printed the message it will exit with status 1.
+// ErrReportAndExit returns an ActionFunc that will print its argument to
+// standard error. Having printed the message it will exit with status 1.
 func ErrReportAndExit(msg string) param.ActionFunc {
-	return func(_ location.L, p *param.ByName, _ []string) error {
-		fmt.Fprint(p.ErrWriter(), msg)
-		os.Exit(1)
-
-		return nil
-	}
+	return ReportToAndExit(os.Stderr, 1, msg)
 }
