@@ -176,9 +176,8 @@ func calcColumnWidths(groups []*param.Group) (int, int) {
 func showWhereSetTable(h StdHelp, ps *param.PSet) {
 	hdr, err := col.NewHeader()
 	if err != nil {
-		h.twc.Println(
-			"Cannot construct header for where-params-set table:",
-			err)
+		h.twc.Println("Cannot make the header for where-params-set table:", err)
+
 		return
 	}
 

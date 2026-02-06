@@ -244,7 +244,7 @@ func TestParamAddPos(t *testing.T) {
 			},
 			paramsToParse: []string{"1", "--", "extra1", "extra2"},
 			errsExpected: map[string][]string{
-				"": []string{
+				"": {
 					`there were 2 unexpected extra parameters:` +
 						` "extra1" "extra2"`,
 				},

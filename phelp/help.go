@@ -42,6 +42,7 @@ func (h StdHelp) Help(ps *param.PSet, messages ...string) {
 	h.twc = twrap.NewTWConfOrPanic(
 		twrap.SetWriter(h.StdW()),
 		twrap.SetTargetLineLen(h.helpLineLen))
+
 	defer func() { h.twc = nil }()
 
 	if h.sectionsChosen.hasNothingChosen() {
@@ -51,14 +52,17 @@ func (h StdHelp) Help(ps *param.PSet, messages ...string) {
 	}
 
 	sep := ""
+
 	if len(messages) > 0 {
 		h.printHelpMessages(messages...)
+
 		sep = majorSectionSeparator
 	}
 
 	for _, sec := range helpSectionsInOrder {
 		if h.sectionsChosen[sec.name] {
 			h.twc.Print(sep)
+
 			sep = majorSectionSeparator
 			if !sec.displayFunc(h, ps) {
 				sep = ""

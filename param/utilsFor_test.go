@@ -185,6 +185,7 @@ func panicSafeTestParse(
 	}()
 
 	stackTrace = []byte{}
+
 	ps.Parse(params)
 
 	return ps.Errors(), panicked, panicVal, stackTrace

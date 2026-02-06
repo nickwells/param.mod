@@ -131,6 +131,7 @@ func showParamsByGroupName(h StdHelp, ps *param.PSet) bool {
 				if printGroup {
 					h.twc.Print(sep)
 					sep = minorSectionSeparator
+
 					h.printGroup(g, maxNameLen)
 					printGroup = false
 				}

@@ -26,6 +26,7 @@ func (h StdHelp) ProcessArgs(ps *param.PSet) {
 
 	if h.sectionsChosen.count() > 0 {
 		ps.HelpRequired()
+
 		if h.exitAfterHelp {
 			ps.ShouldExit()
 		}

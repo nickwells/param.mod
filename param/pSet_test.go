@@ -32,6 +32,7 @@ func TestPSet(t *testing.T) {
 
 	for _, tc := range testCases {
 		var ps *param.PSet
+
 		panicked, panicVal := testhelper.PanicSafe(func() {
 			ps = paramset.NewNoHelpNoExitNoErrRpt(tc.psOpts...)
 		})

@@ -12,7 +12,7 @@ import (
 // ReportTo returns an ActionFunc that will print its msg argument to the
 // given writer.
 func ReportTo(w io.Writer, msg string) param.ActionFunc {
-	return func(_ location.L, p *param.ByName, _ []string) error {
+	return func(_ location.L, _ *param.ByName, _ []string) error {
 		fmt.Fprint(w, msg)
 
 		return nil
@@ -34,7 +34,7 @@ func ErrReport(msg string) param.ActionFunc {
 // given Writer. Having printed the message it will exit with the given
 // status.
 func ReportToAndExit(w io.Writer, exitStatus int, msg string) param.ActionFunc {
-	return func(_ location.L, p *param.ByName, _ []string) error {
+	return func(_ location.L, _ *param.ByName, _ []string) error {
 		fmt.Fprint(w, msg)
 		os.Exit(exitStatus)
 

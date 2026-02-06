@@ -72,11 +72,13 @@ func (ps *PSet) Parse(args ...[]string) {
 	ps.getParamsFromEnvironment()
 
 	var loc *location.L
+
 	var suppliedParams []string
 
 	if len(args) == 0 {
 		loc = location.New("Argument")
 		loc.SetNote(SrcCommandLine)
+
 		suppliedParams = os.Args[1:]
 	} else {
 		loc = location.New("Supplied Parameter")
