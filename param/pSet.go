@@ -66,6 +66,10 @@ type PSet struct {
 
 	helper Helper
 
+	helpRequired bool
+	shouldExit   bool
+	exitStatus   int
+
 	parsed bool
 }
 
@@ -600,4 +604,26 @@ func (ps PSet) FindMatchingNotes(pattern string) ([]string, error) {
 	}
 
 	return matches, nil
+}
+
+// HelpRequired sets the help required flag which will cause PSet.Parse to
+// call the Helper's Help method.
+func (ps *PSet) HelpRequired() {
+	ps.helpRequired = true
+}
+
+// ShouldExit sets the shouldExit flag which will cause PSet.Parse to exit.
+func (ps *PSet) ShouldExit() {
+	ps.shouldExit = true
+}
+
+// SetExitStatus sets the exitStatus to the supplied value (if it is greater
+// than the prior status) and sets the shouldExit flag which will cause
+// PSet.Parse to exit.
+func (ps *PSet) SetExitStatus(s int) {
+	ps.ShouldExit()
+
+	if s > ps.exitStatus {
+		ps.exitStatus = s
+	}
 }
