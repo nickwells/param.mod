@@ -1,6 +1,8 @@
 package paramset
 
 import (
+	"os"
+
 	"github.com/nickwells/errutil.mod/errutil"
 	"github.com/nickwells/param.mod/v6/param"
 )
@@ -13,7 +15,7 @@ func (nh noHelpNoExit) AddParams(_ *param.PSet)         {}
 func (nh noHelpNoExit) ErrorHandler(ps *param.PSet) {
 	errMap := ps.Errors()
 	if len(errMap) != 0 {
-		errutil.ErrMap(errMap).Report(ps.ErrW(), ps.ProgName())
+		errutil.ErrMap(errMap).Report(os.Stderr, ps.ProgName())
 	}
 }
 

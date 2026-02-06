@@ -16,8 +16,8 @@ func (nh noHelp) AddParams(_ *param.PSet)         {}
 func (nh noHelp) ErrorHandler(ps *param.PSet) {
 	errMap := ps.Errors()
 	if len(errMap) != 0 {
-		errMap.Report(ps.ErrW(), ps.ProgName())
-		os.Exit(1)
+		errMap.Report(os.Stderr, ps.ProgName())
+		ps.SetExitStatus(1)
 	}
 }
 
