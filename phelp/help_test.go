@@ -198,6 +198,8 @@ func TestHelp(t *testing.T) {
 	}
 	defer ec.ResetEnv()
 
+	const progDesc = "a description of what the program does"
+
 	testCases := []struct {
 		testhelper.ID
 		params       []string
@@ -209,25 +211,25 @@ func TestHelp(t *testing.T) {
 	}{
 		{
 			ID:         testhelper.MkID("help"),
-			progDesc:   "a description of what the program does (help)",
+			progDesc:   progDesc + " (help)",
 			params:     []string{"-help", "-param2=99"},
 			paramAdder: []param.PSetOptFunc{addByNameParams},
 		},
 		{
 			ID:         testhelper.MkID("help-a"),
-			progDesc:   "a description of what the program does (help-a)",
+			progDesc:   progDesc + " (help-a)",
 			params:     []string{"-help-a", "-param2=99"},
 			paramAdder: []param.PSetOptFunc{addByNameParams},
 		},
 		{
 			ID:         testhelper.MkID("help-s"),
-			progDesc:   "a description of what the program does (help-s)",
+			progDesc:   progDesc + " (help-s)",
 			params:     []string{"-help-s", "-param2=99"},
 			paramAdder: []param.PSetOptFunc{addByNameParams},
 		},
 		{
 			ID:       testhelper.MkID("help-params"),
-			progDesc: "a description of what the program does",
+			progDesc: progDesc,
 			params: []string{
 				"-help-params",
 				"help-groups,help,help",
@@ -237,7 +239,7 @@ func TestHelp(t *testing.T) {
 		},
 		{
 			ID:       testhelper.MkID("help-params-bad-param"),
-			progDesc: "a description of what the program does",
+			progDesc: progDesc,
 			params: []string{
 				"-help-params",
 				"help-groups,help,no-such-param",
@@ -248,7 +250,7 @@ func TestHelp(t *testing.T) {
 		},
 		{
 			ID:       testhelper.MkID("help-params-multi-bad-param"),
-			progDesc: "a description of what the program does",
+			progDesc: progDesc,
 			params: []string{
 				"-help-params",
 				"help-groups,help,no-such-param,not-a-param",
@@ -259,13 +261,13 @@ func TestHelp(t *testing.T) {
 		},
 		{
 			ID:         testhelper.MkID("help-show-groups"),
-			progDesc:   "a description of what the program does",
+			progDesc:   progDesc,
 			params:     []string{"-help-show=groups", "-param2=99"},
 			paramAdder: []param.PSetOptFunc{addByNameParams},
 		},
 		{
 			ID:       testhelper.MkID("help-groups"),
-			progDesc: "a description of what the program does",
+			progDesc: progDesc,
 			params: []string{
 				"-help-groups",
 				paramGroupName,
@@ -275,7 +277,7 @@ func TestHelp(t *testing.T) {
 		},
 		{
 			ID:       testhelper.MkID("help-groups-all"),
-			progDesc: "a description of what the program does",
+			progDesc: progDesc,
 			params: []string{
 				"-help-all",
 				"-help-groups",
@@ -286,7 +288,7 @@ func TestHelp(t *testing.T) {
 		},
 		{
 			ID:       testhelper.MkID("help-show-intro"),
-			progDesc: "a description of what the program does",
+			progDesc: progDesc,
 			params: []string{
 				"-help-show=intro",
 				"-param2=99",
@@ -295,7 +297,7 @@ func TestHelp(t *testing.T) {
 		},
 		{
 			ID:       testhelper.MkID("params-show"),
-			progDesc: "a description of what the program does",
+			progDesc: progDesc,
 			params: []string{
 				"-params-show-where-set",
 				"-params-show-unused",
@@ -312,7 +314,7 @@ func TestHelp(t *testing.T) {
 		},
 		{
 			ID:       testhelper.MkID("help-show-sources"),
-			progDesc: "a description of what the program does",
+			progDesc: progDesc,
 			params: []string{
 				"-help-show=sources",
 				"-param2=99",
@@ -321,7 +323,7 @@ func TestHelp(t *testing.T) {
 		},
 		{
 			ID:       testhelper.MkID("params-file-cmdline-param"),
-			progDesc: "a description of what the program does",
+			progDesc: progDesc,
 			params: []string{
 				"-params-file",
 				"testdata/configFiles/param-cmdline.cfg",
@@ -332,7 +334,7 @@ func TestHelp(t *testing.T) {
 		},
 		{
 			ID: testhelper.MkID("badParams-multi"),
-			progDesc: "a description of what the program does" +
+			progDesc: progDesc +
 				" (badParams)",
 			params: []string{
 				"-params-file=testdata/nonesuch",
@@ -344,7 +346,7 @@ func TestHelp(t *testing.T) {
 		},
 		{
 			ID:       testhelper.MkID("badParams-blank-filename"),
-			progDesc: "a description of what the program does",
+			progDesc: progDesc,
 			params: []string{
 				"-params-file",
 				"",
@@ -355,7 +357,7 @@ func TestHelp(t *testing.T) {
 		},
 		{
 			ID:       testhelper.MkID("badParams-dup-filename"),
-			progDesc: "a description of what the program does",
+			progDesc: progDesc,
 			params: []string{
 				"-params-file",
 				"testdata/configFiles/param.cfg",
@@ -368,7 +370,7 @@ func TestHelp(t *testing.T) {
 		},
 		{
 			ID:       testhelper.MkID("badParams-groups"),
-			progDesc: "a description of what the program does",
+			progDesc: progDesc,
 			params: []string{
 				"-help-groups",
 				"nonesuch1,nonesuch2,nonesuch3",
@@ -379,7 +381,7 @@ func TestHelp(t *testing.T) {
 		},
 		{
 			ID:       testhelper.MkID("badParams-multi-style"),
-			progDesc: "a description of what the program does",
+			progDesc: progDesc,
 			params: []string{
 				"-help",
 				"-help-groups",
@@ -435,70 +437,70 @@ func TestHelp(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		idStr := tc.IDStr()
+		t.Run(tc.Name, func(t *testing.T) {
+			idStr := tc.IDStr()
 
-		setInitialValues()
+			setInitialValues()
 
-		helper := phelp.NewStdHelp()
-		helper.SetExitAfterHelp(false)
-		helper.SetDontExitOnErrors(true)
+			var stdoutBuf, stderrBuf bytes.Buffer
 
-		var stdoutBuf bytes.Buffer
+			helper := phelp.NewStdHelp(
+				phelp.SetStdWriter(&stdoutBuf),
+				phelp.SetErrWriter(&stderrBuf),
+			)
+			helper.SetExitAfterHelp(false)
+			helper.SetDontExitOnErrors(true)
 
-		var stderrBuf bytes.Buffer
+			ps := param.NewSet(
+				helper,
+				param.SetProgramDescription(tc.progDesc),
+			)
 
-		ps := param.NewSet(
-			helper,
-			param.SetStdWriter(&stdoutBuf),
-			param.SetErrWriter(&stderrBuf),
-			param.SetProgramDescription(tc.progDesc),
-		)
-
-		for _, psof := range tc.paramAdder {
-			err = psof(ps)
-			if err != nil {
-				t.Log(idStr)
-				t.Fatal("\t: Unexpected failure to add parameters:",
-					err)
+			for _, psof := range tc.paramAdder {
+				err = psof(ps)
+				if err != nil {
+					t.Log(idStr)
+					t.Fatal("\t: Unexpected failure to add parameters:",
+						err)
+				}
 			}
-		}
 
-		addConfigFiles(ps, tc.configFiles)
+			addConfigFiles(ps, tc.configFiles)
 
-		for _, ep := range tc.envPrefixes {
-			ps.AddEnvPrefix(ep)
-		}
-
-		ps.Parse(tc.params)
-
-		if len(ps.Errors()) != 0 {
-			if !tc.errsExpected {
-				t.Log(idStr)
-				t.Errorf("\t: Unexpected errors: %s", stderrBuf.String())
+			for _, ep := range tc.envPrefixes {
+				ps.AddEnvPrefix(ep)
 			}
-		} else if tc.errsExpected {
-			t.Log(idStr)
-			t.Errorf("\t: Errors expected but not seen")
-		}
 
-		gfc.Check(t, idStr+" [stdout]", tc.Name+".stdout", stdoutBuf.Bytes())
-		gfc.Check(t, idStr+" [stderr]", tc.Name+".stderr", stderrBuf.Bytes())
+			ps.Parse(tc.params)
+
+			if len(ps.Errors()) != 0 {
+				if !tc.errsExpected {
+					t.Log(idStr)
+					t.Errorf("\t: Unexpected errors: %s", stderrBuf.String())
+				}
+			} else if tc.errsExpected {
+				t.Log(idStr)
+				t.Errorf("\t: Errors expected but not seen")
+			}
+
+			gfc.Check(t, idStr+" [stdout]", tc.Name+".stdout", stdoutBuf.Bytes())
+			gfc.Check(t, idStr+" [stderr]", tc.Name+".stderr", stderrBuf.Bytes())
+		})
 	}
 }
 
 func TestHelpWithMessage(t *testing.T) {
-	helper := phelp.NewStdHelp()
+	var stdoutBuf, stderrBuf bytes.Buffer
+
+	helper := phelp.NewStdHelp(
+		phelp.SetStdWriter(&stdoutBuf),
+		phelp.SetErrWriter(&stderrBuf),
+	)
 	helper.SetExitAfterHelp(false)
 	helper.SetDontExitOnErrors(true)
 
-	var stdoutBuf bytes.Buffer
-
-	var stderrBuf bytes.Buffer
-
 	ps := param.NewSet(
 		helper,
-		param.SetStdWriter(&stdoutBuf),
-		param.SetErrWriter(&stderrBuf),
 		param.SetProgramDescription("program description"))
 
 	ps.Parse([]string{})

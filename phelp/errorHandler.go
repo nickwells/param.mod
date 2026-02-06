@@ -1,11 +1,10 @@
 package phelp
 
 import (
-	"os"
+	"fmt"
 
 	"github.com/nickwells/errutil.mod/errutil"
 	"github.com/nickwells/param.mod/v6/param"
-	"github.com/nickwells/twrap.mod/twrap"
 )
 
 // ErrorHandler will, by default, check for errors and if there are any
@@ -16,32 +15,20 @@ import (
 // being passed the PSet error writer, the program name and the PSet
 // error map
 func (h StdHelp) ErrorHandler(ps *param.PSet) {
-	exitStatus := reportErrors(h, nil, ps)
-
-	if exitStatus != 0 && h.exitOnErrors {
-		os.Exit(exitStatus)
-	}
-}
-
-// reportErrors reports the errors (if any) and returns a non-zero exit
-// status if any errors were detected.
-func reportErrors(h StdHelp, _ *twrap.TWConf, ps *param.PSet) int {
 	errMap := ps.Errors()
 
 	if len(errMap) == 0 {
-		return 0
+		return
 	}
 
 	if h.reportErrors {
-		errutil.ErrMap(errMap).Report(ps.ErrW(), ps.ProgName())
-
-		twc := twrap.NewTWConfOrPanic(
-			twrap.SetWriter(ps.ErrW()),
-			twrap.SetTargetLineLen(h.helpLineLen))
-		twc.Wrap("\n"+suggestHelpParam(ps), 0)
+		errutil.ErrMap(errMap).Report(h.ErrW(), ps.ProgName())
+		fmt.Fprintln(h.ErrW(), "\n"+suggestHelpParam(ps))
 	}
 
-	return 1
+	if h.exitOnErrors {
+		ps.SetExitStatus(exitStatusErrorsFound)
+	}
 }
 
 // suggestHelpParam returns a string suggesting the standard help parameter

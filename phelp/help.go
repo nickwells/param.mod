@@ -3,6 +3,7 @@ package phelp
 import (
 	"fmt"
 
+	"github.com/nickwells/pager.mod/pager"
 	"github.com/nickwells/param.mod/v6/param"
 	"github.com/nickwells/twrap.mod/twrap"
 )
@@ -20,9 +21,9 @@ const (
 )
 
 // printHelpMessages prints the messages
-func (h StdHelp) printHelpMessages(twc *twrap.TWConf, messages ...string) {
+func (h StdHelp) printHelpMessages(messages ...string) {
 	for _, message := range messages {
-		twc.Wrap(message, 0)
+		h.twc.Wrap(message, 0)
 	}
 }
 
@@ -33,32 +34,34 @@ func (h StdHelp) printHelpMessages(twc *twrap.TWConf, messages ...string) {
 // standard writer (stdout) and os.Exit will be called with an exit status of
 // 1 to indicate an error.
 func (h StdHelp) Help(ps *param.PSet, messages ...string) {
-	w := ps.StdW()
+	if h.pageOutput {
+		p := pager.Start(&h)
+		defer p.Done()
+	}
+
+	h.twc = twrap.NewTWConfOrPanic(
+		twrap.SetWriter(h.StdW()),
+		twrap.SetTargetLineLen(h.helpLineLen))
+	defer func() { h.twc = nil }()
 
 	if h.sectionsChosen.hasNothingChosen() {
 		if err := h.setHelpSections(standardHelpSectionAlias); err != nil {
 			panic(fmt.Sprint("Couldn't set the default help sections:", err))
 		}
-
-		w = ps.ErrW()
 	}
 
-	twc := twrap.NewTWConfOrPanic(
-		twrap.SetWriter(w),
-		twrap.SetTargetLineLen(h.helpLineLen))
-
-	printSep := false
+	sep := ""
 	if len(messages) > 0 {
-		printSep = true
-
-		h.printHelpMessages(twc, messages...)
+		h.printHelpMessages(messages...)
+		sep = majorSectionSeparator
 	}
 
 	for _, sec := range helpSectionsInOrder {
 		if h.sectionsChosen[sec.name] {
-			printSep = printSepIf(twc, printSep, majorSectionSeparator)
-			if !sec.displayFunc(h, twc, ps) {
-				printSep = false
+			h.twc.Print(sep)
+			sep = majorSectionSeparator
+			if !sec.displayFunc(h, ps) {
+				sep = ""
 			}
 		}
 	}

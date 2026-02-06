@@ -2,8 +2,10 @@ package phelp
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/nickwells/location.mod/location"
+	"github.com/nickwells/pager.mod/pager"
 	"github.com/nickwells/param.mod/v6/param"
 	"github.com/nickwells/param.mod/v6/psetter"
 	"github.com/nickwells/twrap.mod/twrap"
@@ -15,7 +17,7 @@ import (
 type helpSection struct {
 	name        string
 	desc        string
-	displayFunc func(StdHelp, *twrap.TWConf, *param.PSet) bool
+	displayFunc func(StdHelp, *param.PSet) bool
 }
 
 const (
@@ -29,6 +31,8 @@ const (
 	sourcesHelpSectionName       = "sources"
 	examplesHelpSectionName      = "examples"
 	refsHelpSectionName          = "refs"
+	whereSetHelpSectionName      = "where-set"
+	unusedParamsHelpSectionName  = "unused-params"
 )
 
 var helpSectionsInOrder = []helpSection{
@@ -89,6 +93,16 @@ var helpSectionsInOrder = []helpSection{
 		desc: "references to other programs or" +
 			" further sources of information",
 		displayFunc: showReferences,
+	},
+	{
+		name:        whereSetHelpSectionName,
+		desc:        "report where parameters are set",
+		displayFunc: showWhereParamsAreSet,
+	},
+	{
+		name:        unusedParamsHelpSectionName,
+		desc:        "report any unused parameters",
+		displayFunc: showUnusedParams,
 	},
 }
 
@@ -161,13 +175,20 @@ type choices map[string]bool
 // hasNothingChosen returns true if there is no entry in the choices set to
 // true
 func (c choices) hasNothingChosen() bool {
+	return c.count() == 0
+}
+
+// count returns the number of entries set to true
+func (c choices) count() int {
+	var n int
+
 	for _, v := range c {
 		if v {
-			return false
+			n++
 		}
 	}
 
-	return true
+	return n
 }
 
 // StdHelp implements the Helper interface. It records the parameter values
@@ -179,6 +200,7 @@ func (c choices) hasNothingChosen() bool {
 // It will be used automatically if you create your param.PSet using the
 // paramset.New function (recommended).
 type StdHelp struct {
+	pager.Writers
 	// help-... values
 	sectionsChosen choices
 	groupsChosen   choices
@@ -209,13 +231,49 @@ type StdHelp struct {
 	completionsQuiet bool
 	zshCompDir       string
 	zshCompAction    string
+
+	twc *twrap.TWConf
+}
+
+// StdHelpOptFunc is the type of a function that can be passed to
+// NewStdHelp. These functions can be used to set optional behaviour on the
+// helper.
+type StdHelpOptFunc func(h *StdHelp) error
+
+// SetStdWriter returns a StdHelpOptFunc that will set the standard out
+// writer for the helper.
+func SetStdWriter(w io.Writer) StdHelpOptFunc {
+	return func(h *StdHelp) error {
+		if w == nil {
+			return fmt.Errorf("phelp.SetStdWriter cannot take a nil value")
+		}
+
+		h.SetStdW(w)
+
+		return nil
+	}
+}
+
+// SetErrWriter returns a StdHelpOptFunc that will set the standard out
+// writer for the helper.
+func SetErrWriter(w io.Writer) StdHelpOptFunc {
+	return func(h *StdHelp) error {
+		if w == nil {
+			return fmt.Errorf("phelp.SetErrWriter cannot take a nil value")
+		}
+
+		h.SetErrW(w)
+
+		return nil
+	}
 }
 
 // NewStdHelp returns a pointer to a well-constructed instance of the
 // standard help type ready to be used as the helper for a new param.PSet
 // (the standard paramset.New() function will use this)
-func NewStdHelp() *StdHelp {
-	return &StdHelp{
+func NewStdHelp(hof ...StdHelpOptFunc) *StdHelp {
+	h := &StdHelp{
+		Writers:        pager.W(),
 		sectionsChosen: make(choices),
 		groupsChosen:   make(choices),
 		paramsChosen:   make(choices),
@@ -235,6 +293,15 @@ func NewStdHelp() *StdHelp {
 
 		paramsSetFormat: paramSetFmtStd,
 	}
+
+	for _, f := range hof {
+		err := f(h)
+		if err != nil {
+			panic(fmt.Errorf("while creating the StdHelp: %w", err))
+		}
+	}
+
+	return h
 }
 
 // setHelpSections returns an ActionFunc to set the sectionsChosen in the

@@ -2,11 +2,10 @@ package phelp
 
 import (
 	"github.com/nickwells/param.mod/v6/param"
-	"github.com/nickwells/twrap.mod/twrap"
 )
 
 // showReferences produces the See Also section of the help message
-func showReferences(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
+func showReferences(h StdHelp, ps *param.PSet) bool {
 	refs := ps.References()
 	if len(refs) == 0 {
 		return false
@@ -14,41 +13,41 @@ func showReferences(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 
 	switch h.helpFormat {
 	case helpFmtTypeMarkdown:
-		return showReferencesFmtMD(h, twc, ps)
+		return showReferencesFmtMD(h, ps)
 	default:
-		return showReferencesFmtStd(h, twc, ps)
+		return showReferencesFmtStd(h, ps)
 	}
 }
 
 // showReferencesFmtStd prints references in the standard help format
-func showReferencesFmtStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
+func showReferencesFmtStd(h StdHelp, ps *param.PSet) bool {
 	refs := ps.References()
 
-	twc.Print("See Also\n")
+	h.twc.Print("See Also\n")
 
 	for _, r := range refs {
-		twc.Wrap("\n"+r.Name()+"\n", paramIndent)
+		h.twc.Wrap("\n"+r.Name()+"\n", paramIndent)
 
 		if h.showSummary {
 			continue
 		}
 
-		twc.Wrap(r.Desc(), descriptionIndent)
+		h.twc.Wrap(r.Desc(), descriptionIndent)
 	}
 
 	return true
 }
 
 // showReferencesFmtMD prints references in markdown format
-func showReferencesFmtMD(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
+func showReferencesFmtMD(h StdHelp, ps *param.PSet) bool {
 	refs := ps.References()
 
-	twc.Print("# See Also\n\n")
+	h.twc.Print("# See Also\n\n")
 
 	for _, r := range refs {
-		twc.Print("```\n")
-		twc.Wrap(r.Name(), 0)
-		twc.Print("```\n")
+		h.twc.Print("```\n")
+		h.twc.Wrap(r.Name(), 0)
+		h.twc.Print("```\n")
 
 		if h.showSummary {
 			continue
@@ -56,7 +55,7 @@ func showReferencesFmtMD(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 
 		desc := makeTextMarkdownSafe(r.Desc())
 
-		twc.Wrap(desc, 0)
+		h.twc.Wrap(desc, 0)
 	}
 
 	return true

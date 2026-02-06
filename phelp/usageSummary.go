@@ -2,13 +2,12 @@ package phelp
 
 import (
 	"github.com/nickwells/param.mod/v6/param"
-	"github.com/nickwells/twrap.mod/twrap"
 )
 
 // showUsageSummary prints the program name and a parameter summary. Only
 // mandatory parameters are shown.
-func showUsageSummary(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
-	twc.Print("Usage: ", ps.ProgName())
+func showUsageSummary(h StdHelp, ps *param.PSet) bool {
+	h.twc.Print("Usage: ", ps.ProgName())
 
 	bppCount := ps.CountByPosParams()
 
@@ -17,7 +16,7 @@ func showUsageSummary(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	for i := range bppCount {
 		bp, _ := ps.GetParamByPos(i)
 
-		twc.Print(" <", bp.Name(), ">")
+		h.twc.Print(" <", bp.Name(), ">")
 
 		if bp.IsTerminal() {
 			lastPosParamIsTerminal = true
@@ -31,7 +30,7 @@ func showUsageSummary(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 		for _, g := range groups {
 			for _, bn := range g.Params() {
 				if bn.AttrIsSet(param.MustBeSet) {
-					twc.Print(" " + ParamShortSummary(*bn))
+					h.twc.Print(" " + ParamShortSummary(*bn))
 				} else {
 					hasOptionalParams = true
 				}
@@ -39,19 +38,19 @@ func showUsageSummary(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 		}
 
 		if hasOptionalParams {
-			twc.Print(" ...")
+			h.twc.Print(" ...")
 		}
 
 		if ps.TrailingParamsExpected() {
-			twc.Print(" " + ps.TerminalParam())
+			h.twc.Print(" " + ps.TerminalParam())
 		}
 	}
 
 	if ps.TrailingParamsExpected() {
-		twc.Print(" " + ps.TrailingParamsName() + "...")
+		h.twc.Print(" " + ps.TrailingParamsName() + "...")
 	}
 
-	twc.Print("\n")
+	h.twc.Print("\n")
 
 	return true
 }

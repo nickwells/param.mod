@@ -2,11 +2,10 @@ package phelp
 
 import (
 	"github.com/nickwells/param.mod/v6/param"
-	"github.com/nickwells/twrap.mod/twrap"
 )
 
 // showIntro prints the program name and, optionally, the description
-func showIntro(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
+func showIntro(h StdHelp, ps *param.PSet) bool {
 	if h.sectionsChosen[usageHelpSectionName] &&
 		(h.showSummary || ps.ProgDesc() == "") {
 		return false
@@ -14,28 +13,28 @@ func showIntro(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 
 	switch h.helpFormat {
 	case helpFmtTypeMarkdown:
-		showIntroFmtMD(h, twc, ps)
+		showIntroFmtMD(h, ps)
 	default:
-		showIntroFmtStd(h, twc, ps)
+		showIntroFmtStd(h, ps)
 	}
 
 	return true
 }
 
 // showIntroFmtStd prints the intro section in the standard help format
-func showIntroFmtStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) {
-	twc.Print(ps.ProgName() + "\n")
+func showIntroFmtStd(h StdHelp, ps *param.PSet) {
+	h.twc.Print(ps.ProgName() + "\n")
 
 	if h.showSummary {
 		return
 	}
 
-	twc.Wrap(ps.ProgDesc(), 0)
+	h.twc.Wrap(ps.ProgDesc(), 0)
 }
 
 // showIntroFmtMD prints the intro section in markdown format
-func showIntroFmtMD(h StdHelp, twc *twrap.TWConf, ps *param.PSet) {
-	twc.Print("# " + ps.ProgBaseName() + "\n\n")
+func showIntroFmtMD(h StdHelp, ps *param.PSet) {
+	h.twc.Print("# " + ps.ProgBaseName() + "\n\n")
 
 	if h.showSummary {
 		return
@@ -43,6 +42,6 @@ func showIntroFmtMD(h StdHelp, twc *twrap.TWConf, ps *param.PSet) {
 
 	desc := makeTextMarkdownSafe(ps.ProgDesc())
 
-	twc.Wrap(desc, 0)
-	twc.Print("\n")
+	h.twc.Wrap(desc, 0)
+	h.twc.Print("\n")
 }

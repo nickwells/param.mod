@@ -54,23 +54,23 @@ func printWhereSetIntro(twc *twrap.TWConf, p *param.ByName, errCount int) {
 	}
 }
 
-func showWhereParamsAreSet(h StdHelp, twc *twrap.TWConf, ps *param.PSet) int {
+func showWhereParamsAreSet(h StdHelp, ps *param.PSet) bool {
 	switch h.paramsSetFormat {
 	case paramSetFmtStd:
-		showWhereSetStd(h, twc, ps)
+		showWhereSetStd(h, ps)
 	case paramSetFmtShort:
-		showWhereSetShort(h, twc, ps)
+		showWhereSetShort(h, ps)
 	case paramSetFmtTable:
-		showWhereSetTable(h, twc, ps)
+		showWhereSetTable(h, ps)
 	default:
 		panic("the Format of the report on where params are set is unknown")
 	}
 
-	return 0
+	return true
 }
 
-func showWhereSetStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) {
-	twc.Wrap("Parameter Summary\n\n"+
+func showWhereSetStd(h StdHelp, ps *param.PSet) {
+	h.twc.Wrap("Parameter Summary\n\n"+
 		"This shows a summary of all the parameters."+
 		" If there are any errors with a parameter then that will be"+
 		" indicated along with a count of the number of errors. If a"+
@@ -84,30 +84,30 @@ func showWhereSetStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) {
 
 	for _, g := range groups {
 		if printSep {
-			twc.Print("\n")
-			twc.Print(minorSectionSeparator)
+			h.twc.Print("\n")
+			h.twc.Print(minorSectionSeparator)
 		}
 
 		printSep = true
 
-		h.printGroup(twc, g, maxNameLen)
+		h.printGroup(g, maxNameLen)
 
 		for _, p := range g.Params() {
-			printWhereSetIntro(twc, p, paramErrorCnt(ps, p))
-			twc.Println(english.Join(p.AltNames(), ", ", " or "))
+			printWhereSetIntro(h.twc, p, paramErrorCnt(ps, p))
+			h.twc.Println(english.Join(p.AltNames(), ", ", " or "))
 
 			intro := "at : "
 
 			whereSet := p.WhereSet()
 			for _, loc := range whereSet {
-				twc.WrapPrefixed(intro, loc, len(notSetIntro)+atIndent)
+				h.twc.WrapPrefixed(intro, loc, len(notSetIntro)+atIndent)
 				intro = "and: "
 			}
 		}
 	}
 }
 
-func showWhereSetShort(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) {
+func showWhereSetShort(h StdHelp, ps *param.PSet) {
 	groups := ps.GetGroups()
 
 	for _, g := range groups {
@@ -118,14 +118,14 @@ func showWhereSetShort(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) {
 				continue
 			}
 
-			printWhereSetIntro(twc, p, errCount)
-			twc.Println(english.Join(p.AltNames(), ", ", " or "))
+			printWhereSetIntro(h.twc, p, errCount)
+			h.twc.Println(english.Join(p.AltNames(), ", ", " or "))
 
 			intro := "at : "
 
 			whereSet := p.WhereSet()
 			for _, loc := range whereSet {
-				twc.WrapPrefixed(intro, loc, len(notSetIntro)+atIndent)
+				h.twc.WrapPrefixed(intro, loc, len(notSetIntro)+atIndent)
 				intro = "and: "
 			}
 		}
@@ -173,17 +173,19 @@ func calcColumnWidths(groups []*param.Group) (int, int) {
 	return maxGNLen, maxPNLen
 }
 
-func showWhereSetTable(_ StdHelp, twc *twrap.TWConf, ps *param.PSet) {
+func showWhereSetTable(h StdHelp, ps *param.PSet) {
 	hdr, err := col.NewHeader()
 	if err != nil {
-		twc.Println("Cannot construct header for where-params-set table:", err)
+		h.twc.Println(
+			"Cannot construct header for where-params-set table:",
+			err)
 		return
 	}
 
 	groups := ps.GetGroups()
 	maxGroupNameLen, maxParamNameLen := calcColumnWidths(groups)
 
-	rpt := col.NewReportOrPanic(hdr, twc.W,
+	rpt := col.NewReportOrPanic(hdr, h.twc.W,
 		col.New(&colfmt.Int{HandleZeroes: true}, "errs"),
 		col.New(&colfmt.String{W: maxGroupNameLen}, "parameter", "group"),
 		col.New(&colfmt.WrappedString{W: maxParamNameLen},

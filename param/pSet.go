@@ -3,7 +3,6 @@ package param
 import (
 	"errors"
 	"fmt"
-	"io"
 	"path"
 	"slices"
 	"sort"
@@ -11,7 +10,6 @@ import (
 
 	"github.com/nickwells/errutil.mod/errutil"
 	"github.com/nickwells/location.mod/location"
-	"github.com/nickwells/pager.mod/pager"
 )
 
 // DfltTerminalParam is the default value of the parameter that will stop
@@ -33,7 +31,6 @@ type FinalCheckFunc func() error
 // then adding the parameters to the PSet before calling Parse to set the
 // parameter values.
 type PSet struct {
-	pager.Writers
 	parseCalledFrom string
 
 	progName     string
@@ -134,34 +131,6 @@ func (ps *PSet) TrailingParamsExpected() bool {
 // parameters (if any)
 func (ps *PSet) TrailingParamsName() string { return ps.trailingParamsName }
 
-// SetErrWriter returns a PSetOptFunc which can be passed to NewSet. It
-// sets the Writer to which error messages are written
-func SetErrWriter(w io.Writer) PSetOptFunc {
-	return func(ps *PSet) error {
-		if w == nil {
-			return fmt.Errorf("param.SetErrWriter cannot take a nil value")
-		}
-
-		ps.SetErrW(w)
-
-		return nil
-	}
-}
-
-// SetStdWriter returns a PSetOptFunc which can be passed to NewSet. It
-// sets the Writer to which standard messages are written
-func SetStdWriter(w io.Writer) PSetOptFunc {
-	return func(ps *PSet) error {
-		if w == nil {
-			return fmt.Errorf("param.SetStdWriter cannot take a nil value")
-		}
-
-		ps.SetStdW(w)
-
-		return nil
-	}
-}
-
 // SetProgramDescription returns a PSetOptFunc which can be passed to
 // NewSet. It will set the program description
 func SetProgramDescription(desc string) PSetOptFunc {
@@ -243,8 +212,6 @@ func NewSet(h Helper, psof ...PSetOptFunc) *PSet {
 		terminalParam:  DfltTerminalParam,
 		paramPrefixes:  []string{"--", "-"},
 		shortestPrefix: "-",
-
-		Writers: pager.W(),
 
 		helper: h,
 	}

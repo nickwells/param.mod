@@ -2,11 +2,10 @@ package phelp
 
 import (
 	"github.com/nickwells/param.mod/v6/param"
-	"github.com/nickwells/twrap.mod/twrap"
 )
 
 // showExamples prints the Examples section of the help message
-func showExamples(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
+func showExamples(h StdHelp, ps *param.PSet) bool {
 	ex := ps.Examples()
 	if len(ex) == 0 {
 		return false
@@ -14,41 +13,41 @@ func showExamples(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 
 	switch h.helpFormat {
 	case helpFmtTypeMarkdown:
-		return showExamplesFmtMD(h, twc, ps)
+		return showExamplesFmtMD(h, ps)
 	default:
-		return showExamplesFmtStd(h, twc, ps)
+		return showExamplesFmtStd(h, ps)
 	}
 }
 
 // showExamplesFmtStd prints examples in the standard help format
-func showExamplesFmtStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
+func showExamplesFmtStd(h StdHelp, ps *param.PSet) bool {
 	ex := ps.Examples()
 
-	_, _ = twc.Print("Examples\n")
+	_, _ = h.twc.Print("Examples\n")
 
 	for _, e := range ex {
-		twc.Wrap("\n"+e.Ex()+"\n", paramIndent)
+		h.twc.Wrap("\n"+e.Ex()+"\n", paramIndent)
 
 		if h.showSummary {
 			continue
 		}
 
-		twc.Wrap(e.Desc(), descriptionIndent)
+		h.twc.Wrap(e.Desc(), descriptionIndent)
 	}
 
 	return true
 }
 
 // showExamplesFmtMD prints examples in markdown format
-func showExamplesFmtMD(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
+func showExamplesFmtMD(h StdHelp, ps *param.PSet) bool {
 	ex := ps.Examples()
 
-	twc.Print("# Examples\n\n")
+	h.twc.Print("# Examples\n\n")
 
 	for _, e := range ex {
-		twc.Print("```sh\n")
-		twc.Print(e.Ex() + "\n")
-		twc.Print("```\n")
+		h.twc.Print("```sh\n")
+		h.twc.Print(e.Ex() + "\n")
+		h.twc.Print("```\n")
 
 		if h.showSummary {
 			continue
@@ -56,8 +55,8 @@ func showExamplesFmtMD(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 
 		desc := makeTextMarkdownSafe(e.Desc())
 
-		twc.Wrap(desc, 0)
-		twc.Print("\n")
+		h.twc.Wrap(desc, 0)
+		h.twc.Print("\n")
 	}
 
 	return true

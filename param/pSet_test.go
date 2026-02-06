@@ -1,7 +1,6 @@
 package param_test
 
 import (
-	"bytes"
 	"errors"
 	"fmt"
 	"testing"
@@ -14,8 +13,6 @@ import (
 
 // TestPSet runs various tests around constructing a parameter set
 func TestPSet(t *testing.T) {
-	var buff bytes.Buffer
-
 	testCases := []struct {
 		testhelper.ID
 		testhelper.ExpPanic
@@ -25,26 +22,9 @@ func TestPSet(t *testing.T) {
 			ID: testhelper.MkID("nil"),
 		},
 		{
-			ID: testhelper.MkID("set writers"),
-			psOpts: []param.PSetOptFunc{
-				param.SetStdWriter(&buff),
-				param.SetErrWriter(&buff),
-			},
-		},
-		{
-			ID: testhelper.MkID("bad std writer"),
-			ExpPanic: testhelper.MkExpPanic(
-				"param.SetStdWriter cannot take a nil value"),
-			psOpts: []param.PSetOptFunc{
-				param.SetStdWriter(nil),
-				param.SetErrWriter(&buff),
-			},
-		},
-		{
 			ID:       testhelper.MkID("setopt error"),
 			ExpPanic: testhelper.MkExpPanic("whoops"),
 			psOpts: []param.PSetOptFunc{
-				param.SetErrWriter(&buff),
 				func(_ *param.PSet) error { return errors.New("whoops") },
 			},
 		},

@@ -88,7 +88,20 @@ func (ps *PSet) Parse(args ...[]string) {
 	}
 
 	ps.ParamParse(loc, suppliedParams)
+
 	ps.helper.ProcessArgs(ps)
+
+	if ps.helpRequired {
+		ps.helper.Help(ps)
+	}
+
+	if ps.errorCount > 0 {
+		ps.helper.ErrorHandler(ps)
+	}
+
+	if ps.shouldExit {
+		os.Exit(ps.exitStatus)
+	}
 
 	errCount := ps.errorCount
 	ps.remHandler.HandleRemainder(ps, loc)

@@ -1,3 +1,19 @@
+Usage: PROGRAM NAME UNKNOWN -param2=int ...
+
+===============
+
+stdParams-help   [ 12 parameters, 11 hidden ]
+      [-help, -usage]
+---------------
+test-group1      [ 6 parameters, 1 hidden ]
+      [-param1=int, -param1-alt1=int]
+      -param2=int, -param2-alt2=int
+      [-param4[=Bool] ]
+      [-param5=v1|v2]
+      [-param6=v2|v1]
+
+===============
+
 Parameter Summary
 
 This shows a summary of all the parameters. If there are any errors with a
@@ -55,22 +71,3 @@ Unused Parameters:  1
       not-a-param
             at: [config file]: testdata/configFiles/cfg-with-param:1:
                 not-a-param = 99
-
-===============
-
-
-===============
-
-Usage: PROGRAM NAME UNKNOWN -param2=int ...
-
-===============
-
-stdParams-help   [ 12 parameters, 11 hidden ]
-      [-help, -usage]
----------------
-test-group1      [ 6 parameters, 1 hidden ]
-      [-param1=int, -param1-alt1=int]
-      -param2=int, -param2-alt2=int
-      [-param4[=Bool] ]
-      [-param5=v1|v2]
-      [-param6=v2|v1]

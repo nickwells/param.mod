@@ -27,7 +27,7 @@ func noteCanBeShown(h StdHelp, n *param.Note) bool {
 }
 
 // showNotes produces the Notes section of the help message
-func showNotes(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
+func showNotes(h StdHelp, ps *param.PSet) bool {
 	notes := ps.Notes()
 	if len(notes) == 0 {
 		return false
@@ -35,14 +35,14 @@ func showNotes(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 
 	switch h.helpFormat {
 	case helpFmtTypeMarkdown:
-		return showNotesFmtMD(h, twc, ps)
+		return showNotesFmtMD(h, ps)
 	default:
-		return showNotesFmtStd(h, twc, ps)
+		return showNotesFmtStd(h, ps)
 	}
 }
 
 // showNotesFmtStd produces the Notes section of the help message
-func showNotesFmtStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
+func showNotesFmtStd(h StdHelp, ps *param.PSet) bool {
 	notes := ps.Notes()
 	hiddenCount := 0
 	keys := make([]string, 0, len(notes))
@@ -58,11 +58,11 @@ func showNotesFmtStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	sort.Strings(keys)
 
 	if h.showHiddenItems {
-		twc.Printf("Notes [ %d notes ]\n", len(notes))
+		h.twc.Printf("Notes [ %d notes ]\n", len(notes))
 	} else if hiddenCount == len(notes) {
-		twc.Printf("Notes [ %d notes, all hidden ]\n", len(notes))
+		h.twc.Printf("Notes [ %d notes, all hidden ]\n", len(notes))
 	} else {
-		twc.Printf("Notes [ %d notes, %d hidden ]\n", len(notes), hiddenCount)
+		h.twc.Printf("Notes [ %d notes, %d hidden ]\n", len(notes), hiddenCount)
 	}
 
 	for _, headline := range keys {
@@ -71,16 +71,16 @@ func showNotesFmtStd(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 			continue
 		}
 
-		twc.Wrap(n.Headline(), paramIndent)
+		h.twc.Wrap(n.Headline(), paramIndent)
 
 		if h.showSummary {
 			continue
 		}
 
-		twc.Wrap(n.Text(), descriptionIndent)
+		h.twc.Wrap(n.Text(), descriptionIndent)
 
-		showNotesRefsFmtStd(twc, n.SeeParams(), "Parameter")
-		showNotesRefsFmtStd(twc, n.SeeNotes(), "Note")
+		showNotesRefsFmtStd(h.twc, n.SeeParams(), "Parameter")
+		showNotesRefsFmtStd(h.twc, n.SeeNotes(), "Note")
 	}
 
 	return true
@@ -128,7 +128,7 @@ func showNotesRefsFmtStd(twc *twrap.TWConf, refs []string, name string) {
 
 // showNotesFmtMD produces the Notes section of the help message in Markdown
 // format
-func showNotesFmtMD(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
+func showNotesFmtMD(h StdHelp, ps *param.PSet) bool {
 	notes := ps.Notes()
 
 	keys := make([]string, 0, len(notes))
@@ -145,12 +145,12 @@ func showNotesFmtMD(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 		return false
 	}
 
-	twc.Print("# Notes\n\n")
+	h.twc.Print("# Notes\n\n")
 
 	sort.Strings(keys)
 
 	for _, headline := range keys {
-		twc.Print("## " + makeTextMarkdownSafe(headline) + "\n")
+		h.twc.Print("## " + makeTextMarkdownSafe(headline) + "\n")
 
 		if h.showSummary {
 			continue
@@ -160,12 +160,12 @@ func showNotesFmtMD(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 		text := makeTextMarkdownSafe(n.Text())
 		r := strings.NewReplacer("\n", "\n\n")
 		text = r.Replace(text)
-		twc.Wrap(text, 0)
+		h.twc.Wrap(text, 0)
 
-		showNotesRefsFmtMD(twc, n.SeeParams(), "Parameter")
-		showNotesRefsFmtMD(twc, n.SeeNotes(), "Note")
+		showNotesRefsFmtMD(h.twc, n.SeeParams(), "Parameter")
+		showNotesRefsFmtMD(h.twc, n.SeeNotes(), "Note")
 
-		twc.Print("\n\n")
+		h.twc.Print("\n\n")
 	}
 
 	return true

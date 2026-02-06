@@ -2,7 +2,6 @@ package phelp
 
 import (
 	"github.com/nickwells/param.mod/v6/param"
-	"github.com/nickwells/twrap.mod/twrap"
 )
 
 type groupCF struct {
@@ -12,9 +11,7 @@ type groupCF struct {
 
 // showConfigFiles prints the config files that can be used to configure the
 // behaviour of the program
-func showConfigFiles(
-	h StdHelp, twc *twrap.TWConf, cf []param.ConfigFileDetails,
-) {
+func showConfigFiles(h StdHelp, cf []param.ConfigFileDetails) {
 	if len(cf) == 0 {
 		return
 	}
@@ -22,16 +19,16 @@ func showConfigFiles(
 	if h.showSummary {
 		for _, f := range cf {
 			if f.ParamsMustExist() {
-				twc.Println("config-file::" + f.String())
+				h.twc.Println("config-file::" + f.String())
 			} else {
-				twc.Println("multi-program-config-file::" + f.String())
+				h.twc.Println("multi-program-config-file::" + f.String())
 			}
 		}
 
 		return
 	}
 
-	twc.Print("\n  Common Configuration Files\n\n")
+	h.twc.Print("\n  Common Configuration Files\n\n")
 
 	var hasNonStrictFiles bool
 
@@ -43,12 +40,12 @@ func showConfigFiles(
 			prefix = "*"
 		}
 
-		twc.Printf("    %s %s\n", prefix, f.String())
+		h.twc.Printf("    %s %s\n", prefix, f.String())
 	}
 
 	if hasNonStrictFiles {
-		twc.Println()
-		twc.WrapPrefixed("Note: ",
+		h.twc.Println()
+		h.twc.WrapPrefixed("Note: ",
 			"the files marked with a '*' are allowed to contain"+
 				" parameters not valid for this program. Any such"+
 				" parameters will be silently ignored. To detect"+
@@ -60,36 +57,36 @@ func showConfigFiles(
 
 // showGroupConfigFiles prints the config files specific to particular groups
 // of parameters that can be used to configure the behaviour of the program
-func showGroupConfigFiles(h StdHelp, twc *twrap.TWConf, gf []groupCF) {
+func showGroupConfigFiles(h StdHelp, gf []groupCF) {
 	if len(gf) == 0 {
 		return
 	}
 
 	if h.showSummary {
 		for _, f := range gf {
-			twc.Println("group-config-file:" + f.groupName +
+			h.twc.Println("group-config-file:" + f.groupName +
 				":" + f.cf.String())
 		}
 
 		return
 	}
 
-	twc.Print("\n  Group Configuration Files\n\n")
+	h.twc.Print("\n  Group Configuration Files\n\n")
 
 	for _, f := range gf {
-		twc.Println("    "+f.groupName+": ", f.cf.String())
+		h.twc.Println("    "+f.groupName+": ", f.cf.String())
 	}
 
 	if len(gf) > 1 {
-		twc.Println()
-		twc.WrapPrefixed("Note: ",
+		h.twc.Println()
+		h.twc.WrapPrefixed("Note: ",
 			"the order in which groups are processed is indeterminate"+
 				" but within each group the files are processed in the"+
 				" order listed above.", textIndent)
 	}
 
-	twc.Println()
-	twc.WrapPrefixed("Note: ",
+	h.twc.Println()
+	h.twc.WrapPrefixed("Note: ",
 		"parameters given in group config files must be valid"+
 			" parameters of the program and members"+
 			" of the parameter group.",
@@ -99,21 +96,21 @@ func showGroupConfigFiles(h StdHelp, twc *twrap.TWConf, gf []groupCF) {
 // showEnvPrefixes prints the config files specific to particular
 // groups of parameters that can be used to configure the behaviour of the
 // program
-func showEnvPrefixes(h StdHelp, twc *twrap.TWConf, ep []string) {
+func showEnvPrefixes(h StdHelp, ep []string) {
 	if len(ep) == 0 {
 		return
 	}
 
 	if h.showSummary {
 		for _, e := range ep {
-			twc.Println("env-var-prefix::" + e)
+			h.twc.Println("env-var-prefix::" + e)
 		}
 
 		return
 	}
 
-	twc.Print("\n  Environment Variables\n\n")
-	twc.Wrap(
+	h.twc.Print("\n  Environment Variables\n\n")
+	h.twc.Wrap(
 		"The program can also be configured through"+
 			" environment variables prefixed with:\n"+altSrcEnvVars(ep),
 		textIndent)
@@ -140,16 +137,16 @@ func getGroupConfigFiles(ps *param.PSet) []groupCF {
 // that can be used to set parameters: environment variables or configuration
 // files. If there were no alternative sources it will not print saying that
 // there are no alternative sources.
-func showAltSources(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
+func showAltSources(h StdHelp, ps *param.PSet) bool {
 	gf := getGroupConfigFiles(ps)
 	cf := ps.ConfigFiles()
 	ep := ps.EnvPrefixes()
 
 	if len(gf) == 0 && len(cf) == 0 && len(ep) == 0 {
 		if h.showSummary {
-			twc.Wrap("none", textIndent)
+			h.twc.Wrap("none", textIndent)
 		} else {
-			twc.Wrap("There are no alternative sources, parameters can only"+
+			h.twc.Wrap("There are no alternative sources, parameters can only"+
 				" be set through the command line",
 				textIndent)
 		}
@@ -158,17 +155,17 @@ func showAltSources(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 	}
 
 	if !h.showSummary {
-		twc.Print("Alternative Sources\n\n")
-		twc.Wrap("Program parameters may be set through the command line"+
+		h.twc.Print("Alternative Sources\n\n")
+		h.twc.Wrap("Program parameters may be set through the command line"+
 			" but also through these additional sources.",
 			0)
 	}
 
-	showGroupConfigFiles(h, twc, gf)
-	showConfigFiles(h, twc, cf)
-	showEnvPrefixes(h, twc, ep)
+	showGroupConfigFiles(h, gf)
+	showConfigFiles(h, cf)
+	showEnvPrefixes(h, ep)
 
-	twc.Print("\n")
+	h.twc.Print("\n")
 
 	return true
 }

@@ -149,8 +149,10 @@ stdParams-help   [ 12 parameters ]
                                sources       : any additional sources of
                                   parameter values such as environment variables
                                   or configuration files
+                               unused-params : report any unused parameters
                                usage         : the program name, a parameter
                                   summary, and any trailing parameters
+                               where-set     : report where parameters are set
                             The following aliases are available:
                                all           : intro, usage, params-pos,
                                   params-grouped, notes, sources, examples, refs

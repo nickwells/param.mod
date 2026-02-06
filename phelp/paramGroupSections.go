@@ -13,37 +13,37 @@ import (
 
 // showByPosParams will print the positional parameters and their
 // descriptions.
-func showByPosParams(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
+func showByPosParams(h StdHelp, ps *param.PSet) bool {
 	bppCount := ps.CountByPosParams()
 	if bppCount == 0 {
 		return false
 	}
 
-	twc.Print("Positional Parameters\n\n")
+	h.twc.Print("Positional Parameters\n\n")
 
 	for i := range bppCount {
-		printByPosParam(h, twc, ps, i)
+		printByPosParam(h, ps, i)
 	}
 
 	return true
 }
 
 // printByPosParam prints the details of the i'th positional parameter
-func printByPosParam(h StdHelp, twc *twrap.TWConf, ps *param.PSet, i int) {
+func printByPosParam(h StdHelp, ps *param.PSet, i int) {
 	bp, err := ps.GetParamByPos(i)
 	if err != nil {
 		return
 	}
 
-	twc.Wrap(fmt.Sprintf("%d) %s", i+1, bp.Name()), paramIndent)
+	h.twc.Wrap(fmt.Sprintf("%d) %s", i+1, bp.Name()), paramIndent)
 
 	if h.showSummary {
 		return
 	}
 
-	twc.Wrap(bp.Description(), descriptionIndent)
-	h.showAllowedVals(twc, bp.Name(), bp.Setter())
-	showInitialValue(twc, bp.InitialValue(), bp.Setter().CurrentValue())
+	h.twc.Wrap(bp.Description(), descriptionIndent)
+	h.showAllowedVals(bp.Name(), bp.Setter())
+	showInitialValue(h.twc, bp.InitialValue(), bp.Setter().CurrentValue())
 }
 
 // getMaxGroupNameLen returns the length of the longest group name
@@ -58,12 +58,12 @@ func getMaxGroupNameLen(groups []*param.Group) int {
 
 // showGroups will show the group name and details for all the registered
 // parameter groups
-func showGroups(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
-	twc.Print("\nParameter groups\n\n")
+func showGroups(h StdHelp, ps *param.PSet) bool {
+	h.twc.Print("\nParameter groups\n\n")
 
 	groups := ps.GetGroups()
 	maxNameLen := getMaxGroupNameLen(groups)
-	printSep := false
+	sep := ""
 
 	for _, g := range groups {
 		if !groupCanBeShown(h, g) {
@@ -71,10 +71,11 @@ func showGroups(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 		}
 
 		if !h.showSummary {
-			printSep = printSepIf(twc, printSep, minorSectionSeparator)
+			h.twc.Print(sep)
+			sep = minorSectionSeparator
 		}
 
-		h.printGroup(twc, g, maxNameLen)
+		h.printGroup(g, maxNameLen)
 	}
 
 	return true
@@ -82,7 +83,7 @@ func showGroups(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 
 // showParamsByName will show the named parameters in name order. If
 // paramsChosen is not empty then only those parameters will be shown.
-func showParamsByName(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
+func showParamsByName(h StdHelp, ps *param.PSet) bool {
 	groups := ps.GetGroups()
 	paramsToShow := make([]*param.ByName, 0)
 
@@ -104,7 +105,7 @@ func showParamsByName(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 		})
 
 	for _, p := range paramsToShow {
-		h.printParamUsage(twc, p)
+		h.printParamUsage(p)
 	}
 
 	return true
@@ -112,10 +113,10 @@ func showParamsByName(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 
 // showParamsByGroupName will show the named parameters in name order. If
 // paramsChosen is not empty then only those parameters will be shown.
-func showParamsByGroupName(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
+func showParamsByGroupName(h StdHelp, ps *param.PSet) bool {
 	groups := ps.GetGroups()
 	maxNameLen := getMaxGroupNameLen(groups)
-	printSep := false
+	sep := ""
 	count := 0
 
 	for _, g := range groups {
@@ -128,14 +129,15 @@ func showParamsByGroupName(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 		for _, p := range g.Params() {
 			if paramCanBeShown(h, p) || h.groupsChosen[g.Name()] {
 				if printGroup {
-					printSep = printSepIf(twc, printSep, minorSectionSeparator)
-					h.printGroup(twc, g, maxNameLen)
+					h.twc.Print(sep)
+					sep = minorSectionSeparator
+					h.printGroup(g, maxNameLen)
 					printGroup = false
 				}
 			}
 
 			if paramCanBeShown(h, p) {
-				h.printParamUsage(twc, p)
+				h.printParamUsage(p)
 
 				count++
 			}
@@ -146,25 +148,25 @@ func showParamsByGroupName(h StdHelp, twc *twrap.TWConf, ps *param.PSet) bool {
 }
 
 // printParamUsage prints the named parameter help text
-func (h StdHelp) printParamUsage(twc *twrap.TWConf, p *param.ByName) {
+func (h StdHelp) printParamUsage(p *param.ByName) {
 	smy := ParamSummary(*p)
-	twc.Wrap2Indent(smy, paramIndent, paramLine2Indent)
+	h.twc.Wrap2Indent(smy, paramIndent, paramLine2Indent)
 
 	if h.showSummary {
 		return
 	}
 
-	twc.Wrap(p.Description(), descriptionIndent)
-	printParamAttributes(twc, p)
-	showSeeAlso(twc, p)
-	showSeeNotes(twc, p)
+	h.twc.Wrap(p.Description(), descriptionIndent)
+	printParamAttributes(h.twc, p)
+	showSeeAlso(h.twc, p)
+	showSeeNotes(h.twc, p)
 
 	if p.Setter().ValueReq() == param.None {
 		return
 	}
 
-	h.showAllowedVals(twc, p.Name(), p.Setter())
-	showInitialValue(twc, p.InitialValue(), p.Setter().CurrentValue())
+	h.showAllowedVals(p.Name(), p.Setter())
+	showInitialValue(h.twc, p.InitialValue(), p.Setter().CurrentValue())
 }
 
 // showInitialValue shows the initial value of the ByName parameter. If the
@@ -212,9 +214,7 @@ func showSeeNotes(twc *twrap.TWConf, p *param.ByName) {
 // showAllowedVals prints the allowed values for a parameter. It will print
 // a reference to an earlier parameter if the allowed value text has been
 // seen already and the text is longer than 50 characters
-func (h StdHelp) showAllowedVals(
-	twc *twrap.TWConf, pName string, s param.Setter,
-) {
+func (h StdHelp) showAllowedVals(pName string, s param.Setter) {
 	const prefix = "Allowed values: "
 
 	const longString = 50
@@ -245,7 +245,7 @@ func (h StdHelp) showAllowedVals(
 	keyStr := s.AllowedValues() + valueList + aliases
 	if len(keyStr) > longString {
 		if name, alreadyShown := h.avalShownAlready[keyStr]; alreadyShown {
-			twc.WrapPrefixed(prefix,
+			h.twc.WrapPrefixed(prefix,
 				"(see parameter: "+name+")",
 				descriptionIndent)
 
@@ -260,9 +260,9 @@ func (h StdHelp) showAllowedVals(
 	indent := descriptionIndent + len(prefix)
 	valDescIndent := indent + extraIndent
 
-	twc.WrapPrefixed(prefix, s.AllowedValues(), descriptionIndent)
-	twc.Wrap2Indent(valueList, indent, valDescIndent)
-	twc.Wrap2Indent(aliases, indent, valDescIndent)
+	h.twc.WrapPrefixed(prefix, s.AllowedValues(), descriptionIndent)
+	h.twc.Wrap2Indent(valueList, indent, valDescIndent)
+	h.twc.Wrap2Indent(aliases, indent, valDescIndent)
 }
 
 // paramCanBeShown will return true if the param can be shown. It checks
@@ -302,35 +302,35 @@ func groupCanBeShown(h StdHelp, g *param.Group) bool {
 }
 
 // printGroup prints the group name etc
-func (h StdHelp) printGroup(twc *twrap.TWConf, g *param.Group, maxLen int) {
-	twc.Printf("%-*.*s [ ", maxLen, maxLen, g.Name())
+func (h StdHelp) printGroup(g *param.Group, maxLen int) {
+	h.twc.Printf("%-*.*s [ ", maxLen, maxLen, g.Name())
 
 	if len(g.Params()) == 1 {
-		twc.Print("1 parameter")
+		h.twc.Print("1 parameter")
 	} else {
-		twc.Printf("%d parameters", len(g.Params()))
+		h.twc.Printf("%d parameters", len(g.Params()))
 	}
 
 	if g.HiddenCount() > 0 && !h.showHiddenItems {
 		if g.AllParamsHidden() {
-			twc.Print(", all hidden")
+			h.twc.Print(", all hidden")
 		} else {
-			twc.Printf(", %d hidden", g.HiddenCount())
+			h.twc.Printf(", %d hidden", g.HiddenCount())
 		}
 	}
 
-	twc.Print(" ]\n")
+	h.twc.Print(" ]\n")
 
 	if h.showSummary {
 		return
 	}
 
 	if desc := g.Desc(); desc != "" {
-		twc.Wrap(desc, textIndent)
+		h.twc.Wrap(desc, textIndent)
 	}
 
-	printGroupConfigFile(twc, g)
-	twc.Print("\n")
+	printGroupConfigFile(h.twc, g)
+	h.twc.Print("\n")
 }
 
 // printParamAttributes prints additional text according to the settings of

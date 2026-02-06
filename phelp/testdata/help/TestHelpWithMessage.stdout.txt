@@ -1,0 +1,28 @@
+message1
+message2
+
+===============
+
+PROGRAM NAME UNKNOWN
+program description
+
+===============
+
+Usage: PROGRAM NAME UNKNOWN ...
+
+===============
+
+stdParams-help   [ 12 parameters, 11 hidden ]
+    These are parameters for printing a help message.
+
+      [-help, -usage]
+            print this help message and exit.
+
+            Seldom used parameters may be hidden; to see all the parameters use
+            the parameter:
+              -help-all
+            To just see a summary of each parameter (suppressing the full
+            description) use the parameter:
+              -help-summary
+            For the full help message use the parameter:
+              -help-full
