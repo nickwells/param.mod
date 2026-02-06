@@ -2,7 +2,6 @@ package param
 
 import (
 	"fmt"
-	"io"
 
 	"github.com/nickwells/location.mod/location"
 )
@@ -149,16 +148,4 @@ func (bp *ByPos) processParam(loc *location.L, val string) {
 		bp.ps.AddErr(name,
 			loc.Errorf("%s", err.Error()))
 	}
-}
-
-// StdWriter returns the standard writer of the PSet that this parameter
-// belongs to
-func (bp ByPos) StdWriter() io.Writer {
-	return bp.ps.StdW()
-}
-
-// ErrWriter returns the error writer of the PSet that this parameter
-// belongs to
-func (bp ByPos) ErrWriter() io.Writer {
-	return bp.ps.ErrW()
 }

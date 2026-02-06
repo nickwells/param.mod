@@ -3,7 +3,6 @@ package param
 import (
 	"errors"
 	"fmt"
-	"io"
 	"maps"
 	"slices"
 	"strings"
@@ -427,16 +426,4 @@ func (p *ByName) processParam(loc *location.L, paramParts []string) {
 			p.ps.AddErr(p.name, loc.Error(err.Error()))
 		}
 	}
-}
-
-// StdWriter returns the standard writer of the PSet that this parameter
-// belongs to
-func (p ByName) StdWriter() io.Writer {
-	return p.ps.StdW()
-}
-
-// ErrWriter returns the error writer of the PSet that this parameter
-// belongs to
-func (p ByName) ErrWriter() io.Writer {
-	return p.ps.ErrW()
 }
