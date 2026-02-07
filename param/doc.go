@@ -16,7 +16,7 @@ it and when you've set all the parameters you want, you call Parse on the
 PSet. You can create a PSet with the NewSet function but it is more
 convenient to use the convenience function from the paramset package:
 
-	paramset.NewOrPanic(...)
+	paramset.New(...)
 
 this will automatically set the mandatory helper to the Standard helper.
 It will Panic if any errors are detected. This allows you to test that no
