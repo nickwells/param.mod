@@ -6,8 +6,8 @@ import (
 
 	"github.com/nickwells/location.mod/location"
 	"github.com/nickwells/pager.mod/pager"
-	"github.com/nickwells/param.mod/v6/param"
-	"github.com/nickwells/param.mod/v6/psetter"
+	"github.com/nickwells/param.mod/v7/param"
+	"github.com/nickwells/param.mod/v7/psetter"
 	"github.com/nickwells/twrap.mod/twrap"
 )
 

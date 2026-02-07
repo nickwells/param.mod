@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/nickwells/pager.mod/pager"
-	"github.com/nickwells/param.mod/v6/param"
+	"github.com/nickwells/param.mod/v7/param"
 	"github.com/nickwells/twrap.mod/twrap"
 )
 

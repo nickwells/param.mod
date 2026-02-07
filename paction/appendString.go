@@ -2,7 +2,7 @@ package paction
 
 import (
 	"github.com/nickwells/location.mod/location"
-	"github.com/nickwells/param.mod/v6/param"
+	"github.com/nickwells/param.mod/v7/param"
 )
 
 // AppendStrings returns an ActionFunc that appends the given strings to the

@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/nickwells/location.mod/location"
-	"github.com/nickwells/param.mod/v6/param"
+	"github.com/nickwells/param.mod/v7/param"
 )
 
 // CaptureParamVal will record the value of the parameter

@@ -3,8 +3,8 @@ package psetter_test
 import (
 	"testing"
 
-	"github.com/nickwells/param.mod/v6/param"
-	"github.com/nickwells/param.mod/v6/psetter"
+	"github.com/nickwells/param.mod/v7/param"
+	"github.com/nickwells/param.mod/v7/psetter"
 )
 
 func TestNilSetter(t *testing.T) {

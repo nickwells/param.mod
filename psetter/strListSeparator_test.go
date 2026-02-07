@@ -3,7 +3,7 @@ package psetter_test
 import (
 	"testing"
 
-	"github.com/nickwells/param.mod/v6/psetter"
+	"github.com/nickwells/param.mod/v7/psetter"
 )
 
 func TestStrListSeparator(t *testing.T) {

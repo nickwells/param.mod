@@ -4,7 +4,7 @@ import (
 	"maps"
 	"slices"
 
-	"github.com/nickwells/param.mod/v6/param"
+	"github.com/nickwells/param.mod/v7/param"
 )
 
 // showUnusedParams will print all the parameters that have been detected in

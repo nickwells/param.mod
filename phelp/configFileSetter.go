@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/nickwells/filecheck.mod/filecheck"
-	"github.com/nickwells/param.mod/v6/psetter"
+	"github.com/nickwells/param.mod/v7/psetter"
 )
 
 // configFileSetter sets a config file from which to read configuration

@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/nickwells/errutil.mod/errutil"
-	"github.com/nickwells/param.mod/v6/param"
+	"github.com/nickwells/param.mod/v7/param"
 )
 
 // ErrorHandler will, by default, check for errors and if there are any

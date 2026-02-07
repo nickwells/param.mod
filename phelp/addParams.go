@@ -1,7 +1,7 @@
 package phelp
 
 import (
-	"github.com/nickwells/param.mod/v6/param"
+	"github.com/nickwells/param.mod/v7/param"
 )
 
 // groupNamePfx is a standard prefix applied to the names of the groups in

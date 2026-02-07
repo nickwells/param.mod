@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/nickwells/errutil.mod/errutil"
-	"github.com/nickwells/param.mod/v6/param"
+	"github.com/nickwells/param.mod/v7/param"
 )
 
 // panicSafeCheck runs the CheckSetter and catches any panic, returning true

@@ -1,8 +1,8 @@
 package paramset
 
 import (
-	"github.com/nickwells/param.mod/v6/param"
-	"github.com/nickwells/param.mod/v6/phelp"
+	"github.com/nickwells/param.mod/v7/param"
+	"github.com/nickwells/param.mod/v7/phelp"
 )
 
 // New creates a new PSet with the standard helper set. This is a suitable

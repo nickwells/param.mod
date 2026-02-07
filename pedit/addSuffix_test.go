@@ -3,9 +3,9 @@ package pedit_test
 import (
 	"fmt"
 
-	"github.com/nickwells/param.mod/v6/paramset"
-	"github.com/nickwells/param.mod/v6/pedit"
-	"github.com/nickwells/param.mod/v6/psetter"
+	"github.com/nickwells/param.mod/v7/paramset"
+	"github.com/nickwells/param.mod/v7/pedit"
+	"github.com/nickwells/param.mod/v7/psetter"
 )
 
 // ExampleAddSuffix_Edit demonstrates the behaviour of the AddSuffix editor.

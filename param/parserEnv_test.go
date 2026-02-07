@@ -3,8 +3,8 @@ package param_test
 import (
 	"testing"
 
-	"github.com/nickwells/param.mod/v6/param"
-	"github.com/nickwells/param.mod/v6/paramset"
+	"github.com/nickwells/param.mod/v7/param"
+	"github.com/nickwells/param.mod/v7/paramset"
 	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 

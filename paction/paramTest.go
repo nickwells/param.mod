@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/nickwells/location.mod/location"
-	"github.com/nickwells/param.mod/v6/param"
+	"github.com/nickwells/param.mod/v7/param"
 )
 
 // ParamTestFunc represents a function that can be used to test a parameter

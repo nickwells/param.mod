@@ -1,7 +1,7 @@
 package phelp
 
 import (
-	"github.com/nickwells/param.mod/v6/param"
+	"github.com/nickwells/param.mod/v7/param"
 )
 
 // ProcessArgs will process the values set after parsing is complete. This is

@@ -2,7 +2,7 @@ package paction
 
 import (
 	"github.com/nickwells/location.mod/location"
-	"github.com/nickwells/param.mod/v6/param"
+	"github.com/nickwells/param.mod/v7/param"
 )
 
 // SetVal returns an ActionFunc that sets the val to the given setTo value.

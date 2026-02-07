@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/nickwells/check.mod/v2/check"
-	"github.com/nickwells/param.mod/v6/paramset"
-	"github.com/nickwells/param.mod/v6/psetter"
+	"github.com/nickwells/param.mod/v7/paramset"
+	"github.com/nickwells/param.mod/v7/psetter"
 )
 
 // ExampleTime_standard demonstrates the use of a Time setter

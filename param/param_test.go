@@ -6,9 +6,9 @@ import (
 	"testing"
 
 	"github.com/nickwells/errutil.mod/errutil"
-	"github.com/nickwells/param.mod/v6/param"
-	"github.com/nickwells/param.mod/v6/paramset"
-	"github.com/nickwells/param.mod/v6/psetter"
+	"github.com/nickwells/param.mod/v7/param"
+	"github.com/nickwells/param.mod/v7/paramset"
+	"github.com/nickwells/param.mod/v7/psetter"
 	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 

@@ -3,7 +3,7 @@ package paramset
 import (
 	"os"
 
-	"github.com/nickwells/param.mod/v6/param"
+	"github.com/nickwells/param.mod/v7/param"
 )
 
 // noHelp is a minimal implementation of the param.Helper interface. In

@@ -1,6 +1,6 @@
 package pedit
 
-import "github.com/nickwells/param.mod/v6/psetter"
+import "github.com/nickwells/param.mod/v7/psetter"
 
 // Composite combines multiple editors which are applied in sequence with the
 // results of each being passed to the next. It implements the Editor interface
