@@ -91,6 +91,8 @@ func (ps *PSet) Parse(args ...[]string) {
 
 	ps.ParamParse(loc, suppliedParams)
 
+	ps.reportUnexpectedTrailingParams()
+
 	ps.helper.ProcessArgs(ps)
 
 	if ps.helpRequired {
@@ -103,13 +105,6 @@ func (ps *PSet) Parse(args ...[]string) {
 
 	if ps.shouldExit {
 		os.Exit(ps.exitStatus)
-	}
-
-	errCount := ps.errorCount
-	ps.remHandler.HandleRemainder(ps, loc)
-
-	if errCount != ps.errorCount {
-		ps.helper.ErrorHandler(ps)
 	}
 }
 
@@ -150,6 +145,8 @@ func caller() string {
 	return "unknown-file:0 [unknown]"
 }
 
+// detectMandatoryParamsNotSet will check that all the named parameters which
+// must be set. have been set and will add errors for any missing ones.
 func (ps *PSet) detectMandatoryParamsNotSet() {
 	for _, p := range ps.byName {
 		if p.AttrIsSet(MustBeSet) &&

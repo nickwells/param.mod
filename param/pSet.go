@@ -1,7 +1,6 @@
 package param
 
 import (
-	"errors"
 	"fmt"
 	"path"
 	"slices"
@@ -57,7 +56,6 @@ type PSet struct {
 	remainingParams        []string
 	terminalParam          string
 	terminalParamSeen      bool
-	remHandler             RemHandler
 	trailingParamsExpected bool
 	trailingParamsName     string
 
@@ -75,67 +73,58 @@ type PSet struct {
 // parameter set.
 type PSetOptFunc func(ps *PSet) error
 
-// SetRemHandler sets the value of the remainder handler to be used by the
-// parameter set. Note that the handler must be set and so you cannot pass
-// nil. The default behaviour is for an error to be reported if there are any
-// unprocessed parameters. If you expect additional arguments after either a
-// terminal positional parameter or after an explicit end-of-parameters
-// parameter (see the TerminalParam method) then you have two choices. You
-// can set the remainder handler to the NullRemHandler and process the
-// remainder yourself in the body of the program. Alternatively you can pass
-// a RemHandler that will handle the remainder in the Parse method.
-//
-// If this is not set the default behaviour is to report any extra parameters
-// after the TerminalParam as errors.
-//
-// Any errors detected by the supplied RemHandler must be added to the PSet's
-// error map usiong the AddErr method. These will be reported automatically
-// along with any other parsing errors.
-func (ps *PSet) SetRemHandler(rh RemHandler) error {
-	if rh == nil {
-		return errors.New("the remainder handler must not be nil")
-	}
-
-	if ps.parsed {
-		return errors.New("parsing is already complete" +
-			" - you must set the RemHandler before calling Parse")
-	}
-
-	ps.remHandler = rh
-	ps.trailingParamsExpected = true
-
-	return nil
-}
-
-// SetNamedRemHandler calls SetRemHandler to set the remainder handler and if
-// that succeeds it will set the text to be used for the remaining arguments.
-// This name will be used in the help message
-func (ps *PSet) SetNamedRemHandler(rh RemHandler, name string) error {
-	err := ps.SetRemHandler(rh)
-	if err != nil {
-		return err
-	}
-
-	ps.trailingParamsName = name
-
-	return nil
-}
-
 // TrailingParamsExpected returns true if a remainder handler has been set
 // successfully and false otherwise
 func (ps *PSet) TrailingParamsExpected() bool {
 	return ps.trailingParamsExpected
 }
 
+// SetTrailingParamsExpected sets the flag notifying the PSet that trailing
+// parameters are allowed and should not be flagged as an error.
+func (ps *PSet) SetTrailingParamsExpected() {
+	ps.trailingParamsExpected = true
+}
+
+// SetTrailingParamsExpected is a PSetOptFunc that sets the flag notifying
+// the PSet that trailing parameters are allowed and should not be flagged as
+// an error.
+func SetTrailingParamsExpected(ps *PSet) error {
+	ps.trailingParamsExpected = true
+
+	return nil
+}
+
 // TrailingParamsName returns the name that has been given to the trailing
 // parameters (if any)
 func (ps *PSet) TrailingParamsName() string { return ps.trailingParamsName }
+
+// SetTrailingParamsName sets the name to be given to the trailing parameters
+// (if any) in help messages. It also sets the flag notifying the PSet that
+// trailing parameters are allowed and should not be flagged as an error.
+func (ps *PSet) SetTrailingParamsName(name string) {
+	ps.trailingParamsName = name
+	ps.trailingParamsExpected = true
+}
+
+// SetTrailingParamsName returns a PSetOptFunc which can be passed to
+// NewSet. It will set the name to be given to any trailing parameters. It
+// also sets the flag notifying the PSet that trailing parameters are allowed
+// and should not be flagged as an error.
+func SetTrailingParamsName(name string) PSetOptFunc {
+	return func(ps *PSet) error {
+		ps.trailingParamsName = name
+		ps.trailingParamsExpected = true
+
+		return nil
+	}
+}
 
 // SetProgramDescription returns a PSetOptFunc which can be passed to
 // NewSet. It will set the program description
 func SetProgramDescription(desc string) PSetOptFunc {
 	return func(ps *PSet) error {
 		ps.progDesc = desc
+
 		return nil
 	}
 }
@@ -156,6 +145,7 @@ func (ps *PSet) ProgDesc() string {
 func SetParamPrefixes(pp []string) PSetOptFunc {
 	return func(ps *PSet) error {
 		ps.SetParamPrefixes(pp)
+
 		return nil
 	}
 }
@@ -223,11 +213,6 @@ func NewSet(h Helper, psof ...PSetOptFunc) *PSet {
 		if err != nil {
 			panic(fmt.Errorf("while creating the PSet: %w", err))
 		}
-	}
-
-	if ps.remHandler == nil {
-		ps.remHandler = dfltRemHandler{}
-		ps.trailingParamsExpected = false
 	}
 
 	return ps
