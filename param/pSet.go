@@ -11,15 +11,15 @@ import (
 	"github.com/nickwells/location.mod/location"
 )
 
-// DfltTerminalParam is the default value of the parameter that will stop
+// dfltTerminalParam is the default value of the parameter that will stop
 // command-line parameters from being processed. Any parameters found after
 // this value will be available through the TrailingParams() func. This default
 // value can be overridden through the SetTerminalParam func
-const DfltTerminalParam = "--"
+const dfltTerminalParam = "--"
 
-// DfltProgName is the program name that will be returned if Parse has not
+// dfltProgName is the program name that will be returned if Parse has not
 // yet been called
-const DfltProgName = "PROGRAM NAME UNKNOWN"
+const dfltProgName = "PROGRAM NAME UNKNOWN"
 
 // FinalCheckFunc is the type of a function to be called after all the
 // parameters have been set
@@ -187,8 +187,8 @@ func (ps *PSet) ShortestPrefix() string {
 func NewSet(h Helper, psof ...PSetOptFunc) *PSet {
 	ps := &PSet{
 		parseCalledFrom: "Parse() not yet called",
-		progName:        DfltProgName,
-		progBaseName:    DfltProgName,
+		progName:        dfltProgName,
+		progBaseName:    dfltProgName,
 		nameToParam:     make(map[string]*ByName),
 		groups:          make(map[string]*Group),
 		notes:           make(map[string]*Note),
@@ -199,7 +199,7 @@ func NewSet(h Helper, psof ...PSetOptFunc) *PSet {
 		envPrefixes: make([]string, 0, 1),
 		configFiles: make([]ConfigFileDetails, 0, 1),
 
-		terminalParam:  DfltTerminalParam,
+		terminalParam:  dfltTerminalParam,
 		paramPrefixes:  []string{"--", "-"},
 		shortestPrefix: "-",
 

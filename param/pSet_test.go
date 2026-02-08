@@ -217,10 +217,6 @@ func TestPSet_SetTerminalParam(t *testing.T) {
 		setTP bool
 	}{
 		{
-			ID:    testhelper.MkID("don't set"),
-			tpVal: param.DfltTerminalParam,
-		},
-		{
 			ID:    testhelper.MkID("new val"),
 			tpVal: "xxx",
 			setTP: true,

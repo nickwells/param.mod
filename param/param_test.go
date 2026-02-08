@@ -579,12 +579,6 @@ func TestParamParse1(t *testing.T) {
 				*tc.setter.Value, tc.expectedVal)
 		}
 	}
-
-	if ps.ProgName() != param.DfltProgName {
-		t.Log(t.Name())
-		t.Errorf("\t: ps.ProgName() (= %q) was expected to be == %q",
-			ps.ProgName(), param.DfltProgName)
-	}
 }
 
 func TestParamParse(t *testing.T) {
