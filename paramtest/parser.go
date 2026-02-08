@@ -38,18 +38,35 @@ import (
 // either is nil then it is not run. Any errors returned by these functions
 // conmstitute a test failure and will be reported as such.
 type Parser struct {
+	// ID identifies the test.
 	testhelper.ID
 
+	// ExpParseErrors is the collection of errors expected after PSet.Parse
+	// (and the PostParse func , if any) is called.
 	ExpParseErrors errutil.ErrMap
-	Ps             *param.PSet
+	// Ps is thePSet which will have Parse called on it.
+	Ps *param.PSet
 
-	Val       any
-	ExpVal    any
+	// Val is the value to be populated by Parse.
+	Val any
+	// ExpVal is the value that Val is expected to have after PSet.Parse (and
+	// the PostParse func , if any) is called.
+	ExpVal any
+	// CheckFunc should return an error if Val differs unexpectedly from
+	// ExpVal.
 	CheckFunc func(val, expVal any) error
 
-	Pre  func() error
+	// Pre is called before Parse. Any error will stop the Test and the error
+	// will be returned.
+	Pre func() error
+	// PostParse is called after Parse and before any errors are gathered and
+	// checked and before the values are compared. Any error will stop the
+	// Test and the error will be returned.
+	PostParse func(*param.PSet, any) error
+	// Post is called at the very end. Any error will be returned.
 	Post func() error
 
+	// Args are the parameters to be passed to PSet.Parse.
 	Args []string
 }
 
@@ -85,6 +102,17 @@ func (p Parser) Test(t *testing.T) (err error) {
 	}
 
 	p.Ps.Parse(p.Args)
+
+	if p.PostParse != nil {
+		err = p.PostParse(p.Ps, p.Val)
+		if err != nil {
+			t.Log(p.IDStr())
+			t.Logf("\t: Unexpected post-parsing error: %s\n", err)
+			t.Error("\t: error returned by the test 'PostParse' func")
+
+			return err
+		}
+	}
 
 	errMap := p.Ps.Errors()
 
