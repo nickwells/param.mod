@@ -13,7 +13,7 @@ import (
 
 // DfltTerminalParam is the default value of the parameter that will stop
 // command-line parameters from being processed. Any parameters found after
-// this value will be available through the Remainder() func. This default
+// this value will be available through the TrailingParams() func. This default
 // value can be overridden through the SetTerminalParam func
 const DfltTerminalParam = "--"
 
@@ -53,7 +53,7 @@ type PSet struct {
 	paramPrefixes  []string
 	shortestPrefix string
 
-	remainingParams        []string
+	trailingParams         []string
 	terminalParam          string
 	terminalParamSeen      bool
 	trailingParamsExpected bool
@@ -142,7 +142,7 @@ func (ps *PSet) ProgDesc() string {
 // SetParamPrefixes returns a PSetOptFunc which can be passed to NewSet. It
 // will set the list of allowed parameter prefixes that are to be removed
 // before parameter processing.
-func SetParamPrefixes(pp []string) PSetOptFunc {
+func SetParamPrefixes(pp ...string) PSetOptFunc {
 	return func(ps *PSet) error {
 		ps.SetParamPrefixes(pp)
 
@@ -218,8 +218,8 @@ func NewSet(h Helper, psof ...PSetOptFunc) *PSet {
 	return ps
 }
 
-// Remainder returns any arguments that come after the terminal parameter.
-func (ps *PSet) Remainder() []string { return ps.remainingParams }
+// TrailingParams returns any arguments that come after the terminal parameter.
+func (ps *PSet) TrailingParams() []string { return ps.trailingParams }
 
 // Errors returns the map of errors for the param set
 func (ps PSet) Errors() errutil.ErrMap { return ps.errMap }
@@ -227,7 +227,7 @@ func (ps PSet) Errors() errutil.ErrMap { return ps.errMap }
 // AddErr adds the errors to the named entry in the Error Map. Any nil errors
 // are filtered out of the slice and if the slice is empty no change is made
 func (ps *PSet) AddErr(name string, errs ...error) {
-	errs = slices.DeleteFunc[[]error, error](
+	errs = slices.DeleteFunc(
 		errs, func(e error) bool { return e == nil })
 
 	if len(errs) == 0 {
@@ -390,14 +390,14 @@ func (ps *PSet) AddFinalCheck(fcf FinalCheckFunc) {
 
 // SetTerminalParam sets the value of the parameter that is used to terminate
 // the processing of parameters. This can be used to override the default
-// value which is set to DfltTerminalParam
+// value which is set to DfltTerminalParam.
 func (ps *PSet) SetTerminalParam(s string) { ps.terminalParam = s }
 
 // TerminalParam will return the current value of the terminal
-// parameter. This is the parameter which can be given to indicate that any
-// following parameters should be handled by the RemHandler (see
-// SetRemHandler and SetNamedRemHandler). Unless SetTerminalParam has been
-// called this will return the default value: DfltTerminalParam
+// parameter. This is the parameter which can be given to indicate that
+// argument parsing should stop and any subsequent arguments will be
+// available through the PSet.TrailingParams method. Unless SetTerminalParam
+// has been called this will return the default value: DfltTerminalParam
 func (ps *PSet) TerminalParam() string { return ps.terminalParam }
 
 // fixGroups checks that the parameter groups correctly reflect the

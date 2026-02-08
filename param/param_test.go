@@ -205,9 +205,9 @@ func TestParamAddPos(t *testing.T) {
 		testhelper.ExpPanic
 		pi []paramInitialisers
 
-		paramsToParse     []string
-		errsExpected      map[string][]string
-		remainderExpected []string
+		paramsToParse          []string
+		errsExpected           map[string][]string
+		trailingParamsExpected []string
 	}{
 		{
 			ID: testhelper.MkID("good params"),
@@ -249,7 +249,7 @@ func TestParamAddPos(t *testing.T) {
 						` "extra1" "extra2"`,
 				},
 			},
-			remainderExpected: []string{"extra1", "extra2"},
+			trailingParamsExpected: []string{"extra1", "extra2"},
 		},
 		{
 			ID: testhelper.MkID("bad params - name empty"),
@@ -439,11 +439,14 @@ func TestParamAddPos(t *testing.T) {
 				panicVal, []string{}, stackTrace) {
 				errMapCheck(t, tc.IDStr(), errMap, tc.errsExpected)
 
-				if !reflect.DeepEqual(ps.Remainder(), tc.remainderExpected) {
+				if !reflect.DeepEqual(ps.TrailingParams(),
+					tc.trailingParamsExpected) {
 					t.Log(tc.IDStr())
-					t.Logf("\t: remainder received: %v\n", ps.Remainder())
-					t.Logf("\t: remainder expected: %v\n", tc.remainderExpected)
-					t.Errorf("\t: unexpected remainder\n")
+					t.Logf("\t: trailing params received: %v\n",
+						ps.TrailingParams())
+					t.Logf("\t: trailing params expected: %v\n",
+						tc.trailingParamsExpected)
+					t.Errorf("\t: unexpected trailing params\n")
 				}
 			}
 		}

@@ -13,13 +13,13 @@ func (ps *PSet) reportUnexpectedTrailingParams() {
 		return
 	}
 
-	remCount := len(ps.Remainder())
+	remCount := len(ps.trailingParams)
 
 	if remCount == 0 {
 		return
 	}
 
-	remStr := english.JoinQuoted(ps.Remainder(), " ", " ")
+	remStr := english.JoinQuoted(ps.trailingParams, " ", " ")
 	etc := "..."
 
 	const maxLen = 20

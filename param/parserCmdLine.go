@@ -71,7 +71,7 @@ func (ps *PSet) handleParamsByPos(loc *location.L, params []string,
 			pp.processParam(loc, pStr)
 
 			if pp.isTerminal {
-				ps.remainingParams = params[i+1:]
+				ps.trailingParams = params[i+1:]
 				return parsingFinished
 			}
 		}
@@ -132,7 +132,7 @@ func (ps *PSet) handleParamsByName(loc *location.L, params []string) {
 	}
 
 	if i < len(params) {
-		ps.remainingParams = params[i+1:]
+		ps.trailingParams = params[i+1:]
 	}
 }
 
