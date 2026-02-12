@@ -59,6 +59,11 @@ func (s String[T]) AllowedValues() string {
 	return "any string" + HasChecks(s)
 }
 
+// ValDescribe returns text describing the value expected
+func (s String[T]) ValDescribe() string {
+	return "string"
+}
+
 // CurrentValue returns the current setting of the parameter value
 func (s String[T]) CurrentValue() string {
 	return string(*s.Value)
