@@ -13,18 +13,16 @@ func CaptureParamVal(v *string) param.ActionFunc {
 		panic("nil pointer passed to CaptureParamVal")
 	}
 
-	return func(loc location.L, p *param.ByName, paramValues []string) error {
-		const hasValue = 2
+	return func(loc location.L, p *param.BaseParam, paramVals []string) error {
 		if p.Setter().ValueReq() != param.Mandatory ||
-			len(paramValues) != hasValue {
+			len(paramVals) == 0 {
 			panic(fmt.Errorf(
-				"coding error: "+
-					"capturing a parameter value must be done "+
-					"with a parameter with a mandatory following value: "+
+				"capturing a parameter value must be done "+
+					"with a parameter with a mandatory value: "+
 					"param: %q, at: %s", p.Name(), loc))
 		}
 
-		*v = paramValues[1]
+		*v = paramVals[len(paramVals)-1]
 
 		return nil
 	}

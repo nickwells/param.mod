@@ -307,7 +307,7 @@ func NewStdHelp(hof ...StdHelpOptFunc) *StdHelp {
 // setHelpSections returns an ActionFunc to set the sectionsChosen in the
 // StdHelp instance
 func setHelpSections(h *StdHelp, sections ...string) param.ActionFunc {
-	return func(_ location.L, _ *param.ByName, _ []string) error {
+	return func(_ location.L, _ *param.BaseParam, _ []string) error {
 		return h.setHelpSections(sections...)
 	}
 }
@@ -346,4 +346,14 @@ func (h *StdHelp) unsetHelpSections(sections ...string) error {
 	}
 
 	return nil
+}
+
+// makeParamStr returns a quoted string with the parameter name and any
+// arguments given.
+func makeParamStr(ps *param.PSet, pName, pArgs string) string {
+	if pArgs != "" {
+		pArgs = " " + pArgs
+	}
+
+	return `"` + ps.ShortestPrefix() + pName + pArgs + `"`
 }

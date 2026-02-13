@@ -17,12 +17,12 @@ stdParams-help   [ 12 parameters, 11 hidden ]
 
             Seldom used parameters may be hidden; to see all the parameters use
             the parameter:
-              -help-all
+              "-help-all"
             To just see a summary of each parameter (suppressing the full
             description) use the parameter:
-              -help-summary
+              "-help-summary"
             For the full help message use the parameter:
-              -help-full
+              "-help-full"
 
             This parameter may only be given on the command line, not in the
             configuration files or as an environment variable

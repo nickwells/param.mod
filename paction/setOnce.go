@@ -50,7 +50,7 @@ const (
 // use is to have a separate SetOnce value for each parameter that you want
 // to protect
 func (so *SetOnce) MakeActionFunc(action SetOnceErrAction) param.ActionFunc {
-	return func(loc location.L, p *param.ByName, paramVals []string) error {
+	return func(loc location.L, p *param.BaseParam, paramVals []string) error {
 		if len(so.paramsSetAt) == 0 {
 			so.paramsSetAt = append(so.paramsSetAt,
 				param.Source{
@@ -63,20 +63,20 @@ func (so *SetOnce) MakeActionFunc(action SetOnceErrAction) param.ActionFunc {
 			return nil
 		}
 
-		if action == ErrorOnMultipleTries {
+		switch action {
+		case ErrorOnMultipleTries:
 			return fmt.Errorf(
 				"parameter %s has been set already, firstly at: %s",
 				p.Name(), so.paramsSetAt[0].Desc())
-		}
-
-		if action == ExitOnMultipleTries {
+		case ExitOnMultipleTries:
 			fmt.Fprintf(os.Stderr,
 				"parameter %s has been set already, at %s. Aborting",
 				p.Name(), so.paramsSetAt[0].Desc())
 			os.Exit(1)
+		case IgnoreMultipleTries:
+			// do nothing
 		}
 
-		// if action == IgnoreMultipleTries
 		return nil
 	}
 }

@@ -20,33 +20,15 @@ import (
 // choose a different PSet for parsing the remaining parameters. This allows
 // support for tools with an interface like 'git' or the 'go' command itself.
 type ByPos struct {
-	ps           *PSet
-	setter       Setter
-	name         string
-	description  string
-	initialValue string
-	isTerminal   bool
-}
-
-// Name returns the parameter name
-func (bp ByPos) Name() string { return bp.name }
-
-// Description returns the parameter description
-func (bp ByPos) Description() string { return bp.description }
-
-// InitialValue returns the initialValue of the ByPos parameter
-func (bp ByPos) InitialValue() string { return bp.initialValue }
-
-// Setter returns the setter
-func (bp ByPos) Setter() Setter {
-	return bp.setter
+	BaseParam
+	isTerminal bool
 }
 
 // =============================================
 
-// PosOptFunc is the type of a option func used to set various flags on a
+// ByPosOptFunc is the type of a option func used to set various flags on a
 // positional parameter
-type PosOptFunc func(bp *ByPos) error
+type ByPosOptFunc func(bp *ByPos) error
 
 // AddByPos will add a new positional parameter to the set of parameters. The
 // setter defines the function that should be performed when the parameter is
@@ -61,17 +43,16 @@ type PosOptFunc func(bp *ByPos) error
 // hint at the intended purpose. The name should be expanded and explained by
 // the description.
 func (ps *PSet) AddByPos(name string, setter Setter,
-	desc string, opts ...PosOptFunc,
+	desc string, opts ...ByPosOptFunc,
 ) *ByPos {
-	if ps.parsed {
-		panic("Parameters have already been parsed." +
-			" A new positional parameter (" + name + ") cannot be added.")
+	if err := ps.AlreadyParsed(); err != nil {
+		panic(fmt.Errorf("positional parameter %d (%q) can't be added: %w",
+			len(ps.byPos)+1, name, err))
 	}
 
 	if setter.ValueReq() == None {
-		panic(fmt.Sprintf(
-			"Couldn't add positional parameter %d (%q):"+
-				" a positional parameter must take a value",
+		panic(fmt.Errorf(
+			"positional parameter %d (%q) can't be added, it must take a value",
 			len(ps.byPos)+1, name))
 	}
 
@@ -80,30 +61,57 @@ func (ps *PSet) AddByPos(name string, setter Setter,
 	checkTerminalFlags(ps)
 
 	bp := &ByPos{
-		ps:           ps,
-		setter:       setter,
-		name:         name,
-		description:  desc,
-		initialValue: setter.CurrentValue(),
+		BaseParam: mkBaseParam(ps, name, setter, desc, caller()),
 	}
 
 	for _, optFunc := range opts {
 		if err := optFunc(bp); err != nil {
-			panic(fmt.Sprintf(
-				"Couldn't set the options for positional parameter %d (%q): %s",
+			panic(fmt.Errorf("positional parameter %d (%q) can't be added: %w",
 				len(ps.byPos)+1, name, err))
 		}
 	}
 
+	ps.nameToPosParam[name] = bp
 	ps.byPos = append(ps.byPos, bp)
 
 	return bp
 }
 
+// ByPosValueName returns a ByPosOptFunc which will set the short value name
+// used in the parameter summary (it follows the "=" after the parameter
+// name). See BaseParam.SetValueName.
+func ByPosValueName(vName string) ByPosOptFunc {
+	return func(p *ByPos) error {
+		return (&p.BaseParam).SetValueName(vName)
+	}
+}
+
+// ByPosSeeAlso returns a ByPosOptFunc which will add the names of parameters
+// to the list of parameters to be referenced when showing the help
+// message. See BaseParam.SetSeeAlsoRefs.
+func ByPosSeeAlso(refs ...string) ByPosOptFunc {
+	source := caller()
+
+	return func(p *ByPos) error {
+		return (&p.BaseParam).SetSeeAlsoRefs(source, refs...)
+	}
+}
+
+// ByPosSeeNote returns a ByPosOptFunc which will add the names of notes to
+// the list of notes to be referenced when showing the help message. See
+// BaseParam.SetSeeNotes.
+func ByPosSeeNote(notes ...string) ByPosOptFunc {
+	source := caller()
+
+	return func(p *ByPos) error {
+		return (&p.BaseParam).SetSeeNotes(source, notes...)
+	}
+}
+
 // IsTerminal returns true if the ByPos parameter is marked as terminal
 func (bp ByPos) IsTerminal() bool { return bp.isTerminal }
 
-// SetAsTerminal is a function which can be passed as a PosOptFunc. It sets
+// SetAsTerminal is a function which can be passed as a ByPosOptFunc. It sets
 // the flag on the positional parameter indicating that it is terminal. Only
 // the last positional parameter can be terminal; this is checked separately
 // later.
@@ -131,9 +139,9 @@ func SetAsTerminal(bp *ByPos) error {
 func checkTerminalFlags(ps *PSet) {
 	for i, bp := range ps.byPos {
 		if bp.isTerminal {
-			panic(fmt.Sprintf(
-				"Positional parameter %d is marked as terminal"+
-					" but is not the last positional parameter", i))
+			panic(fmt.Errorf(
+				"positional parameter %d (%q) is marked as terminal"+
+					" but is not the last positional parameter", i, bp.name))
 		}
 	}
 }
@@ -147,5 +155,12 @@ func (bp *ByPos) processParam(loc *location.L, val string) {
 			loc.Idx(), bp.name)
 		bp.ps.AddErr(name,
 			loc.Errorf("%s", err.Error()))
+	}
+
+	for _, action := range bp.postAction {
+		err = action(*loc, (&bp.BaseParam), []string{val})
+		if err != nil {
+			bp.ps.AddErr(bp.name, loc.Error(err.Error()))
+		}
 	}
 }

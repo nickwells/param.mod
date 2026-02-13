@@ -7,7 +7,7 @@ import (
 
 	"github.com/nickwells/english.mod/english"
 	"github.com/nickwells/param.mod/v7/param"
-	"github.com/nickwells/param.mod/v7/psetter"
+	"github.com/nickwells/param.mod/v7/phelputils"
 	"github.com/nickwells/twrap.mod/twrap"
 )
 
@@ -42,6 +42,8 @@ func printByPosParam(h StdHelp, ps *param.PSet, i int) {
 	}
 
 	h.twc.Wrap(bp.Description(), descriptionIndent)
+	showSeeAlso(h.twc, &bp.BaseParam)
+	showSeeNotes(h.twc, &bp.BaseParam)
 	h.showAllowedVals(bp.Name(), bp.Setter())
 	showInitialValue(h.twc, bp.InitialValue(), bp.Setter().CurrentValue())
 }
@@ -150,7 +152,7 @@ func showParamsByGroupName(h StdHelp, ps *param.PSet) bool {
 
 // printParamUsage prints the named parameter help text
 func (h StdHelp) printParamUsage(p *param.ByName) {
-	smy := ParamSummary(*p)
+	smy := phelputils.ParamSummary(*p)
 	h.twc.Wrap2Indent(smy, paramIndent, paramLine2Indent)
 
 	if h.showSummary {
@@ -159,8 +161,8 @@ func (h StdHelp) printParamUsage(p *param.ByName) {
 
 	h.twc.Wrap(p.Description(), descriptionIndent)
 	printParamAttributes(h.twc, p)
-	showSeeAlso(h.twc, p)
-	showSeeNotes(h.twc, p)
+	showSeeAlso(h.twc, &p.BaseParam)
+	showSeeNotes(h.twc, &p.BaseParam)
 
 	if p.Setter().ValueReq() == param.None {
 		return
@@ -190,8 +192,8 @@ func showInitialValue(twc *twrap.TWConf, initialValue, currentValue string) {
 	}
 }
 
-// showSeeAlso shows the references for the ByName parameter (if any)
-func showSeeAlso(twc *twrap.TWConf, p *param.ByName) {
+// showSeeAlso shows the references for the BaseParam parameter (if any)
+func showSeeAlso(twc *twrap.TWConf, p *param.BaseParam) {
 	refs := p.SeeAlso()
 	if len(refs) == 0 {
 		return
@@ -201,8 +203,9 @@ func showSeeAlso(twc *twrap.TWConf, p *param.ByName) {
 	twc.WrapPrefixed(prompt, strings.Join(refs, ", "), descriptionIndent)
 }
 
-// showSeeNotes shows the references to notes for the ByName parameter (if any)
-func showSeeNotes(twc *twrap.TWConf, p *param.ByName) {
+// showSeeNotes shows the references to notes for the BaseParam parameter (if
+// any)
+func showSeeNotes(twc *twrap.TWConf, p *param.BaseParam) {
 	notes := p.SeeNotes()
 	if len(notes) == 0 {
 		return
@@ -218,52 +221,18 @@ func showSeeNotes(twc *twrap.TWConf, p *param.ByName) {
 func (h StdHelp) showAllowedVals(pName string, s param.Setter) {
 	const prefix = "Allowed values: "
 
-	const longString = 50
-
-	var valueList string
-
-	if sAVM, ok := s.(psetter.AllowedValuesMapper); ok {
-		avm := sAVM.AllowedValuesMap()
-		if len(avm) == 1 {
-			valueList = "The value must be:\n" + avm.String()
-		} else if len(avm) > 1 {
-			valueList = "The value must be one of the following:\n" +
-				avm.String()
-		}
-	}
-
-	var aliases string
-
-	if sAVM, ok := s.(psetter.AllowedValuesAliasMapper); ok {
-		avam := sAVM.AllowedValuesAliasMap()
-		if len(avam) == 1 {
-			aliases = "The following alias is available:\n" + avam.String()
-		} else if len(avam) > 1 {
-			aliases = "The following aliases are available:\n" + avam.String()
-		}
-	}
-
-	keyStr := s.AllowedValues() + valueList + aliases
-	if len(keyStr) > longString {
-		if name, alreadyShown := h.avalShownAlready[keyStr]; alreadyShown {
-			h.twc.WrapPrefixed(prefix,
-				"(see parameter: "+name+")",
-				descriptionIndent)
-
-			return
-		}
-
-		h.avalShownAlready[keyStr] = pName
-	}
+	parts := phelputils.AllowedValueParts(h.avalShownAlready, pName, s)
 
 	const extraIndent = 6
 
 	indent := descriptionIndent + len(prefix)
 	valDescIndent := indent + extraIndent
 
-	h.twc.WrapPrefixed(prefix, s.AllowedValues(), descriptionIndent)
-	h.twc.Wrap2Indent(valueList, indent, valDescIndent)
-	h.twc.Wrap2Indent(aliases, indent, valDescIndent)
+	h.twc.WrapPrefixed(prefix, parts[0], descriptionIndent)
+
+	for _, p := range parts[1:] {
+		h.twc.Wrap2Indent(p, indent, valDescIndent)
+	}
 }
 
 // paramCanBeShown will return true if the param can be shown. It checks

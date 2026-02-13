@@ -25,7 +25,7 @@ func setConfigFileForGroupStdParamsCmpl(ps *param.PSet) error {
 			"github.com",
 			"nickwells",
 			"param.mod",
-			"v6",
+			"v7",
 			"phelp",
 			"group-stdParams-cmpl.cfg"),
 		filecheck.Optional)

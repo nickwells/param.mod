@@ -36,19 +36,20 @@ type PSet struct {
 	progBaseName string
 	progDesc     string
 
-	byPos        []*ByPos
-	byName       []*ByName
-	nameToParam  map[string]*ByName
-	groups       map[string]*Group
-	unusedParams map[string][]string
-	errMap       errutil.ErrMap
-	errorCount   int
-	finalChecks  []FinalCheckFunc
-	envPrefixes  []string
-	configFiles  []ConfigFileDetails
-	examples     []Example
-	references   []Reference
-	notes        map[string]*Note
+	byPos          []*ByPos
+	byName         []*ByName
+	nameToParam    map[string]*ByName
+	nameToPosParam map[string]*ByPos
+	groups         map[string]*Group
+	unusedParams   map[string][]string
+	errMap         errutil.ErrMap
+	errorCount     int
+	finalChecks    []FinalCheckFunc
+	envPrefixes    []string
+	configFiles    []ConfigFileDetails
+	examples       []Example
+	references     []Reference
+	notes          map[string]*Note
 
 	paramPrefixes  []string
 	shortestPrefix string
@@ -190,6 +191,7 @@ func NewSet(h Helper, psof ...PSetOptFunc) *PSet {
 		progName:        dfltProgName,
 		progBaseName:    dfltProgName,
 		nameToParam:     make(map[string]*ByName),
+		nameToPosParam:  make(map[string]*ByPos),
 		groups:          make(map[string]*Group),
 		notes:           make(map[string]*Note),
 		unusedParams:    make(map[string][]string),
@@ -254,8 +256,15 @@ func (ps *PSet) ProgName() string { return ps.progName }
 // default value
 func (ps *PSet) ProgBaseName() string { return ps.progBaseName }
 
-// AreSet will return true if Parse has been called or false otherwise
-func (ps *PSet) AreSet() bool { return ps.parsed }
+// AlreadyParsed will return a non-nil error if Parse has been called.
+func (ps *PSet) AlreadyParsed() error {
+	if ps.parsed {
+		return fmt.Errorf("param.PSet.Parse has already been called, from: %s",
+			ps.parseCalledFrom)
+	}
+
+	return nil
+}
 
 // UnusedParams returns a copy of the map of unused parameter names. The map
 // associates a parameter name with a slice of strings which records where

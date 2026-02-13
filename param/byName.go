@@ -1,10 +1,7 @@
 package param
 
 import (
-	"errors"
 	"fmt"
-	"maps"
-	"slices"
 	"strings"
 
 	"github.com/nickwells/location.mod/location"
@@ -44,27 +41,12 @@ import (
 // and confirm that the combination of parameters is allowed. See the
 // PSet.AddFinalCheck method.
 type ByName struct {
-	ps              *PSet
-	name            string
-	valueName       string
+	BaseParam
 	altNames        []string
 	groupName       string
-	setter          Setter
-	description     string
-	seeAlso         map[string]string
-	seeNote         map[string]string
-	initialValue    string
 	whereIsParamSet []string
-	whereAdded      string
 	attributes      Attributes
-	postAction      []ActionFunc
 }
-
-// PSet returns the parameter set to which the ByName parameter belongs
-func (p ByName) PSet() *PSet { return p.ps }
-
-// Name returns the name of the ByName parameter
-func (p ByName) Name() string { return p.name }
 
 // AltNames returns a copy of the alternative names of the ByName parameter
 func (p ByName) AltNames() []string {
@@ -90,44 +72,8 @@ func (p ByName) WhereSet() []string {
 	return ws
 }
 
-// Description returns the description of the ByName parameter
-func (p ByName) Description() string { return p.description }
-
-// InitialValue returns the initialValue of the ByName parameter
-func (p ByName) InitialValue() string { return p.initialValue }
-
 // GroupName returns the groupName of the ByName parameter
 func (p ByName) GroupName() string { return p.groupName }
-
-// Setter returns the setter
-func (p ByName) Setter() Setter { return p.setter }
-
-// SeeAlso returns a sorted list of references to other parameters
-func (p ByName) SeeAlso() []string {
-	return slices.Sorted(maps.Keys(p.seeAlso))
-}
-
-// SeeNotes returns a sorted list of references to notes
-func (p ByName) SeeNotes() []string {
-	return slices.Sorted(maps.Keys(p.seeNote))
-}
-
-// ValueName returns the parameter's bespoke value name
-func (p ByName) ValueName() string { return p.valueName }
-
-// seeAlsoSource returns the string describing where the SeeAlso reference
-// was added. This is suitable for reporting the location in code the mistake
-// was made. If the reference is not found it will return an empty string
-func (p ByName) seeAlsoSource(ref string) string {
-	return p.seeAlso[ref]
-}
-
-// seeNoteSource returns the string describing where the SeeNote note was
-// added. This is suitable for reporting the location in code the mistake was
-// made. If the note is not found it will return an empty string
-func (p ByName) seeNoteSource(note string) string {
-	return p.seeNote[note]
-}
 
 // Attributes records various flags that can be set on a ByName parameter
 type Attributes int32
@@ -173,9 +119,9 @@ func (p ByName) AttrIsSet(attr Attributes) bool {
 
 // =============================================
 
-// OptFunc is the type of a option func used to set various flags etc on a
+// ByNameOptFunc is the type of a option func used to set various flags etc on a
 // parameter.
-type OptFunc func(p *ByName) error
+type ByNameOptFunc func(p *ByName) error
 
 // Add will add a new named parameter to the set that will be recognised. The
 // setter defines the function that should be performed when the parameter is
@@ -184,16 +130,16 @@ type OptFunc func(p *ByName) error
 //
 // Any leading or trailing spaces are silently removed. Add will panic if the
 // parameter has already been used. Add will also panic if the name doesn't
-// start with a letter or if it contains any other character than a letter,
-// a digit or a dash.
+// start with a letter or if it contains any other character than a letter, a
+// digit or a dash.
 //
-// Various other features of the parameter can be set by the OptFuncs which
-// may be passed after the description.
-func (ps *PSet) Add(name string, setter Setter, desc string, opts ...OptFunc,
+// Various other features of the parameter can be set by the ByNameOptFunc's
+// which may be passed after the description.
+func (ps *PSet) Add(
+	name string, setter Setter, desc string, opts ...ByNameOptFunc,
 ) *ByName {
-	if ps.parsed {
-		panic("Parameters have already been parsed." +
-			" A new named parameter (" + name + ") cannot be added.")
+	if err := ps.AlreadyParsed(); err != nil {
+		panic(fmt.Errorf("named parameter (%q) can't be added: %w", name, err))
 	}
 
 	setter.CheckSetter(name)
@@ -201,28 +147,23 @@ func (ps *PSet) Add(name string, setter Setter, desc string, opts ...OptFunc,
 	ppCount := len(ps.byPos)
 	if ppCount > 0 &&
 		ps.byPos[ppCount-1].isTerminal {
-		panic("The param set has a terminal positional parameter." +
-			" The non-positional parameter " + name + " cannot be added as" +
-			" it will never be used.")
+		panic(
+			fmt.Errorf("named parameter (%q) can't be added:"+
+				" it can never be used as"+
+				" the param set has a terminal positional parameter",
+				name))
 	}
 
 	name = strings.TrimSpace(name)
 
 	whereAdded := caller()
 	if err := ps.nameCheck(name, whereAdded); err != nil {
-		panic(err.Error())
+		panic(fmt.Errorf("named parameter (%q) can't be added: %w", name, err))
 	}
 
 	p := &ByName{
-		ps:           ps,
-		name:         name,
-		groupName:    DfltGroupName,
-		setter:       setter,
-		description:  desc,
-		initialValue: setter.CurrentValue(),
-		whereAdded:   whereAdded,
-		seeAlso:      make(map[string]string),
-		seeNote:      make(map[string]string),
+		BaseParam: mkBaseParam(ps, name, setter, desc, whereAdded),
+		groupName: DfltGroupName,
 	}
 	ps.nameToParam[name] = p
 	ps.byName = append(ps.byName, p)
@@ -230,8 +171,7 @@ func (ps *PSet) Add(name string, setter Setter, desc string, opts ...OptFunc,
 
 	for _, optFunc := range opts {
 		if err := optFunc(p); err != nil {
-			panic(fmt.Sprintf(
-				"Error setting the options for param %q:\n  %s.",
+			panic(fmt.Errorf("named parameter (%q) can't be added: %w",
 				name, err))
 		}
 	}
@@ -253,13 +193,15 @@ func (ps *PSet) addByNameToGroup(p *ByName) {
 	g.params = append(g.params, p)
 }
 
-// Attrs returns an OptFunc which will set the attributes of the parameter to
-// the passed value. Note that if the IsTerminal attribute is set then the
-// CommandLineOnly attribute is forced on as well.
-func Attrs(attrs Attributes) OptFunc {
+// Attrs returns a ByNameOptFunc which will set the attributes of the
+// parameter to the passed value. Note that if the IsTerminal attribute is
+// set then the CommandLineOnly attribute is forced on as well.
+func Attrs(attrs Attributes) ByNameOptFunc {
 	return func(p *ByName) error {
 		if attrs&IsTerminalParam == IsTerminalParam {
 			attrs |= CommandLineOnly
+
+			p.ps.TrailingParamsExpected()
 		}
 
 		p.attributes = attrs
@@ -268,9 +210,10 @@ func Attrs(attrs Attributes) OptFunc {
 	}
 }
 
-// AltNames will attach multiple alternative names to the parameter.
-// It will return an error if any alternative name has already been used
-func AltNames(altNames ...string) OptFunc {
+// AltNames returns a ByNameOptFunc which will attach multiple alternative
+// names to the parameter.  It will return an error if any alternative name
+// has already been used
+func AltNames(altNames ...string) ByNameOptFunc {
 	return func(p *ByName) error {
 		for _, altName := range altNames {
 			altName = strings.TrimSpace(altName)
@@ -287,87 +230,44 @@ func AltNames(altNames ...string) OptFunc {
 	}
 }
 
-// ValueName returns an OptFunc that will set the short value name used in
-// the parameter summary (it follows the "=" after the parameter name). If
-// this is not empty this will be used in preference to either the param
-// setter's value description or the setter's type name. This allows a
-// per-parameter value name to be given for a more helpful usage message. It
-// will return an error if the vName is the empty string.
-func ValueName(vName string) OptFunc {
+// ValueName returns a ByNameOptFunc which will set the short value name used
+// in the parameter summary (it follows the "=" after the parameter
+// name). See BaseParam.SetValueName.
+func ValueName(vName string) ByNameOptFunc {
 	return func(p *ByName) error {
-		if vName == "" {
-			return errors.New("some non-empty value name must be given")
-		}
-
-		p.valueName = vName
-
-		return nil
+		return (&p.BaseParam).SetValueName(vName)
 	}
 }
 
-// SeeAlso will add the names of parameters to the list of parameters to be
-// referenced when showing the help message. They will be checked before the
-// parameters are parsed to ensure that they are all valid names. Note that
-// it is not possible to check the names as they are added since the
-// referenced name might not have been added yet. It will return an error if
-// the referenced name has already been used. A reference to the parameter
-// itself will be ignored; this allows the same group of parameter names to
-// be passed to each parameter in the group wihout self-reference.
-func SeeAlso(refs ...string) OptFunc {
+// SeeAlso returns a ByNameOptFunc which will add the names of parameters to
+// the list of parameters to be referenced when showing the help message. See
+// BaseParam.SetSeeAlsoRefs.
+func SeeAlso(refs ...string) ByNameOptFunc {
 	source := caller()
 
 	return func(p *ByName) error {
-		for _, ref := range refs {
-			ref = strings.TrimSpace(ref)
-			if ref == p.name { // don't add a see-also to yourself
-				continue
-			}
-
-			if whereAdded, exists := p.seeAlso[ref]; exists {
-				return fmt.Errorf(
-					"the SeeAlso reference %q has already been added, at %s",
-					ref, whereAdded)
-			}
-
-			p.seeAlso[ref] = source
-		}
-
-		return nil
+		return (&p.BaseParam).SetSeeAlsoRefs(source, refs...)
 	}
 }
 
-// SeeNote will add the names of parameters to the list of parameters
-// to be referenced when showing the help message. They will be checked
-// before the parameters are parsed to ensure that they are all valid
-// names. Note that it is not possible to check the names as they are added
-// since the referenced name might not have been added yet. It will return an
-// error if the referenced name has already been used.
-func SeeNote(notes ...string) OptFunc {
+// SeeNote returns a ByNameOptFunc which will add the names of notes to the
+// list of notes to be referenced when showing the help message. See
+// BaseParam.SetSeeNotes.
+func SeeNote(notes ...string) ByNameOptFunc {
 	source := caller()
 
 	return func(p *ByName) error {
-		for _, note := range notes {
-			note = strings.TrimSpace(note)
-
-			if whereAdded, exists := p.seeNote[note]; exists {
-				return fmt.Errorf(
-					"the SeeNote reference %q has already been added, at %s",
-					note, whereAdded)
-			}
-
-			p.seeNote[note] = source
-		}
-
-		return nil
+		return (&p.BaseParam).SetSeeNotes(source, notes...)
 	}
 }
 
-// GroupName will set the parameter group name for the parameter. The group
-// name is stripped of any leading or trailing white space and it is checked
-// for validity; an error is returned if it is not valid.  A parameter group
-// can be used to collect related parameters together, this grouping will be
-// reflected when the usage message is displayed
-func GroupName(name string) OptFunc {
+// GroupName returns a ByNameOptFunc which will set the parameter group name
+// for the parameter. The group name is stripped of any leading or trailing
+// white space and it is checked for validity; an error is returned if it is
+// not valid.  A parameter group can be used to collect related parameters
+// together, this grouping will be reflected when the usage message is
+// displayed
+func GroupName(name string) ByNameOptFunc {
 	return func(p *ByName) error {
 		name = strings.TrimSpace(name)
 
@@ -421,7 +321,7 @@ func (p *ByName) processParam(loc *location.L, paramParts []string) {
 	p.whereIsParamSet = append(p.whereIsParamSet, loc.String())
 
 	for _, action := range p.postAction {
-		err = action(*loc, p, paramParts)
+		err = action(*loc, (&p.BaseParam), paramParts)
 		if err != nil {
 			p.ps.AddErr(p.name, loc.Error(err.Error()))
 		}

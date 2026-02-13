@@ -13,7 +13,7 @@ stdParams-cmpl   [ 3 parameters ]
     of the files and control whether they should be overwritten.
 
     Parameters in this group may also be set in the configuration file:
-    testdata/.config/github.com/nickwells/param.mod/v6/phelp/group-stdParams-cmpl.cfg
+    testdata/.config/github.com/nickwells/param.mod/v7/phelp/group-stdParams-cmpl.cfg
 
       [-completions-quiet[=Bool] ]
             suppress any messages produced after generating or updating the
@@ -63,12 +63,12 @@ stdParams-help   [ 12 parameters ]
 
             Seldom used parameters may be hidden; to see all the parameters use
             the parameter:
-              -help-all
+              "-help-all"
             To just see a summary of each parameter (suppressing the full
             description) use the parameter:
-              -help-summary
+              "-help-summary"
             For the full help message use the parameter:
-              -help-full
+              "-help-full"
       [-help-all, -help-a]
             show all the parameters. Less commonly useful parameters are not
             shown in the standard help message. This will reveal them.

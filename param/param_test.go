@@ -56,7 +56,7 @@ func TestParamAdd(t *testing.T) {
 			npi: &namedParamInitialiser{
 				name:   "param-1",
 				setter: psetter.Int[int64]{Value: &p1},
-				opts: []param.OptFunc{
+				opts: []param.ByNameOptFunc{
 					param.AltNames("param-1-alt"),
 					param.GroupName("test"),
 				},
@@ -79,7 +79,7 @@ func TestParamAdd(t *testing.T) {
 			npi: &namedParamInitialiser{
 				name:   "param-2",
 				setter: psetter.Int[int64]{Value: &p1},
-				opts:   []param.OptFunc{param.AltNames("param-1")},
+				opts:   []param.ByNameOptFunc{param.AltNames("param-1")},
 			},
 			ExpPanic: testhelper.MkExpPanic(
 				"parameter name",
@@ -91,7 +91,7 @@ func TestParamAdd(t *testing.T) {
 			npi: &namedParamInitialiser{
 				name:   "param-3",
 				setter: psetter.Int[int64]{Value: &p1},
-				opts:   []param.OptFunc{param.AltNames("?")},
+				opts:   []param.ByNameOptFunc{param.AltNames("?")},
 			},
 			ExpPanic: testhelper.MkExpPanic(
 				"parameter name",
@@ -103,7 +103,7 @@ func TestParamAdd(t *testing.T) {
 			npi: &namedParamInitialiser{
 				name:   "param-4",
 				setter: psetter.Int[int64]{Value: &p1},
-				opts:   []param.OptFunc{param.AltNames("param-1-alt")},
+				opts:   []param.ByNameOptFunc{param.AltNames("param-1-alt")},
 			},
 			ExpPanic: testhelper.MkExpPanic(
 				"parameter name",
@@ -116,7 +116,7 @@ func TestParamAdd(t *testing.T) {
 	ps := paramset.NewNoHelpNoExitNoErrRpt()
 	for _, tc := range testCases {
 		p, panicked, panicVal := panicSafeTestAddByName(ps, tc.npi)
-		testhelper.CheckExpPanic(t, panicked, panicVal, tc)
+		testhelper.CheckExpPanicError(t, panicked, panicVal, tc)
 
 		p2, err := ps.GetParamByName(tc.npi.name)
 		if tc.paramShouldExist {
@@ -216,7 +216,7 @@ func TestParamAddPos(t *testing.T) {
 					npi: &namedParamInitialiser{
 						name:   "param-1",
 						setter: psetter.Int[int64]{Value: &p1},
-						opts: []param.OptFunc{
+						opts: []param.ByNameOptFunc{
 							param.AltNames("param-1-alt"),
 							param.GroupName("test"),
 						},
@@ -227,7 +227,7 @@ func TestParamAddPos(t *testing.T) {
 					npi: &namedParamInitialiser{
 						name:   "param-2",
 						setter: psetter.Int[int64]{Value: &p1},
-						opts: []param.OptFunc{
+						opts: []param.ByNameOptFunc{
 							param.AltNames("param-2-alt"),
 							param.GroupName("test"),
 						},
@@ -258,7 +258,7 @@ func TestParamAddPos(t *testing.T) {
 					npi: &namedParamInitialiser{
 						name:   "",
 						setter: psetter.Int[int64]{Value: &p1},
-						opts: []param.OptFunc{
+						opts: []param.ByNameOptFunc{
 							param.GroupName("test"),
 						},
 					},
@@ -276,7 +276,7 @@ func TestParamAddPos(t *testing.T) {
 					npi: &namedParamInitialiser{
 						name:   "param-1",
 						setter: psetter.Int[int64]{Value: &p1},
-						opts: []param.OptFunc{
+						opts: []param.ByNameOptFunc{
 							param.AltNames("param-1-alt"),
 							param.GroupName("test"),
 						},
@@ -287,14 +287,14 @@ func TestParamAddPos(t *testing.T) {
 					ppi: &posParamInitialiser{
 						name:   "ppi1",
 						setter: psetter.Int[int64]{Value: &p1},
-						opts: []param.PosOptFunc{
+						opts: []param.ByPosOptFunc{
 							param.SetAsTerminal,
 						},
 					},
 				},
 			},
 			ExpPanic: testhelper.MkExpPanic(
-				`Couldn't set the options for positional parameter 1 ("ppi1"):`,
+				`positional parameter 1 ("ppi1") can't be added:`,
 				"the param set has 1 non-positional parameters.",
 				" It cannot also have a terminal positional parameter as"+
 					" the non-positional parameters will never be used."),
@@ -307,7 +307,7 @@ func TestParamAddPos(t *testing.T) {
 					ppi: &posParamInitialiser{
 						name:   "ppi1",
 						setter: psetter.Int[int64]{Value: &p1},
-						opts: []param.PosOptFunc{
+						opts: []param.ByPosOptFunc{
 							param.SetAsTerminal,
 						},
 					},
@@ -317,7 +317,7 @@ func TestParamAddPos(t *testing.T) {
 					npi: &namedParamInitialiser{
 						name:   "param-1",
 						setter: psetter.Int[int64]{Value: &p1},
-						opts: []param.OptFunc{
+						opts: []param.ByNameOptFunc{
 							param.AltNames("param-1-alt"),
 							param.GroupName("test"),
 						},
@@ -325,9 +325,8 @@ func TestParamAddPos(t *testing.T) {
 				},
 			},
 			ExpPanic: testhelper.MkExpPanic(
-				"The param set has a terminal positional parameter.",
-				"The non-positional parameter param-1 cannot be added"+
-					" as it will never be used"),
+				"it can never be used as the param set has" +
+					" a terminal positional parameter"),
 		},
 		{
 			ID: testhelper.MkID("bad params - terminal ByPos not the last"),
@@ -336,7 +335,7 @@ func TestParamAddPos(t *testing.T) {
 					ppi: &posParamInitialiser{
 						name:   "ppi1",
 						setter: psetter.Int[int64]{Value: &p1},
-						opts: []param.PosOptFunc{
+						opts: []param.ByPosOptFunc{
 							param.SetAsTerminal,
 						},
 					},
@@ -346,12 +345,12 @@ func TestParamAddPos(t *testing.T) {
 					ppi: &posParamInitialiser{
 						name:   "ppi2",
 						setter: psetter.Int[int64]{Value: &p1},
-						opts:   []param.PosOptFunc{},
+						opts:   []param.ByPosOptFunc{},
 					},
 				},
 			},
 			ExpPanic: testhelper.MkExpPanic(
-				"Positional parameter 0 is marked as terminal but" +
+				`positional parameter 0 ("ppi1") is marked as terminal but` +
 					" is not the last positional parameter"),
 		},
 		{
@@ -429,7 +428,7 @@ func TestParamAddPos(t *testing.T) {
 			}
 		}
 
-		testhelper.CheckExpPanic(t, panicked, panicVal, tc)
+		testhelper.CheckExpPanicError(t, panicked, panicVal, tc)
 
 		if !panicked {
 			errMap, panicked, panicVal, stackTrace := panicSafeTestParse(
@@ -458,9 +457,10 @@ func TestParamAddPos(t *testing.T) {
 func parsePSet(t *testing.T, ps *param.PSet, args []string) errutil.ErrMap {
 	t.Helper()
 
-	if ps.AreSet() {
+	if err := ps.AlreadyParsed(); err != nil {
 		t.Log(t.Name())
-		t.Errorf("\t: params haven't been set but AreSet() says they have")
+		t.Logf("\t: unexpected error: %s", err)
+		t.Errorf("\t: PSet.AlreadyParsed() indicates parsing has been done")
 	}
 
 	errMap, panicked, panicVal, stackTrace := panicSafeTestParse(ps, args)
@@ -470,9 +470,9 @@ func parsePSet(t *testing.T, ps *param.PSet, args []string) errutil.ErrMap {
 		return errMap
 	}
 
-	if !ps.AreSet() {
+	if err := ps.AlreadyParsed(); err == nil {
 		t.Log(t.Name())
-		t.Errorf("\t: params have been set but AreSet() says they haven't")
+		t.Errorf("\t: parsing complete but PSet.AlreadyParsed returns no error")
 	}
 
 	return errMap
@@ -487,11 +487,9 @@ func TestParamParseTwice(t *testing.T) {
 	}
 
 	_, panicked, panicVal, _ := panicSafeTestParse(ps, []string{})
-	testhelper.PanicCheckString(t, t.Name(),
+	testhelper.PanicCheckError(t, t.Name(),
 		panicked, true,
-		panicVal, []string{
-			"param.Parse has already been called, previously from:",
-		})
+		panicVal, []string{"param.PSet.Parse has already been called, from:"})
 }
 
 func TestParamAddParamAfterParse(t *testing.T) {
@@ -511,11 +509,11 @@ func TestParamAddParamAfterParse(t *testing.T) {
 			desc:   "desc - this should not be added",
 		})
 
-	testhelper.PanicCheckString(t, "param.Add - adding a param after parsing",
+	testhelper.PanicCheckError(t, "param.Add - adding a param after parsing",
 		panicked, true,
 		panicVal, []string{
-			"Parameters have already been parsed." +
-				" A new named parameter (test99) cannot be added",
+			`named parameter ("test99") can't be added:` +
+				" param.PSet.Parse has already been called, from:",
 		})
 
 	_, panicked, panicVal = panicSafeTestAddByPos(ps,
@@ -523,12 +521,12 @@ func TestParamAddParamAfterParse(t *testing.T) {
 			name:   "ppi1",
 			setter: psetter.Int[int64]{Value: &p1},
 		})
-	testhelper.PanicCheckString(t,
+	testhelper.PanicCheckError(t,
 		"Adding a positional param after parsing",
 		panicked, true,
 		panicVal, []string{
-			"Parameters have already been parsed." +
-				" A new positional parameter (ppi1) cannot be added.",
+			`positional parameter 1 ("ppi1") can't be added:` +
+				" param.PSet.Parse has already been called, from:",
 		})
 }
 

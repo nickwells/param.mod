@@ -12,7 +12,7 @@ type Source struct {
 	From      string
 	Loc       location.L
 	ParamVals []string
-	Param     *ByName
+	Param     *BaseParam
 }
 
 // String formats a Source into a string

@@ -52,7 +52,7 @@ func TestSource(t *testing.T) {
 			From:      tc.from,
 			Loc:       *tc.loc,
 			ParamVals: tc.pVals,
-			Param:     tc.p,
+			Param:     &tc.p.BaseParam,
 		}
 		if s.String() != tc.expStr {
 			t.Logf("test %d: %s :\n", i, tc.name)
@@ -85,7 +85,7 @@ func TestSources(t *testing.T) {
 		From:      "source",
 		Loc:       *loc,
 		ParamVals: []string{"p", "true"},
-		Param:     p,
+		Param:     &p.BaseParam,
 	}
 
 	sources := param.Sources{s, s}

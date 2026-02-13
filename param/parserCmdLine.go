@@ -146,26 +146,35 @@ func (ps *PSet) getParamsFromStringSlice(loc *location.L, params []string) {
 	ps.handleParamsByName(loc, params)
 }
 
-// trimParam trims the parameter of one or two leading dashes. It returns an
-// error if the parameter does not start with '-' or '--' or if the trimmed
-// parameter name is empty
-func (ps *PSet) trimParam(param string) (string, error) {
-	if len(ps.paramPrefixes) == 0 {
-		return param, nil
-	}
-
+// TrimPrefixesFromParam goes through the list of allowed parameter prefixes
+// and tries removing them in turn from the passed parameter name. As soon as
+// a prefix is successfully removed the resulting shortened parameter name is
+// returned. If the parameter name does not start with any of the prefixes
+// then the parameter name is returned unchanged.
+func (ps *PSet) TrimPrefixesFromParam(pName string) string {
 	for _, pfx := range ps.paramPrefixes {
-		trimmedParam := strings.TrimPrefix(param, pfx)
-		if trimmedParam != param {
-			if trimmedParam == "" {
-				return param, errors.New("the parameter name is blank")
-			}
-
-			return trimmedParam, nil
+		trimmedParam := strings.TrimPrefix(pName, pfx)
+		if trimmedParam != pName {
+			return trimmedParam
 		}
 	}
 
-	return param, fmt.Errorf(
-		"parameter %q does not start with %s",
-		param, english.JoinQuoted(ps.paramPrefixes, ", ", " or "))
+	return pName
+}
+
+// trimParam trims the parameter of its prefix (if any). It returns an error
+// if the parameter does not start with any of the given prefixes.
+func (ps *PSet) trimParam(pName string) (string, error) {
+	if len(ps.paramPrefixes) == 0 {
+		return pName, nil
+	}
+
+	trimmedParam := ps.TrimPrefixesFromParam(pName)
+	if trimmedParam != pName {
+		return trimmedParam, nil
+	}
+
+	return pName, fmt.Errorf("parameter %q does not start with %s",
+		pName,
+		english.JoinQuoted(ps.paramPrefixes, ", ", " or "))
 }

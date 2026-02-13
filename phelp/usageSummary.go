@@ -2,6 +2,7 @@ package phelp
 
 import (
 	"github.com/nickwells/param.mod/v7/param"
+	"github.com/nickwells/param.mod/v7/phelputils"
 )
 
 // showUsageSummary prints the program name and a parameter summary. Only
@@ -30,7 +31,7 @@ func showUsageSummary(h StdHelp, ps *param.PSet) bool {
 		for _, g := range groups {
 			for _, bn := range g.Params() {
 				if bn.AttrIsSet(param.MustBeSet) {
-					h.twc.Print(" " + ParamShortSummary(*bn))
+					h.twc.Print(" " + phelputils.ParamShortSummary(*bn))
 				} else {
 					hasOptionalParams = true
 				}

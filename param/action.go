@@ -12,14 +12,24 @@ import "github.com/nickwells/location.mod/location"
 //
 // paramValues will have one or possibly two entries: the name used to match
 // the param and (possibly) the value string.
-type ActionFunc func(loc location.L, p *ByName, paramValues []string) error
+type ActionFunc func(loc location.L, p *BaseParam, paramValues []string) error
 
 // PostAction will return an option function which will add an action
 // function to the list of functions to be called after the value has been
 // set.
-func PostAction(action ActionFunc) OptFunc {
+func PostAction(action ActionFunc) ByNameOptFunc {
 	return func(p *ByName) error {
-		p.postAction = append(p.postAction, action)
+		(&p.BaseParam).postAction = append(p.postAction, action)
+		return nil
+	}
+}
+
+// ByPosPostAction will return an option function which will add an action
+// function to the list of functions to be called after the value has been
+// set.
+func ByPosPostAction(action ActionFunc) ByPosOptFunc {
+	return func(p *ByPos) error {
+		(&p.BaseParam).postAction = append(p.postAction, action)
 		return nil
 	}
 }

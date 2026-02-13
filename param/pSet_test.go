@@ -38,7 +38,7 @@ func TestPSet(t *testing.T) {
 		})
 		if !testhelper.CheckExpPanicError(t, panicked, panicVal, tc) &&
 			!panicked {
-			if ps.AreSet() {
+			if err := ps.AlreadyParsed(); err != nil {
 				t.Log(tc.IDStr())
 				t.Errorf("\t: the parsed flag is unexpectedly set")
 			}
@@ -374,13 +374,13 @@ func TestGetParamGroups(t *testing.T) {
 					name:   "param",
 					setter: psetter.Bool{Value: &boolVar},
 					desc:   "desc",
-					opts:   []param.OptFunc{param.GroupName("abc")},
+					opts:   []param.ByNameOptFunc{param.GroupName("abc")},
 				},
 				{
 					name:   "param2",
 					setter: psetter.Bool{Value: &boolVar},
 					desc:   "desc",
-					opts:   []param.OptFunc{param.GroupName("xyz")},
+					opts:   []param.ByNameOptFunc{param.GroupName("xyz")},
 				},
 			},
 			expectedResults: []GroupAndParams{
@@ -405,7 +405,7 @@ func TestGetParamGroups(t *testing.T) {
 					name:   "aaa",
 					setter: psetter.Bool{Value: &boolVar},
 					desc:   "desc",
-					opts: []param.OptFunc{
+					opts: []param.ByNameOptFunc{
 						param.GroupName("abc"),
 						param.Attrs(param.DontShowInStdUsage),
 					},
@@ -414,7 +414,7 @@ func TestGetParamGroups(t *testing.T) {
 					name:   "aab",
 					setter: psetter.Bool{Value: &boolVar},
 					desc:   "desc",
-					opts: []param.OptFunc{
+					opts: []param.ByNameOptFunc{
 						param.GroupName("abc"),
 						param.Attrs(param.DontShowInStdUsage),
 					},
@@ -423,7 +423,7 @@ func TestGetParamGroups(t *testing.T) {
 					name:   "param2",
 					setter: psetter.Bool{Value: &boolVar},
 					desc:   "desc",
-					opts:   []param.OptFunc{param.GroupName("xyz")},
+					opts:   []param.ByNameOptFunc{param.GroupName("xyz")},
 				},
 			},
 			expectedResults: []GroupAndParams{

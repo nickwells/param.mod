@@ -53,7 +53,6 @@ func (trimDashes) Edit(_, val string) (string, error) {
 // addUsageParams will add the usage parameters into the parameter set
 func (h *StdHelp) addUsageParams(ps *param.PSet) {
 	groupName := groupNamePfx + "-help"
-	paramPfx := ps.ShortestPrefix()
 
 	ps.AddGroup(groupName,
 		"These are parameters for printing a help message.")
@@ -64,17 +63,17 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			"Seldom used parameters may be hidden;"+
 			" to see all the parameters use the parameter:"+
 			"\n  "+
-			paramPfx+helpShowHiddenArgName+
+			makeParamStr(ps, helpShowHiddenArgName, "")+
 			"\n"+
 			"To just see a summary of each parameter"+
 			" (suppressing the full description)"+
 			" use the parameter:"+
 			"\n  "+
-			paramPfx+helpSummaryArgName+
+			makeParamStr(ps, helpSummaryArgName, "")+
 			"\n"+
 			"For the full help message use the parameter:"+
 			"\n  "+
-			paramPfx+helpFullArgName,
+			makeParamStr(ps, helpFullArgName, ""),
 		param.Attrs(param.CommandLineOnly),
 		param.AltNames("usage"),
 		param.PostAction(setHelpSections(h, standardHelpSectionAlias)),
@@ -300,7 +299,7 @@ func makeForceDefaultSectionsFunc(h *StdHelp) param.FinalCheckFunc {
 // checkGroups returns an ActionFunc which will check that the groupsChosen
 // element of the StdHelp structure only contains valid group names
 func checkGroups(h *StdHelp, ps *param.PSet) param.ActionFunc {
-	return func(_ location.L, _ *param.ByName, _ []string) error {
+	return func(_ location.L, _ *param.BaseParam, _ []string) error {
 		var badNames []string
 
 		for gName := range h.groupsChosen {
@@ -336,15 +335,15 @@ func checkGroups(h *StdHelp, ps *param.PSet) param.ActionFunc {
 		altNames := altNames(h, ps, badNames, param.SuggestGroups)
 
 		return makeBadNameError(badNames, altNames, "group",
-			"\nFor a list of available group names try '-"+
-				helpShowArgName+" "+groupsHelpSectionName+"'")
+			"\nFor a list of available group names try "+
+				makeParamStr(ps, helpShowArgName, groupsHelpSectionName))
 	}
 }
 
 // checkNotes returns an ActionFunc which will check that the notesChosen
 // element of the StdHelp structure only contains valid note names
 func checkNotes(h *StdHelp, ps *param.PSet) param.ActionFunc {
-	return func(_ location.L, _ *param.ByName, _ []string) error {
+	return func(_ location.L, _ *param.BaseParam, _ []string) error {
 		var badNames []string
 
 		for nName := range h.notesChosen {
@@ -385,11 +384,12 @@ func checkNotes(h *StdHelp, ps *param.PSet) param.ActionFunc {
 // checkParams returns an ActionFunc which will check that the paramsChosen
 // element of the StdHelp structure only contains valid parameter names
 func checkParams(h *StdHelp, ps *param.PSet) param.ActionFunc {
-	return func(_ location.L, _ *param.ByName, _ []string) error {
+	return func(_ location.L, _ *param.BaseParam, _ []string) error {
 		var badNames []string
 
 		for pName := range h.paramsChosen {
-			trimmedName := strings.TrimLeft(pName, "-")
+			trimmedName := ps.TrimPrefixesFromParam(pName)
+			// TODO: add checks for named positional parameters
 			if _, err := ps.GetParamByName(trimmedName); err != nil {
 				delete(h.paramsChosen, pName)
 
@@ -423,15 +423,19 @@ func checkParams(h *StdHelp, ps *param.PSet) param.ActionFunc {
 
 		return makeBadNameError(badNames, altNames, "parameter",
 			"\nTo see a list of parameter names try "+
-				"'-"+helpShowArgName+" "+namedParamsHelpSectionName+"'."+
-				"\nTo see a full list, add '-"+helpShowHiddenArgName+"'."+
-				"\nTo see just the names, add '-"+helpSummaryArgName+"'.")
+				makeParamStr(ps, helpShowArgName, namedParamsHelpSectionName)+"."+
+				"\nTo see a full list, add "+
+				makeParamStr(ps, helpShowHiddenArgName, "")+"."+
+				"\nTo see just the names, add "+
+				makeParamStr(ps, helpSummaryArgName, "")+".")
 	}
 }
 
 // altNames returns a list of possible alternative names using the passed
 // suggestion function
-func altNames(h *StdHelp, ps *param.PSet, badNames []string, sf param.SuggestionFunc) []string {
+func altNames(
+	h *StdHelp, ps *param.PSet, badNames []string, sf param.SuggestionFunc,
+) []string {
 	altNames := make([]string, 0)
 	alreadyAdded := map[string]bool{}
 

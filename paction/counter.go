@@ -41,7 +41,7 @@ func (c Counter) SetBy() string { return c.ParamsSetAt.String() }
 // MakeActionFunc returns a function suitable for passing to the PostAction
 // method of a param.ByName object
 func (c *Counter) MakeActionFunc() param.ActionFunc {
-	return func(loc location.L, p *param.ByName, paramValues []string) error {
+	return func(loc location.L, p *param.BaseParam, paramVals []string) error {
 		if c.ParamCount == nil {
 			c.ParamCount = make(map[string]int)
 		}
@@ -52,7 +52,7 @@ func (c *Counter) MakeActionFunc() param.ActionFunc {
 			param.Source{
 				From:      loc.Source(),
 				Loc:       loc,
-				ParamVals: paramValues,
+				ParamVals: paramVals,
 				Param:     p,
 			})
 

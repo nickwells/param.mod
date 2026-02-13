@@ -50,17 +50,14 @@ import (
 //
 // It will panic if it is called twice.
 func (ps *PSet) Parse(args ...[]string) {
-	if ps.parsed {
-		panic(
-			fmt.Sprintf("param.Parse has already been called,"+
-				" previously from: %s now from: %s",
-				ps.parseCalledFrom,
-				caller()))
+	if err := ps.AlreadyParsed(); err != nil {
+		panic(err)
 	}
 
 	ps.parsed = true
 	ps.parseCalledFrom = caller()
 
+	ps.checkForTerminalParams()
 	ps.checkSeeRefs()
 
 	if len(args) == 0 {
@@ -158,9 +155,14 @@ func (ps *PSet) detectMandatoryParamsNotSet() {
 }
 
 // checkRefParamExists will panic if the named parameter is not found in the
-// PSet named params.
+// PSet named params or positional params.
 func (ps *PSet) checkRefParamExists(from, ref, refSrc string) {
-	if _, exists := ps.nameToParam[ref]; !exists {
+	var paramExists bool
+	if _, paramExists = ps.nameToParam[ref]; !paramExists {
+		_, paramExists = ps.nameToPosParam[ref]
+	}
+
+	if !paramExists {
 		panic(
 			fmt.Errorf("%q has a reference to %q but no such parameter exists."+
 				"\nThe bad reference was added at: %s",
@@ -193,6 +195,17 @@ func (ps *PSet) checkSeeRefs() {
 		}
 	}
 
+	for _, p := range ps.byPos {
+		refs := p.SeeAlso()
+		for _, ref := range refs {
+			ps.checkRefParamExists(p.Name(), ref, p.seeAlsoSource(ref))
+		}
+
+		for _, ref := range p.SeeNotes() {
+			ps.checkRefNoteExists(p.Name(), ref, p.seeNoteSource(ref))
+		}
+	}
+
 	notes := slices.Sorted(maps.Keys(ps.notes)) // repeatable ordering for tests
 
 	for _, n := range notes {
@@ -203,6 +216,26 @@ func (ps *PSet) checkSeeRefs() {
 
 		for _, ref := range note.SeeNotes() {
 			ps.checkRefNoteExists(n, ref, note.seeAlsoNote[ref])
+		}
+	}
+}
+
+// checkForTerminalParams panics if the PSet has both positional and named
+// parameters but the last positional parameter is marked as terminal. It
+// will panic if so.
+func (ps *PSet) checkForTerminalParams() {
+	ppCount := len(ps.byPos)
+	npCount := len(ps.byName)
+
+	if ppCount > 0 && npCount > 0 {
+		lastPosParam := ps.byPos[ppCount-1]
+		if lastPosParam.isTerminal {
+			panic(
+				fmt.Errorf(
+					"bad PSet: the last positional parameter (%q) is Terminal"+
+						" but the PSet has named parameters"+
+						" which can never be used",
+					lastPosParam.name))
 		}
 	}
 }

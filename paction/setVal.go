@@ -13,7 +13,7 @@ import (
 // saves forcing the user to both specify the configuration and request the
 // operation.
 func SetVal[T any](val *T, setTo T) param.ActionFunc {
-	return func(_ location.L, _ *param.ByName, _ []string) error {
+	return func(_ location.L, _ *param.BaseParam, _ []string) error {
 		*val = setTo
 
 		return nil
@@ -29,7 +29,7 @@ func SetVal[T any](val *T, setTo T) param.ActionFunc {
 // saves forcing the user to both specify the configuration and request the
 // operation.
 func SetValIf[T any](val *T, setTo T, test ParamTestFunc) param.ActionFunc {
-	return func(loc location.L, p *param.ByName, s []string) error {
+	return func(loc location.L, p *param.BaseParam, s []string) error {
 		if test(loc, p, s) {
 			*val = setTo
 		}
@@ -49,7 +49,7 @@ func SetValIf[T any](val *T, setTo T, test ParamTestFunc) param.ActionFunc {
 // it implies that you want the operation performed. This saves forcing the
 // user to both specify the configuration and request the operation.
 func SetMapVal[K comparable, V any](m map[K]V, k K, b V) param.ActionFunc {
-	return func(_ location.L, _ *param.ByName, _ []string) error {
+	return func(_ location.L, _ *param.BaseParam, _ []string) error {
 		m[k] = b
 		return nil
 	}
@@ -67,7 +67,7 @@ func SetMapVal[K comparable, V any](m map[K]V, k K, b V) param.ActionFunc {
 // user to both specify the configuration and request the operation.
 func SetMapValIf[K comparable, V any](m map[K]V, k K, b V, test ParamTestFunc,
 ) param.ActionFunc {
-	return func(loc location.L, p *param.ByName, s []string) error {
+	return func(loc location.L, p *param.BaseParam, s []string) error {
 		if test(loc, p, s) {
 			m[k] = b
 		}

@@ -3,7 +3,7 @@ PROGRAM NAME UNKNOWN: an error was found
             Bad group names: "nonesuch1"
                              "nonesuch2"
                              "nonesuch3"
-            For a list of available group names try '-help-show groups'
+            For a list of available group names try "-help-show groups"
             At: [command line]: Supplied Parameter:2: "-help-groups"
             "nonesuch1,nonesuch2,nonesuch3"
 

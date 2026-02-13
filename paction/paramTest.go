@@ -8,40 +8,40 @@ import (
 )
 
 // ParamTestFunc represents a function that can be used to test a parameter
-type ParamTestFunc func(location.L, *param.ByName, []string) bool
+type ParamTestFunc func(location.L, *param.BaseParam, []string) bool
 
 // IsACommandLineParam returns true if the parameter has been set through
 // the command line, false otherwise.
-func IsACommandLineParam(loc location.L, _ *param.ByName, _ []string) bool {
+func IsACommandLineParam(loc location.L, _ *param.BaseParam, _ []string) bool {
 	return loc.Note() == param.SrcCommandLine
 }
 
 // IsNotACommandLineParam returns true if the parameter has not been set through
 // the command line, false otherwise.
-func IsNotACommandLineParam(loc location.L, _ *param.ByName, _ []string) bool {
+func IsNotACommandLineParam(loc location.L, _ *param.BaseParam, _ []string) bool {
 	return !IsACommandLineParam(loc, nil, nil)
 }
 
 // IsAConfigFileParam returns true if the parameter has been set through
 // a line in a configuration file, false otherwise.
-func IsAConfigFileParam(loc location.L, _ *param.ByName, _ []string) bool {
+func IsAConfigFileParam(loc location.L, _ *param.BaseParam, _ []string) bool {
 	return strings.HasPrefix(loc.Note(), param.SrcConfigFilePfx)
 }
 
 // IsNotAConfigFileParam returns true if the parameter has not been set through
 // a line in a configuration file, false otherwise.
-func IsNotAConfigFileParam(loc location.L, _ *param.ByName, _ []string) bool {
+func IsNotAConfigFileParam(loc location.L, _ *param.BaseParam, _ []string) bool {
 	return !IsAConfigFileParam(loc, nil, nil)
 }
 
 // IsAnEnvVarParam returns true if the parameter has been set through
 // an environment variable, false otherwise.
-func IsAnEnvVarParam(loc location.L, _ *param.ByName, _ []string) bool {
+func IsAnEnvVarParam(loc location.L, _ *param.BaseParam, _ []string) bool {
 	return loc.Note() == param.SrcEnvironment
 }
 
 // IsNotAnEnvVarParam returns true if the parameter has not been set through
 // an environment variable, false otherwise.
-func IsNotAnEnvVarParam(loc location.L, _ *param.ByName, _ []string) bool {
+func IsNotAnEnvVarParam(loc location.L, _ *param.BaseParam, _ []string) bool {
 	return loc.Note() == param.SrcEnvironment
 }

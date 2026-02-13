@@ -56,7 +56,7 @@ type namedParamInitialiser struct {
 	name   string
 	setter param.Setter
 	desc   string
-	opts   []param.OptFunc
+	opts   []param.ByNameOptFunc
 }
 
 // compare compares the parameter with the initialiser values and reports an
@@ -106,7 +106,7 @@ type posParamInitialiser struct {
 	setter param.Setter
 	name   string
 	desc   string
-	opts   []param.PosOptFunc
+	opts   []param.ByPosOptFunc
 }
 
 // paramInitialisers holds a pointer to either a namedParamInitialiser or a
