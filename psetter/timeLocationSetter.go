@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/nickwells/check.mod/v2/check"
+	"github.com/nickwells/strdist.mod/v2/strdist"
 )
 
 // TimeLocation allows you to give a parameter that can be used to set a
@@ -43,7 +44,7 @@ func (s TimeLocation) suggestAltTimeLocation(badLoc string) string {
 	var altLocs []string
 	for _, f := range []func(string, []string) []string{
 		// This finds matches against the locations
-		SuggestedVals,
+		strdist.SuggestedVals,
 		// This finds those entries in Locations which have a name with parts
 		// separated by a '/'. This is how geographical timezone locations
 		// are represented, for instance Europe/London, Asia/Jerusalem or
@@ -63,7 +64,7 @@ func (s TimeLocation) suggestAltTimeLocation(badLoc string) string {
 				}
 			}
 
-			matches := SuggestedVals(s, justCities)
+			matches := strdist.SuggestedVals(s, justCities)
 			if len(matches) == 0 {
 				return matches
 			}
@@ -89,7 +90,7 @@ func (s TimeLocation) suggestAltTimeLocation(badLoc string) string {
 		}
 	}
 
-	return SuggestionString(altLocs)
+	return strdist.SuggestionString(altLocs)
 }
 
 // SetWithVal (called when a value follows the parameter) checks that the

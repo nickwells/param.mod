@@ -11,6 +11,7 @@ import (
 	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/filecheck.mod/filecheck"
 	"github.com/nickwells/fileparse.mod/fileparse"
+	"github.com/nickwells/strdist.mod/v2/strdist"
 )
 
 // Pathname allows you to give a parameter that can be used to set a pathname
@@ -55,14 +56,14 @@ func (s Pathname) findAlternatives(base, badName, tail string) string {
 
 	var altStrs []string
 
-	for _, alt := range SuggestedVals(badName, names) {
+	for _, alt := range strdist.SuggestedVals(badName, names) {
 		altStr := filepath.Join(base, alt, tail)
 		if s.Expectation.StatusCheck(altStr) == nil {
 			altStrs = append(altStrs, altStr)
 		}
 	}
 
-	return SuggestionString(altStrs)
+	return strdist.SuggestionString(altStrs)
 }
 
 // expandError expands on the error, it tries to find the component of the
