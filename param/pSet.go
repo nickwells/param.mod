@@ -361,15 +361,14 @@ func (ps *PSet) setValue(
 
 // GetParamByName will return the named parameter if it can be found. The error
 // will be set if not
-func (ps *PSet) GetParamByName(name string) (p *ByName, err error) {
+func (ps *PSet) GetParamByName(name string) (*ByName, error) {
 	name = strings.TrimSpace(name)
 
-	p, exists := ps.nameToParam[name]
-	if !exists {
-		return nil, fmt.Errorf("parameter %q does not exist", name)
+	if p, exists := ps.nameToParam[name]; exists {
+		return p, nil
 	}
 
-	return p, nil
+	return nil, fmt.Errorf("named parameter %q does not exist", name)
 }
 
 // GetParamByPos will return the positional parameter if it exists. The error
