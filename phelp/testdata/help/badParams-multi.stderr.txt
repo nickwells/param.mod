@@ -14,4 +14,4 @@ PROGRAM NAME UNKNOWN: 4 errors were found in 3 categories
             At: [command line]: Supplied Parameter:1:
             "-params-file=testdata/nonesuch"
 
-For more information use the '-help' parameter.
+For more information use the "-help" parameter

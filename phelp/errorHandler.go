@@ -33,7 +33,6 @@ func (h StdHelp) ErrorHandler(ps *param.PSet) {
 
 // suggestHelpParam returns a string suggesting the standard help parameter
 func suggestHelpParam(ps *param.PSet) string {
-	return "For more information use the '" +
-		ps.ShortestPrefix() + helpArgName +
-		"' parameter."
+	return fmt.Sprintf("For more information use the %q parameter",
+		ps.ShortestPrefix()+helpArgName)
 }

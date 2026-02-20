@@ -3,4 +3,4 @@ PROGRAM NAME UNKNOWN: an error was found
             no file name has been given
             At: [command line]: Supplied Parameter:2: "-params-file" ""
 
-For more information use the '-help' parameter.
+For more information use the "-help" parameter

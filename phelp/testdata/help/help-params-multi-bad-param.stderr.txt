@@ -8,4 +8,4 @@ PROGRAM NAME UNKNOWN: an error was found
             At: [command line]: Supplied Parameter:2: "-help-params"
             "help-groups,help,no-such-param,not-a-param"
 
-For more information use the '-help' parameter.
+For more information use the "-help" parameter

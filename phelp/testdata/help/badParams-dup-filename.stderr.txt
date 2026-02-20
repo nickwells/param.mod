@@ -5,4 +5,4 @@ PROGRAM NAME UNKNOWN: an error was found
             At: [command line]: Supplied Parameter:4: "-params-file"
             "testdata/configFiles/param.cfg"
 
-For more information use the '-help' parameter.
+For more information use the "-help" parameter
