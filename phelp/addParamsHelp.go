@@ -389,7 +389,6 @@ func checkParams(h *StdHelp, ps *param.PSet) param.ActionFunc {
 
 		for pName := range h.paramsChosen {
 			trimmedName := ps.TrimPrefixesFromParam(pName)
-			// TODO: add checks for named positional parameters
 			if _, err := ps.GetParamByName(trimmedName); err != nil {
 				delete(h.paramsChosen, pName)
 
