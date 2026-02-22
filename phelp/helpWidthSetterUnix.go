@@ -27,7 +27,7 @@ func getHelpWidthSetter(helpWidth *int, chks ...check.ValCk[int]) param.Setter {
 					" the default width is used.",
 				Calc: func(_, _ string) (int, error) {
 					ws, err := unix.IoctlGetWinsize(
-						int(os.Stdout.Fd()), unix.TIOCGWINSZ)
+						int(os.Stdout.Fd()), unix.TIOCGWINSZ) //nolint:gosec
 					if err == nil {
 						return int(ws.Col), nil
 					}
