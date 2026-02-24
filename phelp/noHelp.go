@@ -1,4 +1,4 @@
-package ptypes
+package phelp
 
 import (
 	"os"

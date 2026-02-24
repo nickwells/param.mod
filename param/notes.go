@@ -6,6 +6,8 @@ import (
 	"runtime"
 	"slices"
 	"strings"
+
+	"github.com/nickwells/param.mod/v7/ptypes"
 )
 
 // NoteAttributes records various flags that can be set on a Note
@@ -110,7 +112,7 @@ func (ps *PSet) Notes() map[string]*Note {
 
 // NoteOptFunc is the type of an option func used to set various flags etc on a
 // note.
-type NoteOptFunc func(n *Note) error
+type NoteOptFunc = ptypes.OptFunc[Note]
 
 // NoteAttrs returns a NoteOptFunc which will set the attributes of the note to
 // The passed value.

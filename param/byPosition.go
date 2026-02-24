@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/nickwells/location.mod/location"
+	"github.com/nickwells/param.mod/v7/ptypes"
 )
 
 // ByPos represents a positional parameter. There are numerous strict
@@ -28,7 +29,7 @@ type ByPos struct {
 
 // ByPosOptFunc is the type of a option func used to set various flags on a
 // positional parameter
-type ByPosOptFunc func(bp *ByPos) error
+type ByPosOptFunc = ptypes.OptFunc[ByPos]
 
 // AddByPos will add a new positional parameter to the set of parameters. The
 // setter defines the function that should be performed when the parameter is

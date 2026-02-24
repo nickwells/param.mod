@@ -238,7 +238,7 @@ type StdHelp struct {
 // StdHelpOptFunc is the type of a function that can be passed to
 // NewStdHelp. These functions can be used to set optional behaviour on the
 // helper.
-type StdHelpOptFunc func(h *StdHelp) error
+type StdHelpOptFunc ptypes.OptFunc[StdHelp]
 
 // SetStdWriter returns a StdHelpOptFunc that will set the standard out
 // writer for the helper.

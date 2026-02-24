@@ -2,7 +2,7 @@ package paramset
 
 import (
 	"github.com/nickwells/param.mod/v7/param"
-	"github.com/nickwells/param.mod/v7/ptypes"
+	"github.com/nickwells/param.mod/v7/phelp"
 )
 
 // NewNoHelp creates a new PSet with the helper set to the noHelp
@@ -18,5 +18,5 @@ import (
 // If errors are detected then they will be reported and the program will
 // exit.
 func NewNoHelp(psof ...param.PSetOptFunc) *param.PSet {
-	return param.NewSet(ptypes.NoHelp{}, psof...)
+	return param.NewSet(phelp.NoHelp{}, psof...)
 }

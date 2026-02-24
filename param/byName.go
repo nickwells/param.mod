@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/nickwells/location.mod/location"
+	"github.com/nickwells/param.mod/v7/ptypes"
 )
 
 // =============================================
@@ -119,9 +120,9 @@ func (p ByName) AttrIsSet(attr Attributes) bool {
 
 // =============================================
 
-// ByNameOptFunc is the type of a option func used to set various flags etc on a
-// parameter.
-type ByNameOptFunc func(p *ByName) error
+// ByNameOptFunc is the type of an option func used to set various flags etc
+// on a parameter.
+type ByNameOptFunc = ptypes.OptFunc[ByName]
 
 // Add will add a new named parameter to the set that will be recognised. The
 // setter defines the function that should be performed when the parameter is

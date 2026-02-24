@@ -9,6 +9,7 @@ import (
 
 	"github.com/nickwells/errutil.mod/errutil"
 	"github.com/nickwells/location.mod/location"
+	"github.com/nickwells/param.mod/v7/ptypes"
 )
 
 // dfltTerminalParam is the default value of the parameter that will stop
@@ -72,7 +73,7 @@ type PSet struct {
 // PSetOptFunc is the type of a function that can be passed to
 // NewSet. These functions can be used to set optional behaviour on the
 // parameter set.
-type PSetOptFunc func(ps *PSet) error
+type PSetOptFunc = ptypes.OptFunc[PSet]
 
 // TrailingParamsExpected returns true if a remainder handler has been set
 // successfully and false otherwise
