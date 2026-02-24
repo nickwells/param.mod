@@ -6,13 +6,25 @@ import (
 	"github.com/nickwells/param.mod/v7/param"
 )
 
-// NoHelp is a minimal implementation of the param.Helper interface. In
-// particular there are no parameters added
+// NoHelp minimally implements the param.Helper interface.
 type NoHelp struct{}
 
-func (nh NoHelp) ProcessArgs(_ *param.PSet)       {}
+// ProcessArgs is a null implementation of the ProcessArgs method in the
+// param.Helper interface
+func (nh NoHelp) ProcessArgs(_ *param.PSet) {}
+
+// Help is a null implementation of the Help method in the param.Helper
+// interface
 func (nh NoHelp) Help(_ *param.PSet, _ ...string) {}
-func (nh NoHelp) AddParams(_ *param.PSet)         {}
+
+// AddParams is a null implementation of the AddParams method in the
+// param.Helper interface
+func (nh NoHelp) AddParams(_ *param.PSet) {}
+
+// ErrorHandler is a minimal implementation of the ErrorHandler method in the
+// param.Helper interface. It will check to see if any errors are present as
+// reported by the param.PSet Errors method and if so it will report them and
+// set the param.PSet exit status.
 func (nh NoHelp) ErrorHandler(ps *param.PSet) {
 	errMap := ps.Errors()
 	if len(errMap) != 0 {
