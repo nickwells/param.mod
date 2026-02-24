@@ -7,6 +7,7 @@ import (
 
 	"github.com/nickwells/param.mod/v7/param"
 	"github.com/nickwells/param.mod/v7/psetter"
+	"github.com/nickwells/param.mod/v7/ptypes"
 	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
@@ -46,9 +47,9 @@ func TestCheck(t *testing.T) {
 
 	var timeLoc *time.Location
 
-	avalMapEmpty := psetter.AllowedVals[string]{}
-	avalMapOneEntry := psetter.AllowedVals[string]{goodStr: "desc"}
-	avalMapGood := psetter.AllowedVals[string]{
+	avalMapEmpty := ptypes.AllowedVals[string]{}
+	avalMapOneEntry := ptypes.AllowedVals[string]{goodStr: "desc"}
+	avalMapGood := ptypes.AllowedVals[string]{
 		goodStr:    "desc",
 		goodStrAlt: "desc",
 	}

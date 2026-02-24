@@ -5,6 +5,7 @@ import (
 	"github.com/nickwells/param.mod/v7/param"
 	"github.com/nickwells/param.mod/v7/paramset"
 	"github.com/nickwells/param.mod/v7/psetter"
+	"github.com/nickwells/param.mod/v7/ptypes"
 )
 
 var (
@@ -33,7 +34,7 @@ func addParams(ps *param.PSet) error {
 	ps.Add("action",
 		psetter.Enum[string]{
 			Value: &action,
-			AllowedVals: psetter.AllowedVals[string]{
+			AllowedVals: ptypes.AllowedVals[string]{
 				"delete":  "delete the thing",
 				"copy":    "copy the thing",
 				"nothing": "do nothing",

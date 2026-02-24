@@ -3,6 +3,8 @@ package psetter
 import (
 	"fmt"
 	"sort"
+
+	"github.com/nickwells/param.mod/v7/ptypes"
 )
 
 // Enum allows you to give a parameter that will only allow one of an
@@ -28,12 +30,12 @@ type Enum[T ~string] struct {
 
 	// The AllowedVals must be set, the program will panic if not. The Value
 	// is guaranteed to take one of these values.
-	AllowedVals[T]
+	ptypes.AllowedVals[T]
 
 	// The Aliases need not be given but if they are then each alias must not
 	// be in AllowedVals and all of the resulting values must be in
 	// AllowedVals.
-	Aliases[T]
+	ptypes.Aliases[T]
 
 	// Value must be set, the program will panic if not. This is the value
 	// being set

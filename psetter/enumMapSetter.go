@@ -8,6 +8,8 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/nickwells/param.mod/v7/ptypes"
 )
 
 // EnumMap sets the entry in a map of strings. The values initially set in
@@ -37,12 +39,12 @@ type EnumMap[T ~string] struct {
 
 	// The AllowedVals must be set, the program will panic if not. These are
 	// the allowed keys in the Values map
-	AllowedVals[T]
+	ptypes.AllowedVals[T]
 
 	// The Aliases need not be given but if they are then each alias must not
 	// be in AllowedVals and all of the resulting values must be in
 	// AllowedVals.
-	Aliases[T]
+	ptypes.Aliases[T]
 
 	// Value must be set, the program will panic if not. This is the map of
 	// values that this setter is setting

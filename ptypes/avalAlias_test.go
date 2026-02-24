@@ -1,16 +1,16 @@
-package psetter_test
+package ptypes_test
 
 import (
 	"testing"
 
-	"github.com/nickwells/param.mod/v7/psetter"
+	"github.com/nickwells/param.mod/v7/ptypes"
 	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
 func TestAliasesString(t *testing.T) {
 	testCases := []struct {
 		testhelper.ID
-		a      psetter.Aliases[string]
+		a      ptypes.Aliases[string]
 		expStr string
 	}{
 		{
@@ -18,7 +18,7 @@ func TestAliasesString(t *testing.T) {
 		},
 		{
 			ID: testhelper.MkID("with entries"),
-			a: psetter.Aliases[string]{
+			a: ptypes.Aliases[string]{
 				"first":  {"one", "two", "three"},
 				"second": {"blah", "blahTwo", "blahThree"},
 				"third":  {},
@@ -38,20 +38,20 @@ func TestAliasesString(t *testing.T) {
 func TestAliasesAllowedValuesAliasMap(t *testing.T) {
 	testCases := []struct {
 		testhelper.ID
-		a      psetter.Aliases[string]
-		expVal psetter.Aliases[string]
+		a      ptypes.Aliases[string]
+		expVal ptypes.Aliases[string]
 	}{
 		{
 			ID:     testhelper.MkID("empty"),
-			a:      psetter.Aliases[string]{},
-			expVal: psetter.Aliases[string]{},
+			a:      ptypes.Aliases[string]{},
+			expVal: ptypes.Aliases[string]{},
 		},
 		{
 			ID: testhelper.MkID("not empty"),
-			a: psetter.Aliases[string]{
+			a: ptypes.Aliases[string]{
 				"hello": {"world"},
 			},
-			expVal: psetter.Aliases[string]{
+			expVal: ptypes.Aliases[string]{
 				"hello": {"world"},
 			},
 		},
@@ -72,22 +72,22 @@ func TestAliasesCheck(t *testing.T) {
 	testCases := []struct {
 		testhelper.ID
 		testhelper.ExpErr
-		a  psetter.Aliases[string]
-		av psetter.AllowedVals[string]
+		a  ptypes.Aliases[string]
+		av ptypes.AllowedVals[string]
 	}{
 		{
 			ID: testhelper.MkID("nil"),
 		},
 		{
 			ID: testhelper.MkID("empty"),
-			a:  psetter.Aliases[string]{},
+			a:  ptypes.Aliases[string]{},
 		},
 		{
 			ID: testhelper.MkID("good"),
-			a: psetter.Aliases[string]{
+			a: ptypes.Aliases[string]{
 				"aval1": {"val1"},
 			},
-			av: psetter.AllowedVals[string]{
+			av: ptypes.AllowedVals[string]{
 				"val1": "val1 description",
 			},
 		},
@@ -95,10 +95,10 @@ func TestAliasesCheck(t *testing.T) {
 			ID: testhelper.MkID("bad - empty alias value"),
 			ExpErr: testhelper.MkExpErr(
 				`bad alias: "aval1": []string{} - the alias maps to no values`),
-			a: psetter.Aliases[string]{
+			a: ptypes.Aliases[string]{
 				"aval1": {},
 			},
-			av: psetter.AllowedVals[string]{
+			av: ptypes.AllowedVals[string]{
 				"val1": "val1 description",
 			},
 		},
@@ -107,10 +107,10 @@ func TestAliasesCheck(t *testing.T) {
 			ExpErr: testhelper.MkExpErr(
 				`bad alias: "val1": []string{"aval1"} -` +
 					` an allowed value has the same name`),
-			a: psetter.Aliases[string]{
+			a: ptypes.Aliases[string]{
 				"val1": {"aval1"},
 			},
-			av: psetter.AllowedVals[string]{
+			av: ptypes.AllowedVals[string]{
 				"val1":  "val1 description",
 				"aval1": "aval1 description",
 			},
@@ -120,10 +120,10 @@ func TestAliasesCheck(t *testing.T) {
 			ExpErr: testhelper.MkExpErr(
 				`bad alias: "": []string{"val1"} -` +
 					` the alias name must not be blank`),
-			a: psetter.Aliases[string]{
+			a: ptypes.Aliases[string]{
 				"": {"val1"},
 			},
-			av: psetter.AllowedVals[string]{
+			av: ptypes.AllowedVals[string]{
 				"val1": "val1 description",
 			},
 		},
@@ -132,10 +132,10 @@ func TestAliasesCheck(t *testing.T) {
 			ExpErr: testhelper.MkExpErr(
 				`bad alias: "aval1=x": []string{"val1"} -` +
 					` the alias name must not contain '='`),
-			a: psetter.Aliases[string]{
+			a: ptypes.Aliases[string]{
 				"aval1=x": {"val1"},
 			},
-			av: psetter.AllowedVals[string]{
+			av: ptypes.AllowedVals[string]{
 				"val1": "val1 description",
 			},
 		},
@@ -144,10 +144,10 @@ func TestAliasesCheck(t *testing.T) {
 			ExpErr: testhelper.MkExpErr(
 				`bad alias: "aval1": []string{"val1", "val2", "val1"} -` +
 					` "val1" appears more than once (at index 0 and 2)`),
-			a: psetter.Aliases[string]{
+			a: ptypes.Aliases[string]{
 				"aval1": {"val1", "val2", "val1"},
 			},
-			av: psetter.AllowedVals[string]{
+			av: ptypes.AllowedVals[string]{
 				"val1": "val1 description",
 				"val2": "val2 description",
 			},
@@ -157,10 +157,10 @@ func TestAliasesCheck(t *testing.T) {
 			ExpErr: testhelper.MkExpErr(
 				`bad alias: "aval1": []string{"val1", "val2", "val3"} -` +
 					` "val3" (at index 2) is unknown`),
-			a: psetter.Aliases[string]{
+			a: ptypes.Aliases[string]{
 				"aval1": {"val1", "val2", "val3"},
 			},
-			av: psetter.AllowedVals[string]{
+			av: ptypes.AllowedVals[string]{
 				"val1": "val1 description",
 				"val2": "val2 description",
 			},
@@ -182,7 +182,7 @@ func TestAliasesCheck(t *testing.T) {
     - "val99" (at index 3 and 4) is unknown
     - "val99" appears more than once (at index 3 and 4)
 "val5": []string{"val1"} - an allowed value has the same name as the alias`),
-			a: psetter.Aliases[string]{
+			a: ptypes.Aliases[string]{
 				"":       {"val1", "val2", "val99"},
 				"aval1":  {"val1", "val2", "val99"},
 				"aval3":  {},
@@ -190,7 +190,7 @@ func TestAliasesCheck(t *testing.T) {
 				"aval6":  {"val1", "val1", "val1", "val99", "val99"},
 				"val5":   {"val1"},
 			},
-			av: psetter.AllowedVals[string]{
+			av: ptypes.AllowedVals[string]{
 				"val1": "val1 description",
 				"val2": "val2 description",
 				"val3": "val3 description",
@@ -213,13 +213,13 @@ func TestAliasValueLengths(t *testing.T) {
 		testhelper.ID
 		testhelper.ExpPanic
 		testhelper.ExpErr
-		a      psetter.Aliases[string]
+		a      ptypes.Aliases[string]
 		minLen int
 		maxLen int
 	}{
 		{
 			ID: testhelper.MkID("all ok, min: 1, max: 1"),
-			a: psetter.Aliases[string]{
+			a: ptypes.Aliases[string]{
 				"a": []string{"aa"},
 				"b": []string{"bb"},
 			},
@@ -228,7 +228,7 @@ func TestAliasValueLengths(t *testing.T) {
 		},
 		{
 			ID: testhelper.MkID("all ok, min: 1, max: 2"),
-			a: psetter.Aliases[string]{
+			a: ptypes.Aliases[string]{
 				"a": []string{"aa"},
 				"b": []string{"bb", "cc"},
 			},
@@ -239,7 +239,7 @@ func TestAliasValueLengths(t *testing.T) {
 			ID: testhelper.MkID("panic bad (min > max), min: 2, max: 1"),
 			ExpPanic: testhelper.MkExpPanic(
 				"Aliases.CheckMapLengths: minLen (2) > maxLen (1)"),
-			a: psetter.Aliases[string]{
+			a: ptypes.Aliases[string]{
 				"a": []string{"aa"},
 				"b": []string{"bb"},
 			},
@@ -250,7 +250,7 @@ func TestAliasValueLengths(t *testing.T) {
 			ID: testhelper.MkID("panic bad (min <0), min: -1, max: 1"),
 			ExpPanic: testhelper.MkExpPanic(
 				"Aliases.CheckMapLengths: minLen (-1) <= 0"),
-			a: psetter.Aliases[string]{
+			a: ptypes.Aliases[string]{
 				"a": []string{"aa"},
 				"b": []string{"bb"},
 			},
@@ -261,7 +261,7 @@ func TestAliasValueLengths(t *testing.T) {
 			ID: testhelper.MkID("panic bad (min ==0), min: 0, max: 1"),
 			ExpPanic: testhelper.MkExpPanic(
 				"Aliases.CheckMapLengths: minLen (0) <= 0"),
-			a: psetter.Aliases[string]{
+			a: ptypes.Aliases[string]{
 				"a": []string{"aa"},
 				"b": []string{"bb"},
 			},
@@ -272,7 +272,7 @@ func TestAliasValueLengths(t *testing.T) {
 			ID: testhelper.MkID("panic bad (max <0), min: 1, max: -1"),
 			ExpPanic: testhelper.MkExpPanic(
 				"Aliases.CheckMapLengths: maxLen (-1) <= 0"),
-			a: psetter.Aliases[string]{
+			a: ptypes.Aliases[string]{
 				"a": []string{"aa"},
 				"b": []string{"bb"},
 			},
@@ -283,7 +283,7 @@ func TestAliasValueLengths(t *testing.T) {
 			ID: testhelper.MkID("panic bad (max ==0), min: 1, max: 0"),
 			ExpPanic: testhelper.MkExpPanic(
 				"Aliases.CheckMapLengths: maxLen (0) <= 0"),
-			a: psetter.Aliases[string]{
+			a: ptypes.Aliases[string]{
 				"a": []string{"aa"},
 				"b": []string{"bb"},
 			},
@@ -294,7 +294,7 @@ func TestAliasValueLengths(t *testing.T) {
 			ID: testhelper.MkID("err bad, min: 1, max: 1"),
 			ExpErr: testhelper.MkExpErr(
 				`bad alias: alias "b" maps to too many values (2 > 1)`),
-			a: psetter.Aliases[string]{
+			a: ptypes.Aliases[string]{
 				"a": []string{"aa"},
 				"b": []string{"bb", "cc"},
 			},
@@ -307,7 +307,7 @@ func TestAliasValueLengths(t *testing.T) {
 				"bad aliases: (2)",
 				`alias "b" maps to too many values (3 > 2)`,
 				`alias "c" maps to too many values (4 > 2)`),
-			a: psetter.Aliases[string]{
+			a: ptypes.Aliases[string]{
 				"a": []string{"aa"},
 				"b": []string{"bb", "cc", "dd"},
 				"c": []string{"cc", "dd", "ee", "ff"},

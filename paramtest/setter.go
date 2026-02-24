@@ -5,6 +5,7 @@ import (
 
 	"github.com/nickwells/param.mod/v7/param"
 	"github.com/nickwells/param.mod/v7/psetter"
+	"github.com/nickwells/param.mod/v7/ptypes"
 	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
@@ -111,7 +112,7 @@ func (s Setter) Test(t *testing.T) {
 		s.Name+".val-postSetWithVal", []byte(cv))
 
 	if s.ValDescriber {
-		if vd, ok := s.PSetter.(psetter.ValDescriber); !ok {
+		if vd, ok := s.PSetter.(ptypes.ValDescriber); !ok {
 			t.Log(s.IDStr())
 			t.Error("\t: should have a ValDescribe method but doesn't\n")
 		} else {

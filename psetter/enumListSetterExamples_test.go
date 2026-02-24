@@ -6,6 +6,7 @@ import (
 	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/param.mod/v7/paramset"
 	"github.com/nickwells/param.mod/v7/psetter"
+	"github.com/nickwells/param.mod/v7/ptypes"
 )
 
 // ExampleEnumList_standard demonstrates the use of an EnumList setter
@@ -22,7 +23,7 @@ func ExampleEnumList_standard() {
 	ps.Add("my-list",
 		psetter.EnumList[string]{
 			Value: &ss,
-			AllowedVals: psetter.AllowedVals[string]{
+			AllowedVals: ptypes.AllowedVals[string]{
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},
@@ -65,7 +66,7 @@ func ExampleEnumList_withBadVals() {
 	ps.Add("my-list",
 		psetter.EnumList[string]{
 			Value: &ss,
-			AllowedVals: psetter.AllowedVals[string]{
+			AllowedVals: ptypes.AllowedVals[string]{
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},
@@ -114,7 +115,7 @@ func ExampleEnumList_withPassingChecks() {
 	ps.Add("my-list",
 		psetter.EnumList[string]{
 			Value: &ss,
-			AllowedVals: psetter.AllowedVals[string]{
+			AllowedVals: ptypes.AllowedVals[string]{
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},
@@ -162,7 +163,7 @@ func ExampleEnumList_withFailingChecks() {
 	ps.Add("my-list",
 		psetter.EnumList[string]{
 			Value: &ss,
-			AllowedVals: psetter.AllowedVals[string]{
+			AllowedVals: ptypes.AllowedVals[string]{
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},
@@ -220,7 +221,7 @@ func ExampleEnumList_withNilValue() {
 	// we expect this to panic because the list Value has not been initialised
 	ps.Add("my-list",
 		psetter.EnumList[string]{
-			AllowedVals: psetter.AllowedVals[string]{
+			AllowedVals: ptypes.AllowedVals[string]{
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},

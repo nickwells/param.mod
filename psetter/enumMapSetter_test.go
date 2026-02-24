@@ -6,6 +6,7 @@ import (
 	"github.com/nickwells/param.mod/v7/param"
 	"github.com/nickwells/param.mod/v7/paramtest"
 	"github.com/nickwells/param.mod/v7/psetter"
+	"github.com/nickwells/param.mod/v7/ptypes"
 	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
@@ -35,7 +36,7 @@ func TestSetterEnumMap(t *testing.T) {
 		"z": true,
 	}
 
-	dfltAllowedVals := psetter.AllowedVals[string]{
+	dfltAllowedVals := ptypes.AllowedVals[string]{
 		"x": "x desc",
 		"y": "y desc",
 		"z": "z desc",
@@ -63,7 +64,7 @@ func TestSetterEnumMap(t *testing.T) {
 			ID: testhelper.MkID("only-one-allowed-val"),
 			PSetter: psetter.EnumMap[string]{
 				Value: &nilMap,
-				AllowedVals: psetter.AllowedVals[string]{
+				AllowedVals: ptypes.AllowedVals[string]{
 					"x": "x-desc",
 				},
 			},
@@ -76,7 +77,7 @@ func TestSetterEnumMap(t *testing.T) {
 			ID: testhelper.MkID("invalid-initial-entry"),
 			PSetter: psetter.EnumMap[string]{
 				Value: &zvalMap,
-				AllowedVals: psetter.AllowedVals[string]{
+				AllowedVals: ptypes.AllowedVals[string]{
 					"x": "x-desc",
 					"y": "y-desc",
 				},
@@ -90,11 +91,11 @@ func TestSetterEnumMap(t *testing.T) {
 			ID: testhelper.MkID("bad-alias-equals-aval"),
 			PSetter: psetter.EnumMap[string]{
 				Value: &zvalMap,
-				AllowedVals: psetter.AllowedVals[string]{
+				AllowedVals: ptypes.AllowedVals[string]{
 					"x": "x-desc",
 					"y": "y-desc",
 				},
-				Aliases: psetter.Aliases[string]{
+				Aliases: ptypes.Aliases[string]{
 					"x": []string{"y"},
 				},
 			},
@@ -107,11 +108,11 @@ func TestSetterEnumMap(t *testing.T) {
 			ID: testhelper.MkID("bad-alias-empty"),
 			PSetter: psetter.EnumMap[string]{
 				Value: &zvalMap,
-				AllowedVals: psetter.AllowedVals[string]{
+				AllowedVals: ptypes.AllowedVals[string]{
 					"x": "x-desc",
 					"y": "y-desc",
 				},
-				Aliases: psetter.Aliases[string]{
+				Aliases: ptypes.Aliases[string]{
 					"z": []string{},
 				},
 			},
@@ -123,11 +124,11 @@ func TestSetterEnumMap(t *testing.T) {
 			ID: testhelper.MkID("bad-alias-duplicate"),
 			PSetter: psetter.EnumMap[string]{
 				Value: &zvalMap,
-				AllowedVals: psetter.AllowedVals[string]{
+				AllowedVals: ptypes.AllowedVals[string]{
 					"x": "x-desc",
 					"y": "y-desc",
 				},
-				Aliases: psetter.Aliases[string]{
+				Aliases: ptypes.Aliases[string]{
 					"z": []string{"x", "x"},
 				},
 			},
@@ -140,11 +141,11 @@ func TestSetterEnumMap(t *testing.T) {
 			ID: testhelper.MkID("bad-alias-not-an-aval"),
 			PSetter: psetter.EnumMap[string]{
 				Value: &zvalMap,
-				AllowedVals: psetter.AllowedVals[string]{
+				AllowedVals: ptypes.AllowedVals[string]{
 					"x": "x-desc",
 					"y": "y-desc",
 				},
-				Aliases: psetter.Aliases[string]{
+				Aliases: ptypes.Aliases[string]{
 					"z": []string{"a"},
 				},
 			},
@@ -157,7 +158,7 @@ func TestSetterEnumMap(t *testing.T) {
 			ID: testhelper.MkID("hidden-initial-entry"),
 			PSetter: psetter.EnumMap[string]{
 				Value: &zvalMap,
-				AllowedVals: psetter.AllowedVals[string]{
+				AllowedVals: ptypes.AllowedVals[string]{
 					"x": "x-desc",
 					"y": "y-desc",
 				},
@@ -223,7 +224,7 @@ func TestSetterEnumMap(t *testing.T) {
 			PSetter: psetter.EnumMap[string]{
 				Value:       &emptyMap,
 				AllowedVals: dfltAllowedVals,
-				Aliases: psetter.Aliases[string]{
+				Aliases: ptypes.Aliases[string]{
 					"all": []string{"x", "y", "z"},
 					"xy":  []string{"x", "y"},
 					"xz":  []string{"x", "z"},

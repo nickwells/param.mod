@@ -5,6 +5,7 @@ import (
 
 	"github.com/nickwells/param.mod/v7/paramset"
 	"github.com/nickwells/param.mod/v7/psetter"
+	"github.com/nickwells/param.mod/v7/ptypes"
 )
 
 // ExampleEnumMap_standard demonstrates the use of an EnumMap setter.
@@ -23,7 +24,7 @@ func ExampleEnumMap_standard() {
 	ps.Add("my-map",
 		psetter.EnumMap[string]{
 			Value: &m,
-			AllowedVals: psetter.AllowedVals[string]{
+			AllowedVals: ptypes.AllowedVals[string]{
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},
@@ -68,7 +69,7 @@ func ExampleEnumMap_fixingInitialValue() {
 	ps.Add("my-map",
 		psetter.EnumMap[string]{
 			Value: &m,
-			AllowedVals: psetter.AllowedVals[string]{
+			AllowedVals: ptypes.AllowedVals[string]{
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},
@@ -117,7 +118,7 @@ func ExampleEnumMap_hiddenMapEntries() {
 	ps.Add("my-map",
 		psetter.EnumMap[string]{
 			Value: &m,
-			AllowedVals: psetter.AllowedVals[string]{ // Note there's no 'z' value
+			AllowedVals: ptypes.AllowedVals[string]{ // Note there's no 'z' value
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},
@@ -179,7 +180,7 @@ func ExampleEnumMap_withBadKey() {
 	ps.Add("my-map",
 		psetter.EnumMap[string]{
 			Value: &m,
-			AllowedVals: psetter.AllowedVals[string]{ // Note there's no 'z' value
+			AllowedVals: ptypes.AllowedVals[string]{ // Note there's no 'z' value
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},
@@ -211,7 +212,7 @@ func ExampleEnumMap_withNilValue() {
 	// we expect this to panic because the map Value has not been initialised
 	ps.Add("my-map",
 		psetter.EnumMap[string]{
-			AllowedVals: psetter.AllowedVals[string]{
+			AllowedVals: ptypes.AllowedVals[string]{
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},

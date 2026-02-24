@@ -11,6 +11,7 @@ import (
 	"github.com/nickwells/param.mod/v7/param"
 	"github.com/nickwells/param.mod/v7/phelp"
 	"github.com/nickwells/param.mod/v7/psetter"
+	"github.com/nickwells/param.mod/v7/ptypes"
 	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
@@ -109,7 +110,7 @@ func addByNameParams(ps *param.PSet) error {
 	)
 
 	ps.Add("param5", psetter.Enum[string]{
-		AllowedVals: psetter.AllowedVals[string]{
+		AllowedVals: ptypes.AllowedVals[string]{
 			"v1": "a value",
 			"v2": "another value",
 		},
@@ -120,7 +121,7 @@ func addByNameParams(ps *param.PSet) error {
 	)
 
 	ps.Add("param6", psetter.Enum[string]{
-		AllowedVals: psetter.AllowedVals[string]{
+		AllowedVals: ptypes.AllowedVals[string]{
 			"v1": "a value",
 			"v2": "another value",
 		},

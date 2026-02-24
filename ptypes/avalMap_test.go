@@ -1,16 +1,16 @@
-package psetter_test
+package ptypes_test
 
 import (
 	"testing"
 
-	"github.com/nickwells/param.mod/v7/psetter"
+	"github.com/nickwells/param.mod/v7/ptypes"
 	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
 func TestAllowedVals(t *testing.T) {
 	testCases := []struct {
 		testhelper.ID
-		av      psetter.AllowedVals[string]
+		av      ptypes.AllowedVals[string]
 		expAVal string
 	}{
 		{
@@ -47,20 +47,20 @@ func TestAllowedVals(t *testing.T) {
 func TestAllowedValuesMap(t *testing.T) {
 	testCases := []struct {
 		testhelper.ID
-		av     psetter.AllowedVals[string]
-		expVal psetter.AllowedVals[string]
+		av     ptypes.AllowedVals[string]
+		expVal ptypes.AllowedVals[string]
 	}{
 		{
 			ID:     testhelper.MkID("empty"),
-			av:     psetter.AllowedVals[string]{},
-			expVal: psetter.AllowedVals[string]{},
+			av:     ptypes.AllowedVals[string]{},
+			expVal: ptypes.AllowedVals[string]{},
 		},
 		{
 			ID: testhelper.MkID("not empty"),
-			av: psetter.AllowedVals[string]{
+			av: ptypes.AllowedVals[string]{
 				"hello": "world",
 			},
-			expVal: psetter.AllowedVals[string]{
+			expVal: ptypes.AllowedVals[string]{
 				"hello": "world",
 			},
 		},
@@ -81,11 +81,11 @@ func TestAllowedValuesCheck(t *testing.T) {
 	testCases := []struct {
 		testhelper.ID
 		testhelper.ExpErr
-		av psetter.AllowedVals[string]
+		av ptypes.AllowedVals[string]
 	}{
 		{
 			ID: testhelper.MkID("good"),
-			av: psetter.AllowedVals[string]{
+			av: ptypes.AllowedVals[string]{
 				"av1": "allowed value 1",
 				"av2": "allowed value 2",
 			},
@@ -95,14 +95,14 @@ func TestAllowedValuesCheck(t *testing.T) {
 			ExpErr: testhelper.MkExpErr(
 				"the map of allowed values has no entries." +
 					" It should have at least 2"),
-			av: psetter.AllowedVals[string]{},
+			av: ptypes.AllowedVals[string]{},
 		},
 		{
 			ID: testhelper.MkID("bad - one entry"),
 			ExpErr: testhelper.MkExpErr(
 				"the map of allowed values has only 1 entry." +
 					" It should have at least 2"),
-			av: psetter.AllowedVals[string]{
+			av: ptypes.AllowedVals[string]{
 				"hello": "world",
 			},
 		},
@@ -111,7 +111,7 @@ func TestAllowedValuesCheck(t *testing.T) {
 			ExpErr: testhelper.MkExpErr(
 				`Bad allowed value: "": "blank" -` +
 					` the allowed value must not be blank`),
-			av: psetter.AllowedVals[string]{
+			av: ptypes.AllowedVals[string]{
 				"":    "blank",
 				"av1": "allowed value 1",
 				"av2": "allowed value 2",
@@ -122,7 +122,7 @@ func TestAllowedValuesCheck(t *testing.T) {
 			ExpErr: testhelper.MkExpErr(
 				`Bad allowed value: "av0=x": "contains '='" -` +
 					` the allowed value must not contain '='`),
-			av: psetter.AllowedVals[string]{
+			av: ptypes.AllowedVals[string]{
 				"av0=x": "contains '='",
 				"av1":   "allowed value 1",
 				"av2":   "allowed value 2",

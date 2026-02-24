@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/nickwells/param.mod/v7/param"
-	"github.com/nickwells/param.mod/v7/psetter"
+	"github.com/nickwells/param.mod/v7/ptypes"
 )
 
 // valTypeName returns a descriptive string for the type of the Setter
@@ -15,7 +15,7 @@ func valTypeName(p param.ByName) string {
 	}
 
 	s := p.Setter()
-	if sVD, ok := s.(psetter.ValDescriber); ok {
+	if sVD, ok := s.(ptypes.ValDescriber); ok {
 		return sVD.ValDescribe()
 	}
 

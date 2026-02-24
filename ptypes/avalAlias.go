@@ -1,4 +1,4 @@
-package psetter
+package ptypes
 
 import (
 	"fmt"

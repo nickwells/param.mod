@@ -10,6 +10,7 @@ import (
 	"github.com/nickwells/filecheck.mod/filecheck"
 	"github.com/nickwells/param.mod/v7/param"
 	"github.com/nickwells/param.mod/v7/psetter"
+	"github.com/nickwells/param.mod/v7/ptypes"
 	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
@@ -24,7 +25,7 @@ func TestSetWithVal(t *testing.T) {
 	vEnumList := []string{"hello", "world"}
 	setterEnumList := psetter.EnumList[string]{
 		Value: &vEnumList,
-		AllowedVals: psetter.AllowedVals[string]{
+		AllowedVals: ptypes.AllowedVals[string]{
 			"hello": "hello description",
 			"world": "world description",
 			"bye":   "bye description",
@@ -32,7 +33,7 @@ func TestSetWithVal(t *testing.T) {
 	}
 	setterEnumListWithChecks := psetter.EnumList[string]{
 		Value: &vEnumList,
-		AllowedVals: psetter.AllowedVals[string]{
+		AllowedVals: ptypes.AllowedVals[string]{
 			"hello": "hello description",
 			"world": "world description",
 			"bye":   "bye description",
@@ -47,7 +48,7 @@ func TestSetWithVal(t *testing.T) {
 	}
 	setterEnumMap := psetter.EnumMap[string]{
 		Value: &vEnumMap,
-		AllowedVals: psetter.AllowedVals[string]{
+		AllowedVals: ptypes.AllowedVals[string]{
 			"hello": "hello description",
 			"world": "world description",
 			"bye":   "bye description",
@@ -57,7 +58,7 @@ func TestSetWithVal(t *testing.T) {
 	vEnum := "hello"
 	setterEnum := psetter.Enum[string]{
 		Value: &vEnum,
-		AllowedVals: psetter.AllowedVals[string]{
+		AllowedVals: ptypes.AllowedVals[string]{
 			"hello": "hello description",
 			"world": "world description",
 			"bye":   "bye description",

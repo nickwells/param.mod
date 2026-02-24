@@ -4,6 +4,7 @@ import (
 	"github.com/nickwells/param.mod/v7/paction"
 	"github.com/nickwells/param.mod/v7/param"
 	"github.com/nickwells/param.mod/v7/psetter"
+	"github.com/nickwells/param.mod/v7/ptypes"
 )
 
 const (
@@ -34,7 +35,7 @@ func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
 	ps.Add(paramNameWhereSetFormat,
 		psetter.Enum[string]{
 			Value: &h.paramsSetFormat,
-			AllowedVals: psetter.AllowedVals[string]{
+			AllowedVals: ptypes.AllowedVals[string]{
 				paramSetFmtStd: "the standard format for showing" +
 					" where and if parameters are set",
 				paramSetFmtShort: "a short form of the information" +

@@ -7,6 +7,7 @@ import (
 	"github.com/nickwells/filecheck.mod/filecheck"
 	"github.com/nickwells/param.mod/v7/param"
 	"github.com/nickwells/param.mod/v7/psetter"
+	"github.com/nickwells/param.mod/v7/ptypes"
 )
 
 const (
@@ -58,7 +59,7 @@ func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
 
 	zshMakeCompletionsParam := ps.Add(paramNameCompletionsZshMake,
 		psetter.Enum[string]{
-			AllowedVals: psetter.AllowedVals[string]{
+			AllowedVals: ptypes.AllowedVals[string]{
 				zshCompActionRepl: "any existing zsh completions" +
 					" file for the program will be overwritten or a" +
 					" new file will be generated." +

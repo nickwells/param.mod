@@ -1,4 +1,4 @@
-package psetter
+package ptypes
 
 // ValDescriber is an interface for a function which can be added as a method
 // on an existing Setter and if it is present its return value will be used

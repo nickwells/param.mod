@@ -7,7 +7,7 @@ import (
 	"github.com/nickwells/location.mod/location"
 	"github.com/nickwells/pager.mod/pager"
 	"github.com/nickwells/param.mod/v7/param"
-	"github.com/nickwells/param.mod/v7/psetter"
+	"github.com/nickwells/param.mod/v7/ptypes"
 	"github.com/nickwells/twrap.mod/twrap"
 )
 
@@ -108,8 +108,8 @@ var helpSectionsInOrder = []helpSection{
 
 // makeSectionAllowedVals constructs an AllowedVals map from the
 // helpSectionsInOrder slice
-func makeSectionAllowedVals() psetter.AllowedVals[string] {
-	rval := psetter.AllowedVals[string]{}
+func makeSectionAllowedVals() ptypes.AllowedVals[string] {
+	rval := ptypes.AllowedVals[string]{}
 	for _, s := range helpSectionsInOrder {
 		if _, duplicate := rval[s.name]; duplicate {
 			panic(fmt.Sprintf("Bad help section: %q appears twice", s.name))
@@ -141,7 +141,7 @@ const (
 	groupedParamsHelpSectionAlias = "grouped-params"
 )
 
-var sectionAliases = psetter.Aliases[string]{
+var sectionAliases = ptypes.Aliases[string]{
 	paramHelpSectionAlias: []string{
 		posParamsHelpSectionName, groupedParamsHelpSectionName,
 	},
@@ -215,7 +215,7 @@ type StdHelp struct {
 	helpLineLen int
 	helpFormat  helpFmt
 
-	avalShownAlready map[string]string
+	avalShownAlready ptypes.AValCache
 
 	// params-... values
 	paramsShowWhereSet bool

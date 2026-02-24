@@ -11,7 +11,7 @@ import (
 
 	"github.com/nickwells/filecheck.mod/filecheck"
 	"github.com/nickwells/param.mod/v7/param"
-	"github.com/nickwells/param.mod/v7/psetter"
+	"github.com/nickwells/param.mod/v7/ptypes"
 	"github.com/nickwells/twrap.mod/twrap"
 )
 
@@ -121,7 +121,7 @@ func zshMsgAction(p *param.ByName) string {
 func zshMsgActionGetAllowedVals(p *param.ByName) string {
 	var avals []string
 
-	if getter, ok := p.Setter().(psetter.AllowedValuesMapper); ok {
+	if getter, ok := p.Setter().(ptypes.AllowedValuesMapper); ok {
 		m := getter.AllowedValuesMap()
 		if m != nil {
 			keys, _ := m.Keys()
@@ -129,7 +129,7 @@ func zshMsgActionGetAllowedVals(p *param.ByName) string {
 		}
 	}
 
-	if getter, ok := p.Setter().(psetter.AllowedValuesAliasMapper); ok {
+	if getter, ok := p.Setter().(ptypes.AllowedValuesAliasMapper); ok {
 		m := getter.AllowedValuesAliasMap()
 		if m != nil {
 			keys, _ := m.Keys()

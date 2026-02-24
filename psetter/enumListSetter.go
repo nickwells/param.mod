@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/nickwells/check.mod/v2/check"
+	"github.com/nickwells/param.mod/v7/ptypes"
 )
 
 // EnumList sets the values in a slice of strings. The values must be in
@@ -29,12 +30,12 @@ type EnumList[T ~string] struct {
 	ValueReqMandatory
 	// The AllowedVals must be set, the program will panic if not. These are
 	// the only values that will be allowed in the slice of strings.
-	AllowedVals[T]
+	ptypes.AllowedVals[T]
 
 	// The Aliases need not be given but if they are then each alias must not
 	// be in AllowedVals and all of the resulting values must be in
 	// AllowedVals.
-	Aliases[T]
+	ptypes.Aliases[T]
 
 	// Value must be set, the program will panic if not. This is the slice of
 	// values that this setter is setting.

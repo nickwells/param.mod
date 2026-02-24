@@ -12,6 +12,7 @@ import (
 	"github.com/nickwells/param.mod/v7/paction"
 	"github.com/nickwells/param.mod/v7/param"
 	"github.com/nickwells/param.mod/v7/psetter"
+	"github.com/nickwells/param.mod/v7/ptypes"
 )
 
 const (
@@ -202,7 +203,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 	ps.Add(helpFormatArgName,
 		psetter.Enum[helpFmt]{
 			Value: &h.helpFormat,
-			AllowedVals: psetter.AllowedVals[helpFmt]{
+			AllowedVals: ptypes.AllowedVals[helpFmt]{
 				helpFmtTypeStd: "the standard format." +
 					" This is almost certainly what you want",
 				helpFmtTypeMarkdown: "markdown format. This will have" +

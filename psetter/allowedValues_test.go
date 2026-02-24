@@ -7,6 +7,7 @@ import (
 
 	"github.com/nickwells/param.mod/v7/param"
 	"github.com/nickwells/param.mod/v7/psetter"
+	"github.com/nickwells/param.mod/v7/ptypes"
 	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
@@ -69,7 +70,7 @@ func TestAllowedValues(t *testing.T) {
 			ID: testhelper.MkID("EnumList"),
 			s: &psetter.EnumList[string]{
 				Value: &emptyStrList,
-				AllowedVals: psetter.AllowedVals[string]{
+				AllowedVals: ptypes.AllowedVals[string]{
 					"aval":     "desc",
 					"aval-alt": "desc",
 				},
@@ -79,7 +80,7 @@ func TestAllowedValues(t *testing.T) {
 			ID: testhelper.MkID("EnumMap"),
 			s: &psetter.EnumMap[string]{
 				Value: &strToBoolMap,
-				AllowedVals: psetter.AllowedVals[string]{
+				AllowedVals: ptypes.AllowedVals[string]{
 					"aval":     "desc",
 					"aval-alt": "desc",
 				},
@@ -89,7 +90,7 @@ func TestAllowedValues(t *testing.T) {
 			ID: testhelper.MkID("Enum"),
 			s: &psetter.Enum[string]{
 				Value: &goodStr,
-				AllowedVals: psetter.AllowedVals[string]{
+				AllowedVals: ptypes.AllowedVals[string]{
 					"aval":     "desc",
 					"aval-alt": "desc",
 				},

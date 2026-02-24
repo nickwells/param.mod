@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/nickwells/check.mod/v2/check"
+	"github.com/nickwells/param.mod/v7/ptypes"
 )
 
 // Calculated allows you to give a parameter where certain predetermined
@@ -85,8 +86,8 @@ func (s Calculated[T]) AllowedValues() string {
 }
 
 // AllowedValuesMap returns the allowed values and their associated tags
-func (s Calculated[T]) AllowedValuesMap() AllowedVals[string] {
-	avm := AllowedVals[string]{}
+func (s Calculated[T]) AllowedValuesMap() ptypes.AllowedVals[string] {
+	avm := ptypes.AllowedVals[string]{}
 	for k, nc := range s.CalcMap {
 		avm[k] = nc.Name
 	}

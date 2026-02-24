@@ -6,6 +6,7 @@ import (
 	"github.com/nickwells/param.mod/v7/param"
 	"github.com/nickwells/param.mod/v7/paramtest"
 	"github.com/nickwells/param.mod/v7/psetter"
+	"github.com/nickwells/param.mod/v7/ptypes"
 	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
@@ -41,20 +42,20 @@ func TestSetterEnum(t *testing.T) {
 		badAlias  = "noCorrespondingValue"
 	)
 
-	allowedVals := psetter.AllowedVals[string]{
+	allowedVals := ptypes.AllowedVals[string]{
 		allowedVal1: "notes for av1",
 		allowedVal2: "notes for av2",
 		allowedVal3: "notes for av3",
 	}
-	badAdValsOneEntry := psetter.AllowedVals[string]{
+	badAdValsOneEntry := ptypes.AllowedVals[string]{
 		allowedVal1: "notes for av1",
 	}
 
-	badAliases := psetter.Aliases[string]{
+	badAliases := ptypes.Aliases[string]{
 		badAlias: []string{badVal},
 	}
 
-	goodAliases := psetter.Aliases[string]{
+	goodAliases := ptypes.Aliases[string]{
 		goodAlias: []string{allowedVal2},
 	}
 

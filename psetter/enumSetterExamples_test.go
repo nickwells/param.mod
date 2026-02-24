@@ -5,6 +5,7 @@ import (
 
 	"github.com/nickwells/param.mod/v7/paramset"
 	"github.com/nickwells/param.mod/v7/psetter"
+	"github.com/nickwells/param.mod/v7/ptypes"
 )
 
 // ExampleEnum_standard demonstrates the use of an Enum setter.
@@ -21,7 +22,7 @@ func ExampleEnum_standard() {
 	ps.Add("my-string",
 		psetter.Enum[string]{
 			Value: &s,
-			AllowedVals: psetter.AllowedVals[string]{
+			AllowedVals: ptypes.AllowedVals[string]{
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},
@@ -58,7 +59,7 @@ func ExampleEnum_withBadVal() {
 	ps.Add("my-string",
 		psetter.Enum[string]{
 			Value: &s,
-			AllowedVals: psetter.AllowedVals[string]{ // Note there's no 'z' value
+			AllowedVals: ptypes.AllowedVals[string]{ // Note there's no 'z' value
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},
@@ -109,7 +110,7 @@ func ExampleEnum_withNilValue() {
 	// we expect this to panic because the Value has not been initialised
 	ps.Add("my-string",
 		psetter.Enum[string]{
-			AllowedVals: psetter.AllowedVals[string]{
+			AllowedVals: ptypes.AllowedVals[string]{
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},
@@ -144,7 +145,7 @@ func ExampleEnum_withBadInitialValue() {
 	ps.Add("my-string",
 		psetter.Enum[string]{
 			Value: &s,
-			AllowedVals: psetter.AllowedVals[string]{ // Note there's no 'z' value
+			AllowedVals: ptypes.AllowedVals[string]{ // Note there's no 'z' value
 				XOption: "a description of this option",
 				YOption: "what this option means",
 			},

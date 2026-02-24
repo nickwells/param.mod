@@ -4,24 +4,24 @@ import (
 	"strings"
 
 	"github.com/nickwells/param.mod/v7/param"
-	"github.com/nickwells/param.mod/v7/psetter"
+	"github.com/nickwells/param.mod/v7/ptypes"
 )
 
-// AValCache is a cache of allowed value descriptions and where they were
-// first shown.
-type AValCache map[string]string
-
-// AllowedValueParts returns as separate blocks of text as are needed to
+// AllowedValueParts returns separate blocks of text as are needed to
 // describe the allowed value. If the value has already been shown for
 // another parameter (as recorded in the cache) then a reference to that is
 // shown instead if the resultant text is longer than a threshold value and
 // the resultant reference text is shorter than the full value would be.
-func AllowedValueParts(cache AValCache, pName string, s param.Setter) []string {
+func AllowedValueParts(
+	cache ptypes.AValCache,
+	pName string,
+	s param.Setter,
+) []string {
 	const allowedValueThresholdLength = 50
 
 	parts := []string{s.AllowedValues()}
 
-	if sAVM, ok := s.(psetter.AllowedValuesMapper); ok {
+	if sAVM, ok := s.(ptypes.AllowedValuesMapper); ok {
 		var part string
 
 		avm := sAVM.AllowedValuesMap()
@@ -35,7 +35,7 @@ func AllowedValueParts(cache AValCache, pName string, s param.Setter) []string {
 		parts = append(parts, part)
 	}
 
-	if sAVAM, ok := s.(psetter.AllowedValuesAliasMapper); ok {
+	if sAVAM, ok := s.(ptypes.AllowedValuesAliasMapper); ok {
 		var part string
 
 		avam := sAVAM.AllowedValuesAliasMap()
