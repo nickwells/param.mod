@@ -171,16 +171,14 @@ func (s EnumMap[T]) CheckSetter(name string) {
 		*s.Value = make(map[T]bool)
 	}
 
-	intro := fmt.Sprintf("%s: %T Check failed: ", name, s)
-
 	// Check that the AllowedVals map is well formed
 	if err := s.AllowedVals.Check(); err != nil {
-		panic(intro + err.Error())
+		panic(BadSetterMessage(name, fmt.Sprintf("%T", s), err.Error()))
 	}
 
 	// Check the alias values
 	if err := s.Aliases.Check(s.AllowedVals); err != nil {
-		panic(intro + err.Error())
+		panic(BadSetterMessage(name, fmt.Sprintf("%T", s), err.Error()))
 	}
 
 	if s.AllowHiddenMapEntries {
@@ -190,9 +188,12 @@ func (s EnumMap[T]) CheckSetter(name string) {
 	// Check that the current values are all allowed
 	for k := range *s.Value {
 		if _, ok := s.AllowedVals[k]; !ok {
-			panic(fmt.Sprintf("%sthe map entry with key %q is invalid"+
-				" - the key is not in the allowed values map",
-				intro, k))
+			panic(
+				BadValueMessage(
+					name,
+					fmt.Sprintf("%T", s),
+					fmt.Sprintf("the map entry with key %q is invalid"+
+						" - the key is not in the allowed values map", k)))
 		}
 	}
 }

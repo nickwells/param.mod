@@ -123,24 +123,26 @@ func (s EnumList[T]) CheckSetter(name string) {
 		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
 
-	intro := fmt.Sprintf("%s: %T Check failed: ", name, s)
-
 	// Check that the AllowedVals map is well formed
 	if err := s.AllowedVals.Check(); err != nil {
-		panic(intro + err.Error())
+		panic(BadSetterMessage(name, fmt.Sprintf("%T", s), err.Error()))
 	}
 
 	// Check the alias values
 	if err := s.Aliases.Check(s.AllowedVals); err != nil {
-		panic(intro + err.Error())
+		panic(BadSetterMessage(name, fmt.Sprintf("%T", s), err.Error()))
 	}
 
 	// Check that the current values are all allowed
 	for i, v := range *s.Value {
 		if _, ok := s.AllowedVals[v]; !ok {
-			panic(fmt.Sprintf(
-				"%selement %d (%s) in the current list of entries is invalid",
-				intro, i, v))
+			panic(
+				BadValueMessage(
+					name,
+					fmt.Sprintf("%T", s),
+					fmt.Sprintf(
+						"element %d (%s) in the list of entries is invalid",
+						i, v)))
 		}
 	}
 

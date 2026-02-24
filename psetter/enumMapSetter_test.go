@@ -100,8 +100,9 @@ func TestSetterEnumMap(t *testing.T) {
 				},
 			},
 			ExpPanic: testhelper.MkExpPanic(
-				"psetter.EnumMap[string] Check failed: " +
-					`bad alias: "x": []string{"y"} -` +
+				"psetter.EnumMap[string] Check failed:" +
+					" the Setter is improperly constructed:" +
+					` bad alias: "x": []string{"y"} -` +
 					` an allowed value has the same name as the alias`),
 		},
 		{
@@ -117,8 +118,9 @@ func TestSetterEnumMap(t *testing.T) {
 				},
 			},
 			ExpPanic: testhelper.MkExpPanic(
-				"psetter.EnumMap[string] Check failed: " +
-					`bad alias: "z": []string{} - the alias maps to no values`),
+				"psetter.EnumMap[string] Check failed:" +
+					" the Setter is improperly constructed:" +
+					` bad alias: "z": []string{} - the alias maps to no values`),
 		},
 		{
 			ID: testhelper.MkID("bad-alias-duplicate"),
@@ -133,8 +135,9 @@ func TestSetterEnumMap(t *testing.T) {
 				},
 			},
 			ExpPanic: testhelper.MkExpPanic(
-				"psetter.EnumMap[string] Check failed: " +
-					`bad alias: "z": []string{"x", "x"} -` +
+				"psetter.EnumMap[string] Check failed:" +
+					" the Setter is improperly constructed:" +
+					` bad alias: "z": []string{"x", "x"} -` +
 					` "x" appears more than once (at index 0 and 1)`),
 		},
 		{
@@ -150,8 +153,9 @@ func TestSetterEnumMap(t *testing.T) {
 				},
 			},
 			ExpPanic: testhelper.MkExpPanic(
-				"psetter.EnumMap[string] Check failed: " +
-					`bad alias: "z": []string{"a"} -` +
+				"psetter.EnumMap[string] Check failed:" +
+					" the Setter is improperly constructed:" +
+					` bad alias: "z": []string{"a"} -` +
 					` "a" (at index 0) is unknown`),
 		},
 		{

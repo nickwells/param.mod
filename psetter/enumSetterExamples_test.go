@@ -152,5 +152,5 @@ func ExampleEnum_withBadInitialValue() {
 		}, "help text")
 	// Output:
 	// panic
-	// my-string: psetter.Enum[string] Check failed: the initial value (z) is not valid
+	// my-string: psetter.Enum[string] Check failed: the Value to be set is currently invalid: the initial value (z) is invalid
 }

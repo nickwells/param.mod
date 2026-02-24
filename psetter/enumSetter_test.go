@@ -117,7 +117,8 @@ func TestSetterEnum(t *testing.T) {
 			ID: testhelper.MkID("bad-setter-no-avals"),
 			ExpPanic: testhelper.MkExpPanic(dfltParamName +
 				": psetter.Enum[string]" +
-				" Check failed: the map of allowed values has no entries." +
+				" Check failed: the Setter is improperly constructed:" +
+				" the map of allowed values has no entries." +
 				" It should have at least 2"),
 			PSetter: psetter.Enum[string]{
 				Value: &v4,
@@ -127,7 +128,8 @@ func TestSetterEnum(t *testing.T) {
 			ID: testhelper.MkID("bad-setter-one-aval"),
 			ExpPanic: testhelper.MkExpPanic(dfltParamName +
 				": psetter.Enum[string]" +
-				" Check failed: the map of allowed values has only 1 entry." +
+				" Check failed: the Setter is improperly constructed:" +
+				" the map of allowed values has only 1 entry." +
 				" It should have at least 2"),
 			PSetter: psetter.Enum[string]{
 				AllowedVals: badAdValsOneEntry,
@@ -138,8 +140,8 @@ func TestSetterEnum(t *testing.T) {
 			ID: testhelper.MkID("bad-setter-bad-aliases"),
 			ExpPanic: testhelper.MkExpPanic(dfltParamName +
 				": psetter.Enum[string]" +
-				" Check failed: " +
-				`bad alias: "` + badAlias + `":` +
+				" Check failed: the Setter is improperly constructed:" +
+				` bad alias: "` + badAlias + `":` +
 				` []string{"bad-value"} - ` +
 				`"bad-value" (at index 0) is unknown`),
 			PSetter: psetter.Enum[string]{

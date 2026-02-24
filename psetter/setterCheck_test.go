@@ -56,16 +56,19 @@ func TestCheck(t *testing.T) {
 
 	nilValueMsg := "Check failed: the Value to be set is nil"
 	tooFewAValsMsg := []string{
-		"Check failed: the map of allowed values has ",
+		"Check failed: the Setter is improperly constructed: " +
+			"the map of allowed values has ",
 		"It should have at least 2",
 	}
-	badInitialVal := []string{
-		"Check failed: the initial value",
-		"is not valid",
+	badInitialValList := []string{
+		"Check failed: the Value to be set is currently invalid:" +
+			" element",
+		"in the list of entries is invalid",
 	}
-	badInitialList := []string{
-		"Check failed: element",
-		"in the current list of entries is invalid",
+	badInitialValSingle := []string{
+		"Check failed: the Value to be set is currently invalid:" +
+			" the initial value",
+		" is invalid",
 	}
 
 	nc := psetter.NamedCalc[int64]{
@@ -122,7 +125,7 @@ func TestCheck(t *testing.T) {
 			},
 			ExpPanic: testhelper.MkExpPanic(
 				append([]string{"test: psetter.EnumList[string] "},
-					badInitialList...)...),
+					badInitialValList...)...),
 		},
 		{
 			ID: testhelper.MkID("EnumList - bad - no value"),
@@ -243,7 +246,7 @@ func TestCheck(t *testing.T) {
 			},
 			ExpPanic: testhelper.MkExpPanic(
 				append([]string{"test: psetter.Enum[string] "},
-					badInitialVal...)...),
+					badInitialValSingle...)...),
 		},
 		{
 			ID: testhelper.MkID("Enum - bad - no value"),

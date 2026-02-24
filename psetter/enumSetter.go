@@ -83,18 +83,18 @@ func (s Enum[T]) CheckSetter(name string) {
 		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
 
-	intro := fmt.Sprintf("%s: %T Check failed: ", name, s)
-
+	// Check that the AllowedVals map is well formed
 	if err := s.AllowedVals.Check(); err != nil {
-		panic(intro + err.Error())
+		panic(BadSetterMessage(name, fmt.Sprintf("%T", s), err.Error()))
 	}
 
+	// Check the alias values
 	if err := s.Aliases.Check(s.AllowedVals); err != nil {
-		panic(intro + err.Error())
+		panic(BadSetterMessage(name, fmt.Sprintf("%T", s), err.Error()))
 	}
 
 	if err := s.CheckMapLengths(1, 1); err != nil {
-		panic(intro + err.Error())
+		panic(name + fmt.Sprintf("%T", s) + err.Error())
 	}
 
 	if s.AllowInvalidInitialValue {
@@ -102,8 +102,12 @@ func (s Enum[T]) CheckSetter(name string) {
 	}
 
 	if !s.ValueAllowed(string(*s.Value)) {
-		panic(fmt.Sprintf("%sthe initial value (%s) is not valid",
-			intro, *s.Value))
+		panic(
+			BadValueMessage(
+				name,
+				fmt.Sprintf("%T", s),
+				fmt.Sprintf("the initial value (%s) is invalid",
+					*s.Value)))
 	}
 }
 
