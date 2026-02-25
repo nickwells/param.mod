@@ -112,7 +112,12 @@ func (g Group) ConfigFiles() []ConfigFileDetails {
 //
 // The group name will have any leading and trailing spaces deleted before
 // use.
+//
+// Any groups must be added before the parameters are parsed; this will
+// panic otherwise.
 func (ps *PSet) AddGroup(name, desc string) {
+	ps.panicIfAlreadyParsed(fmt.Sprintf("group (%q) can't be added", name))
+
 	name = strings.TrimSpace(name)
 	if err := GroupNameCheck(name); err != nil {
 		panic("Invalid group name: " + err.Error())

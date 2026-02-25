@@ -71,7 +71,7 @@ type PSet struct {
 }
 
 // PSetOptFunc is the type of a function that can be passed to
-// NewSet. These functions can be used to set optional behaviour on the
+// [NewSet]. These functions can be used to set optional behaviour on the
 // parameter set.
 type PSetOptFunc = ptypes.OptFunc[PSet]
 
@@ -82,14 +82,22 @@ func (ps *PSet) TrailingParamsExpected() bool {
 }
 
 // SetTrailingParamsExpected sets the flag notifying the PSet that trailing
-// parameters are allowed and should not be flagged as an error.
+// parameters are allowed and should not be flagged as an error. See also
+// [SetTrailingParamsExpected] (an option function that can be passed to
+// [NewSet]).
+//
+// This must be called before the parameters are parsed; this will
+// panic otherwise.
 func (ps *PSet) SetTrailingParamsExpected() {
+	ps.panicIfAlreadyParsed(
+		"the trailing parameters expected flag may not be set")
+
 	ps.trailingParamsExpected = true
 }
 
 // SetTrailingParamsExpected is a PSetOptFunc that sets the flag notifying
 // the PSet that trailing parameters are allowed and should not be flagged as
-// an error.
+// an error. See also the [PSet.SetTrailingParamsExpected] method.
 func SetTrailingParamsExpected(ps *PSet) error {
 	ps.trailingParamsExpected = true
 
@@ -102,27 +110,35 @@ func (ps *PSet) TrailingParamsName() string { return ps.trailingParamsName }
 
 // SetTrailingParamsName sets the name to be given to the trailing parameters
 // (if any) in help messages. It also sets the flag notifying the PSet that
-// trailing parameters are allowed and should not be flagged as an error.
+// trailing parameters are allowed and should not be flagged as an error. See
+// also [SetTrailingParamsName] (which returns an option function that can
+// be passed to [NewSet]).
+//
+// This must be called before the parameters are parsed; this will
+// panic otherwise.
 func (ps *PSet) SetTrailingParamsName(name string) {
+	ps.panicIfAlreadyParsed("the trailing parameters name may not be set")
+
 	ps.trailingParamsName = name
 	ps.trailingParamsExpected = true
 }
 
 // SetTrailingParamsName returns a PSetOptFunc which can be passed to
-// NewSet. It will set the name to be given to any trailing parameters. It
+// [NewSet]. It will set the name to be given to any trailing parameters. It
 // also sets the flag notifying the PSet that trailing parameters are allowed
-// and should not be flagged as an error.
+// and should not be flagged as an error. See also the
+// [PSet.SetTrailingParamsName] method.
 func SetTrailingParamsName(name string) PSetOptFunc {
 	return func(ps *PSet) error {
-		ps.trailingParamsName = name
-		ps.trailingParamsExpected = true
+		ps.SetTrailingParamsName(name)
 
 		return nil
 	}
 }
 
 // SetProgramDescription returns a PSetOptFunc which can be passed to
-// NewSet. It will set the program description
+// [NewSet]. It will set the program description. See also the
+// [PSet.SetProgramDescription] method.
 func SetProgramDescription(desc string) PSetOptFunc {
 	return func(ps *PSet) error {
 		ps.progDesc = desc
@@ -131,19 +147,26 @@ func SetProgramDescription(desc string) PSetOptFunc {
 	}
 }
 
-// SetProgramDescription sets the program description
+// SetProgramDescription sets the program description. See also
+// [SetProgramDescription] (an option function that can be passed to
+// [NewSet]).
+//
+// This must be called before the parameters are parsed; this will
+// panic otherwise.
 func (ps *PSet) SetProgramDescription(desc string) {
 	ps.progDesc = desc
 }
 
 // ProgDesc returns the program description
 func (ps *PSet) ProgDesc() string {
+	ps.panicIfAlreadyParsed("the program description may not be set")
+
 	return ps.progDesc
 }
 
-// SetParamPrefixes returns a PSetOptFunc which can be passed to NewSet. It
+// SetParamPrefixes returns a PSetOptFunc which can be passed to [NewSet]. It
 // will set the list of allowed parameter prefixes that are to be removed
-// before parameter processing.
+// before parameter processing. See also the [PSet.SetParamPrefixes] method.
 func SetParamPrefixes(pp ...string) PSetOptFunc {
 	return func(ps *PSet) error {
 		ps.SetParamPrefixes(pp)
@@ -156,8 +179,14 @@ func SetParamPrefixes(pp ...string) PSetOptFunc {
 // be removed before parameter processing. The prefixes are sorted into
 // longest-first order (preserving the order of equal length prefixes). Note
 // that the prefixes used do not participate in the parameter processing but
-// are discarded unseen.
+// are discarded unseen. See also [SetParamPrefixes] (an option function that
+// can be passed to [NewSet]).
+//
+// The prefixes must be set before the parameters are parsed; this will
+// panic otherwise.
 func (ps *PSet) SetParamPrefixes(pp []string) {
+	ps.panicIfAlreadyParsed("parameter prefixes may not be set")
+
 	slices.SortStableFunc(pp, func(a, b string) int { return len(b) - len(a) })
 
 	ps.paramPrefixes = pp
@@ -221,7 +250,9 @@ func NewSet(h Helper, psof ...PSetOptFunc) *PSet {
 	return ps
 }
 
-// TrailingParams returns any arguments that come after the terminal parameter.
+// TrailingParams returns any arguments that come after the terminal
+// parameter. See also the [PSet.SetTrailingParamsName] and
+// [PSet.SetTrailingParamsExpected] methods.
 func (ps *PSet) TrailingParams() []string { return ps.trailingParams }
 
 // Errors returns the map of errors for the param set
@@ -265,6 +296,18 @@ func (ps *PSet) AlreadyParsed() error {
 	}
 
 	return nil
+}
+
+// panicIfAlreadyParsed will panic if the parameters have already been
+// parsed.
+func (ps *PSet) panicIfAlreadyParsed(msg string) {
+	if err := ps.AlreadyParsed(); err != nil {
+		if msg == "" {
+			panic(err)
+		}
+
+		panic(fmt.Errorf("%s: %w", msg, err))
+	}
 }
 
 // UnusedParams returns a copy of the map of unused parameter names. The map
@@ -392,15 +435,39 @@ func (ps *PSet) CountByPosParams() int {
 // be set and they will be called in the order that they are added. Each
 // function should return an error (or nil) to be added to the list of errors
 // detected. All the checks will be called even if one of them returns an
-// error
+// error.
+//
+// This will panic if called after the parameters have been parsed.
 func (ps *PSet) AddFinalCheck(fcf FinalCheckFunc) {
+	ps.panicIfAlreadyParsed("cannot add a final check function")
+
 	ps.finalChecks = append(ps.finalChecks, fcf)
 }
 
 // SetTerminalParam sets the value of the parameter that is used to terminate
 // the processing of parameters. This can be used to override the default
-// value which is set to DfltTerminalParam.
-func (ps *PSet) SetTerminalParam(s string) { ps.terminalParam = s }
+// value which is set to dfltTerminalParam. See also [SetTerminalParam]
+// (which returns an option function that can be passed to [NewSet]).
+//
+// This will panic if called after the parameters have been parsed.
+func (ps *PSet) SetTerminalParam(s string) {
+	ps.panicIfAlreadyParsed("cannot set the terminal parameter")
+
+	ps.terminalParam = s
+}
+
+// SetTerminalParam returns a PSetOptFunc which can be passed to NewSet. It
+// will set the value of the parameter that is used to terminate the
+// processing of parameters. This can be used to override the default value
+// which is set to dfltTerminalParam. See also the [PSet.SetTerminalParam]
+// method.
+func SetTerminalParam(s string) PSetOptFunc {
+	return func(ps *PSet) error {
+		ps.SetTerminalParam(s)
+
+		return nil
+	}
+}
 
 // TerminalParam will return the current value of the terminal
 // parameter. This is the parameter which can be given to indicate that

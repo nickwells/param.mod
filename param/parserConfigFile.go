@@ -275,7 +275,13 @@ func checkExistenceConstraint(fName string, c filecheck.Exists) {
 //
 // The config file supports the features of a file parsed by the
 // fileparse.FP such as comments and include files.
+//
+// This must be called before the parameters are parsed; this will
+// panic otherwise.
 func (ps *PSet) SetConfigFile(fName string, c filecheck.Exists) {
+	ps.panicIfAlreadyParsed(
+		fmt.Sprintf("the config file %q can't be set", fName))
+
 	checkExistenceConstraint(fName, c)
 
 	ps.configFiles = []ConfigFileDetails{
@@ -292,7 +298,13 @@ func (ps *PSet) SetConfigFile(fName string, c filecheck.Exists) {
 // program-specific config files where it can be expected that any parameter
 // given in the config file will exist and so it should be reported as an
 // error if it does not.
+//
+// This must be called before the parameters are parsed; this will
+// panic otherwise.
 func (ps *PSet) SetConfigFileStrict(fName string, c filecheck.Exists) {
+	ps.panicIfAlreadyParsed(
+		fmt.Sprintf("The config file %q can't be set", fName))
+
 	checkExistenceConstraint(fName, c)
 
 	ps.configFiles = []ConfigFileDetails{
@@ -310,7 +322,14 @@ func (ps *PSet) SetConfigFileStrict(fName string, c filecheck.Exists) {
 // recognised.
 //
 // Additionally, the param group must already exist.
+//
+// This must be called before the parameters are parsed; this will
+// panic otherwise.
 func (ps *PSet) SetGroupConfigFile(gName, fName string, c filecheck.Exists) {
+	ps.panicIfAlreadyParsed(
+		fmt.Sprintf("The group config file %q (group: %q) can't be set",
+			fName, gName))
+
 	if c == filecheck.MustNotExist {
 		panic(fmt.Sprintf(
 			"config file %q (group %q): bad existence constraint.",
@@ -336,7 +355,13 @@ func (ps *PSet) SetGroupConfigFile(gName, fName string, c filecheck.Exists) {
 //
 // This can be used to set a system-wide config file and a per-user config
 // file that can be used to provide personal preferences.
+//
+// The config file must be added before the parameters are parsed; this will
+// panic otherwise.
 func (ps *PSet) AddConfigFile(fName string, c filecheck.Exists) {
+	ps.panicIfAlreadyParsed(
+		fmt.Sprintf("The config file %q can't be added", fName))
+
 	checkExistenceConstraint(fName, c)
 
 	ps.configFiles = append(ps.configFiles,
@@ -352,7 +377,13 @@ func (ps *PSet) AddConfigFile(fName string, c filecheck.Exists) {
 // program-specific config files where it can be expected that any parameter
 // given in the config file will exist and so it should be reported as an
 // error if it does not.
+//
+// The config file must be added before the parameters are parsed; this will
+// panic otherwise.
 func (ps *PSet) AddConfigFileStrict(fName string, c filecheck.Exists) {
+	ps.panicIfAlreadyParsed(
+		fmt.Sprintf("The config file %q can't be added", fName))
+
 	checkExistenceConstraint(fName, c)
 
 	ps.configFiles = append(ps.configFiles,
@@ -364,7 +395,14 @@ func (ps *PSet) AddConfigFileStrict(fName string, c filecheck.Exists) {
 }
 
 // AddGroupConfigFile adds an additional config file for the named group.
+//
+// The config file must be added before the parameters are parsed; this will
+// panic otherwise.
 func (ps *PSet) AddGroupConfigFile(gName, fName string, c filecheck.Exists) {
+	ps.panicIfAlreadyParsed(fmt.Sprintf(
+		"the group config file %q (group: %q) can't be added",
+		fName, gName))
+
 	if c == filecheck.MustNotExist {
 		panic(fmt.Sprintf(
 			"config file %q (group %q): bad existence constraint.",

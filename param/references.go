@@ -1,5 +1,7 @@
 package param
 
+import "fmt"
+
 // Reference records a name and a description for the "See Also" section of the
 // help message
 type Reference struct {
@@ -7,8 +9,13 @@ type Reference struct {
 	desc string
 }
 
-// AddReference adds a reference to the set of references on the PSet
+// AddReference adds a reference to the set of references on the PSet.
+//
+// This will panic if called after the parameters have been parsed.
 func (ps *PSet) AddReference(name, desc string) {
+	ps.panicIfAlreadyParsed(
+		fmt.Sprintf("reference %q may not be added", name))
+
 	ps.references = append(ps.references,
 		Reference{
 			name: name,

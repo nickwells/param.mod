@@ -30,8 +30,7 @@ func TestSetEnv(t *testing.T) {
 			},
 			panicExpected: true,
 			panicMustContain: []string{
-				`Can't set "" as an environment variable prefix. `,
-				`The environment prefix must not be empty`,
+				`environment variable prefix must not be empty`,
 			},
 		},
 		{
@@ -44,8 +43,7 @@ func TestSetEnv(t *testing.T) {
 			},
 			panicExpected: true,
 			panicMustContain: []string{
-				`Can't add "" as an environment variable prefix. `,
-				`The environment prefix must not be empty`,
+				`environment variable prefix must not be empty`,
 			},
 		},
 		{
@@ -62,8 +60,7 @@ func TestSetEnv(t *testing.T) {
 			},
 			panicExpected: true,
 			panicMustContain: []string{
-				`Can't add "" as an environment variable prefix. `,
-				`The environment prefix must not be empty`,
+				`environment variable prefix must not be empty`,
 			},
 		},
 		{
@@ -104,8 +101,8 @@ func TestSetEnv(t *testing.T) {
 			},
 			panicExpected: true,
 			panicMustContain: []string{
-				`Can't add "some_" as an environment variable prefix. `,
-				`It's a prefix of the already added: "some_Pfx_"`,
+				`invalid environment variable prefix "some_": ` +
+					`it's a prefix of the already added: "some_Pfx_"`,
 			},
 		},
 		{
@@ -122,8 +119,8 @@ func TestSetEnv(t *testing.T) {
 			},
 			panicExpected: true,
 			panicMustContain: []string{
-				`Can't add "some_Pfx_" as an environment variable prefix. `,
-				`The already added: "some_" is a prefix of it`,
+				`invalid environment variable prefix "some_Pfx_": ` +
+					`the already added: "some_" is a prefix of it`,
 			},
 		},
 	}
@@ -132,7 +129,7 @@ func TestSetEnv(t *testing.T) {
 
 		panicked, panicVal := panicEnvPrefix(t, tc.seq, ps)
 
-		testhelper.PanicCheckString(t, tc.IDStr(),
+		testhelper.PanicCheckError(t, tc.IDStr(),
 			panicked, tc.panicExpected,
 			panicVal, tc.panicMustContain)
 	}

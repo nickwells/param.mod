@@ -42,8 +42,13 @@ func (n Note) Text() string {
 }
 
 // AddNote adds an note to the set of notes on the PSet. The headline of the
-// note must be unique
+// note must be unique.
+//
+// Any notes must be added before the parameters are parsed; this will
+// panic otherwise.
 func (ps *PSet) AddNote(headline, text string, opts ...NoteOptFunc) *Note {
+	ps.panicIfAlreadyParsed(fmt.Sprintf("note (%q) can't be added", headline))
+
 	if existingNote, alreadyExists := ps.notes[headline]; alreadyExists {
 		panic(fmt.Sprintf(
 			"a note with headline: %s has already been added\nat: %s",

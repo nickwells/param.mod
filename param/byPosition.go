@@ -46,10 +46,9 @@ type ByPosOptFunc = ptypes.OptFunc[ByPos]
 func (ps *PSet) AddByPos(name string, setter Setter,
 	desc string, opts ...ByPosOptFunc,
 ) *ByPos {
-	if err := ps.AlreadyParsed(); err != nil {
-		panic(fmt.Errorf("positional parameter %d (%q) can't be added: %w",
-			len(ps.byPos)+1, name, err))
-	}
+	ps.panicIfAlreadyParsed(
+		fmt.Sprintf("positional parameter %d (%q) can't be added",
+			len(ps.byPos)+1, name))
 
 	if setter.ValueReq() == None {
 		panic(fmt.Errorf(

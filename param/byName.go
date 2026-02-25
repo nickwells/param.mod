@@ -139,9 +139,8 @@ type ByNameOptFunc = ptypes.OptFunc[ByName]
 func (ps *PSet) Add(
 	name string, setter Setter, desc string, opts ...ByNameOptFunc,
 ) *ByName {
-	if err := ps.AlreadyParsed(); err != nil {
-		panic(fmt.Errorf("named parameter (%q) can't be added: %w", name, err))
-	}
+	ps.panicIfAlreadyParsed(
+		fmt.Sprintf("named parameter (%q) can't be added", name))
 
 	setter.CheckSetter(name)
 

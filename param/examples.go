@@ -1,5 +1,7 @@
 package param
 
+import "fmt"
+
 // Example records a sample usage and a description for the "Examples"
 // section of the help message
 type Example struct {
@@ -8,8 +10,13 @@ type Example struct {
 }
 
 // AddExample adds an example to the set of examples on the PSet. Note that
-// there is no validation of the given example
+// there is no validation of the given example.
+//
+// Any examples must be added before the parameters are parsed; this will
+// panic otherwise.
 func (ps *PSet) AddExample(ex, desc string) {
+	ps.panicIfAlreadyParsed(fmt.Sprintf("example (%q) can't be added", ex))
+
 	ps.examples = append(ps.examples,
 		Example{
 			ex:   ex,

@@ -50,9 +50,7 @@ import (
 //
 // It will panic if it is called twice.
 func (ps *PSet) Parse(args ...[]string) {
-	if err := ps.AlreadyParsed(); err != nil {
-		panic(err)
-	}
+	ps.panicIfAlreadyParsed("")
 
 	ps.parsed = true
 	ps.parseCalledFrom = caller()
