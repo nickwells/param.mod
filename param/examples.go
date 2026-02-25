@@ -15,7 +15,7 @@ type Example struct {
 // Any examples must be added before the parameters are parsed; this will
 // panic otherwise.
 func (ps *PSet) AddExample(ex, desc string) {
-	ps.panicIfAlreadyParsed(fmt.Sprintf("example (%q) can't be added", ex))
+	ps.panicIfAlreadyParsed(fmt.Sprintf("can't add example: %q", ex))
 
 	ps.examples = append(ps.examples,
 		Example{

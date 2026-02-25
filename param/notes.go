@@ -47,12 +47,14 @@ func (n Note) Text() string {
 // Any notes must be added before the parameters are parsed; this will
 // panic otherwise.
 func (ps *PSet) AddNote(headline, text string, opts ...NoteOptFunc) *Note {
-	ps.panicIfAlreadyParsed(fmt.Sprintf("note (%q) can't be added", headline))
+	panicIntro := fmt.Sprintf("can't add note: %q", headline)
+
+	ps.panicIfAlreadyParsed(panicIntro)
 
 	if existingNote, alreadyExists := ps.notes[headline]; alreadyExists {
-		panic(fmt.Sprintf(
-			"a note with headline: %s has already been added\nat: %s",
-			headline, existingNote.addedAt))
+		panic(fmt.Errorf(
+			"%s: a note with the same headline has already been added\nat: %s",
+			panicIntro, existingNote.addedAt))
 	}
 
 	const stackDumpBufSz = 10_000
@@ -76,7 +78,7 @@ func (ps *PSet) AddNote(headline, text string, opts ...NoteOptFunc) *Note {
 	for _, o := range opts {
 		err := o(n)
 		if err != nil {
-			panic(err.Error())
+			panic(fmt.Errorf("%s: %w", panicIntro, err))
 		}
 	}
 

@@ -101,7 +101,7 @@ func TestSetEnv(t *testing.T) {
 			},
 			panicExpected: true,
 			panicMustContain: []string{
-				`invalid environment variable prefix "some_": ` +
+				`invalid environment variable prefix: "some_": ` +
 					`it's a prefix of the already added: "some_Pfx_"`,
 			},
 		},
@@ -119,7 +119,7 @@ func TestSetEnv(t *testing.T) {
 			},
 			panicExpected: true,
 			panicMustContain: []string{
-				`invalid environment variable prefix "some_Pfx_": ` +
+				`invalid environment variable prefix: "some_Pfx_": ` +
 					`the already added: "some_" is a prefix of it`,
 			},
 		},

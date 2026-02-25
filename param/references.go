@@ -13,8 +13,7 @@ type Reference struct {
 //
 // This will panic if called after the parameters have been parsed.
 func (ps *PSet) AddReference(name, desc string) {
-	ps.panicIfAlreadyParsed(
-		fmt.Sprintf("reference %q may not be added", name))
+	ps.panicIfAlreadyParsed(fmt.Sprintf("can't add the reference: %q", name))
 
 	ps.references = append(ps.references,
 		Reference{

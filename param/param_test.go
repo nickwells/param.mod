@@ -294,7 +294,7 @@ func TestParamAddPos(t *testing.T) {
 				},
 			},
 			ExpPanic: testhelper.MkExpPanic(
-				`positional parameter 1 ("ppi1") can't be added:`,
+				`can't add positional parameter 1: "ppi1":`,
 				"the param set has 1 non-positional parameters.",
 				" It cannot also have a terminal positional parameter as"+
 					" the non-positional parameters will never be used."),
@@ -512,7 +512,7 @@ func TestParamAddParamAfterParse(t *testing.T) {
 	testhelper.PanicCheckError(t, "param.Add - adding a param after parsing",
 		panicked, true,
 		panicVal, []string{
-			`named parameter ("test99") can't be added:` +
+			`can't add named parameter: "test99":` +
 				" param.PSet.Parse has already been called, from:",
 		})
 
@@ -525,7 +525,7 @@ func TestParamAddParamAfterParse(t *testing.T) {
 		"Adding a positional param after parsing",
 		panicked, true,
 		panicVal, []string{
-			`positional parameter 1 ("ppi1") can't be added:` +
+			`can't add positional parameter 1: "ppi1":` +
 				" param.PSet.Parse has already been called, from:",
 		})
 }

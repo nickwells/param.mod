@@ -116,11 +116,13 @@ func (g Group) ConfigFiles() []ConfigFileDetails {
 // Any groups must be added before the parameters are parsed; this will
 // panic otherwise.
 func (ps *PSet) AddGroup(name, desc string) {
-	ps.panicIfAlreadyParsed(fmt.Sprintf("group (%q) can't be added", name))
+	panicIntro := fmt.Sprintf("can't add group: %q", name)
+
+	ps.panicIfAlreadyParsed(panicIntro)
 
 	name = strings.TrimSpace(name)
 	if err := GroupNameCheck(name); err != nil {
-		panic("Invalid group name: " + err.Error())
+		panic(fmt.Errorf("%s: %w", panicIntro, err))
 	}
 
 	const stackDumpBufSz = 10_000
@@ -149,9 +151,9 @@ func (ps *PSet) AddGroup(name, desc string) {
 	// description differs from the previous description then panic
 	if g.desc != desc &&
 		g.desc != "" {
-		panic(fmt.Sprintf(
-			"The description for group %q was set to:\n%s\nat: %s",
-			name, g.desc, g.setFrom))
+		panic(fmt.Errorf(
+			"%s: the description was previously set to:\n%s\nat: %s",
+			panicIntro, g.desc, g.setFrom))
 	}
 
 	// all's well - just set the description and where it was set from

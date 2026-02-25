@@ -28,16 +28,16 @@ func checkEnvPrefix(prefix string) error {
 //
 // Any environment prefixes must be set before the parameters are parsed;
 // this will panic otherwise.
-func (ps *PSet) SetEnvPrefix(prefix string) {
+func (ps *PSet) SetEnvPrefix(pfx string) {
 	ps.panicIfAlreadyParsed(
-		fmt.Sprintf("the %s (%q) can't be set", ePfxName, prefix))
+		fmt.Sprintf("can't set the %s: %q", ePfxName, pfx))
 
-	if err := checkEnvPrefix(prefix); err != nil {
+	if err := checkEnvPrefix(pfx); err != nil {
 		panic(err)
 	}
 
 	ps.envPrefixes = nil
-	ps.envPrefixes = append(ps.envPrefixes, prefix)
+	ps.envPrefixes = append(ps.envPrefixes, pfx)
 }
 
 // AddEnvPrefix adds a new prefix to the list of environment variable
@@ -46,29 +46,28 @@ func (ps *PSet) SetEnvPrefix(prefix string) {
 //
 // Any environment prefixes must be added before the parameters are parsed;
 // this will panic otherwise.
-func (ps *PSet) AddEnvPrefix(prefix string) {
-	ps.panicIfAlreadyParsed(
-		fmt.Sprintf("the %s (%q) can't be added", ePfxName, prefix))
+func (ps *PSet) AddEnvPrefix(pfx string) {
+	ps.panicIfAlreadyParsed(fmt.Sprintf("can't add the %s: %q", ePfxName, pfx))
 
-	if err := checkEnvPrefix(prefix); err != nil {
+	if err := checkEnvPrefix(pfx); err != nil {
 		panic(err)
 	}
 
-	errMsgIntro := fmt.Sprintf("invalid %s %q:", ePfxName, prefix)
+	errMsgIntro := fmt.Sprintf("invalid %s: %q:", ePfxName, pfx)
 
 	for _, ep := range ps.envPrefixes {
-		if strings.HasPrefix(ep, prefix) {
+		if strings.HasPrefix(ep, pfx) {
 			panic(fmt.Errorf("%s it's a prefix of the already added: %q",
 				errMsgIntro, ep))
 		}
 
-		if strings.HasPrefix(prefix, ep) {
+		if strings.HasPrefix(pfx, ep) {
 			panic(fmt.Errorf("%s the already added: %q is a prefix of it",
 				errMsgIntro, ep))
 		}
 	}
 
-	ps.envPrefixes = append(ps.envPrefixes, prefix)
+	ps.envPrefixes = append(ps.envPrefixes, pfx)
 }
 
 // EnvPrefixes returns a copy of the current environment prefixes.

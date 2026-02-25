@@ -147,7 +147,7 @@ func TestPSet_SetGroupDescription(t *testing.T) {
 			},
 			panicExpected: true,
 			panicMsgContains: []string{
-				"description for group \"b\" was set to:",
+				`can't add group: "b": the description was previously set to:`,
 				"group B desc",
 			},
 			expectedDescs: []groupNameAndDesc{
@@ -168,7 +168,7 @@ func TestPSet_SetGroupDescription(t *testing.T) {
 			},
 			panicExpected: true,
 			panicMsgContains: []string{
-				"Invalid group name:",
+				`can't add group: "99":`,
 				`the group name "99" is invalid. It must match`,
 			},
 			expectedDescs: []groupNameAndDesc{
@@ -199,7 +199,7 @@ func TestPSet_SetGroupDescription(t *testing.T) {
 			}
 		}
 
-		testhelper.PanicCheckStringWithStack(t, tc.IDStr(),
+		testhelper.PanicCheckErrorWithStack(t, tc.IDStr(),
 			panicked, tc.panicExpected,
 			panicVal, tc.panicMsgContains, stackTrace)
 

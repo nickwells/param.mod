@@ -46,14 +46,13 @@ type ByPosOptFunc = ptypes.OptFunc[ByPos]
 func (ps *PSet) AddByPos(name string, setter Setter,
 	desc string, opts ...ByPosOptFunc,
 ) *ByPos {
-	ps.panicIfAlreadyParsed(
-		fmt.Sprintf("positional parameter %d (%q) can't be added",
-			len(ps.byPos)+1, name))
+	panicPrefix := fmt.Sprintf("can't add positional parameter %d: %q",
+		len(ps.byPos)+1, name)
+
+	ps.panicIfAlreadyParsed(panicPrefix)
 
 	if setter.ValueReq() == None {
-		panic(fmt.Errorf(
-			"positional parameter %d (%q) can't be added, it must take a value",
-			len(ps.byPos)+1, name))
+		panic(fmt.Errorf("%s: the Setter must take a value", panicPrefix))
 	}
 
 	setter.CheckSetter(name)
@@ -66,8 +65,7 @@ func (ps *PSet) AddByPos(name string, setter Setter,
 
 	for _, optFunc := range opts {
 		if err := optFunc(bp); err != nil {
-			panic(fmt.Errorf("positional parameter %d (%q) can't be added: %w",
-				len(ps.byPos)+1, name, err))
+			panic(fmt.Errorf("%s: %w", panicPrefix, err))
 		}
 	}
 

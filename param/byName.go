@@ -139,8 +139,9 @@ type ByNameOptFunc = ptypes.OptFunc[ByName]
 func (ps *PSet) Add(
 	name string, setter Setter, desc string, opts ...ByNameOptFunc,
 ) *ByName {
-	ps.panicIfAlreadyParsed(
-		fmt.Sprintf("named parameter (%q) can't be added", name))
+	panicPrefix := fmt.Sprintf("can't add named parameter: %q", name)
+
+	ps.panicIfAlreadyParsed(panicPrefix)
 
 	setter.CheckSetter(name)
 
@@ -148,17 +149,16 @@ func (ps *PSet) Add(
 	if ppCount > 0 &&
 		ps.byPos[ppCount-1].isTerminal {
 		panic(
-			fmt.Errorf("named parameter (%q) can't be added:"+
-				" it can never be used as"+
+			fmt.Errorf("%s: it can never be used as"+
 				" the param set has a terminal positional parameter",
-				name))
+				panicPrefix))
 	}
 
 	name = strings.TrimSpace(name)
 
 	whereAdded := caller()
 	if err := ps.nameCheck(name, whereAdded); err != nil {
-		panic(fmt.Errorf("named parameter (%q) can't be added: %w", name, err))
+		panic(fmt.Errorf("%s: %w", panicPrefix, err))
 	}
 
 	p := &ByName{
@@ -171,8 +171,7 @@ func (ps *PSet) Add(
 
 	for _, optFunc := range opts {
 		if err := optFunc(p); err != nil {
-			panic(fmt.Errorf("named parameter (%q) can't be added: %w",
-				name, err))
+			panic(fmt.Errorf("%s: %w", panicPrefix, err))
 		}
 	}
 

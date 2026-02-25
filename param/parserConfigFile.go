@@ -280,7 +280,7 @@ func checkExistenceConstraint(fName string, c filecheck.Exists) {
 // panic otherwise.
 func (ps *PSet) SetConfigFile(fName string, c filecheck.Exists) {
 	ps.panicIfAlreadyParsed(
-		fmt.Sprintf("the config file %q can't be set", fName))
+		fmt.Sprintf("can't set the config file %q", fName))
 
 	checkExistenceConstraint(fName, c)
 
@@ -303,7 +303,7 @@ func (ps *PSet) SetConfigFile(fName string, c filecheck.Exists) {
 // panic otherwise.
 func (ps *PSet) SetConfigFileStrict(fName string, c filecheck.Exists) {
 	ps.panicIfAlreadyParsed(
-		fmt.Sprintf("The config file %q can't be set", fName))
+		fmt.Sprintf("can't set the config file %q", fName))
 
 	checkExistenceConstraint(fName, c)
 
@@ -327,7 +327,7 @@ func (ps *PSet) SetConfigFileStrict(fName string, c filecheck.Exists) {
 // panic otherwise.
 func (ps *PSet) SetGroupConfigFile(gName, fName string, c filecheck.Exists) {
 	ps.panicIfAlreadyParsed(
-		fmt.Sprintf("The group config file %q (group: %q) can't be set",
+		fmt.Sprintf("can't set the group config file %q (group: %q)",
 			fName, gName))
 
 	if c == filecheck.MustNotExist {
@@ -360,7 +360,7 @@ func (ps *PSet) SetGroupConfigFile(gName, fName string, c filecheck.Exists) {
 // panic otherwise.
 func (ps *PSet) AddConfigFile(fName string, c filecheck.Exists) {
 	ps.panicIfAlreadyParsed(
-		fmt.Sprintf("The config file %q can't be added", fName))
+		fmt.Sprintf("can't add the config file %q", fName))
 
 	checkExistenceConstraint(fName, c)
 
@@ -382,7 +382,7 @@ func (ps *PSet) AddConfigFile(fName string, c filecheck.Exists) {
 // panic otherwise.
 func (ps *PSet) AddConfigFileStrict(fName string, c filecheck.Exists) {
 	ps.panicIfAlreadyParsed(
-		fmt.Sprintf("The config file %q can't be added", fName))
+		fmt.Sprintf("can't add the config file %q", fName))
 
 	checkExistenceConstraint(fName, c)
 
@@ -400,7 +400,7 @@ func (ps *PSet) AddConfigFileStrict(fName string, c filecheck.Exists) {
 // panic otherwise.
 func (ps *PSet) AddGroupConfigFile(gName, fName string, c filecheck.Exists) {
 	ps.panicIfAlreadyParsed(fmt.Sprintf(
-		"the group config file %q (group: %q) can't be added",
+		"can't add the group config file %q (group: %q)",
 		fName, gName))
 
 	if c == filecheck.MustNotExist {

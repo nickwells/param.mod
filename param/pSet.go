@@ -89,8 +89,7 @@ func (ps *PSet) TrailingParamsExpected() bool {
 // This must be called before the parameters are parsed; this will
 // panic otherwise.
 func (ps *PSet) SetTrailingParamsExpected() {
-	ps.panicIfAlreadyParsed(
-		"the trailing parameters expected flag may not be set")
+	ps.panicIfAlreadyParsed("can't set the trailing params expected flag")
 
 	ps.trailingParamsExpected = true
 }
@@ -117,7 +116,7 @@ func (ps *PSet) TrailingParamsName() string { return ps.trailingParamsName }
 // This must be called before the parameters are parsed; this will
 // panic otherwise.
 func (ps *PSet) SetTrailingParamsName(name string) {
-	ps.panicIfAlreadyParsed("the trailing parameters name may not be set")
+	ps.panicIfAlreadyParsed("can't set the trailing params name")
 
 	ps.trailingParamsName = name
 	ps.trailingParamsExpected = true
@@ -141,7 +140,7 @@ func SetTrailingParamsName(name string) PSetOptFunc {
 // [PSet.SetProgramDescription] method.
 func SetProgramDescription(desc string) PSetOptFunc {
 	return func(ps *PSet) error {
-		ps.progDesc = desc
+		ps.SetProgramDescription(desc)
 
 		return nil
 	}
@@ -154,13 +153,13 @@ func SetProgramDescription(desc string) PSetOptFunc {
 // This must be called before the parameters are parsed; this will
 // panic otherwise.
 func (ps *PSet) SetProgramDescription(desc string) {
+	ps.panicIfAlreadyParsed("can't set the program description")
+
 	ps.progDesc = desc
 }
 
 // ProgDesc returns the program description
 func (ps *PSet) ProgDesc() string {
-	ps.panicIfAlreadyParsed("the program description may not be set")
-
 	return ps.progDesc
 }
 
@@ -185,7 +184,7 @@ func SetParamPrefixes(pp ...string) PSetOptFunc {
 // The prefixes must be set before the parameters are parsed; this will
 // panic otherwise.
 func (ps *PSet) SetParamPrefixes(pp []string) {
-	ps.panicIfAlreadyParsed("parameter prefixes may not be set")
+	ps.panicIfAlreadyParsed("can't set the parameter prefixes")
 
 	slices.SortStableFunc(pp, func(a, b string) int { return len(b) - len(a) })
 
@@ -439,7 +438,7 @@ func (ps *PSet) CountByPosParams() int {
 //
 // This will panic if called after the parameters have been parsed.
 func (ps *PSet) AddFinalCheck(fcf FinalCheckFunc) {
-	ps.panicIfAlreadyParsed("cannot add a final check function")
+	ps.panicIfAlreadyParsed("can't add a final check function")
 
 	ps.finalChecks = append(ps.finalChecks, fcf)
 }
@@ -451,7 +450,7 @@ func (ps *PSet) AddFinalCheck(fcf FinalCheckFunc) {
 //
 // This will panic if called after the parameters have been parsed.
 func (ps *PSet) SetTerminalParam(s string) {
-	ps.panicIfAlreadyParsed("cannot set the terminal parameter")
+	ps.panicIfAlreadyParsed("can't set the terminal parameter")
 
 	ps.terminalParam = s
 }
