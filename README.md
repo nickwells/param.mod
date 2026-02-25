@@ -95,7 +95,7 @@ with `param.PSet.SetTerminalParam`) and the remaining parameters will be
 available for further processing without being parsed. If you intend for your
 users to supply additional parameters you must indicate this using the
 `PSet.SetTrailingParamsExpected` method or the `PSet.SetTrailingParamsName`
-method. Any trailing parameters(coming after the terminal parameter) can be
+method. Any trailing parameters (coming after the terminal parameter) can be
 retrieved using the `PSet.TrailingParams` method after `PSet.Parse` has
 completed.
 
