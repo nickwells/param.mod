@@ -47,7 +47,7 @@ func (s Map[T]) CountChecks() int {
 // map and if any check returns a non-nil error that is returned. Finally it
 // will update the Value with the new entries.
 //
-// Note that the Value map is not replaced compmletely, just updated.
+// Note that the Value map is not replaced completely, just updated.
 func (s Map[T]) SetWithVal(paramName string, paramVal string) error {
 	var err error
 
