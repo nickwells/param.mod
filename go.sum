@@ -1,7 +1,7 @@
 github.com/nickwells/check.mod/v2 v2.1.27 h1:RQDXuly5TLOuxpLhMg2gVWSNy+20T4HFx3lG/kPCKlA=
 github.com/nickwells/check.mod/v2 v2.1.27/go.mod h1:HAt6YMkpDow/8HJYDcTfwWsyf6NMR3IPPwW1vTUFMns=
-github.com/nickwells/col.mod/v6 v6.0.1 h1:psg9ZvCacrTI+vEjOtmQHr2wP/TPt4GLWPfRmjVhoKk=
-github.com/nickwells/col.mod/v6 v6.0.1/go.mod h1:q0EY5mPUgee3eqIdkUcMOewQIThUHynQS/BjKQkKo70=
+github.com/nickwells/col.mod/v6 v6.0.2 h1:asdDmwmjue0OWL1vXb+/9Qw6aedmn5BoEiPzrl9e128=
+github.com/nickwells/col.mod/v6 v6.0.2/go.mod h1:q0EY5mPUgee3eqIdkUcMOewQIThUHynQS/BjKQkKo70=
 github.com/nickwells/english.mod v1.2.7 h1:wooWFTe74SWb1hzTyHjmHuHkehJKwYt17pZvuJueRII=
 github.com/nickwells/english.mod v1.2.7/go.mod h1:t2rzy1Anjz7JVefigm+V0mSw0nQRDkl630FgV/BTILQ=
 github.com/nickwells/errutil.mod v1.2.22 h1:azlIWkuZ0vWGGxKNBX80D/Dkbwg/B+r+GHvWrZms/n8=
@@ -26,9 +26,9 @@ github.com/nickwells/twrap.mod v1.5.12 h1:azVwj1RQeUx5D7bVmTYgNGyrlY/0zuFfm/Phof
 github.com/nickwells/twrap.mod v1.5.12/go.mod h1:p/uyn87EGgP8Hk/Gdo1SssZIhOHrgiaOT4ZbeSduxcg=
 github.com/nickwells/xdg.mod v1.0.10 h1:5VtR7yUy+r9xm5Rnt3PkTzvmlq8ZeLRPJsWtCWl7KAs=
 github.com/nickwells/xdg.mod v1.0.10/go.mod h1:A9TRwwLG/nHo8snq4XHjPteDNAVHYRwPUo54CAwhTEA=
-golang.org/x/exp v0.0.0-20260212183809-81e46e3db34a h1:ovFr6Z0MNmU7nH8VaX5xqw+05ST2uO1exVfZPVqRC5o=
-golang.org/x/exp v0.0.0-20260212183809-81e46e3db34a/go.mod h1:K79w1Vqn7PoiZn+TkNpx3BUWUQksGO3JcVX6qIjytmA=
-golang.org/x/sys v0.41.0 h1:Ivj+2Cp/ylzLiEU89QhWblYnOE9zerudt9Ftecq2C6k=
-golang.org/x/sys v0.41.0/go.mod h1:OgkHotnGiDImocRcuBABYBEXf8A9a87e/uXjp9XT3ks=
+golang.org/x/exp v0.0.0-20260218203240-3dfff04db8fa h1:Zt3DZoOFFYkKhDT3v7Lm9FDMEV06GpzjG2jrqW+QTE0=
+golang.org/x/exp v0.0.0-20260218203240-3dfff04db8fa/go.mod h1:K79w1Vqn7PoiZn+TkNpx3BUWUQksGO3JcVX6qIjytmA=
+golang.org/x/sys v0.42.0 h1:omrd2nAlyT5ESRdCLYdm3+fMfNFE/+Rf4bDIQImRJeo=
+golang.org/x/sys v0.42.0/go.mod h1:4GL1E5IUh+htKOUEOaiffhrAeqysfVGipDYzABqnCmw=
 golang.org/x/term v0.40.0 h1:36e4zGLqU4yhjlmxEaagx2KuYbJq3EwY8K943ZsHcvg=
 golang.org/x/term v0.40.0/go.mod h1:w2P8uVp06p2iyKKuvXIm7N/y0UCRt3UfJTfZ7oOpglM=
