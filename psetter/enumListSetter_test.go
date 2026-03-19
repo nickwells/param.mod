@@ -173,6 +173,7 @@ func TestSetterEnumList(t *testing.T) {
 			}
 
 			tc.SetVR(param.Mandatory)
+			tc.ValDescriber = true
 
 			tc.Test(t)
 		}

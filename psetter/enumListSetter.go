@@ -154,8 +154,8 @@ func (s EnumList[T]) CheckSetter(name string) {
 	}
 }
 
-// ValDescriber returns a string describing the allowed values
-func (s EnumList[T]) ValDescriber() string {
+// ValDescribe returns a string describing the allowed values
+func (s EnumList[T]) ValDescribe() string {
 	var t T
 	return fmt.Sprintf("%T%s...", t, s.GetSeparator())
 }
