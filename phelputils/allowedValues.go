@@ -22,30 +22,17 @@ func AllowedValueParts(
 	parts := []string{s.AllowedValues()}
 
 	if sAVM, ok := s.(ptypes.AllowedValuesMapper); ok {
-		var part string
-
-		avm := sAVM.AllowedValuesMap()
-		if len(avm) == 1 {
-			part = "The value must be:\n" + avm.String()
-		} else if len(avm) > 1 {
-			part = "The value must be one of the following:\n" +
-				avm.String()
+		desc := MakeAllowedValueDesc("value", sAVM.AllowedValuesMap())
+		if desc != "" {
+			parts = append(parts, desc)
 		}
-
-		parts = append(parts, part)
 	}
 
 	if sAVAM, ok := s.(ptypes.AllowedValuesAliasMapper); ok {
-		var part string
-
-		avam := sAVAM.AllowedValuesAliasMap()
-		if len(avam) == 1 {
-			part = "The following alias is available:\n" + avam.String()
-		} else if len(avam) > 1 {
-			part = "The following aliases are available:\n" + avam.String()
+		desc := MakeAliasDesc("", sAVAM.AllowedValuesAliasMap())
+		if desc != "" {
+			parts = append(parts, desc)
 		}
-
-		parts = append(parts, part)
 	}
 
 	keyStr := strings.Join(parts, "")
@@ -63,4 +50,43 @@ func AllowedValueParts(
 	}
 
 	return parts
+}
+
+// MakeAllowedValueDesc returns a string describing the allowed values
+func MakeAllowedValueDesc(name string, avm ptypes.AllowedVals[string]) string {
+	if len(avm) == 0 {
+		return ""
+	}
+
+	desc := "The " + name + " must be"
+
+	if len(avm) > 1 {
+		desc += " one of the following"
+	}
+
+	desc += ":\n" + avm.String()
+
+	return desc
+}
+
+// MakeAliasDesc returns a string describing the aliases
+func MakeAliasDesc(name string, am ptypes.Aliases[string]) string {
+	if len(am) == 0 {
+		return ""
+	}
+
+	desc := "The following"
+	if name != "" {
+		desc += " " + name
+	}
+
+	if len(am) == 1 {
+		desc += " alias is"
+	} else {
+		desc += " aliases are"
+	}
+
+	desc += " available:\n" + am.String()
+
+	return desc
 }
