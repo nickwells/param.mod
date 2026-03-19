@@ -8,6 +8,7 @@ import (
 	"github.com/nickwells/english.mod/english"
 	"github.com/nickwells/param.mod/v7/param"
 	"github.com/nickwells/param.mod/v7/phelputils"
+	"github.com/nickwells/param.mod/v7/ptypes"
 	"github.com/nickwells/twrap.mod/twrap"
 )
 
@@ -42,10 +43,18 @@ func printByPosParam(h StdHelp, ps *param.PSet, i int) {
 	}
 
 	h.twc.Wrap(bp.Description(), descriptionIndent)
+
 	showSeeAlso(h.twc, &bp.BaseParam)
 	showSeeNotes(h.twc, &bp.BaseParam)
-	h.showAllowedVals(bp.Name(), bp.Setter())
-	showInitialValue(h.twc, bp.InitialValue(), bp.Setter().CurrentValue())
+
+	s := bp.Setter()
+	h.showAllowedVals(bp.Name(), s)
+
+	if eh, ok := s.(ptypes.ExtraHelper); ok {
+		eh.ExtraHelp(h.twc, descriptionIndent, valDescExtraIndent)
+	}
+
+	showInitialValue(h.twc, bp.InitialValue(), s.CurrentValue())
 }
 
 // getMaxGroupNameLen returns the length of the longest group name
@@ -161,6 +170,7 @@ func (h StdHelp) printParamUsage(p *param.ByName) {
 
 	h.twc.Wrap(p.Description(), descriptionIndent)
 	printParamAttributes(h.twc, p)
+
 	showSeeAlso(h.twc, &p.BaseParam)
 	showSeeNotes(h.twc, &p.BaseParam)
 
@@ -168,8 +178,14 @@ func (h StdHelp) printParamUsage(p *param.ByName) {
 		return
 	}
 
-	h.showAllowedVals(p.Name(), p.Setter())
-	showInitialValue(h.twc, p.InitialValue(), p.Setter().CurrentValue())
+	s := p.Setter()
+	h.showAllowedVals(p.Name(), s)
+
+	if eh, ok := s.(ptypes.ExtraHelper); ok {
+		eh.ExtraHelp(h.twc, descriptionIndent, valDescExtraIndent)
+	}
+
+	showInitialValue(h.twc, p.InitialValue(), s.CurrentValue())
 }
 
 // showInitialValue shows the initial value of the ByName parameter. If the
@@ -223,10 +239,8 @@ func (h StdHelp) showAllowedVals(pName string, s param.Setter) {
 
 	parts := phelputils.AllowedValueParts(h.avalShownAlready, pName, s)
 
-	const extraIndent = 6
-
 	indent := descriptionIndent + len(prefix)
-	valDescIndent := indent + extraIndent
+	valDescIndent := indent + valDescExtraIndent
 
 	h.twc.WrapPrefixed(prefix, parts[0], descriptionIndent)
 

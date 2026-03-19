@@ -9,10 +9,11 @@ import (
 )
 
 const (
-	paramIndent       = 6
-	paramLine2Indent  = 9
-	descriptionIndent = 12
-	textIndent        = 4
+	paramIndent        = 6
+	paramLine2Indent   = 9
+	descriptionIndent  = 12
+	textIndent         = 4
+	valDescExtraIndent = 6
 )
 
 const (
