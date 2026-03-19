@@ -1,0 +1,1 @@
+a list of name=tags separated by ',' where 'tags' is a list of tag-values separated by '|' and the name is one of the allowed values.
