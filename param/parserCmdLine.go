@@ -9,6 +9,36 @@ import (
 	"github.com/nickwells/location.mod/location"
 )
 
+// makeByPosParamDesc returns a brief description of the positional
+// parameters in order.
+func (ps *PSet) makeByPosParamDesc() string {
+	if len(ps.byPos) == 0 {
+		return ""
+	}
+
+	var byPosMiniHelp strings.Builder
+	byPosMiniHelp.WriteString("The first")
+
+	if len(ps.byPos) == 1 {
+		byPosMiniHelp.WriteString(" parameter")
+	} else {
+		fmt.Fprintf(&byPosMiniHelp,
+			" %d parameters",
+			len(ps.byPos))
+	}
+
+	sep := "should be <"
+
+	for _, bp := range ps.byPos {
+		byPosMiniHelp.WriteString(sep + bp.name)
+		sep = ">, <"
+	}
+
+	byPosMiniHelp.WriteString(">")
+
+	return byPosMiniHelp.String()
+}
+
 // reportMissingParams adds an error to the param set error map reporting any
 // missing positional parameters.
 func (ps *PSet) reportMissingParams(missingCount int) {
@@ -16,34 +46,20 @@ func (ps *PSet) reportMissingParams(missingCount int) {
 		return
 	}
 
-	byPosMiniHelp := "The first"
-	if len(ps.byPos) == 1 {
-		byPosMiniHelp += " parameter should be: <" + ps.byPos[0].name + ">"
-	} else {
-		byPosMiniHelp += fmt.Sprintf(
-			" %d parameters should be: ",
-			len(ps.byPos))
-
-		sep := "<"
-
-		for _, bp := range ps.byPos {
-			byPosMiniHelp += sep + bp.name
-			sep = ">, <"
-		}
-
-		byPosMiniHelp += ">"
-	}
+	var err error
 
 	if missingCount == 1 {
-		ps.AddErr("", errors.New("a parameter is missing,"+
-			" one more positional parameter is needed. "+
-			byPosMiniHelp))
+		err = errors.New("a parameter is missing," +
+			" one more positional parameter is needed. " +
+			ps.makeByPosParamDesc())
 	} else {
-		ps.AddErr("", fmt.Errorf(
+		err = fmt.Errorf(
 			"some parameters are missing,"+
 				" %d more positional parameters are needed. %s",
-			missingCount, byPosMiniHelp))
+			missingCount, ps.makeByPosParamDesc())
 	}
+
+	ps.AddErr("", err)
 }
 
 type parsingStatus int
