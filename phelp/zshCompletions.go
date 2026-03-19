@@ -55,21 +55,24 @@ func zshSafeStr(s string) string {
 // zshMakeAltNames constructs a list of alternative names to be ignored if
 // the named parameter is matched
 func zshMakeAltNames(name string, names []string) string {
-	altNames := ""
+	var altNames strings.Builder
+
 	prefix := "-"
 
 	for _, altName := range names {
 		if altName != name {
-			altNames += prefix + altName
+			altNames.WriteString(prefix + altName)
 			prefix = " -"
 		}
 	}
 
-	if altNames == "" {
-		return altNames
+	rval := altNames.String()
+
+	if rval == "" {
+		return rval
 	}
 
-	return "(" + altNames + ")"
+	return "(" + rval + ")"
 }
 
 // zshNameSuffix creates the suffix to be applied to the option name to
