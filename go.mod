@@ -1,27 +1,27 @@
 module github.com/nickwells/param.mod/v7
 
 require (
-	github.com/nickwells/check.mod/v2 v2.1.27
-	github.com/nickwells/col.mod/v6 v6.0.2
-	github.com/nickwells/english.mod v1.2.7
-	github.com/nickwells/errutil.mod v1.2.22
-	github.com/nickwells/filecheck.mod v1.2.11
-	github.com/nickwells/fileparse.mod v1.1.37
-	github.com/nickwells/location.mod v1.2.34
-	github.com/nickwells/pager.mod v1.0.16
-	github.com/nickwells/strdist.mod/v2 v2.1.0
-	github.com/nickwells/testhelper.mod/v2 v2.4.3
-	github.com/nickwells/twrap.mod v1.5.12
-	github.com/nickwells/xdg.mod v1.0.10
-	golang.org/x/exp v0.0.0-20260218203240-3dfff04db8fa
+	github.com/nickwells/check.mod/v2 v2.1.28
+	github.com/nickwells/col.mod/v6 v6.0.3
+	github.com/nickwells/english.mod v1.2.8
+	github.com/nickwells/errutil.mod v1.2.23
+	github.com/nickwells/filecheck.mod v1.2.12
+	github.com/nickwells/fileparse.mod v1.1.38
+	github.com/nickwells/location.mod v1.2.35
+	github.com/nickwells/pager.mod v1.0.17
+	github.com/nickwells/strdist.mod/v2 v2.1.1
+	github.com/nickwells/testhelper.mod/v2 v2.5.0
+	github.com/nickwells/twrap.mod v1.5.13
+	github.com/nickwells/xdg.mod v1.0.11
+	golang.org/x/exp v0.0.0-20260312153236-7ab1446f8b90
 	golang.org/x/sys v0.42.0
 )
 
 require (
-	github.com/nickwells/mathutil.mod/v2 v2.5.8
-	github.com/nickwells/tempus.mod v1.2.9 // indirect
+	github.com/nickwells/mathutil.mod/v2 v2.5.9
+	github.com/nickwells/tempus.mod v1.2.10 // indirect
 )
 
-require golang.org/x/term v0.40.0 // indirect
+require golang.org/x/term v0.41.0 // indirect
 
 go 1.26.0
