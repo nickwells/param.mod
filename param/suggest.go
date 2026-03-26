@@ -11,31 +11,20 @@ import (
 // alternative names for the given string.
 type SuggestionFunc func(ps *PSet, s string) []string
 
-const alternativeCount = 3
-
 // SuggestParams finds those parameter names the shortest distance from the
 // passed value and returns them
 func SuggestParams(ps *PSet, s string) []string {
-	finder := strdist.DefaultFinders[strdist.CaseBlindAlgoNameCosine]
-
-	return finder.FindNStrLike(alternativeCount,
-		s, slices.Collect(maps.Keys(ps.nameToParam))...)
+	return strdist.SuggestedVals(s, slices.Collect(maps.Keys(ps.nameToParam)))
 }
 
 // SuggestGroups finds those group names the shortest distance from the
 // passed value and returns them
 func SuggestGroups(ps *PSet, s string) []string {
-	finder := strdist.DefaultFinders[strdist.CaseBlindAlgoNameCosine]
-
-	return finder.FindNStrLike(alternativeCount,
-		s, slices.Collect(maps.Keys(ps.groups))...)
+	return strdist.SuggestedVals(s, slices.Collect(maps.Keys(ps.groups)))
 }
 
 // SuggestNotes finds those note names the shortest distance from the
 // passed value and returns them
 func SuggestNotes(ps *PSet, s string) []string {
-	finder := strdist.DefaultFinders[strdist.CaseBlindAlgoNameCosine]
-
-	return finder.FindNStrLike(alternativeCount,
-		s, slices.Collect(maps.Keys(ps.notes))...)
+	return strdist.SuggestedVals(s, slices.Collect(maps.Keys(ps.notes)))
 }
