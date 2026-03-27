@@ -173,9 +173,6 @@ func (s TaggedValueList[E, T]) SetWithVal(_ string, paramVal string) error {
 			tv := TaggedValue[E, T]{Value: E(av), Tags: tags}
 			teVals = append(teVals, tv)
 		}
-
-		tv := TaggedValue[E, T]{Value: E(ev), Tags: tags}
-		teVals = append(teVals, tv)
 	}
 
 	for _, check := range s.Checks {
