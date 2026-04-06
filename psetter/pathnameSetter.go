@@ -178,3 +178,6 @@ func (s Pathname) CheckSetter(name string) {
 		}
 	}
 }
+
+// ValDescribe returns a brief description of the expected value
+func (s Pathname) ValDescribe() string { return "pathname" }

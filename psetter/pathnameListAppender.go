@@ -133,6 +133,4 @@ func (s PathnameListAppender) CheckSetter(name string) {
 }
 
 // ValDescribe returns a brief description of the expected value
-func (s PathnameListAppender) ValDescribe() string {
-	return "pathname"
-}
+func (s PathnameListAppender) ValDescribe() string { return "pathname" }

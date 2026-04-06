@@ -109,3 +109,9 @@ func (s StrList[T]) CheckSetter(name string) {
 		}
 	}
 }
+
+// ValDescribe returns a string giving a summary of the values that can
+// follow the parameter name.
+func (s StrList[T]) ValDescribe() string {
+	return "string" + s.GetSeparator() + "string..."
+}

@@ -156,3 +156,9 @@ func (s TimeLocation) CheckSetter(name string) {
 		}
 	}
 }
+
+// ValDescribe returns a string giving a summary of the values that can
+// follow the parameter name.
+func (s TimeLocation) ValDescribe() string {
+	return "location"
+}

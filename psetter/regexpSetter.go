@@ -57,3 +57,7 @@ func (s Regexp) CheckSetter(name string) {
 		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
 }
+
+// ValDescribe returns a string giving a summary of the values that can
+// follow the parameter name.
+func (s Regexp) ValDescribe() string { return "pattern" }

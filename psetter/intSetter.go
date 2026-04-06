@@ -81,5 +81,5 @@ func (s Int[T]) CheckSetter(name string) {
 
 // ValDescribe returns a name describing the values allowed
 func (s Int[T]) ValDescribe() string {
-	return "int"
+	return "number"
 }

@@ -105,5 +105,5 @@ func (s IntList[T]) CheckSetter(name string) {
 
 // ValDescribe returns a name describing the values allowed
 func (s IntList[T]) ValDescribe() string {
-	return "list-of-ints"
+	return "number" + s.GetSeparator() + "number..."
 }

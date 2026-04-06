@@ -144,5 +144,5 @@ func (s Map[T]) CheckSetter(name string) {
 
 // ValDescribe returns a short string describing the allowed values
 func (s Map[T]) ValDescribe() string {
-	return "s[=Bool]" + s.GetSeparator() + "..."
+	return "string[=Bool]" + s.GetSeparator() + "..."
 }

@@ -5,7 +5,7 @@ With embedded new lines (help-with-positional-params)
 
 ===============
 
-Usage: PROGRAM NAME UNKNOWN <pos1> <pos2> -param2=int ...
+Usage: PROGRAM NAME UNKNOWN <pos1> <pos2> -param2=number ...
 
 ===============
 
@@ -42,11 +42,11 @@ stdParams-help   [ 12 parameters, 11 hidden ]
 test-group1      [ 6 parameters, 1 hidden ]
     test parameters.
 
-      [-param1=int, -param1-alt1=int]
+      [-param1=number, -param1-alt1=number]
             help text for param1
             Allowed values: any value that can be read as a whole number
             Initial value: 1
-      -param2=int, -param2-alt2=int
+      -param2=number, -param2-alt2=number
             help text for param2.
             With an embedded new line and a lot of text to demonstrate the
             behaviour when text is wrapped across multiple lines
