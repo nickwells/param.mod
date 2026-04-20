@@ -131,7 +131,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			psetter.Map[string]{
 				Value: (*map[string]bool)(&h.groupsChosen),
 				Checks: []check.MapStringBool{
-					check.MapValAggregate[map[string]bool, string, bool](
+					check.MapValAggregate[map[string]bool](
 						boolCounter),
 				},
 			},
@@ -153,7 +153,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			psetter.Map[string]{
 				Value: (*map[string]bool)(&h.paramsChosen),
 				Checks: []check.MapStringBool{
-					check.MapValAggregate[map[string]bool, string, bool](
+					check.MapValAggregate[map[string]bool](
 						boolCounter),
 				},
 				Editor: trimDashes{},
@@ -174,7 +174,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			psetter.Map[string]{
 				Value: (*map[string]bool)(&h.notesChosen),
 				Checks: []check.MapStringBool{
-					check.MapValAggregate[map[string]bool, string, bool](
+					check.MapValAggregate[map[string]bool](
 						boolCounter),
 				},
 			},
@@ -235,7 +235,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 	)
 
 	ps.Add(helpWidthArgName,
-		getHelpWidthSetter(&h.helpLineLen, check.ValGT[int](0)),
+		getHelpWidthSetter(&h.helpLineLen, check.ValGT(0)),
 		"when showing help wrap the output to the width given here."+
 			"\n\n"+
 			"Note that some shells will set the COLUMNS variable"+

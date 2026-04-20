@@ -50,7 +50,7 @@ func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
 			" how this information is shown."+
 			exitAfterParamProcessing,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.PostAction(paction.SetVal[bool](&h.paramsShowWhereSet, true)),
+		param.PostAction(paction.SetVal(&h.paramsShowWhereSet, true)),
 		param.GroupName(groupName),
 		param.SeeAlso(paramNameShowWhereSet),
 	)
