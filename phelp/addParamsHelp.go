@@ -184,7 +184,6 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			param.AltNames("help-note", "help-n"),
 			param.ValueName("note-name,..."),
 			param.PostAction(checkNotes(h, ps)),
-			param.PostAction(setHelpSections(h, notesHelpSectionName)),
 			param.GroupName(groupName))
 	}
 
