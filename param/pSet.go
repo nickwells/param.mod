@@ -355,7 +355,7 @@ func (ps *PSet) recordUnexpectedParam(paramName string, loc *location.L) {
 
 	altNames := SuggestParams(ps, paramName)
 	if len(altNames) != 0 {
-		msg += "\n\nDid you mean: " + strings.Join(altNames, " or ") + " ?"
+		msg += "\n\nDid you mean:\n   " + strings.Join(altNames, "\n   ")
 	}
 
 	ps.AddErr(paramName, loc.Error(msg))

@@ -471,7 +471,7 @@ func makeBadNameError(badNames, altNames []string, tName, extra string) error {
 
 	if len(altNames) > 0 {
 		sort.Strings(altNames)
-		alts = "\nDid you mean " + strings.Join(altNames, " or ")
+		alts = "\n\nDid you mean:\n   " + strings.Join(altNames, "\n   ")
 	}
 
 	return errors.New(badStr + alts + extra)

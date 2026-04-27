@@ -206,7 +206,8 @@ func TestParamLineParser(t *testing.T) {
 			ID: testhelper.MkID("string has no equals"),
 			ExpErr: testhelper.MkExpErr(
 				"this is not a parameter of this program.",
-				"Did you mean: ival ?"),
+				"Did you mean:",
+				"ival"),
 			line:  "ival 5",
 			pname: "ival 5",
 		},
