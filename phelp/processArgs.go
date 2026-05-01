@@ -2,6 +2,7 @@ package phelp
 
 import (
 	"github.com/nickwells/param.mod/v7/param"
+	"github.com/nickwells/twrap.mod/twrap"
 )
 
 // ProcessArgs will process the values set after parsing is complete. This is
@@ -9,7 +10,8 @@ import (
 // will be processed.
 func (h StdHelp) ProcessArgs(ps *param.PSet) {
 	if zshCompHasAction(h) {
-		ps.SetExitStatus(zshCompletionHandler(h, nil, ps))
+		twc := twrap.NewTWConfOrPanic()
+		ps.SetExitStatus(zshCompletionHandler(h, twc, ps))
 	}
 
 	if h.paramsShowWhereSet {
