@@ -16,7 +16,7 @@ stdParams-help   [ 12 parameters, 11 hidden ]
     These are parameters for printing a help message.
 
       [-help, -usage]
-            print this help message and exit.
+            print this help message.
 
             Seldom used parameters may be hidden; to see all the parameters use
             the parameter:
@@ -26,3 +26,6 @@ stdParams-help   [ 12 parameters, 11 hidden ]
               "-help-summary"
             For the full help message use the parameter:
               "-help-full"
+
+            The program will exit after the help message is shown.
+            No errors will be shown.

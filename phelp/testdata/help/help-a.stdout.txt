@@ -59,7 +59,7 @@ stdParams-help   [ 12 parameters ]
     These are parameters for printing a help message.
 
       [-help, -usage]
-            print this help message and exit.
+            print this help message.
 
             Seldom used parameters may be hidden; to see all the parameters use
             the parameter:
@@ -69,17 +69,23 @@ stdParams-help   [ 12 parameters ]
               "-help-summary"
             For the full help message use the parameter:
               "-help-full"
+
+            The program will exit after the help message is shown.
+            No errors will be shown.
       [-help-all, -help-a]
-            show all the parameters. Less commonly useful parameters are not
-            shown in the standard help message. This will reveal them.
+            show all the parameters (or notes). Less commonly useful parameters
+            are not shown in the standard help message; similarly some notes may
+            be hidden. This will reveal them.
 
             The program will exit after the help message is shown.
+            No errors will be shown.
       [-help-all-short, -help-as, -help-sa]
-            print a shorter help message but with all the parameters shown. This
-            is the equivalent of giving both the help-all and the help-summary
-            parameters.
+            print a shorter help message but with all the parameters (or notes)
+            shown. This is the equivalent of giving both the help-all and the
+            help-summary parameters.
 
             The program will exit after the help message is shown.
+            No errors will be shown.
       [-help-format=standard|markdown]
             specify how the help message should be produced. Only some parts of
             the help message support this feature. They will mostly produce
@@ -97,12 +103,16 @@ stdParams-help   [ 12 parameters ]
             hidden ones.
 
             The program will exit after the help message is shown.
+            No errors will be shown.
       [-help-groups=group-name,..., -help-group=group-name,...,
          -help-g=group-name,...]
             when printing the help message only show the listed groups. This
-            will also force hidden parameters to be shown.
+            will also force hidden parameters to be shown. To see the available
+            group names use "-help-show groups". To see just the group names
+            (without the accompanying text) also use "-help-summary".
 
             The program will exit after the help message is shown.
+            No errors will be shown.
             Allowed values: a list of string values separated by ',' subject to
                             checks. The names can optionally be followed by '='
                             and a string representing true or false
@@ -114,15 +124,20 @@ stdParams-help   [ 12 parameters ]
             Allowed values: (see parameter: completions-quiet)
       [-help-notes=note-name,..., -help-note=note-name,...,
          -help-n=note-name,...]
-            when printing the help message only show the listed notes.
+            when printing the help message only show the listed notes. To see
+            just the available note names use "-help-show notes" with
+            "-help-summary". To see all the note names (including hidden ones)
+            also use "-help-all". Or just "-help-all-short".
 
             The program will exit after the help message is shown.
+            No errors will be shown.
             Allowed values: (see parameter: help-groups)
       [-help-params=param-name,..., -help-param=param-name,...,
          -help-p=param-name,...]
             when printing the help message only show the listed parameters.
 
             The program will exit after the help message is shown.
+            No errors will be shown.
             Allowed values: (see parameter: help-groups)
       [-help-show=part,...]
             specify the parts of the help message you wish to see
@@ -178,6 +193,7 @@ stdParams-help   [ 12 parameters ]
             descriptions are not shown.
 
             The program will exit after the help message is shown.
+            No errors will be shown.
       [-help-width=...]
             when showing help wrap the output to the width given here.
 
