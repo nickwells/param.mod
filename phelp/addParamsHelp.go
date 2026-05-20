@@ -16,17 +16,18 @@ import (
 )
 
 const (
-	helpArgName           = "help"
-	helpShowArgName       = "help-show"
-	helpFullArgName       = "help-full"
-	helpShowHiddenArgName = "help-all"
-	helpSummaryArgName    = "help-summary"
-	helpGroupsArgName     = "help-groups"
-	helpParamsArgName     = "help-params"
-	helpNotesArgName      = "help-notes"
-	helpFormatArgName     = "help-format"
-	helpNoPageArgName     = "help-no-page"
-	helpWidthArgName      = "help-width"
+	helpArgName                 = "help"
+	helpShowArgName             = "help-show"
+	helpFullArgName             = "help-full"
+	helpShowHiddenArgName       = "help-all"
+	helpSummaryArgName          = "help-summary"
+	helpSummaryAndHiddenArgName = "help-all-short"
+	helpGroupsArgName           = "help-groups"
+	helpParamsArgName           = "help-params"
+	helpNotesArgName            = "help-notes"
+	helpFormatArgName           = "help-format"
+	helpNoPageArgName           = "help-no-page"
+	helpWidthArgName            = "help-width"
 )
 
 // helpFmt is a string type used to determine the format in which to display
@@ -114,9 +115,9 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		param.PostAction(paction.SetVal(&h.helpRequested, true)),
 		param.GroupName(groupName))
 
-	ps.Add("help-all-short", psetter.Nil{},
+	ps.Add(helpSummaryAndHiddenArgName, psetter.Nil{},
 		"print a shorter help message but with all the"+
-			" parameters shown. This is the equivalent"+
+			" parameters (or notes) shown. This is the equivalent"+
 			" of giving both the "+helpShowHiddenArgName+
 			" and the "+helpSummaryArgName+" parameters."+
 			exitAfterHelpMessage,
