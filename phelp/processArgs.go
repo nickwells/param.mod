@@ -11,7 +11,14 @@ import (
 func (h StdHelp) ProcessArgs(ps *param.PSet) {
 	if zshCompHasAction(h) {
 		twc := twrap.NewTWConfOrPanic()
-		ps.SetExitStatus(zshCompletionHandler(h, twc, ps))
+
+		completionErrStatus := zshCompletionHandler(h, twc, ps)
+		if completionErrStatus == 0 {
+			h.reportErrors = false
+		}
+
+		ps.SetExitStatus(completionErrStatus)
+		ps.ShouldExit()
 	}
 
 	if h.paramsShowWhereSet {
