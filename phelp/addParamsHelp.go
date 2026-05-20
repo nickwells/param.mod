@@ -95,9 +95,10 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		param.GroupName(groupName))
 
 	ps.Add(helpShowHiddenArgName, psetter.Nil{},
-		"show all the parameters."+
+		"show all the parameters (or notes)."+
 			" Less commonly useful parameters are not shown in the"+
-			" standard help message. This will reveal them."+
+			" standard help message; similarly some notes may be hidden."+
+			" This will reveal them."+
 			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.AltNames("help-a"),
@@ -141,6 +142,11 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			},
 			"when printing the help message only show the listed groups."+
 				" This will also force hidden parameters to be shown."+
+				" To see the available group names use "+
+				makeParamStr(ps, helpShowArgName, groupsHelpSectionName)+"."+
+				" To see just the group names"+
+				" (without the accompanying text) also use "+
+				makeParamStr(ps, helpSummaryArgName, "")+"."+
 				exitAfterHelpMessage,
 			param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 			param.AltNames("help-group", "help-g"),
@@ -183,6 +189,14 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 				},
 			},
 			"when printing the help message only show the listed notes."+
+				" To see just the available note names use "+
+				makeParamStr(ps, helpShowArgName, notesHelpSectionName)+
+				" with "+
+				makeParamStr(ps, helpSummaryArgName, "")+"."+
+				" To see all the note names (including hidden ones) also use "+
+				makeParamStr(ps, helpShowHiddenArgName, "")+"."+
+				" Or just "+
+				makeParamStr(ps, helpSummaryAndHiddenArgName, "")+"."+
 				exitAfterHelpMessage,
 			param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 			param.AltNames("help-note", "help-n"),
