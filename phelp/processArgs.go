@@ -34,6 +34,8 @@ func (h StdHelp) ProcessArgs(ps *param.PSet) {
 	}
 
 	if h.sectionsChosen.count() > 0 {
+		h.reportErrors = false // don't report errors if help requested
+
 		ps.HelpRequired()
 
 		if h.exitAfterHelp {

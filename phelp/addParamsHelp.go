@@ -40,7 +40,9 @@ const (
 
 const (
 	exitAfterHelpMessage = "\n\nThe program will exit" +
-		" after the help message is shown."
+		" after the help message is shown." +
+		"\n" +
+		"No errors will be shown."
 )
 
 type trimDashes struct{}
@@ -59,7 +61,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		"These are parameters for printing a help message.")
 
 	ps.Add(helpArgName, psetter.Nil{},
-		"print this help message and exit."+
+		"print this help message."+
 			"\n\n"+
 			"Seldom used parameters may be hidden;"+
 			" to see all the parameters use the parameter:"+
@@ -74,7 +76,8 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			"\n"+
 			"For the full help message use the parameter:"+
 			"\n  "+
-			makeParamStr(ps, helpFullArgName, ""),
+			makeParamStr(ps, helpFullArgName, "")+
+			exitAfterHelpMessage,
 		param.Attrs(param.CommandLineOnly),
 		param.AltNames("usage"),
 		param.PostAction(setHelpSections(h, standardHelpSectionAlias)),
