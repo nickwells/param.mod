@@ -4,6 +4,7 @@ package phelp
 
 import (
 	"os"
+	"strconv"
 
 	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/param.mod/v7/param"
@@ -24,7 +25,9 @@ func getHelpWidthSetter(helpWidth *int, chks ...check.ValCk[int]) param.Setter {
 			"auto": {
 				Name: "use the terminal width as the help width." +
 					" If the help output is not to a terminal," +
-					" the default width is used.",
+					" the default width (" +
+					strconv.Itoa(twrap.DfltTargetLineLen) +
+					") is used.",
 				Calc: func(_, _ string) (int, error) {
 					ws, err := unix.IoctlGetWinsize(
 						int(os.Stdout.Fd()), unix.TIOCGWINSZ) //nolint:gosec

@@ -205,7 +205,7 @@ stdParams-help   [ 12 parameters ]
                             The value must be:
                                auto: use the terminal width as the help width.
                                   If the help output is not to a terminal, the
-                                  default width is used.
+                                  default width (80) is used.
             Initial value: 80
 ---------------
 stdParams-params [ 7 parameters ]
