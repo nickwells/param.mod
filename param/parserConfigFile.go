@@ -451,8 +451,7 @@ func checkCFErrs(ps *PSet, errs []error, cf ConfigFileDetails, desc string) {
 	if len(errs) == 1 {
 		err := errs[0]
 
-		var perr *os.PathError
-		if errors.As(err, &perr) {
+		if perr, ok := errors.AsType[*os.PathError](err); ok {
 			if errors.Is(err, os.ErrNotExist) &&
 				cf.CfConstraint == filecheck.Optional &&
 				perr.Path == filepath.Clean(cf.Name) {
