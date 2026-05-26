@@ -28,7 +28,7 @@ const (
 
 // zshCompHasAction returns true if the StdHelp zsh Completion Action is not
 // None, false otherwise.
-func zshCompHasAction(h StdHelp) bool {
+func zshCompHasAction(h *StdHelp) bool {
 	return h.zshCompAction != zshCompActionNone
 }
 
@@ -193,7 +193,7 @@ func zshWriteCompFunc(ps *param.PSet, w io.Writer) {
 // zshCompletionHandler performs the appropriate action according to the
 // setting of the StdHelp zshCompletionAction member. It returns a suggested
 // exit status.
-func zshCompletionHandler(h StdHelp, twc *twrap.TWConf, ps *param.PSet) int {
+func zshCompletionHandler(h *StdHelp, twc *twrap.TWConf, ps *param.PSet) int {
 	switch h.zshCompAction {
 	case zshCompActionNone:
 		return 0
@@ -239,7 +239,7 @@ func zshHandleErr(err error, ps *param.PSet) int {
 }
 
 // zshCompFileName returns the name of the completions file
-func zshCompFileName(h StdHelp, ps *param.PSet) string {
+func zshCompFileName(h *StdHelp, ps *param.PSet) string {
 	return filepath.Join(h.zshCompDir, "_"+ps.ProgBaseName())
 }
 
@@ -292,7 +292,7 @@ func zshReplaceCompFile(filename string, ps *param.PSet) error {
 
 // zshCompFileNotify writes a notification message informing the user that
 // the completion file has been successfully created.
-func zshCompFileNotify(h StdHelp, twc *twrap.TWConf, filename string) {
+func zshCompFileNotify(h *StdHelp, twc *twrap.TWConf, filename string) {
 	if h.completionsQuiet {
 		return
 	}

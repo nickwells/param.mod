@@ -1,5 +1,0 @@
-PROGRAM NAME UNKNOWN: an error was found
-      param2:
-            this parameter must be set somewhere
-
-For more information use the "-help" parameter

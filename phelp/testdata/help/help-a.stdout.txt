@@ -224,6 +224,8 @@ stdParams-params [ 7 parameters ]
             after all the parameters are set any errors detected will be
             reported unless this flag is set
             Allowed values: (see parameter: completions-quiet)
+            Initial value: false
+            Current value: true
       [-params-exit-after-parsing[=Bool] ]
             exit after the parameters have been read and processed. This lets
             you check the parameters are valid and see what values get set

@@ -8,7 +8,7 @@ import (
 // ProcessArgs will process the values set after parsing is complete. This is
 // where any StdHelp parameters (as added by the StdHelp AddParams method)
 // will be processed.
-func (h StdHelp) ProcessArgs(ps *param.PSet) {
+func (h *StdHelp) ProcessArgs(ps *param.PSet) {
 	if zshCompHasAction(h) {
 		twc := twrap.NewTWConfOrPanic()
 
@@ -34,7 +34,11 @@ func (h StdHelp) ProcessArgs(ps *param.PSet) {
 	}
 
 	if h.sectionsChosen.count() > 0 {
-		h.reportErrors = false // don't report errors if help requested
+		// when help has been requested, only report errors if there have
+		// been errors with the help parameters
+		if !hasHelpErrors(ps) {
+			h.reportErrors = false
+		}
 
 		ps.HelpRequired()
 
@@ -42,4 +46,23 @@ func (h StdHelp) ProcessArgs(ps *param.PSet) {
 			ps.ShouldExit()
 		}
 	}
+}
+
+// hasHelpErrors checks to see if any of the errors are help-related and
+// returns true if there are any such errors.
+func hasHelpErrors(ps *param.PSet) bool {
+	errMap := ps.Errors()
+
+	for k := range errMap {
+		p, err := ps.GetParamByName(k)
+		if err != nil {
+			continue // it's not a named parameter error
+		}
+
+		if p.GroupName() == helpGroupName {
+			return true
+		}
+	}
+
+	return false
 }
