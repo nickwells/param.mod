@@ -3,7 +3,6 @@ package phelp
 import (
 	"fmt"
 
-	"github.com/nickwells/errutil.mod/errutil"
 	"github.com/nickwells/param.mod/v7/param"
 )
 
@@ -22,7 +21,7 @@ func (h StdHelp) ErrorHandler(ps *param.PSet) {
 	}
 
 	if h.reportErrors {
-		errutil.ErrMap(errMap).Report(h.ErrW(), ps.ProgName())
+		errMap.Report(h.ErrW(), ps.ProgName())
 		fmt.Fprintln(h.ErrW(), "\n"+suggestHelpParam(ps))
 	}
 
