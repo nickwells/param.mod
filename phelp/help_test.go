@@ -211,6 +211,20 @@ func TestHelp(t *testing.T) {
 		paramAdder   []param.PSetOptFunc
 	}{
 		{
+			ID:           testhelper.MkID("help-s.suppress.errors"),
+			progDesc:     progDesc + " (help)",
+			params:       []string{"-help-s", "-not-a-param2=99"},
+			errsExpected: true,
+			paramAdder:   []param.PSetOptFunc{addByNameParams},
+		},
+		{
+			ID:           testhelper.MkID("help-s.show.errors"),
+			progDesc:     progDesc + " (help)",
+			params:       []string{"-help-s", "-help-param=not-a-param2"},
+			errsExpected: true,
+			paramAdder:   []param.PSetOptFunc{addByNameParams},
+		},
+		{
 			ID:         testhelper.MkID("help"),
 			progDesc:   progDesc + " (help)",
 			params:     []string{"-help", "-param2=99"},

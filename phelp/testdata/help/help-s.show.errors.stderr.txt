@@ -1,0 +1,11 @@
+PROGRAM NAME UNKNOWN: 2 errors were found in 2 categories
+      help-params:
+            Bad parameter name: "not-a-param2"
+            To see a list of parameter names try "-help-show params-named".
+            To see a full list, add "-help-all".
+            To see just the names, add "-help-summary".
+            At: [command line]: Supplied Parameter:2: "-help-param=not-a-param2"
+      param2:
+            this parameter must be set somewhere
+
+For more information use the "-help" parameter
