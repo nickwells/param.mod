@@ -25,9 +25,7 @@ const (
 // addParamHandlingParams will add the standard parameter-handling parameters
 // into the parameter set
 func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
-	groupName := groupNamePfx + "-params"
-
-	ps.AddGroup(groupName,
+	ps.AddGroup(paramsGroupName,
 		"These are the parameter-handling parameters."+
 			" There are parameters for showing where parameters"+
 			" have been set and for the handling of parameter errors.")
@@ -51,7 +49,7 @@ func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
 			exitAfterParamProcessing,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.PostAction(paction.SetVal(&h.paramsShowWhereSet, true)),
-		param.GroupName(groupName),
+		param.GroupName(paramsGroupName),
 		param.SeeAlso(paramNameShowWhereSet),
 	)
 
@@ -63,7 +61,7 @@ func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
 			" files in use)."+
 			exitAfterParamProcessing,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.GroupName(groupName),
+		param.GroupName(paramsGroupName),
 		param.SeeAlso(paramNameWhereSetFormat),
 	)
 
@@ -83,7 +81,7 @@ func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
 			" that you've set in your alternative sources."+
 			exitAfterParamProcessing,
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.GroupName(groupName))
+		param.GroupName(paramsGroupName))
 
 	ps.Add(paramNameDontShowErrors,
 		psetter.Bool{
@@ -93,7 +91,7 @@ func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
 		"after all the parameters are set any errors detected will be"+
 			" reported unless this flag is set",
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.GroupName(groupName))
+		param.GroupName(paramsGroupName))
 
 	ps.Add(paramNameDontExitOnErrors,
 		psetter.Bool{
@@ -106,7 +104,7 @@ func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
 			" if this option is chosen and it should only be used in"+
 			" emergencies",
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.GroupName(groupName))
+		param.GroupName(paramsGroupName))
 
 	ps.Add(paramNameExitAfterParsing,
 		psetter.Bool{Value: &h.exitAfterParsing},
@@ -118,7 +116,7 @@ func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
 			" parameters are processed and these will still take place"+
 			" even if this parameter is set.",
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.GroupName(groupName))
+		param.GroupName(paramsGroupName))
 
 	ps.Add(paramNameFile,
 		&configFileSetter{},
@@ -130,5 +128,5 @@ func (h *StdHelp) addParamHandlingParams(ps *param.PSet) {
 		param.AltNames("params-from", "params-f"),
 		param.PostAction(param.ConfigFileActionFunc),
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.GroupName(groupName))
+		param.GroupName(paramsGroupName))
 }

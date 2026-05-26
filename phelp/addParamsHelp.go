@@ -56,9 +56,7 @@ func (trimDashes) Edit(_, val string) (string, error) {
 
 // addUsageParams will add the usage parameters into the parameter set
 func (h *StdHelp) addUsageParams(ps *param.PSet) {
-	groupName := groupNamePfx + "-help"
-
-	ps.AddGroup(groupName,
+	ps.AddGroup(helpGroupName,
 		"These are parameters for printing a help message.")
 
 	ps.Add(helpArgName, psetter.Nil{},
@@ -82,7 +80,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		param.Attrs(param.CommandLineOnly),
 		param.AltNames("usage"),
 		param.PostAction(setHelpSections(h, standardHelpSectionAlias)),
-		param.GroupName(groupName))
+		param.GroupName(helpGroupName))
 
 	ps.Add(helpFullArgName, psetter.Nil{},
 		"show all parts of the help message and all"+
@@ -92,7 +90,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.PostAction(setHelpSections(h, allHelpSectionAlias)),
 		param.PostAction(paction.SetVal(&h.showHiddenItems, true)),
-		param.GroupName(groupName))
+		param.GroupName(helpGroupName))
 
 	ps.Add(helpShowHiddenArgName, psetter.Nil{},
 		"show all the parameters (or notes)."+
@@ -104,7 +102,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		param.AltNames("help-a"),
 		param.PostAction(paction.SetVal(&h.showHiddenItems, true)),
 		param.PostAction(paction.SetVal(&h.helpRequested, true)),
-		param.GroupName(groupName))
+		param.GroupName(helpGroupName))
 
 	ps.Add(helpSummaryArgName, psetter.Nil{},
 		"print a shorter help message. Only minimal details"+
@@ -114,7 +112,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		param.AltNames("help-s", "help-short"),
 		param.PostAction(paction.SetVal(&h.showSummary, true)),
 		param.PostAction(paction.SetVal(&h.helpRequested, true)),
-		param.GroupName(groupName))
+		param.GroupName(helpGroupName))
 
 	ps.Add(helpSummaryAndHiddenArgName, psetter.Nil{},
 		"print a shorter help message but with all the"+
@@ -127,7 +125,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		param.PostAction(paction.SetVal(&h.showHiddenItems, true)),
 		param.PostAction(paction.SetVal(&h.showSummary, true)),
 		param.PostAction(paction.SetVal(&h.helpRequested, true)),
-		param.GroupName(groupName))
+		param.GroupName(helpGroupName))
 
 	{
 		boolCounter := check.NewCounter(check.ValEQ(true), check.ValGT(0))
@@ -153,7 +151,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			param.ValueName("group-name,..."),
 			param.PostAction(checkGroups(h, ps)),
 			param.PostAction(paction.SetVal(&h.showHiddenItems, true)),
-			param.GroupName(groupName))
+			param.GroupName(helpGroupName))
 	}
 
 	{
@@ -174,7 +172,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			param.AltNames("help-param", "help-p"),
 			param.ValueName("param-name,..."),
 			param.PostAction(checkParams(h, ps)),
-			param.GroupName(groupName))
+			param.GroupName(helpGroupName))
 	}
 
 	{
@@ -202,7 +200,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			param.AltNames("help-note", "help-n"),
 			param.ValueName("note-name,..."),
 			param.PostAction(checkNotes(h, ps)),
-			param.GroupName(groupName))
+			param.GroupName(helpGroupName))
 	}
 
 	ps.Add(helpShowArgName,
@@ -214,7 +212,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 		"specify the parts of the help message you wish to see",
 		param.ValueName("part,..."),
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.GroupName(groupName),
+		param.GroupName(helpGroupName),
 	)
 
 	ps.Add(helpFormatArgName,
@@ -232,7 +230,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			" of the help message support this feature. They will mostly"+
 			" produce Standard format regardless of this setting.",
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
-		param.GroupName(groupName),
+		param.GroupName(helpGroupName),
 	)
 
 	ps.Add(helpNoPageArgName,
@@ -246,7 +244,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			" variable or 'less' if 'PAGER' is not set or the command"+
 			" it refers to cannot be found)",
 		param.AltNames("help-dont-page", "help-no-pager"),
-		param.GroupName(groupName),
+		param.GroupName(helpGroupName),
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.PostAction(paction.SetVal(&h.helpRequested, true)),
 	)
@@ -258,7 +256,7 @@ func (h *StdHelp) addUsageParams(ps *param.PSet) {
 			"Note that some shells will set the COLUMNS variable"+
 			" to the width of the current terminal. You can pass"+
 			" this as the value to get a full-width help message.",
-		param.GroupName(groupName),
+		param.GroupName(helpGroupName),
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 		param.PostAction(paction.SetVal(&h.helpRequested, true)),
 	)

@@ -7,7 +7,13 @@ import (
 // groupNamePfx is a standard prefix applied to the names of the groups in
 // which all the param package parameters are grouped. You should not give
 // any of your parameter groups the same name (it'll be confusing)
-const groupNamePfx = "stdParams"
+const (
+	groupNamePfx = "stdParams"
+
+	helpGroupName   = groupNamePfx + "-help"
+	paramsGroupName = groupNamePfx + "-params"
+	cmplGroupName   = groupNamePfx + "-cmpl"
+)
 
 // CommonParamsGroupNamePrefix returns the prefix used to start the names of
 // all the common parameter groups

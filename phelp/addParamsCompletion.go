@@ -19,9 +19,7 @@ const (
 // addParamCompletionParams will add the standard parameters for specifying
 // and creating shell completion functions into the parameter set
 func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
-	groupName := groupNamePfx + "-cmpl"
-
-	ps.AddGroup(groupName,
+	ps.AddGroup(cmplGroupName,
 		"These are the parameters for"+
 			" creating shell completion functions."+
 			" You can specify where"+
@@ -41,7 +39,7 @@ func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
 			" The directory should be in the list of directories"+
 			" given in the fpath shell variable."+
 			" See the zsh manual for more details.",
-		param.GroupName(groupName),
+		param.GroupName(cmplGroupName),
 		param.Attrs(param.DontShowInStdUsage),
 	)
 
@@ -51,7 +49,7 @@ func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
 		},
 		"suppress any messages produced after generating"+
 			" or updating the completions file.",
-		param.GroupName(groupName),
+		param.GroupName(cmplGroupName),
 		param.Attrs(param.DontShowInStdUsage),
 	)
 
@@ -80,7 +78,7 @@ func (h *StdHelp) addParamCompletionParams(ps *param.PSet) {
 			" If it is set to any value other than '"+zshCompActionNone+
 			"' then the program will exit after the parameters are processed.",
 		param.SeeAlso(paramNameCompletionsZshDir),
-		param.GroupName(groupName),
+		param.GroupName(cmplGroupName),
 		param.Attrs(param.CommandLineOnly|param.DontShowInStdUsage),
 	)
 
