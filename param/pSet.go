@@ -224,7 +224,7 @@ func NewSet(h Helper, psof ...PSetOptFunc) *PSet {
 		groups:          make(map[string]*Group),
 		notes:           make(map[string]*Note),
 		unusedParams:    make(map[string][]string),
-		errMap:          *(errutil.NewErrMap()),
+		errMap:          *errutil.NewErrMap(),
 		finalChecks:     make([]FinalCheckFunc, 0),
 
 		envPrefixes: make([]string, 0, 1),
