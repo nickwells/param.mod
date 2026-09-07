@@ -3,8 +3,6 @@ package psetter
 import (
 	"fmt"
 	"time"
-
-	"github.com/nickwells/check.mod/v2/check"
 )
 
 // Time Formats given here can be used to set the Format member of the Time
@@ -22,6 +20,7 @@ const (
 // value.
 type Time struct {
 	ValueReqMandatory
+	ValueChecker[time.Time]
 
 	// You must set a Value, the program will panic if not. This is the
 	// Time that the setter is setting.
@@ -30,14 +29,6 @@ type Time struct {
 	// suitable for setting the Value. If no Format is given the default
 	// value will be used, see TimeFmtDefault.
 	Format string
-	// The Checks, if any, are applied to the time.Time value and the new
-	// parameter will be applied only if they all return a nil error.
-	Checks []check.Time
-}
-
-// CountChecks returns the number of check functions this setter has
-func (s Time) CountChecks() int {
-	return len(s.Checks)
 }
 
 // SetWithVal (called when a value follows the parameter) checks that the
@@ -51,11 +42,8 @@ func (s Time) SetWithVal(_ string, paramVal string) error {
 		return err
 	}
 
-	for _, check := range s.Checks {
-		err := check(v)
-		if err != nil {
-			return err
-		}
+	if err := s.ApplyChecks(v); err != nil {
+		return err
 	}
 
 	*s.Value = v
@@ -92,12 +80,7 @@ func (s Time) CheckSetter(name string) {
 		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
 
-	// Check there are no nil Check funcs
-	for i, check := range s.Checks {
-		if check == nil {
-			panic(NilCheckMessage(name, fmt.Sprintf("%T", s), i))
-		}
-	}
+	s.VerifyChecks(name, fmt.Sprintf("%T", s))
 }
 
 // ValDescribe returns a string giving a summary of the values that can

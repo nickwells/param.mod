@@ -3,8 +3,6 @@ package psetter
 import (
 	"fmt"
 	"strings"
-
-	"github.com/nickwells/check.mod/v2/check"
 )
 
 // StrListAppender allows you to specify a parameter that can be used to add
@@ -18,14 +16,11 @@ import (
 // parameter could be set up that will do this.
 type StrListAppender[T ~string] struct {
 	ValueReqMandatory
+	ValueChecker[T]
 
 	// You must set a Value, the program will panic if not. This is the slice
 	// of strings that the setter is appending to.
 	Value *[]T
-	// The Checks, if any, are applied to the supplied parameter value and
-	// the new parameter will be added to the list only if they all return a
-	// nil error.
-	Checks []check.ValCk[T]
 	// The Editor, if present, is applied to the parameter value after any
 	// checks are applied and allows the programmer to modify the value
 	// supplied before using it to set the Value.
@@ -33,11 +28,6 @@ type StrListAppender[T ~string] struct {
 	// Prepend will change the behaviour so that any new values are added at
 	// the start of the list of strings rather than the end.
 	Prepend bool
-}
-
-// CountChecks returns the number of check functions this setter has
-func (s StrListAppender[T]) CountChecks() int {
-	return len(s.Checks)
 }
 
 // SetWithVal (called when a value follows the parameter) takes the parameter
@@ -57,11 +47,9 @@ func (s StrListAppender[T]) SetWithVal(paramName, paramVal string) error {
 	}
 
 	v := T(paramVal)
-	for _, check := range s.Checks {
-		err := check(v)
-		if err != nil {
-			return err
-		}
+
+	if err := s.ApplyChecks(v); err != nil {
+		return err
 	}
 
 	if s.Prepend {
@@ -115,12 +103,7 @@ func (s StrListAppender[T]) CheckSetter(name string) {
 		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
 
-	// Check there are no nil Check funcs
-	for i, check := range s.Checks {
-		if check == nil {
-			panic(NilCheckMessage(name, fmt.Sprintf("%T", s), i))
-		}
-	}
+	s.VerifyChecks(name, fmt.Sprintf("%T", s))
 }
 
 // ValDescribe returns a string giving a summary of the values that can

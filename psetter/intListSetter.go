@@ -5,7 +5,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/mathutil.mod/v2/mathutil"
 	"golang.org/x/exp/constraints"
 )
@@ -14,6 +13,7 @@ import (
 // list (a slice) of ints's.
 type IntList[T constraints.Signed] struct {
 	ValueReqMandatory
+	ValueChecker[[]T]
 
 	// Value must be set, the program will panic if not. This is the slice of
 	// int64's that the setter is setting.
@@ -21,14 +21,6 @@ type IntList[T constraints.Signed] struct {
 	// The StrListSeparator allows you to override the default separator
 	// between list elements.
 	StrListSeparator
-	// The Checks, if any, are applied to the supplied parameter value and
-	// the new parameter will be applied only if they all return a nil error
-	Checks []check.ValCk[[]T]
-}
-
-// CountChecks returns the number of check functions this setter has
-func (s IntList[T]) CountChecks() int {
-	return len(s.Checks)
 }
 
 // SetWithVal (called when a value follows the parameter) splits the value
@@ -53,11 +45,8 @@ func (s IntList[T]) SetWithVal(_ string, paramVal string) error {
 		v = append(v, intVal)
 	}
 
-	for _, check := range s.Checks {
-		err := check(v)
-		if err != nil {
-			return err
-		}
+	if err := s.ApplyChecks(v); err != nil {
+		return err
 	}
 
 	*s.Value = v
@@ -95,12 +84,7 @@ func (s IntList[T]) CheckSetter(name string) {
 		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
 
-	// Check there are no nil Check funcs
-	for i, check := range s.Checks {
-		if check == nil {
-			panic(NilCheckMessage(name, fmt.Sprintf("%T", s), i))
-		}
-	}
+	s.VerifyChecks(name, fmt.Sprintf("%T", s))
 }
 
 // ValDescribe returns a name describing the values allowed

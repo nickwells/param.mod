@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"strings"
 	"time"
-
-	"github.com/nickwells/check.mod/v2/check"
 )
 
 // Duration allows you to specify a parameter that can be used to set a
@@ -14,18 +12,11 @@ import (
 // checks.
 type Duration struct {
 	ValueReqMandatory
+	ValueChecker[time.Duration]
 
 	// Value must be set, the program will panic if not. This is the
 	// time.Duration that the setter is setting.
 	Value *time.Duration
-	// The Checks, if any, are applied to the new Duration and the Value will
-	// only be updated if they all return a nil error.
-	Checks []check.Duration
-}
-
-// CountChecks returns the number of check functions this setter has
-func (s Duration) CountChecks() int {
-	return len(s.Checks)
 }
 
 // SetWithVal (called when a value follows the parameter) checks that the
@@ -40,11 +31,8 @@ func (s Duration) SetWithVal(_ string, paramVal string) error {
 			paramVal, err)
 	}
 
-	for _, check := range s.Checks {
-		err := check(v)
-		if err != nil {
-			return err
-		}
+	if err := s.ApplyChecks(v); err != nil {
+		return err
 	}
 
 	*s.Value = v
@@ -79,10 +67,5 @@ func (s Duration) CheckSetter(name string) {
 		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
 
-	// Check there are no nil Check funcs
-	for i, check := range s.Checks {
-		if check == nil {
-			panic(NilCheckMessage(name, fmt.Sprintf("%T", s), i))
-		}
-	}
+	s.VerifyChecks(name, fmt.Sprintf("%T", s))
 }

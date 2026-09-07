@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/param.mod/v7/ptypes"
 )
 
@@ -28,6 +27,8 @@ import (
 // actually mean.
 type EnumList[T ~string] struct {
 	ValueReqMandatory
+	ValueChecker[[]T]
+
 	// The AllowedVals must be set, the program will panic if not. These are
 	// the only values that will be allowed in the slice of strings.
 	ptypes.AllowedVals[T]
@@ -43,21 +44,13 @@ type EnumList[T ~string] struct {
 	// The StrListSeparator allows you to override the default separator
 	// between list elements.
 	StrListSeparator
-	// The Checks, if any, are applied to the list of new values and the
-	// Value will only be updated if they all return a nil error.
-	Checks []check.ValCk[[]T]
-}
-
-// CountChecks returns the number of check functions this setter has
-func (s EnumList[T]) CountChecks() int {
-	return len(s.Checks)
 }
 
 // SetWithVal (called when a value follows the parameter) splits the value
 // using the list separator. It then checks all the values for validity and
 // only if all the values are in the allowed values list does it add them
 // to the slice of strings pointed to by the Value. It returns a error for
-// the first invalid value or if a check is breached.
+// the first invalid value or if a check does not pass.
 func (s EnumList[T]) SetWithVal(_ string, paramVal string) error {
 	aliasedVals := []T{}
 
@@ -80,11 +73,8 @@ func (s EnumList[T]) SetWithVal(_ string, paramVal string) error {
 		aliasedVals = append(aliasedVals, T(v))
 	}
 
-	for _, check := range s.Checks {
-		err := check(aliasedVals)
-		if err != nil {
-			return err
-		}
+	if err := s.ApplyChecks(aliasedVals); err != nil {
+		return err
 	}
 
 	*s.Value = aliasedVals
@@ -146,12 +136,7 @@ func (s EnumList[T]) CheckSetter(name string) {
 		}
 	}
 
-	// Check there are no nil Check funcs
-	for i, check := range s.Checks {
-		if check == nil {
-			panic(NilCheckMessage(name, fmt.Sprintf("%T", s), i))
-		}
-	}
+	s.VerifyChecks(name, fmt.Sprintf("%T", s))
 }
 
 // ValDescribe returns a string describing the allowed values

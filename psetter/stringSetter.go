@@ -2,30 +2,21 @@ package psetter
 
 import (
 	"fmt"
-
-	"github.com/nickwells/check.mod/v2/check"
 )
 
 // String is the type for setting string values from
 // parameters
 type String[T ~string | []byte | []rune] struct {
 	ValueReqMandatory
+	ValueChecker[T]
 
 	// You must set a Value, the program will panic if not. This is the
 	// string that the setter is setting.
 	Value *T
-	// The Checks, if any, are applied to the supplied parameter value and
-	// the new parameter will be applied only if they all return a nil error.
-	Checks []check.ValCk[T]
 	// The Editor, if present, is applied to the parameter value after any
 	// checks are applied and allows the programmer to modify the value
 	// supplied before using it to set the Value.
 	Editor Editor
-}
-
-// CountChecks returns the number of check functions this setter has
-func (s String[T]) CountChecks() int {
-	return len(s.Checks)
 }
 
 // SetWithVal checks that the parameter value meets the checks if any. It
@@ -41,11 +32,8 @@ func (s String[T]) SetWithVal(paramName, paramVal string) error {
 		}
 	}
 
-	for _, check := range s.Checks {
-		err := check(T(paramVal))
-		if err != nil {
-			return err
-		}
+	if err := s.ApplyChecks(T(paramVal)); err != nil {
+		return err
 	}
 
 	*s.Value = T(paramVal)
@@ -77,10 +65,5 @@ func (s String[T]) CheckSetter(name string) {
 		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
 
-	// Check there are no nil Check funcs
-	for i, check := range s.Checks {
-		if check == nil {
-			panic(NilCheckMessage(name, fmt.Sprintf("%T", s), i))
-		}
-	}
+	s.VerifyChecks(name, fmt.Sprintf("%T", s))
 }

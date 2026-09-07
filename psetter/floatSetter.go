@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/mathutil.mod/v2/mathutil"
 	"golang.org/x/exp/constraints"
 )
@@ -13,18 +12,11 @@ import (
 // float value (64 or 32 bit).
 type Float[T constraints.Float] struct {
 	ValueReqMandatory
+	ValueChecker[T]
 
 	// Value must be set, the program will panic if not. This is the value
 	// being set
 	Value *T
-	// The Checks, if any, are applied to the supplied parameter value and
-	// the new parameter will be applied only if they all return a nil error
-	Checks []check.ValCk[T]
-}
-
-// CountChecks returns the number of check functions this setter has
-func (s Float[T]) CountChecks() int {
-	return len(s.Checks)
 }
 
 // SetWithVal (called when a value follows the parameter) checks that the
@@ -42,11 +34,8 @@ func (s Float[T]) SetWithVal(_ string, paramVal string) error {
 
 	v := T(v64)
 
-	for _, check := range s.Checks {
-		err := check(v)
-		if err != nil {
-			return err
-		}
+	if err := s.ApplyChecks(v); err != nil {
+		return err
 	}
 
 	*s.Value = v
@@ -73,12 +62,7 @@ func (s Float[T]) CheckSetter(name string) {
 		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
 
-	// Check there are no nil Check funcs
-	for i, check := range s.Checks {
-		if check == nil {
-			panic(NilCheckMessage(name, fmt.Sprintf("%T", s), i))
-		}
-	}
+	s.VerifyChecks(name, fmt.Sprintf("%T", s))
 }
 
 // ValDescribe returns a name describing the values allowed

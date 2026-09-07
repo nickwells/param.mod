@@ -5,7 +5,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/strdist.mod/v2/strdist"
 )
 
@@ -14,6 +13,7 @@ import (
 // validate the Value.
 type TimeLocation struct {
 	ValueReqMandatory
+	ValueChecker[time.Location]
 
 	// You must set a Value, the program will panic if not. Note that this is
 	// a pointer to the pointer to the Location, you should initialise it
@@ -23,15 +23,6 @@ type TimeLocation struct {
 	// Locations (which can be empty) is used to provide an improved error
 	// message when the location cannot be loaded.
 	Locations []string
-
-	// The Checks, if any, are applied to the supplied parameter value and
-	// the new parameter will be applied only if they all return a nil error.
-	Checks []check.TimeLocation
-}
-
-// CountChecks returns the number of check functions this setter has
-func (s TimeLocation) CountChecks() int {
-	return len(s.Checks)
 }
 
 // suggestAltTimeLocation tries to find values in the list of available
@@ -113,11 +104,8 @@ func (s TimeLocation) SetWithVal(_ string, paramVal string) error {
 		}
 	}
 
-	for _, check := range s.Checks {
-		err := check(*v)
-		if err != nil {
-			return err
-		}
+	if err := s.ApplyChecks(*v); err != nil {
+		return err
 	}
 
 	*s.Value = v
@@ -149,12 +137,7 @@ func (s TimeLocation) CheckSetter(name string) {
 		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
 
-	// Check there are no nil Check funcs
-	for i, check := range s.Checks {
-		if check == nil {
-			panic(NilCheckMessage(name, fmt.Sprintf("%T", s), i))
-		}
-	}
+	s.VerifyChecks(name, fmt.Sprintf("%T", s))
 }
 
 // ValDescribe returns a string giving a summary of the values that can

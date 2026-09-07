@@ -6,21 +6,17 @@ import (
 	"slices"
 	"strconv"
 	"strings"
-
-	"github.com/nickwells/check.mod/v2/check"
 )
 
 // Map sets the entry in a map of strings. Each value from the
 // parameter is used as a key in the map with the map entry set to true.
 type Map[T ~string] struct {
 	ValueReqMandatory
+	ValueChecker[map[T]bool]
 
 	// You must set a Value, the program will panic if not. This is the map
 	// of strings to bool that the setter is setting
 	Value *map[T]bool
-	// The Checks, if any, are applied to the supplied parameter value and
-	// the new parameter will be applied only if they all return a nil error
-	Checks []check.ValCk[map[T]bool]
 	// The Editor, if present, is applied to the parameter value after any
 	// checks are applied and allows the programmer to modify the value
 	// supplied before using it to set the Value.
@@ -28,11 +24,6 @@ type Map[T ~string] struct {
 	// The StrListSeparator allows you to override the default separator
 	// between list elements.
 	StrListSeparator
-}
-
-// CountChecks returns the number of check functions this setter has
-func (s Map[T]) CountChecks() int {
-	return len(s.Checks)
 }
 
 // SetWithVal (called when a value follows the parameter) splits the value
@@ -81,11 +72,8 @@ func (s Map[T]) SetWithVal(paramName string, paramVal string) error {
 		m[T(namePart)] = b
 	}
 
-	for _, check := range s.Checks {
-		err = check(m)
-		if err != nil {
-			return err
-		}
+	if err := s.ApplyChecks(m); err != nil {
+		return err
 	}
 
 	for k, b := range m {
@@ -129,12 +117,7 @@ func (s Map[T]) CheckSetter(name string) {
 		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
 
-	// Check there are no nil Check funcs
-	for i, check := range s.Checks {
-		if check == nil {
-			panic(NilCheckMessage(name, fmt.Sprintf("%T", s), i))
-		}
-	}
+	s.VerifyChecks(name, fmt.Sprintf("%T", s))
 
 	// make the map if it is nil
 	if *s.Value == nil {

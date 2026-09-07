@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/param.mod/v7/phelputils"
 	"github.com/nickwells/param.mod/v7/ptypes"
 	"github.com/nickwells/twrap.mod/twrap"
@@ -58,6 +57,8 @@ func (tv TaggedValue[E, T]) String(tagSep string) string {
 // actually mean.
 type TaggedValueList[E, T ~string] struct {
 	ValueReqMandatory
+	ValueChecker[[]TaggedValue[E, T]]
+
 	// The AllowedVals must be set, the program will panic if not. These are
 	// the only values that will be allowed in the slice of strings.
 	ptypes.AllowedVals[E]
@@ -89,18 +90,9 @@ type TaggedValueList[E, T ~string] struct {
 	// the StrListSeparator, the program wil panic if not.
 	TagListSeparator StrListSeparator
 
-	// The Checks, if any, are applied to the list of new values and the
-	// Value will only be updated if they all return a nil error.
-	Checks []check.ValCk[[]TaggedValue[E, T]]
-
 	// The TagChecks, if any, are applied to the list tags of each value and
 	// the Value will only be updated if they all return a nil error.
-	TagChecks []check.ValCk[[]T]
-}
-
-// CountChecks returns the number of check functions this setter has
-func (s TaggedValueList[E, T]) CountChecks() int {
-	return len(s.Checks)
+	TagChecks ValueChecker[[]T]
 }
 
 // mkTagList makes a slice of tags from the tag-string, ts. If any of the
@@ -129,11 +121,8 @@ func (s TaggedValueList[E, T]) mkTagList(ts string) ([]T, error) {
 		}
 	}
 
-	for _, tCheck := range s.TagChecks {
-		err := tCheck(tags)
-		if err != nil {
-			return []T{}, err
-		}
+	if err := s.TagChecks.ApplyChecks(tags); err != nil {
+		return []T{}, err
 	}
 
 	return tags, nil
@@ -175,11 +164,8 @@ func (s TaggedValueList[E, T]) SetWithVal(_ string, paramVal string) error {
 		}
 	}
 
-	for _, check := range s.Checks {
-		err := check(teVals)
-		if err != nil {
-			return err
-		}
+	if err := s.ApplyChecks(teVals); err != nil {
+		return err
 	}
 
 	*s.Value = teVals
@@ -216,18 +202,10 @@ func (s TaggedValueList[E, T]) CurrentValue() string {
 // functions.
 func (s TaggedValueList[E, T]) checkChecks(name string) {
 	// Check there are no nil Check funcs
-	for i, check := range s.Checks {
-		if check == nil {
-			panic(NilCheckMessage(name, fmt.Sprintf("%T.Checks", s), i))
-		}
-	}
+	s.VerifyChecks(name, fmt.Sprintf("%T.Checks", s))
 
 	// Check there are no nil TagCheck funcs
-	for i, check := range s.TagChecks {
-		if check == nil {
-			panic(NilCheckMessage(name, fmt.Sprintf("%T.TagChecks", s), i))
-		}
-	}
+	s.TagChecks.VerifyChecks(name, fmt.Sprintf("%T.TagChecks", s))
 }
 
 // checkAllowedVals checks the AllowedVals and Aliases for both the embedded
@@ -235,29 +213,25 @@ func (s TaggedValueList[E, T]) checkChecks(name string) {
 func (s TaggedValueList[E, T]) checkAllowedVals(name string) {
 	// Check that the AllowedVals map is well formed
 	if err := s.AllowedVals.Check(); err != nil {
-		panic(BadSetterMessage(name,
-			fmt.Sprintf("%T.AllowedVals", s),
+		panic(BadSetterMessage(name, fmt.Sprintf("%T.AllowedVals", s),
 			err.Error()))
 	}
 
 	// Check the alias values
 	if err := s.Aliases.Check(s.AllowedVals); err != nil {
-		panic(BadSetterMessage(name,
-			fmt.Sprintf("%T.Aliases", s),
+		panic(BadSetterMessage(name, fmt.Sprintf("%T.Aliases", s),
 			err.Error()))
 	}
 
 	// Check that the TagAllowedVals map is well formed
 	if err := s.TagAllowedVals.Check(); err != nil {
-		panic(BadSetterMessage(name,
-			fmt.Sprintf("%T.TagAllowedVals", s),
+		panic(BadSetterMessage(name, fmt.Sprintf("%T.TagAllowedVals", s),
 			"tag: "+err.Error()))
 	}
 
 	// Check the tag alias values
 	if err := s.TagAliases.Check(s.TagAllowedVals); err != nil {
-		panic(BadSetterMessage(name,
-			fmt.Sprintf("%T.TagAliases", s),
+		panic(BadSetterMessage(name, fmt.Sprintf("%T.TagAliases", s),
 			"tag: "+err.Error()))
 	}
 }
@@ -277,28 +251,22 @@ func (s TaggedValueList[E, T]) CheckSetter(name string) {
 	// Check that the current values are all allowed
 	for i, tev := range *s.Value {
 		if _, ok := s.AllowedVals[tev.Value]; !ok {
-			panic(
-				BadValueMessage(
-					name,
-					fmt.Sprintf("%T", s),
-					fmt.Sprintf(
-						"element %d"+
-							" in the list of initial values is invalid:"+
-							" bad value: %q",
-						i, tev.Value)))
+			panic(BadValueMessage(name, fmt.Sprintf("%T", s),
+				fmt.Sprintf(
+					"element %d"+
+						" in the list of initial values is invalid:"+
+						" bad value: %q",
+					i, tev.Value)))
 		}
 
 		for j, t := range tev.Tags {
 			if _, ok := s.TagAllowedVals[t]; !ok {
-				panic(
-					BadValueMessage(
-						name,
-						fmt.Sprintf("%T", s),
-						fmt.Sprintf(
-							"element %d"+
-								" in the list of initial values is invalid:"+
-								" bad tag: %d: %q",
-							i, j, t)))
+				panic(BadValueMessage(name, fmt.Sprintf("%T", s),
+					fmt.Sprintf(
+						"element %d"+
+							" in the list of initial values is invalid:"+
+							" bad tag: %d: %q",
+						i, j, t)))
 			}
 		}
 	}

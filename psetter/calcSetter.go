@@ -3,7 +3,6 @@ package psetter
 import (
 	"fmt"
 
-	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/param.mod/v7/ptypes"
 )
 
@@ -13,6 +12,7 @@ import (
 // non-empty Name and a non-nil Calc.
 type Calculated[T any] struct {
 	ValueReqMandatory
+	ValueChecker[T]
 
 	// You must set a Value, the program will panic if not. This is a pointer
 	// to the value that the setter is setting.
@@ -30,15 +30,6 @@ type Calculated[T any] struct {
 	// To disallow unmapped values set the NoDefault field to true. In this
 	// case the CalcMap must have more than one entry
 	NoDefault bool
-
-	// The Checks, if any, are applied to the supplied parameter value and
-	// the Value will only be update if they all return a nil error.
-	Checks []check.ValCk[T]
-}
-
-// CountChecks returns the number of check functions this setter has
-func (s Calculated[T]) CountChecks() int {
-	return len(s.Checks)
 }
 
 // CurrentValue returns the current setting of the parameter value
@@ -64,11 +55,8 @@ func (s Calculated[T]) SetWithVal(paramName string, paramVal string) error {
 		return err
 	}
 
-	for _, check := range s.Checks {
-		err := check(v)
-		if err != nil {
-			return err
-		}
+	if err := s.ApplyChecks(v); err != nil {
+		return err
 	}
 
 	*s.Value = v
@@ -104,36 +92,33 @@ func (s Calculated[T]) CheckSetter(name string) {
 		panic(NilValueMessage(name, fmt.Sprintf("%T", s)))
 	}
 
-	// Check there are no nil Check funcs
-	for i, check := range s.Checks {
-		if check == nil {
-			panic(NilCheckMessage(name, fmt.Sprintf("%T", s), i))
-		}
-	}
+	s.VerifyChecks(name, fmt.Sprintf("%T", s))
 
 	// Check the NamedCalc values
-	if len(s.CalcMap) < 1 {
-		panic("the CalcMap cannot be empty")
+	if len(s.CalcMap) == 0 {
+		panic(BadSetterMessage(name, fmt.Sprintf("%T", s),
+			"the CalcMap cannot be empty"))
 	}
 
 	if s.NoDefault {
 		if len(s.CalcMap) <= 1 {
-			panic("with no default value the CalcMap must have" +
-				" more than one entry")
+			panic(BadSetterMessage(name, fmt.Sprintf("%T", s),
+				"with no default value the CalcMap must have"+
+					" more than one entry"))
 		}
 	} else {
-		err := s.Default.Check()
-		if err != nil {
-			panic(fmt.Sprintf("the default NamedCalc is invalid: %s", err))
+		if err := s.Default.Check(); err != nil {
+			panic(BadSetterMessage(name, fmt.Sprintf("%T", s),
+				fmt.Sprintf("the default NamedCalc is invalid: %s", err)))
 		}
 	}
 
 	for k, nc := range s.CalcMap {
 		err := nc.Check()
 		if err != nil {
-			panic(
+			panic(BadSetterMessage(name, fmt.Sprintf("%T", s),
 				fmt.Sprintf("the CalcMap[%q] has an invalid NamedCalc: %s",
-					k, err))
+					k, err)))
 		}
 	}
 }
