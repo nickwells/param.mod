@@ -27,10 +27,11 @@ func (ps *PSet) makeByPosParamDesc() string {
 			len(ps.byPos))
 	}
 
-	sep := "should be <"
+	sep := " should be <"
 
 	for _, bp := range ps.byPos {
-		byPosMiniHelp.WriteString(sep + bp.name)
+		byPosMiniHelp.WriteString(sep)
+		byPosMiniHelp.WriteString(bp.name)
 		sep = ">, <"
 	}
 
