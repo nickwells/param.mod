@@ -32,6 +32,7 @@ func (ps *PSet) makeByPosParamDesc() string {
 	for _, bp := range ps.byPos {
 		byPosMiniHelp.WriteString(sep)
 		byPosMiniHelp.WriteString(bp.name)
+
 		sep = ">, <"
 	}
 
